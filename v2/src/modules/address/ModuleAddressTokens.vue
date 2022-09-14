@@ -193,7 +193,7 @@ const goToTokensBalancePage = async () => {
     await router.push({
         name: ROUTE_NAME.ADDRESS_TOKENS.NAME,
         query: { t: ADDRESS_ROUTE_QUERY.Q_TOKENS[0] },
-        params: { scroll: state.activeToken }
+        params: { scrollId: state.activeToken }
     })
 }
 

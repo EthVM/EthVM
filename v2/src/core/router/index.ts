@@ -94,7 +94,7 @@ const routes: Array<RouteRecordRaw> = [
                 path: ROUTE_NAME.ADDRESS_TOKENS.PATH,
                 name: ROUTE_NAME.ADDRESS_TOKENS.NAME,
                 component: AddressTokensView,
-                props: route => ({ tab: route.query.t, scrollId: route.params.scroll }),
+                props: route => ({ tab: route.query.t, scrollId: route.params.scrollId }),
                 beforeEnter: addressTokensRouteGuard
             },
             {

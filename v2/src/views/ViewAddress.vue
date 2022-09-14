@@ -61,7 +61,7 @@
         =========================
         -->
         <div class="mx-2 mx-sm-6 mx-xl-auto mt-2 mt-sm-6">
-            <router-view v-slot="{ Component }" :address-ref="addressRef" @tabChange="setLastViewedTab">
+            <router-view v-slot="{ Component }" :address-ref="addressRef" :scroll-id="scrollId" @tabChange="setLastViewedTab">
                 <v-container class="pa-0">
                     <Transition name="fade" mode="out-in">
                         <component :is="Component" :key="route.name" />
@@ -120,7 +120,11 @@ const tabs = reactive([
 ])
 
 const props = defineProps({
-    addressRef: String
+    addressRef: String,
+    scrollId: {
+        type: String,
+        required: false
+    }
 })
 
 interface ComponentState {
