@@ -1,134 +1,172 @@
 <template>
-    <v-container fluid class="pa-0 text-body-2">
-        <v-row class="my-0">
-            <!--
-      =====================================================================================
-        Mobile (XS-SM)
-      =====================================================================================
-      -->
-            <v-col xs="12" v-if="!mdAndUp">
-                <div :class="props.isPending ? 'table-row-mobile' : txStatusClass">
-                    <v-row grid-list-xs row wrap align="center" justify="start" fill-height class="pt-3 pb-3 pr-4 pl-4">
-                        <v-col cols="6" class="pa-1">
-                            <router-link :to="`/block/number/${transferObj.block}`" class="black--text font-weight-medium pb-1">
-                                Block # {{ transaction.block }}
-                            </router-link>
-                            <p v-if="props.isPending && transaction.isMined" class="caption primary--text blinking">Mined</p>
-                        </v-col>
-                        <v-col cols="6">
-                            <v-row justify="end">
-                                <p class="black--text align-center pl-2">
-                                    {{ transaction.timestamp }}
-                                </p>
-                            </v-row>
-                        </v-col>
-                        <v-col cols="2" class="pa-1">
-                            <p class="info--text psmall">Tx #</p>
-                        </v-col>
-                        <v-col cols="10" class="pa-1 pl-6">
-                            <app-transform-hash :hash="transaction.hash" :link="`/tx/${transaction.hash}`" />
-                        </v-col>
-                        <v-col cols="12" class="pa-1">
-                            <v-row align="center" class="pa-2">
-                                <p class="info--text psmall pr-1">Addresses:</p>
-                                <app-transform-hash :hash="eth.toCheckSum(transaction.from)" :italic="true" :link="`/address/${transaction.from}`" />
-                                <v-icon class="fas fa-arrow-right primary--text pl-2 pr-2" small>east</v-icon>
-                                <app-transform-hash
-                                    v-if="transaction.to && transaction.to !== ''"
-                                    :hash="eth.toCheckSum(transaction.to)"
-                                    :italic="true"
-                                    :link="`/address/${transaction.to}`"
-                                />
-                                <p v-else class="info--text">Contract Creation</p>
-                            </v-row>
-                        </v-col>
-                        <v-col class="flex-shrink-1">
-                            <p class="info--text psmall">Amount:</p>
-                        </v-col>
-                        <v-col class="flex-shrink-1">
-                            <p class="black--text align-center">
-                                {{ transaction.value.value }}
-                                {{ transaction.value.unit }}
-                                <app-tooltip v-if="transaction.value.tooltipText" :text="`${transaction.value.tooltipText} ETH`" />
-                            </p>
-                        </v-col>
-                    </v-row>
-                </div>
-            </v-col>
-            <!--
-      =====================================================================================
-        Tablet/ Desktop (SM - XL)
-      =====================================================================================
-      -->
-            <v-col v-else sm="12" class="py-2">
-                <!--
-        =====================================================================================
-          Block Info
-        =====================================================================================
+    <div>
+        <!--
+          =====================================================================================
+            Mobile (XS-SM)
+          =====================================================================================
         -->
-                <v-row grid-list-xs row wrap align="center" justify-start fill-height pl-3 pr-2 pt-2 pb-1>
-                    <v-col v-if="!props.isPending" sm="2" lg="1">
-                        <router-link :to="`/block/number/${transferObj.block}`" class="black--text pb-1">{{ transaction.block }}</router-link>
-                    </v-col>
-                    <v-col sm="7" md="5">
-                        <v-row align="center" class="pr-3 pl-2">
-                            <v-col sm="12">
-                                <v-row align="center" justify="start" class="pa-2 flex-nowrap">
-                                    <p class="info--text pr-1 flex-shrink-0">Tx #:</p>
-                                    <app-transform-hash :hash="transaction.hash" :link="`/tx/${transaction.hash}`" />
-                                </v-row>
-                            </v-col>
-                            <v-col row sm="12">
-                                <v-row align="center" class="flex-nowrap mx-0">
-                                    <p class="info--text mr-1">From:</p>
-                                    <app-transform-hash :hash="eth.toCheckSum(transaction.from)" :link="`/address/${transaction.from}`" :italic="true" />
-                                    <v-icon class="fas fa-arrow-right primary--text pl-2 pr-2" small>east</v-icon>
-                                    <p v-if="transaction.to && transaction.to !== ''" class="info--text mr-1">To:</p>
-                                    <p v-else class="info--text">Contract Creation</p>
-                                    <!-- <app-transform-hash v-if="tx.isContractCreation" :hash="tx.creates" :link="`/address/${tx.creates}`" :italic="true" /> -->
-                                    <app-transform-hash
-                                        v-if="transaction.to && transaction.to !== ''"
-                                        :hash="eth.toCheckSum(transaction.to)"
-                                        :link="`/address/${transaction.to}`"
-                                        :italic="true"
-                                    />
-                                </v-row>
-                            </v-col>
-                        </v-row>
-                    </v-col>
-                    <v-col sm="3" lg="2" class="pr-3 pl-2">
-                        <p :class="props.isPending ? 'pl-4' : ''">
-                            {{ transaction.value.value }}
-                            {{ transaction.value.unit }}
-                            <app-tooltip v-if="transaction.value.tooltipText" :text="`${transaction.value.tooltipText} ETH`" />
-                        </p>
-                    </v-col>
-                    <v-col v-if="!smAndDown" md="2">
+        <v-row
+            v-if="!mdAndUp"
+            align="center"
+            justify="start"
+            fill-height
+            class="pt-3 pb-3 pr-4 pl-4"
+            :class="props.isPending ? 'table-row-mobile' : txStatusClass"
+        >
+            <v-col cols="6" class="pa-1">
+                <router-link :to="`/block/number/${transferObj.block}`" class="black--text font-weight-medium pb-1">
+                    Block # {{ transaction.block }}
+                </router-link>
+                <p v-if="props.isPending && transaction.isMined" class="caption primary--text blinking">Mined</p>
+            </v-col>
+            <v-col cols="6">
+                <v-row justify="end">
+                    <p class="black--text align-center pl-2">
                         {{ transaction.timestamp }}
-                        <!--                        <app-time-ago :timestamp="transaction.timestamp" :class="props.isPending ? 'pl-2' : ''" />-->
-                    </v-col>
-                    <v-col v-if="!mdAndDown" lg="1">
-                        <p :class="['black--text', 'text-truncate', 'mb-0', props.isPending ? 'pl-3' : '']">
-                            {{ transaction.fee.value }}
-                        </p>
-                    </v-col>
-                    <v-col v-if="!props.isPending" lg="1">
-                        <v-icon v-if="transaction.status" small class="txSuccess--text tx-status text-xs-center text-green">check_circle</v-icon>
-                        <v-icon v-else small class="txFail--text tx-status text-xs-center text-red">highlight_off</v-icon>
-                    </v-col>
-                    <p v-if="props.isPending && transaction.isMined" class="caption primary--text blinking">Mined</p>
+                    </p>
                 </v-row>
             </v-col>
-            <v-col sm="12">
-                <v-divider class="mb-2 mt-2" />
+            <v-col cols="2" class="pa-1">
+                <p class="info--text psmall">Tx #</p>
+            </v-col>
+            <v-col cols="10" class="pa-1 pl-6">
+                <app-transform-hash :hash="transaction.hash" :link="`/tx/${transaction.hash}`" />
+            </v-col>
+            <v-col cols="12" class="pa-1">
+                <v-row align="center" class="pa-2">
+                    <p class="info--text psmall pr-1">Addresses:</p>
+                    <app-transform-hash :hash="eth.toCheckSum(transaction.from)" :italic="true" :link="`/address/${transaction.from}`" />
+                    <v-icon class="fas fa-arrow-right primary--text pl-2 pr-2" small>east</v-icon>
+                    <app-transform-hash
+                        v-if="transaction.to && transaction.to !== ''"
+                        :hash="eth.toCheckSum(transaction.to)"
+                        :italic="true"
+                        :link="`/address/${transaction.to}`"
+                    />
+                    <p v-else class="info--text">Contract Creation</p>
+                </v-row>
+            </v-col>
+            <v-col class="flex-shrink-1">
+                <p class="info--text psmall">Amount:</p>
+            </v-col>
+            <v-col class="flex-shrink-1">
+                <p class="black--text align-center">
+                    {{ transaction.value.value }}
+                    {{ transaction.value.unit }}
+                    <app-tooltip v-if="transaction.value.tooltipText" :text="`${transaction.value.tooltipText} ETH`" />
+                </p>
             </v-col>
         </v-row>
-    </v-container>
+        <!--
+          =====================================================================================
+            Tablet/ Desktop (SM - XL)
+          =====================================================================================
+        -->
+        <!--
+            =====================================================================================
+              Block Info
+            =====================================================================================
+        -->
+        <v-row v-else align="center" justify="start" class="my-5 px-0 text-subtitle-2 font-weight-regular">
+            <v-col v-if="!props.isPending" lg="2">
+                <router-link :to="`/block/number/${transferObj.block}`" class="text-secondary pb-1">{{ transaction.block }}</router-link>
+                <p class="text-info mb-0">
+                    {{ transaction.timestamp }}
+                </p>
+            </v-col>
+            <v-col lg="2">
+                <app-transform-hash is-short is-blue :hash="transaction.hash" :link="`/tx/${transaction.hash}`" />
+            </v-col>
+            <v-col lg="2">
+                <div class="d-flex align-center">
+                    <app-address-blockie :address="transaction.from || ''" :size="8" class="mr-1 mr-sm-2" />
+                    <app-transform-hash is-short is-blue :hash="eth.toCheckSum(transaction.from)" :link="`/address/${transaction.from}`" />
+                    <v-icon color="success" class="ml-5">east</v-icon>
+                </div>
+            </v-col>
+            <v-col lg="2">
+                <div class="d-flex align-center">
+                    <app-address-blockie :address="transaction.to || ''" :size="8" class="mr-1 mr-sm-2" />
+                    <app-transform-hash
+                        v-if="transaction.to && transaction.to !== ''"
+                        is-short
+                        is-blue
+                        :hash="eth.toCheckSum(transaction.to)"
+                        :link="`/address/${transaction.to}`"
+                    />
+                </div>
+            </v-col>
+            <v-col lg="2">
+                <span>
+                    {{ transaction.value.value }}
+                    <span class="text-uppercase">{{ transaction.value.unit }}</span>
+                </span>
+            </v-col>
+            <v-col lg="1">
+                <span>
+                    {{ transaction.fee.value }}
+                </span>
+            </v-col>
+            <v-col v-if="!props.isPending" lg="1">
+                <div class="d-flex align-center">
+                    <v-icon v-if="transaction.status" small class="text-success">check_circle</v-icon>
+                    <v-icon v-else small class="text-error">highlight_off</v-icon>
+                    <p v-if="props.isPending && transaction.isMined" class="caption primary--text blinking">Mined</p>
+                </div>
+            </v-col>
+            <!--            <v-col sm="7" md="5">-->
+            <!--                <v-row align="center" class="pr-3 pl-2">-->
+            <!--                    <v-col sm="12">-->
+            <!--                        <v-row align="center" justify="start" class="pa-2 flex-nowrap">-->
+            <!--                            <p class="info&#45;&#45;text pr-1 flex-shrink-0">Tx #:</p>-->
+            <!--                            <app-transform-hash :hash="transaction.hash" :link="`/tx/${transaction.hash}`" />-->
+            <!--                        </v-row>-->
+            <!--                    </v-col>-->
+            <!--                    <v-col row sm="12">-->
+            <!--                        <v-row align="center" class="flex-nowrap mx-0">-->
+            <!--                            <p class="info&#45;&#45;text mr-1">From:</p>-->
+            <!--                            <app-transform-hash :hash="eth.toCheckSum(transaction.from)" :link="`/address/${transaction.from}`" :italic="true" />-->
+            <!--                            <v-icon class="fas fa-arrow-right primary&#45;&#45;text pl-2 pr-2" small>east</v-icon>-->
+            <!--                            <p v-if="transaction.to && transaction.to !== ''" class="info&#45;&#45;text mr-1">To:</p>-->
+            <!--                            <p v-else class="info&#45;&#45;text">Contract Creation</p>-->
+            <!--                            &lt;!&ndash; <app-transform-hash v-if="tx.isContractCreation" :hash="tx.creates" :link="`/address/${tx.creates}`" :italic="true" /> &ndash;&gt;-->
+            <!--                            <app-transform-hash-->
+            <!--                                v-if="transaction.to && transaction.to !== ''"-->
+            <!--                                :hash="eth.toCheckSum(transaction.to)"-->
+            <!--                                :link="`/address/${transaction.to}`"-->
+            <!--                                :italic="true"-->
+            <!--                            />-->
+            <!--                        </v-row>-->
+            <!--                    </v-col>-->
+            <!--                </v-row>-->
+            <!--            </v-col>-->
+            <!--            <v-col sm="3" lg="2" class="pr-3 pl-2">-->
+            <!--                <p :class="props.isPending ? 'pl-4' : ''">-->
+            <!--                    {{ transaction.value.value }}-->
+            <!--                    {{ transaction.value.unit }}-->
+            <!--                    <app-tooltip v-if="transaction.value.tooltipText" :text="`${transaction.value.tooltipText} ETH`" />-->
+            <!--                </p>-->
+            <!--            </v-col>-->
+            <!--            <v-col v-if="!smAndDown" md="2">-->
+            <!--                {{ transaction.timestamp }}-->
+            <!--                &lt;!&ndash;                        <app-time-ago :timestamp="transaction.timestamp" :class="props.isPending ? 'pl-2' : ''" />&ndash;&gt;-->
+            <!--            </v-col>-->
+            <!--            <v-col v-if="!mdAndDown" lg="1">-->
+            <!--                <p :class="['black&#45;&#45;text', 'text-truncate', 'mb-0', props.isPending ? 'pl-3' : '']">-->
+            <!--                    {{ transaction.fee.value }}-->
+            <!--                </p>-->
+            <!--            </v-col>-->
+            <!--            <v-col v-if="!props.isPending" lg="1">-->
+            <!--                <v-icon v-if="transaction.status" small class="txSuccess&#45;&#45;text tx-status text-xs-center text-green">check_circle</v-icon>-->
+            <!--                <v-icon v-else small class="txFail&#45;&#45;text tx-status text-xs-center text-red">highlight_off</v-icon>-->
+            <!--            </v-col>-->
+        </v-row>
+    </div>
 </template>
 
 <script setup lang="ts">
+import AppAddressBlockie from '@core/components/AppAddressBlockie.vue'
 import AppTransformHash from '@core/components/AppTransformHash.vue'
-
 import BN from 'bignumber.js'
 import { Tx } from '../types'
 import AppTooltip from '@/core/components/AppTooltip.vue'

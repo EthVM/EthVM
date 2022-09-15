@@ -35,15 +35,8 @@ const { columnPadding, rowMargin } = useAppViewGrid()
 
 const routes = ALL_BLOCKS_TAB
 
-const props = defineProps({
-    tab: {
-        type: String,
-        required: true
-    }
-})
-
 const state = reactive({
-    tab: props.tab
+    tab: routes[0]
 })
 
 const router = useRouter()
