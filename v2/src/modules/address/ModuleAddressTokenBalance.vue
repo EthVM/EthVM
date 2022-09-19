@@ -15,7 +15,6 @@
 <script setup lang="ts">
 import { useAddressToken } from '@core/composables/AddressTokens/addressTokens.composable'
 import { useCoinData } from '@core/composables/CoinData/coinData.composable'
-import { computed } from 'vue'
 import AddressBalanceTotals from './components/AddressBalanceTotals.vue'
 
 const props = defineProps({

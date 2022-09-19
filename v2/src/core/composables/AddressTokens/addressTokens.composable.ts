@@ -11,8 +11,7 @@ export function useAddressToken(addressHash: string) {
     const {
         result: erc20TokensResult,
         loading: loadingTokens,
-        refetch: refetchTokens,
-        onResult: onErc20TokensLoaded
+        refetch: refetchTokens
     } = useGetOwnersErc20TokensQuery(
         {
             hash: addressHash

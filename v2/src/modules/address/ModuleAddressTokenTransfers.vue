@@ -43,165 +43,14 @@
                 </div>
             </template>
             <template v-else>
-                <div v-for="(transfer, index) in transfers" :key="`${transfer.transfer.transactionHash} - ${index}`" class="position-relative">
-                    <!--
-                           ========================
-                             Desktop View
-                           =========================
-                    -->
-                    <template v-if="!mdAndDown">
-                        <v-row class="my-5 px-0 text-body-1 font-weight-regular" align="center">
-                            <v-col :cols="props.isOverview ? 3 : 2" class="py-0">
-                                <v-row class="ma-0 flex-nowrap" align="center">
-                                    <img
-                                        :src="getImg(transfer.contract) || require('@/assets/icon-token.png')"
-                                        alt=""
-                                        height="32"
-                                        width="32"
-                                        class="mr-2 rounded-circle"
-                                    />
-                                    <div style="display: grid">
-                                        <router-link
-                                            v-if="transfer.tokenInfo.name !== '' || transfer.tokenInfo.symbol"
-                                            :to="`/token/${transfer.contract}`"
-                                            class="text-textPrimary text-ellipses"
-                                        >
-                                            <p v-if="transfer.tokenInfo.name" class="text-ellipses">{{ transfer.tokenInfo.name }}</p>
-                                            <p v-else class="text-uppercase caption text-ellipses">{{ transfer.tokenInfo.symbol }}</p>
-                                        </router-link>
-                                        <p v-if="props.isOverview" class="text-info pt-1 text-ellipses">
-                                            {{ transfer.tokenInfo.symbol }}
-                                        </p>
-                                    </div>
-                                </v-row>
-                            </v-col>
-                            <v-col v-if="!props.isOverview" cols="1" class="text-info py-0 text-ellipses">
-                                {{ transfer.tokenInfo.symbol }}
-                            </v-col>
-                            <v-col :cols="props.isOverview ? 3 : 2" class="py-0">
-                                <v-row class="ma-0" align="center">
-                                    <p>
-                                        {{ getAmount(transfer).value }}
-                                    </p>
-                                </v-row>
-                                <p v-if="props.isOverview" class="text-info">
-                                    {{ timeAgo(new Date(transfer.transfer.timestamp * 1e3)) }}
-                                </p>
-                            </v-col>
-                            <v-col :cols="props.isOverview ? 2 : 1" class="py-0">
-                                <app-chip
-                                    :bg="transferType(transfer) === 'in' ? 'success' : 'orange'"
-                                    :text="transferType(transfer) === 'in' ? 'From' : 'To'"
-                                />
-                            </v-col>
-                            <v-col :cols="props.isOverview ? 4 : 2" class="text-secondary py-0">
-                                <div class="d-flex align-center">
-                                    <app-address-blockie :address="eth.toCheckSum(transferTypeAddress(transfer)) || ''" :size="6" class="mr-5" />
-                                    <app-transform-hash
-                                        is-blue
-                                        is-short
-                                        :hash="eth.toCheckSum(transferTypeAddress(transfer))"
-                                        :link="`/address/${eth.toCheckSum(transferTypeAddress(transfer))}`"
-                                    />
-                                </div>
-                            </v-col>
-                            <v-col v-if="!props.isOverview" cols="2" class="text-secondary py-0">
-                                <app-transform-hash
-                                    is-blue
-                                    is-short
-                                    :hash="eth.toCheckSum(transfer.transfer.transactionHash)"
-                                    :link="`/tx/${eth.toCheckSum(transfer.transfer.transactionHash)}`"
-                                />
-                            </v-col>
-                            <v-col v-if="!props.isOverview" cols="1" class="text-info py-0">
-                                {{ timeAgo(new Date(transfer.transfer.timestamp * 1e3)) }}
-                            </v-col>
-                            <v-col v-if="!props.isOverview" cols="1" class="py-0 text-right">
-                                <app-btn-icon
-                                    :icon="getDropdownIcon(transfer.transfer.transactionHash)"
-                                    @click="toggleMoreDetails(transfer.transfer.transactionHash)"
-                                ></app-btn-icon>
-                            </v-col>
-                        </v-row>
-                        <v-row v-if="visibleDetails.has(transfer.transfer.transactionHash)">
-                            <v-col md="3" class="text-right text-body-1 font-weight-bold text-info">Balance Before</v-col>
-                            <v-col md="9" class="text-subtitle-2">{{ getTransferBalanceBefore(transfer).value }} {{ transfer.tokenInfo.symbol }}</v-col>
-                            <v-col md="3" class="text-right text-body-1 font-weight-bold text-info">Balance After</v-col>
-                            <v-col md="9" class="text-subtitle-2">{{ getTransferBalanceAfter(transfer).value }} {{ transfer.tokenInfo.symbol }}</v-col>
-                        </v-row>
-                    </template>
-                    <!--
-                           ========================
-                             Mobile/Tablet View
-                           =========================
-                    -->
-                    <template v-else>
-                        <v-row class="my-5 text-subtitle-2 font-weight-regular" @click="toggleMoreDetails(transfer.transfer.transactionHash)">
-                            <v-col cols="6" class="pb-2">
-                                <div class="d-flex align-center flex-nowrap">
-                                    <div class="mobile-chip rounded-circle mr-2" :class="transferType(transfer) ? 'bg-success' : 'bg-orange'">
-                                        <v-icon size="18">
-                                            {{ transferType(transfer) === 'in' ? 'south_east' : 'north_west' }}
-                                        </v-icon>
-                                    </div>
-                                    <span>
-                                        {{ transferType(transfer) === 'in' ? 'Received' : 'Sent' }}
-                                    </span>
-                                </div>
-                            </v-col>
-                            <v-col cols="6" class="pb-2">
-                                <div class="d-flex align-center">
-                                    <img
-                                        :src="getImg(transfer.contract) || require('@/assets/icon-token.png')"
-                                        alt=""
-                                        height="24"
-                                        width="24"
-                                        class="mr-2 rounded-circle"
-                                    />
-                                    <span> {{ getAmount(transfer).value }} {{ transfer.tokenInfo.symbol }} </span>
-                                </div>
-                            </v-col>
-                            <v-col cols="6" class="py-0 text-info">
-                                {{ timeAgo(new Date(transfer.transfer.timestamp * 1e3)) }} {{ transferType(transfer) === 'in' ? 'from' : 'to' }}
-                            </v-col>
-                            <v-col cols="6" class="py-0 text-secondary">
-                                <div class="d-flex align-center">
-                                    <app-address-blockie :address="eth.toCheckSum(transferTypeAddress(transfer)) || ''" :size="6" class="mr-2" />
-                                    <app-transform-hash
-                                        is-blue
-                                        is-short
-                                        :hash="eth.toCheckSum(transferTypeAddress(transfer))"
-                                        :link="`/address/${eth.toCheckSum(transferTypeAddress(transfer))}`"
-                                    />
-                                </div>
-                            </v-col>
-                        </v-row>
-                        <div v-if="visibleDetails.has(transfer.transfer.transactionHash)" class="pb-5 text-subtitle-2 font-weight-regular">
-                            <div>
-                                <p class="text-info mb-1">Hash</p>
-                                <app-transform-hash
-                                    is-blue
-                                    is-short
-                                    :hash="eth.toCheckSum(transfer.transfer.transactionHash)"
-                                    :link="`/tx/${eth.toCheckSum(transfer.transfer.transactionHash)}`"
-                                />
-                            </div>
-                            <v-divider class="my-5 mx-n4 mx-sm-n6" />
-                            <v-row justify="space-between" class="my-5 mx-0">
-                                <p class="text-info">Balance Before</p>
-                                <p>{{ getTransferBalanceBefore(transfer).value }} {{ transfer.tokenInfo.symbol }}</p>
-                            </v-row>
-                            <v-row justify="space-between" class="my-5 mx-0">
-                                <p class="text-info">Tx Fee Paid</p>
-                                <p class="text-error">-{{ getTxFee(transfer).value }} {{ getTxFee(transfer).unit.toUpperCase() }}</p>
-                            </v-row>
-                            <v-row justify="space-between" class="my-5 mx-0">
-                                <p class="text-info">Balance After</p>
-                                <p>{{ getTransferBalanceAfter(transfer).value }} {{ transfer.tokenInfo.symbol }}</p>
-                            </v-row>
-                        </div>
-                    </template>
-                    <div v-if="visibleDetails.has(transfer.transfer.transactionHash)" class="row-bg bg-tableGrey"></div>
+                <div v-for="(transfer, index) in transfers" :key="`${transfer.transfer.transactionHash} - ${index}`">
+                    <address-token-transfers-row
+                        :transfer="transfer"
+                        :index="index"
+                        :token-img="tokenImg"
+                        :is-overview="props.isOverview"
+                        :address-hash="props.addressHash"
+                    />
                 </div>
                 <app-intersect v-if="!props.isOverview && hasMore" @intersect="loadMoreData">
                     <div class="skeleton-box rounded-xl mt-1 my-4" style="height: 24px"></div>
@@ -213,37 +62,29 @@
 </template>
 
 <script setup lang="ts">
-import { computed, reactive, ref } from 'vue'
-import AppPaginateHasMore from '@core/components/AppPaginateHasMore.vue'
-import AppTooltip from '@core/components/AppTooltip.vue'
-import AppTransformHash from '@core/components/AppTransformHash.vue'
+import { computed, reactive } from 'vue'
 import AppNewUpdate from '@core/components/AppNewUpdate.vue'
-import AppChip from '@core/components/AppChip.vue'
 import AppBtn from '@core/components/AppBtn.vue'
 import AppBtnIcon from '@core/components/AppBtnIcon.vue'
 import AddressBalanceTotals from './components/AddressBalanceTotals.vue'
-import AppAddressBlockie from '@core/components/AppAddressBlockie.vue'
 import AppIntersect from '@core/components/AppIntersect.vue'
+import AddressTokenTransfersRow from './components/TableRowAddressTokenTransfers.vue'
 import { MarketDataFragment as TokenMarketData } from '@core/composables/CoinData/getLatestPrices.generated'
 import { useCoinData } from '@core/composables/CoinData/coinData.composable'
 import { TOKEN_FILTER_VALUES } from '@module/address/models/TokenSort'
-import { formatFloatingPointValue, formatNonVariableEthValue, FormattedNumber } from '@core/helper/number-format-helper'
-const { getEthereumTokensMap } = useCoinData()
 import { useDisplay } from 'vuetify'
 import { TransferFragmentFragment as Transfer, useGetAddressErc20TransfersQuery } from './apollo/AddressTransfers/transfers.generated'
-import { eth, timeAgo } from '@core/helper'
-import BN from 'bignumber.js'
 import { AddressEventType } from '@/apollo/types'
 import { useAddressToken } from '@core/composables/AddressTokens/addressTokens.composable'
 import { useRouter } from 'vue-router'
 import { ADDRESS_ROUTE_QUERY, ROUTE_NAME } from '@core/router/routesNames'
+const { getEthereumTokensMap } = useCoinData()
 
 const MAX_ITEMS = 10
 const OVERVIEW_MAX_ITEMS = 6
 const MOBILE_MAX_ITEMS = 4
-const TYPES = ['in', 'out', 'self']
 
-const { smAndDown, mdAndDown } = useDisplay()
+const { mdAndDown } = useDisplay()
 const props = defineProps({
     addressHash: {
         type: String,
@@ -335,94 +176,6 @@ const tokenImg = computed<Map<string, TokenMarketData> | false>(() => {
     }
     return false
 })
-
-/**
- * Fetches image for the contract
- * @param contract {String}
- * @returns {TokenMarketData} or {undefined}
- */
-const getImg = (contract: string): string | undefined => {
-    if (!loadingTransfers.value && tokenImg.value && tokenImg.value.has(contract)) {
-        const token = tokenImg.value.get(contract)
-        return token?.image
-    }
-    return undefined
-}
-
-const transferType = (transfer: Transfer): string => {
-    const from = transfer.transfer.from.toLowerCase()
-    const to = transfer.transfer.to.toLowerCase()
-    const addr = props.addressHash.toLowerCase()
-
-    if (addr === from && addr === to) {
-        return TYPES[2]
-    } else if (addr === from) {
-        return TYPES[1]
-    }
-    return TYPES[0]
-}
-
-const transferTypeAddress = (transfer: Transfer): string => {
-    switch (transferType(transfer)) {
-        case TYPES[0]:
-            return transfer.transfer.from
-        case TYPES[1]:
-            return transfer.transfer.to
-        default:
-            return props.addressHash
-    }
-}
-
-const getValue = (transfer: Transfer): BN => {
-    let n = new BN(transfer.value)
-    if (transfer.tokenInfo.decimals) {
-        n = n.div(new BN(10).pow(transfer.tokenInfo.decimals))
-    }
-    return n
-}
-
-const getTransferBalanceBefore = (transfer: Transfer): FormattedNumber => {
-    const type = transferTypeAddress(transfer)
-    if (!transfer.stateDiff) {
-        return { value: '0' }
-    }
-    if (type === TYPES[0] && transfer.stateDiff.to) {
-        return formatNonVariableEthValue(new BN(transfer.stateDiff.to.before))
-    }
-    return formatNonVariableEthValue(new BN(transfer.stateDiff.to.before))
-}
-
-const getTransferBalanceAfter = (transfer: Transfer): FormattedNumber => {
-    const type = transferTypeAddress(transfer)
-    if (!transfer.stateDiff) {
-        return { value: '0' }
-    }
-    if (type === TYPES[0] && transfer.stateDiff.to) {
-        return formatNonVariableEthValue(new BN(transfer.stateDiff.to.after))
-    }
-    return formatNonVariableEthValue(new BN(transfer.stateDiff.to.after))
-}
-
-const getTxFee = (transfer: Transfer) => {
-    return formatNonVariableEthValue(new BN(transfer.transfer.txFee))
-}
-
-const getAmount = (transfer: Transfer) => {
-    return formatFloatingPointValue(getValue(transfer))
-}
-
-const visibleDetails = ref(new Set())
-const toggleMoreDetails = (transfer: string): void => {
-    if (visibleDetails.value.has(transfer)) {
-        visibleDetails.value.delete(transfer)
-    } else {
-        visibleDetails.value.add(transfer)
-    }
-}
-
-const getDropdownIcon = (transfer: string): string => {
-    return visibleDetails.value.has(transfer) ? 'expand_less' : 'expand_more'
-}
 
 const setPage = (page: number, reset = false) => {
     if (reset) {

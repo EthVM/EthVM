@@ -25,7 +25,6 @@ import ModuleAddressNftTransfers from '@module/address/ModuleAddressNftTransfers
 import { useAppViewGrid } from '@core/composables/AppViewGrid/AppViewGrid.composable'
 import { ADDRESS_ROUTE_QUERY } from '@core/router/routesNames'
 import { onMounted, reactive } from 'vue'
-import { useAddressUpdate } from '@core/composables/AddressUpdate/addressUpdate.composable'
 import { onBeforeRouteUpdate, useRoute, useRouter } from 'vue-router'
 const { columnPadding, rowMargin } = useAppViewGrid()
 const props = defineProps({
