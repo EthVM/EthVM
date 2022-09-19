@@ -13,7 +13,7 @@
                 <v-col sm="3" lg="2" class="d-none d-sm-block"> From </v-col>
                 <v-spacer v-if="lgAndUp" />
                 <v-col sm="3" lg="2" class="d-none d-sm-block"> To </v-col>
-                <v-col sm="3" :md="isERC721 ? 1 : 2" lg="3">
+                <v-col sm="3" :md="isERC721 ? 1 : 2" :lg="isERC721 ? 1 : 3">
                     <template v-if="!isERC721">Amount</template>
                     <template v-else>ID</template>
                 </v-col>

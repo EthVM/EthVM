@@ -23,6 +23,7 @@ export type AddressEvent = {
 export enum AddressEventType {
     NewErc20Transfer = 'NEW_ERC20_TRANSFER',
     NewErc721Transfer = 'NEW_ERC721_TRANSFER',
+    NewErc1155Transfer = 'NEW_ERC1155_TRANSFER',
     NewEthTransfer = 'NEW_ETH_TRANSFER',
     NewMinedBlock = 'NEW_MINED_BLOCK',
     NewMinedUncle = 'NEW_MINED_UNCLE'
@@ -38,9 +39,10 @@ export type AllTransfer = {
     __typename?: 'AllTransfer'
     contract?: Maybe<Scalars['String']>
     stateDiff?: Maybe<StateDiffChange>
+    tokenId?: Maybe<Scalars['String']>
     tokenInfo?: Maybe<EthTokenInfo>
     transfer: Transfer
-    value: Scalars['String']
+    value?: Maybe<Scalars['String']>
 }
 
 export type AllTransfers = {
@@ -154,6 +156,7 @@ export type Erc721TokenOwner = {
     __typename?: 'ERC721TokenOwner'
     owner: Scalars['String']
     token: Scalars['String']
+    tokenId: Scalars['String']
     tokenInfo: EthTokenInfo
 }
 
@@ -167,6 +170,7 @@ export type Erc721Transfer = {
     __typename?: 'ERC721Transfer'
     contract: Scalars['String']
     token: Scalars['String']
+    tokenId: Scalars['String']
     tokenInfo: EthTokenInfo
     transfer: Transfer
 }
@@ -175,6 +179,34 @@ export type Erc721Transfers = {
     __typename?: 'ERC721Transfers'
     nextKey?: Maybe<Scalars['String']>
     transfers: Array<Maybe<Erc721Transfer>>
+}
+
+export type Erc1155TokenBalance = {
+    __typename?: 'ERC1155TokenBalance'
+    balance: Scalars['String']
+    owner: Scalars['String']
+    tokenInfo: EthTokenInfo
+}
+
+export type Erc1155TokenOwners = {
+    __typename?: 'ERC1155TokenOwners'
+    nextKey?: Maybe<Scalars['String']>
+    owners: Array<Maybe<Erc1155TokenBalance>>
+}
+
+export type Erc1155Transfer = {
+    __typename?: 'ERC1155Transfer'
+    contract: Scalars['String']
+    tokenId: Scalars['String']
+    tokenInfo: EthTokenInfo
+    transfer: Transfer
+    value: Scalars['String']
+}
+
+export type Erc1155Transfers = {
+    __typename?: 'ERC1155Transfers'
+    nextKey?: Maybe<Scalars['String']>
+    transfers: Array<Maybe<Erc1155Transfer>>
 }
 
 export type EthTransfers = {
@@ -201,6 +233,7 @@ export type EthTokenInfo = {
     decimals?: Maybe<Scalars['Int']>
     name?: Maybe<Scalars['String']>
     symbol?: Maybe<Scalars['String']>
+    tokenId?: Maybe<Scalars['String']>
     totalSupply?: Maybe<Scalars['String']>
 }
 
@@ -235,7 +268,6 @@ export type Log = {
     __typename?: 'Log'
     address: Scalars['String']
     data: Scalars['String']
-    id?: Maybe<Scalars['String']>
     logIndex: Scalars['Int']
     removed: Scalars['Boolean']
     topics: Array<Scalars['String']>
@@ -244,11 +276,6 @@ export type Log = {
 
 export type Mutation = {
     __typename?: 'Mutation'
-    /**
-     * ------------------------------------------------
-     * Contracts:
-     * ------------------------------------------------
-     */
     verifyContract: ContractVerify
 }
 
@@ -293,51 +320,30 @@ export type Query = {
     getAllTransfers: AllTransfers
     getBlockByHash: Block
     getBlockByNumber: Block
-    /**
-     * ------------------------------------------------
-     * Transfers:
-     * ------------------------------------------------
-     */
     getBlockRewards: EthTransfers
     getBlockTransfers: EthTransfers
     getBlocksArrayByNumber: Array<Maybe<BlockSummary>>
-    /**
-     * ------------------------------------------------
-     * Contracts:
-     * ------------------------------------------------
-     */
     getContractMeta: ContractMeta
     getERC20TokenBalance: Erc20TokenBalance
     /** Returns a list of all addresses that own an ERC20Token */
     getERC20TokenOwners: Erc20TokenOwners
     getERC20TokenTransfers: Erc20Transfers
     getERC20Transfers: Erc20Transfers
-    /**
-     * ------------------------------------------------
-     * ERC721
-     * ------------------------------------------------
-     */
     getERC721TokenBalance: Erc721TokenBalance
     /** Returns a list of all addresses that own an ERC721Token */
     getERC721TokenOwners: Erc721TokenOwners
     getERC721TokenTransfers: Erc721Transfers
     getERC721Transfers: Erc721Transfers
-    /**
-     * ------------------------------------------------
-     * ETH:
-     * ------------------------------------------------
-     */
+    getERC1155TokenTransfers: Erc1155Transfers
+    getERC1155Transfers: Erc1155Transfers
     getEthBalance: EthOwner
     getEthOwners: EthOwners
     getEthSigs: Array<Maybe<Scalars['String']>>
     getEthTransfers: EthTransfers
+    getEthTransfersByHash: EthTransfers
+    getEthTransfersBySubtype: EthTransfers
     getEthTransfersV2: EthTransfers
     getGenesisRewards: EthTransfers
-    /**
-     * ------------------------------------------------
-     * Helpers:
-     * ------------------------------------------------
-     */
     getHashType: HashType
     getLatestBlockInfo: LatestBlockData
     getLatestPrices: Array<Maybe<TokenMarketInfo>>
@@ -348,6 +354,7 @@ export type Query = {
     getOwnersERC721Balances: Array<Maybe<Erc721TokenBalance>>
     /** Returns a list of all ERC721 Tokens owned by an address */
     getOwnersERC721Tokens: Erc721TokenContract
+    getOwnersERC721TokensV2: Erc721TokenContract
     getPendingTransactions: Array<Maybe<Tx>>
     getTimeseriesData: TimeseriesResponse
     getTimestamp: Scalars['String']
@@ -357,11 +364,6 @@ export type Query = {
     getTransactionByHash: Tx
     getTransactionByHashWithTraces: Tx
     getTransactionStateDiff: Array<Maybe<TxStateDiff>>
-    /**
-     * ------------------------------------------------
-     * Transaction:
-     * ------------------------------------------------
-     */
     getTransactionsByHashes: Array<Maybe<Tx>>
     getUncleByHash: Uncle
     getUncleRewards: EthTransfers
@@ -376,7 +378,6 @@ export type QueryGetAllTransfersArgs = {
     limit?: InputMaybe<Scalars['Int']>
     nextKey?: InputMaybe<Scalars['String']>
     owner: Scalars['String']
-    types?: InputMaybe<Array<InputMaybe<TransferType>>>
 }
 
 export type QueryGetBlockByHashArgs = {
@@ -452,6 +453,18 @@ export type QueryGetErc721TransfersArgs = {
     owner: Scalars['String']
 }
 
+export type QueryGetErc1155TokenTransfersArgs = {
+    contract: Scalars['String']
+    limit?: InputMaybe<Scalars['Int']>
+    nextKey?: InputMaybe<Scalars['String']>
+}
+
+export type QueryGetErc1155TransfersArgs = {
+    limit?: InputMaybe<Scalars['Int']>
+    nextKey?: InputMaybe<Scalars['String']>
+    owner: Scalars['String']
+}
+
 export type QueryGetEthBalanceArgs = {
     owner: Scalars['String']
 }
@@ -471,8 +484,22 @@ export type QueryGetEthTransfersArgs = {
     owner: Scalars['String']
 }
 
+export type QueryGetEthTransfersByHashArgs = {
+    hash: Scalars['String']
+    limit?: InputMaybe<Scalars['Int']>
+    nextKey?: InputMaybe<Scalars['String']>
+    owner: Scalars['String']
+}
+
+export type QueryGetEthTransfersBySubtypeArgs = {
+    limit?: InputMaybe<Scalars['Int']>
+    nextKey?: InputMaybe<Scalars['String']>
+    owner: Scalars['String']
+    subtype: TransferSubtype
+}
+
 export type QueryGetEthTransfersV2Args = {
-    filter?: InputMaybe<TransferFilter>
+    direction?: InputMaybe<TransferDirection>
     limit?: InputMaybe<Scalars['Int']>
     nextKey?: InputMaybe<Scalars['String']>
     owner?: InputMaybe<Scalars['String']>
@@ -503,6 +530,13 @@ export type QueryGetOwnersErc721BalancesArgs = {
 
 export type QueryGetOwnersErc721TokensArgs = {
     contract?: InputMaybe<Scalars['String']>
+    nextKey?: InputMaybe<Scalars['String']>
+    owner: Scalars['String']
+}
+
+export type QueryGetOwnersErc721TokensV2Args = {
+    contract?: InputMaybe<Scalars['String']>
+    limit?: InputMaybe<Scalars['Int']>
     nextKey?: InputMaybe<Scalars['String']>
     owner: Scalars['String']
 }
@@ -765,14 +799,22 @@ export type TransferComplete = {
     type: TransferType
 }
 
-export enum TransferFilter {
-    From = 'FROM',
-    To = 'TO'
+export enum TransferDirection {
+    Incoming = 'INCOMING',
+    Outgoing = 'OUTGOING'
+}
+
+export enum TransferSubtype {
+    BlockReward = 'BLOCK_REWARD',
+    DaoHardFork = 'DAO_HARD_FORK',
+    Genesis = 'GENESIS',
+    UncleReward = 'UNCLE_REWARD'
 }
 
 export enum TransferType {
     Erc20 = 'ERC20',
     Erc721 = 'ERC721',
+    Erc1155 = 'ERC1155',
     Eth = 'ETH'
 }
 

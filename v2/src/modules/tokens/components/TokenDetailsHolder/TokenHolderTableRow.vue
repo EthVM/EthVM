@@ -7,7 +7,7 @@
     -->
         <v-row class="my-5 px-0 text-subtitle-2 font-weight-regular d-none d-sm-flex" align="center">
             <!-- Column 1: Holders Address -->
-            <v-col sm="3">
+            <v-col :sm="!isERC721 ? 3 : 4">
                 <div class="d-flex align-center">
                     <app-address-blockie :address="props.holder.owner || ''" :size="8" class="mr-1 mr-sm-2" />
                     <app-transform-hash is-blue is-short :hash="eth.toCheckSum(props.holder.owner)" :link="holderLink" />
@@ -30,7 +30,7 @@
             <!-- End Column 3 -->
 
             <!-- Column 3: Token Image (ERC721) -->
-            <v-col v-if="isERC721" sm="3" md="3">
+            <v-col v-if="isERC721" sm="3" md="2">
                 <v-img :src="image" align="center" justify="end" max-height="50px" max-width="50px" contain @error="onImageLoadFail" />
             </v-col>
             <!-- End Column 3 -->
@@ -40,12 +40,6 @@
                 <p class="mb-0 ml-2">{{ share.value }}%</p>
             </v-col>
             <!-- End Column 4 -->
-
-            <!-- Column 3: Token Image (ERC721) -->
-            <v-col v-if="isERC721" sm="3" md="2">
-                <v-img :src="image" align="center" justify="end" max-height="50px" max-width="50px" contain @error="onImageLoadFail" />
-            </v-col>
-            <!-- End Column 3 -->
         </v-row>
         <v-row class="d-sm-none my-5">
             <v-col cols="6">
@@ -133,7 +127,7 @@ const isERC721 = computed<boolean>(() => {
 })
 
 const getTokenID = computed<string>(() => {
-    return new BN(props.holder['token']).toString()
+    return new BN(props.holder['tokenId']).toString()
 })
 
 const usdValue = computed(() => {

@@ -41,7 +41,7 @@
             </v-col>
             <!-- End Column 4 -->
             <!-- Column 5: Quantity/ID -->
-            <v-col :md="isERC721 ? 1 : 2" lg="3">
+            <v-col :md="isERC721 ? 1 : 2" :lg="isERC721 ? 1 : 3">
                 <p class="text-truncate">
                     <span v-if="isERC721">{{ getTokenID }}</span>
                     <span v-else>{{ transferValue.value }} {{ symbolFormatted }} </span>
@@ -169,7 +169,7 @@ const isERC721 = computed<boolean>(() => {
 })
 
 const getTokenID = computed<string>(() => {
-    return new BN(props.transfer['token']).toString()
+    return new BN(props.transfer['tokenId']).toString()
 })
 
 /*

@@ -16,8 +16,8 @@ fragment BalanceFragment on BalanceDiff {
     after
 }
 
-query getAddressEthTransfers($hash: String, $filter: TransferFilter, $_limit: Int, $_nextKey: String) {
-    getEthTransfersV2(owner: $hash, filter: $filter, limit: $_limit, nextKey: $_nextKey) {
+query getAddressEthTransfers($hash: String, $filter: TransferDirection, $_limit: Int, $_nextKey: String) {
+    getEthTransfersV2(owner: $hash, direction: $filter, limit: $_limit, nextKey: $_nextKey) {
         transfers {
             transfer {
                 ...TransferSummary
@@ -70,7 +70,7 @@ fragment Erc721TransferFragment on ERC721Transfer {
     transfer {
         ...TransferSummary
     }
-    token
+    tokenId
     contract
     tokenInfo {
         name
