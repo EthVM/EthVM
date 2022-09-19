@@ -5,44 +5,45 @@
               TABLE HEADER
             =====================================================================================
         -->
-        <v-row v-if="!smAndDown" align="center" justify="start" class="text-body-1 text-info">
+        <v-row v-if="!xs" align="center" justify="start" class="text-body-1 text-info">
             <v-col sm="2"> Block # </v-col>
             <v-col sm="2"> Timestamp </v-col>
             <v-col sm="2"> Transactions </v-col>
             <v-col sm="3"> Miner </v-col>
             <v-col sm="3"> Reward </v-col>
         </v-row>
-        <v-divider class="my-0 mt-md-4 mx-n4 mx-sm-n6" />
+        <v-divider v-if="!xs" class="my-0 mt-md-4 mx-n4 mx-sm-n6" />
         <!--
             =====================================================================================
               TABLE BODY
             =====================================================================================
         -->
-        <v-container fluid v-if="!hasMessage" flat class="pt-2 pr-2 pl-2 pb-0">
-            <v-row class="mb-1">
-                <v-col>
-                    <template v-if="!props.isLoading">
-                        <div v-for="(block, index) in props.blockData" :key="index">
-                            <table-blocks-row :block="block" :page-type="props.pageType" />
-                        </div>
-                    </template>
-                    <div v-if="props.isLoading">
-                        <div v-for="i in props.maxItems" :key="i">
-                            <div class="skeleton-box rounded-xl mt-1 my-4" style="height: 24px"></div>
-                        </div>
-                    </div>
-                </v-col>
-            </v-row>
-        </v-container>
+        <div v-if="!hasMessage">
+            <template v-if="!props.isLoading">
+                <div v-for="(block, index) in props.blockData" :key="index">
+                    <table-blocks-row :block="block" :page-type="props.pageType" />
+                </div>
+            </template>
+            <div v-if="props.isLoading">
+                <div v-for="i in props.maxItems" :key="i">
+                    <div class="skeleton-box rounded-xl mt-1 my-4" style="height: 24px"></div>
+                </div>
+            </div>
+            <app-intersect v-if="props.showIntersect" @intersect="$emit('loadMore')">
+                <div class="skeleton-box rounded-xl mt-1 my-4" style="height: 24px"></div>
+                <v-divider />
+            </app-intersect>
+        </div>
     </div>
 </template>
 
 <script setup lang="ts">
 import TableBlocksRow from '@/modules/block/components/RecentBlocks/BlocksTableRow.vue'
+import AppIntersect from '@core/components/AppIntersect.vue'
 import { useDisplay } from 'vuetify/lib/framework.mjs'
 import { computed } from 'vue'
 
-const { smAndDown } = useDisplay()
+const { xs } = useDisplay()
 
 const props = defineProps({
     blockData: Array,
@@ -58,6 +59,10 @@ const props = defineProps({
         default: 'home'
     },
     isScrollView: {
+        type: Boolean,
+        default: false
+    },
+    showIntersect: {
         type: Boolean,
         default: false
     }

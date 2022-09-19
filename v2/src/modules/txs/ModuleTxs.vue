@@ -1,40 +1,43 @@
 <template>
     <v-card :variant="isHome ? 'elevated' : 'flat'" :elevation="isHome ? 1 : 0" rounded="xl" class="pa-4 pa-sm-6">
-        <app-table-title :title="getTitle" :has-pagination="showPagination" :page-type="props.pageType" page-link="/txs">
-            <template v-if="!isHome && !isBlock" #update>
-                <app-new-update text="New Txs" :update-count="state.newMinedTransfers" :hide-count="true" @reload="setPage(0, true)" />
-            </template>
-            <template v-if="showPagination" #pagination>
-                <app-paginate v-if="isBlock" :total="totalPages" :current-page="state.index" @newPage="setPage" />
-                <app-paginate-has-more v-else :has-more="hasMore" :current-page="state.index" :loading="loading" @newPage="setPage" />
-            </template>
-        </app-table-title>
+        <v-card-title class="px-0 mb-5 d-flex align-center justify-space-between">
+            <div class="d-flex align-center">
+                <h1 class="text-h6 font-weight-bold">{{ tableTitle }}</h1>
+                <app-new-update v-if="!isHome" icon-only text="New Txs" :update-count="state.newMinedTransfers" @reload="setPage(0, true)" />
+            </div>
+            <app-btn v-if="isHome" text="More" isSmall icon="east" @click="goToTransactionsPage"></app-btn>
+        </v-card-title>
         <txs-table
+            :class="isHome && !smAndDown ? 'pt-13' : null"
             :max-items="props.maxItems"
             :index="state.index"
-            :is-loading="loading"
+            :is-loading="state.initialLoad"
             :table-message="message"
             :txs-data="transactions"
             :is-scroll-view="isHome"
+            :show-intersect="showPagination"
+            :is-block="isBlock"
+            @loadMore="loadMoreData"
         />
     </v-card>
 </template>
 
 <script setup lang="ts">
-import AppTableTitle from '@core/components/AppTableTitle.vue'
+import AppBtn from '@core/components/AppBtn.vue'
 import AppNewUpdate from '@core/components/AppNewUpdate.vue'
-import AppPaginateHasMore from '@core/components/AppPaginateHasMore.vue'
-import AppPaginate from '@core/components/AppPaginate.vue'
 import {
     useGetAllTxsQuery,
     useNewTransfersCompleteFeedSubscription,
     useGetBlockTransfersQuery,
-    TxSummaryFragment,
+    TransferFragment,
     EthTransfersFragment
 } from './apollo/transfersQuery.generated'
 import { computed, onMounted, reactive, watch } from 'vue'
 import TxsTable from '@module/txs/components/TxsTable.vue'
 import BN from 'bignumber.js'
+import { useDisplay } from 'vuetify'
+import { Q_BLOCKS_AND_TXS, ROUTE_NAME } from '@core/router/routesNames'
+import { useRouter } from 'vue-router'
 
 interface ModuleState {
     initialLoad: boolean
@@ -67,12 +70,14 @@ const props = defineProps({
     }
 })
 
+const { smAndDown } = useDisplay()
+
 /*
  * =======================================================
  * COMPUTED
  * =======================================================
  */
-const transactions = computed(() => {
+const transactions = computed<Array<TransferFragment | null>>(() => {
     if (!isBlock.value && allEthTransfers.value && allEthTransfers.value.transfers !== null) {
         return allEthTransfers.value.transfers
     }
@@ -84,7 +89,7 @@ const transactions = computed(() => {
 
 const totalPages = computed<number>(() => {
     if (isBlock.value) {
-        return Math.ceil(new BN(transactions.value.length).div(props.maxItems).toNumber())
+        return Math.ceil(new BN(transactions.value.length).div(props.maxItems || 10).toNumber())
     }
     return 0
 })
@@ -93,7 +98,7 @@ const message = computed<string>(() => {
     return ''
 })
 
-const getTitle = computed<string>(() => {
+const tableTitle = computed<string>(() => {
     return isBlock.value ? 'Block Transactions' : 'Last Transactions'
 })
 
@@ -181,7 +186,7 @@ const allEthTransfers = computed<EthTransfersFragment | undefined>(() => {
     return getAllEthTransfers.value?.getAllEthTransfers
 })
 
-const allBlockTransfersResult = computed<TxSummaryFragment | undefined>(() => {
+const allBlockTransfersResult = computed<EthTransfersFragment | undefined>(() => {
     return getAllBlockTransfersResult.value?.getBlockTransfers
 })
 
@@ -248,6 +253,18 @@ const setPage = async (page: number, reset = false): Promise<boolean> => {
 
     state.index = page
     return true
+}
+
+const router = useRouter()
+const goToTransactionsPage = async (): Promise<void> => {
+    await router.push({
+        name: ROUTE_NAME.ALL_BLOCKS_AND_TXS.NAME,
+        query: { t: Q_BLOCKS_AND_TXS[1] }
+    })
+}
+
+const loadMoreData = () => {
+    setPage(state.index + 1)
 }
 
 onMounted(() => {

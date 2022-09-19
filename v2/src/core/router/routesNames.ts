@@ -22,7 +22,7 @@ const ROUTE_NAME: Route = {
         PATH: '/blocks',
         NAME: 'blocks'
     },
-    ALL_BLOCKS: {
+    ALL_BLOCKS_AND_TXS: {
         PATH: '/eth',
         NAME: 'allBlocks'
     },
@@ -118,8 +118,8 @@ const ADDRESS_ROUTE_QUERY = {
     Q_MINER: ['blocks', 'uncles']
 }
 
-const TOKEN_DETAILS = ['transfers', 'holders']
+const Q_TOKEN_DETAILS = ['transfers', 'holders']
 
-const ALL_BLOCKS_TAB = ['blocks', 'transactions']
+const Q_BLOCKS_AND_TXS = ['blocks', 'transactions']
 
-export { ROUTE_NAME, ROUTE_PROP, ADDRESS_ROUTE_QUERY, TOKEN_DETAILS, ALL_BLOCKS_TAB }
+export { ROUTE_NAME, ROUTE_PROP, ADDRESS_ROUTE_QUERY, Q_TOKEN_DETAILS, Q_BLOCKS_AND_TXS }

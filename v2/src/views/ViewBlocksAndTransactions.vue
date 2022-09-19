@@ -26,14 +26,21 @@
 import BlockStatsModule from '@module/block/ModuleBlockStats.vue'
 import ModuleTxs from '@module/txs/ModuleTxs.vue'
 import RecentBlocks from '@module/block/ModuleRecentBlocks.vue'
-import { reactive } from 'vue'
+import { onMounted, reactive } from 'vue'
 import { useAppViewGrid } from '@core/composables/AppViewGrid/AppViewGrid.composable'
-import { ALL_BLOCKS_TAB } from '@core/router/routesNames'
+import { Q_BLOCKS_AND_TXS } from '@core/router/routesNames'
 import { useRoute, useRouter } from 'vue-router'
 
 const { columnPadding, rowMargin } = useAppViewGrid()
 
-const routes = ALL_BLOCKS_TAB
+const routes = Q_BLOCKS_AND_TXS
+
+const props = defineProps({
+    tab: {
+        type: String,
+        required: true
+    }
+})
 
 const state = reactive({
     tab: routes[0]
@@ -51,4 +58,8 @@ const changeRoute = () => {
         })
     }
 }
+
+onMounted(() => {
+    state.tab = props.tab
+})
 </script>
