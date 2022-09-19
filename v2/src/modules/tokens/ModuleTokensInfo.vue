@@ -1,167 +1,143 @@
 <template>
-    <v-card variant="flat">
-        <app-table-title title="Tokens" title-caption="Top 200 tokens" :has-pagination="!smAndDown" page-type="">
-            <template #pagination>
-                <app-paginate v-if="totalPages > 1" :total="totalPages" :current-page="state.index" class="pb-2" @newPage="setPage" />
-            </template>
-        </app-table-title>
-        <v-container fluid>
-            <v-card color="info" variant="flat" min-height="40">
-                <v-row align="center" justify="start" class="ma-0">
-                    <v-col cols="4">
-                        <v-row align="center" class="ma-0">
-                            <h5 class="pl-5 pr-2">Token</h5>
-                            <app-btn-icon
-                                v-if="state.sortDirection === 'asc'"
-                                class="sort"
-                                :class="{ 'sort--active': state.sortKey === KEY_SYMBOL }"
-                                icon="arrow_upward"
-                                @click="sortTokens(KEY_SYMBOL, 'desc')"
-                            />
-                            <app-btn-icon
-                                v-if="state.sortDirection === 'desc'"
-                                class="sort"
-                                :class="{ 'sort--active': state.sortKey === KEY_SYMBOL }"
-                                icon="arrow_downward"
-                                @click="sortTokens(KEY_SYMBOL, 'asc')"
-                            />
-                        </v-row>
-                    </v-col>
-                    <v-col cols="2">
-                        <v-row align="center" class="ma-0">
-                            <h5 class="pl-5 pr-2">Price</h5>
-                            <app-btn-icon
-                                v-if="state.sortDirection === 'asc'"
-                                class="sort"
-                                :class="{ 'sort--active': state.sortKey === KEY_PRICE }"
-                                icon="arrow_upward"
-                                @click="sortTokens(KEY_PRICE, 'desc')"
-                            />
-                            <app-btn-icon
-                                v-if="state.sortDirection === 'desc'"
-                                class="sort"
-                                :class="{ 'sort--active': state.sortKey === KEY_PRICE }"
-                                icon="arrow_downward"
-                                @click="sortTokens(KEY_PRICE, 'asc')"
-                            />
-                        </v-row>
-                    </v-col>
-                    <v-col cols="2">
-                        <v-row align="center" class="ma-0">
-                            <h5 class="pl-5 pr-2">%Change (24H)</h5>
-                        </v-row>
-                    </v-col>
-                    <v-col cols="2">
-                        <v-row align="center" class="ma-0">
-                            <h5 class="pl-5 pr-2">Volume</h5>
-                            <app-btn-icon
-                                v-if="state.sortDirection === 'asc'"
-                                class="sort"
-                                :class="{ 'sort--active': state.sortKey === KEY_VOLUME }"
-                                icon="arrow_upward"
-                                @click="sortTokens(KEY_VOLUME, 'desc')"
-                            />
-                            <app-btn-icon
-                                v-if="state.sortDirection === 'desc'"
-                                class="sort"
-                                :class="{ 'sort--active': state.sortKey === KEY_VOLUME }"
-                                icon="arrow_downward"
-                                @click="sortTokens(KEY_VOLUME, 'asc')"
-                            />
-                        </v-row>
-                    </v-col>
-                    <v-col cols="2">
-                        <v-row align="center" class="ma-0">
-                            <h5 class="pl-5 pr-2">Market Cap</h5>
-                            <app-btn-icon
-                                v-if="state.sortDirection === 'asc'"
-                                class="sort"
-                                :class="{ 'sort--active': state.sortKey === KEY_MARKET_CAP }"
-                                icon="arrow_upward"
-                                @click="sortTokens(KEY_MARKET_CAP, 'desc')"
-                            />
-                            <app-btn-icon
-                                v-if="state.sortDirection === 'desc'"
-                                class="sort"
-                                :class="{ 'sort--active': state.sortKey === KEY_MARKET_CAP }"
-                                icon="arrow_downward"
-                                @click="sortTokens(KEY_MARKET_CAP, 'asc')"
-                            />
-                        </v-row>
-                    </v-col>
-                </v-row>
-            </v-card>
-            <div v-if="tokensInPage.length > 0" class="my-2 text-body-1">
-                <div v-for="token in tokensInPage" :key="token.symbol">
-                    <v-row align="center" justify="start" class="ma-0">
-                        <v-col cols="4">
-                            <v-row align="center" class="ma-0">
-                                <div class="mr-2">
-                                    <v-img :src="getTokenImage(token)" width="25px" height="25px" />
-                                </div>
-                                <router-link v-if="token.symbol || token.name" :to="`/token/${token.contract}`" class="text-body-1">
-                                    <span v-if="token.symbol" class="font-weight-medium text-uppercase">{{ token.symbol }} - </span>
-                                    <span class="font-weight-regular">{{ token.name }}</span>
-                                </router-link>
-                                <div v-else>
-                                    <p>Contract:</p>
-                                    <app-transform-hash :hash="eth.toCheckSum(token.contract)" :link="`/token/${token.contract}`" />
-                                </div>
-                            </v-row>
-                        </v-col>
-                        <v-col cols="2">
-                            <v-row align="center" class="ma-0 pl-5">
-                                <p class="mb-0">
-                                    {{ getTokenPrice(token).value }}
-                                    <app-tooltip v-if="getTokenPrice(token).tooltipText" :text="getTokenPrice(token).tooltipText" />
-                                </p>
-                            </v-row>
-                        </v-col>
-                        <v-col cols="2">
-                            <v-row align="center" class="ma-0 pl-5">
-                                <p :class="priceChangeClass(token)">{{ percentageChange(token).value }}%</p>
-                                <v-icon v-if="!isPositivePriceChange(token)" color="error" size="x-small">south_east</v-icon>
-                                <v-icon v-else color="success" size="x-small">north_east</v-icon>
-                                <app-tooltip v-if="percentageChange(token).tooltip" :text="percentageChange(token).tooltip" />
-                            </v-row>
-                        </v-col>
-                        <v-col cols="2">
-                            <v-row align="center" class="ma-0 pl-5">
-                                <p class="mb-0">
-                                    {{ getTokenVolume(token).value }}
-                                    <app-tooltip v-if="getTokenVolume(token).tooltipText" :text="getTokenVolume(token).tooltipText" />
-                                </p>
-                            </v-row>
-                        </v-col>
-                        <v-col cols="2">
-                            <v-row align="center" class="ma-0 pl-5">
-                                <p class="mb-0">
-                                    {{ getTokenMarketCap(token).value }}
-                                    <app-tooltip v-if="getTokenMarketCap(token).tooltipText" :text="getTokenMarketCap(token).tooltipText" />
-                                </p>
-                            </v-row>
+    <div>
+        <v-card variant="elevated" elevation="1" rounded="xl" class="pa-4 pa-sm-6">
+            <v-card-title class="pa-0">
+                <h1 class="text-h4 font-weight-bold">Token Market</h1>
+            </v-card-title>
+            <v-row class="mt-5 mb-10">
+                <v-col md="6">
+                    <v-text-field
+                        v-model="state.tokenSearch"
+                        class="search-field"
+                        placeholder="Search tokens"
+                        prepend-inner-icon="search"
+                        variant="outlined"
+                        density="comfortable"
+                        hide-details
+                    />
+                </v-col>
+            </v-row>
+            <v-row align="center" justify="start" class="text-body-1 text-info my-0 d-none d-sm-flex">
+                <v-col sm="4" md="2" lg="3">
+                    <v-row align="center" class="ma-0">
+                        <p>Token</p>
+                        <app-btn-icon
+                            v-if="state.sortDirection === 'asc'"
+                            class="sort-button"
+                            :class="{ 'sort-button--active': state.sortKey === KEY_SYMBOL }"
+                            icon="arrow_upward"
+                            @click="sortTokens(KEY_SYMBOL, 'desc')"
+                        />
+                        <app-btn-icon
+                            v-if="state.sortDirection === 'desc'"
+                            class="sort-button"
+                            :class="{ 'sort-button--active': state.sortKey === KEY_SYMBOL }"
+                            icon="arrow_downward"
+                            @click="sortTokens(KEY_SYMBOL, 'asc')"
+                        />
+                    </v-row>
+                </v-col>
+                <v-col sm="3" md="2">
+                    <v-row align="center" class="ma-0">
+                        <p>Price</p>
+                        <app-btn-icon
+                            v-if="state.sortDirection === 'asc'"
+                            class="sort-button"
+                            :class="{ 'sort-button--active': state.sortKey === KEY_PRICE }"
+                            icon="arrow_upward"
+                            @click="sortTokens(KEY_PRICE, 'desc')"
+                        />
+                        <app-btn-icon
+                            v-if="state.sortDirection === 'desc'"
+                            class="sort-button"
+                            :class="{ 'sort-button--active': state.sortKey === KEY_PRICE }"
+                            icon="arrow_downward"
+                            @click="sortTokens(KEY_PRICE, 'asc')"
+                        />
+                    </v-row>
+                </v-col>
+                <v-col sm="3" md="2"> %Change (24H) </v-col>
+                <v-col md="2" class="d-none d-md-block">
+                    <v-row align="center" class="ma-0">
+                        <p>Volume</p>
+                        <app-btn-icon
+                            v-if="state.sortDirection === 'asc'"
+                            class="sort-button"
+                            :class="{ 'sort-button--active': state.sortKey === KEY_VOLUME }"
+                            icon="arrow_upward"
+                            @click="sortTokens(KEY_VOLUME, 'desc')"
+                        />
+                        <app-btn-icon
+                            v-if="state.sortDirection === 'desc'"
+                            class="sort-button"
+                            :class="{ 'sort-button--active': state.sortKey === KEY_VOLUME }"
+                            icon="arrow_downward"
+                            @click="sortTokens(KEY_VOLUME, 'asc')"
+                        />
+                    </v-row>
+                </v-col>
+                <v-col md="2" class="d-none d-md-block">
+                    <v-row align="center" class="ma-0">
+                        <p>Market Cap</p>
+                        <app-btn-icon
+                            v-if="state.sortDirection === 'asc'"
+                            class="sort-button"
+                            :class="{ 'sort-button--active': state.sortKey === KEY_MARKET_CAP }"
+                            icon="arrow_upward"
+                            @click="sortTokens(KEY_MARKET_CAP, 'desc')"
+                        />
+                        <app-btn-icon
+                            v-if="state.sortDirection === 'desc'"
+                            class="sort-button"
+                            :class="{ 'sort-button--active': state.sortKey === KEY_MARKET_CAP }"
+                            icon="arrow_downward"
+                            @click="sortTokens(KEY_MARKET_CAP, 'asc')"
+                        />
+                    </v-row>
+                </v-col>
+                <v-col sm="2" lg="1"> Watchlist </v-col>
+            </v-row>
+            <v-divider class="my-0 mt-md-4 mx-n4 mx-sm-n6" />
+            <template v-if="!loadingCoinData">
+                <div v-if="tokensInPage.length > 0">
+                    <div v-for="token in tokensInPage" :key="token.symbol">
+                        <token-market-info-table-row :token="token" :favorite-tokens="favoriteTokens" @set-favorite="setFavoriteTokens" />
+                    </div>
+                    <app-intersect v-if="totalPages > 1 && state.index < totalPages" @intersect="loadMoreData">
+                        <div class="skeleton-box rounded-xl mt-1 my-4" style="height: 24px"></div>
+                        <v-divider />
+                    </app-intersect>
+                </div>
+                <div v-else>
+                    <v-row justify="center" class="my-0">
+                        <v-col md="10" class="bg-background rounded-lg mt-10 mb-8 py-12 text-center">
+                            <v-icon>info</v-icon>
+                            No results found. Please try again
                         </v-col>
                     </v-row>
-                    <v-divider />
                 </div>
-            </div>
-        </v-container>
-    </v-card>
+            </template>
+            <template v-else>
+                <div v-for="item in 10" :key="item" class="my-2">
+                    <div class="skeleton-box rounded-xl mt-1 my-4" style="height: 24px"></div>
+                </div>
+            </template>
+        </v-card>
+    </div>
 </template>
 
 <script setup lang="ts">
 import AppTableTitle from '@core/components/AppTableTitle.vue'
 import AppPaginate from '@core/components/AppPaginate.vue'
-import AppTransformHash from '@core/components/AppTransformHash.vue'
-import AppTooltip from '@core/components/AppTooltip.vue'
 import AppBtnIcon from '@core/components/AppBtnIcon.vue'
+import TokenMarketInfoTableRow from '@module/tokens/components/TokenMarketInfo/TableRowTokenMarketInfo.vue'
+import AppIntersect from '@core/components/AppIntersect.vue'
 import { useDisplay } from 'vuetify'
-import { computed, watch, reactive, onMounted } from 'vue'
+import { ref, computed, watch, reactive, onMounted } from 'vue'
 import { useStore } from '@/store'
 import { useCoinData } from '@core/composables/CoinData/coinData.composable'
 import { MarketDataFragment as TokenMarketData } from '@core/composables/CoinData/getLatestPrices.generated'
 import BN from 'bignumber.js'
-import { eth } from '@core/helper'
 import { formatIntegerValue, formatPercentageValue, FormattedNumber, formatUsdValue } from '@core/helper/number-format-helper'
 
 const MAX_TOKENS = 200
@@ -181,7 +157,8 @@ interface ComponentState {
     tokensByVolume: TokensSorted
     tokensBySymbol: TokensSorted
     tokensByPrice: TokensSorted
-    tokens: TokensSorted
+    tokens: TokenMarketData[]
+    tokenSearch: string
 }
 
 const state: ComponentState = reactive({
@@ -193,10 +170,11 @@ const state: ComponentState = reactive({
     tokensByVolume: [],
     tokensBySymbol: [],
     tokensByPrice: [],
-    tokens: []
+    tokens: [],
+    tokenSearch: ''
 })
 
-const { ethereumTokens } = useCoinData()
+const { ethereumTokens, loading: loadingCoinData } = useCoinData()
 
 class TokensSorted {
     /* Properties: */
@@ -225,7 +203,7 @@ class TokensSorted {
     }
 }
 
-const getCurrentCoinData = (): Array<TokenMarketData | null> => {
+const getCurrentCoinData = (): TokensSorted => {
     switch (state.sortKey) {
         case KEY_PRICE:
             return state.tokensByPrice
@@ -238,17 +216,28 @@ const getCurrentCoinData = (): Array<TokenMarketData | null> => {
     }
 }
 
-const tokensInPage = computed<Array<TokenMarketData | null>>(() => {
-    const start = state.index * state.maxItems
+const tokenFilteredByName = computed<Array<TokenMarketData | null>>(() => {
     if (!store.loadingCoinData && state.tokens) {
-        const end = start + state.maxItems > state.tokens.length ? state.tokens.length : start + state.maxItems
-        return state.tokens.slice(start, end)
+        return state.tokens.filter(token => {
+            const searchText = state.tokenSearch.toLowerCase()
+            const tokenSymbol = token.symbol.toLowerCase()
+            const tokenName = token.name.toLowerCase()
+            return tokenSymbol.includes(searchText) || tokenName.includes(searchText)
+        })
+    }
+    return []
+})
+
+const tokensInPage = computed<Array<TokenMarketData | null>>(() => {
+    const start = 0
+    if (!store.loadingCoinData && state.tokens) {
+        return tokenFilteredByName.value.slice(start, state.index * state.maxItems || state.maxItems)
     }
     return []
 })
 
 const totalPages = computed<number>(() => {
-    return Math.ceil(new BN(state.tokens.length).div(state.maxItems).toNumber())
+    return Math.ceil(new BN(tokenFilteredByName.value.length).div(state.maxItems).toNumber())
 })
 
 /**
@@ -257,46 +246,6 @@ const totalPages = computed<number>(() => {
  */
 const setPage = (page: number): void => {
     state.index = page
-}
-
-const getTokenImage = (token: TokenMarketData): string => {
-    return token.image || require('@/assets/icon-token.png')
-}
-
-const getTokenPrice = (token: TokenMarketData): FormattedNumber => {
-    const price = token.current_price || 0
-    return formatUsdValue(new BN(price))
-}
-
-const getTokenVolume = (token: TokenMarketData): FormattedNumber => {
-    const volume = token.total_volume || 0
-    return formatIntegerValue(new BN(volume))
-}
-
-const getTokenMarketCap = (token: TokenMarketData): FormattedNumber => {
-    const marketCap = token.market_cap || 0
-    return formatIntegerValue(new BN(marketCap))
-}
-
-const percentageChange = (token: TokenMarketData): FormattedNumber => {
-    const change = token.price_change_percentage_24h || 0
-    return formatPercentageValue(new BN(change))
-}
-
-const isPositivePriceChange = (token: TokenMarketData): boolean => {
-    const change = token.price_change_percentage_24h || 0
-    return change > 0
-}
-const priceChangeClass = (token: TokenMarketData): string => {
-    const change = token.price_change_percentage_24h || 0
-
-    if (change > 0) {
-        return 'text-green pl-2'
-    }
-    if (change < 0) {
-        return 'text-red pl-2'
-    }
-    return 'black--text pl-2'
 }
 
 const sortTokens = (key: string, direction: string): void => {
@@ -314,11 +263,27 @@ const sortTokens = (key: string, direction: string): void => {
 }
 
 const setTokensData = (): void => {
-    state.tokensByMarketCap = new TokensSorted(ethereumTokens.value, KEY_MARKET_CAP)
+    if (ethereumTokens.value) {
+        state.tokensByMarketCap = new TokensSorted(ethereumTokens.value, KEY_MARKET_CAP)
+    }
     state.tokens = state.tokensByMarketCap.descend
     state.tokensByPrice = new TokensSorted(state.tokensByMarketCap.ascend, KEY_PRICE)
     state.tokensBySymbol = new TokensSorted(state.tokensByMarketCap.ascend, KEY_SYMBOL)
     state.tokensByVolume = new TokensSorted(state.tokensByMarketCap.ascend, KEY_VOLUME)
+}
+
+const favoriteTokens = ref(new Set<string>())
+
+const setFavoriteTokens = (tokenContract: string): void => {
+    if (!favoriteTokens.value.has(tokenContract)) {
+        favoriteTokens.value.add(tokenContract)
+    } else {
+        favoriteTokens.value.delete(tokenContract)
+    }
+}
+
+const loadMoreData = (e: boolean): void => {
+    setPage(state.index + 1)
 }
 
 watch(
@@ -336,7 +301,7 @@ onMounted(() => {
 </script>
 
 <style scoped lang="scss">
-.sort {
+.sort-button {
     opacity: 0;
     &:hover:not(.sort--active) {
         opacity: 0.5;
@@ -344,6 +309,34 @@ onMounted(() => {
 
     &--active {
         opacity: 1;
+    }
+}
+
+.search-field {
+    max-width: 536px;
+
+    :deep(.v-input__control) {
+        .v-field--variant-outlined .v-field__outline__end {
+            border-radius: 30px;
+            border-width: 0px;
+            background-color: rgba(var(--v-theme-info), 0.5);
+        }
+
+        .v-field--variant-outlined .v-field__outline__start {
+            display: none;
+        }
+
+        .v-field:hover {
+            .v-field__outline {
+                --v-field-border-opacity: 0.5;
+            }
+        }
+
+        .v-field--focused {
+            .v-field__outline {
+                --v-field-border-opacity: 0.4;
+            }
+        }
     }
 }
 </style>
