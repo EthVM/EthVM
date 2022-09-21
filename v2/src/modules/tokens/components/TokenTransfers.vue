@@ -17,7 +17,7 @@
 </template>
 
 <script setup lang="ts">
-import TokenTransfersTable from '@module/tokens/components/TokenDetailsTransfer/TokenTransferTable.vue'
+import TokenTransfersTable from '@module/tokens/components/TokenDetailsTransfer/TableTokenTransfer.vue'
 import { ErrorMessageToken } from '@module/tokens/models/ErrorMessagesForTokens'
 import { excpInvariantViolation } from '@/apollo/errorExceptions'
 import { reactive, computed, defineEmits } from 'vue'

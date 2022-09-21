@@ -130,7 +130,7 @@
 import AppTableTitle from '@core/components/AppTableTitle.vue'
 import AppPaginate from '@core/components/AppPaginate.vue'
 import AppBtnIcon from '@core/components/AppBtnIcon.vue'
-import TokenMarketInfoTableRow from '@module/tokens/components/TokenMarketInfo/TableRowTokenMarketInfo.vue'
+import TokenMarketInfoTableRow from '@module/tokens/components/TokenMarketInfo/TableTokenMarketInfoRow.vue'
 import AppIntersect from '@core/components/AppIntersect.vue'
 import { useDisplay } from 'vuetify'
 import { ref, computed, watch, reactive, onMounted } from 'vue'

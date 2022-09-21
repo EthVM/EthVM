@@ -38,7 +38,7 @@
 </template>
 
 <script setup lang="ts">
-import TableBlocksRow from '@/modules/block/components/RecentBlocks/BlocksTableRow.vue'
+import TableBlocksRow from '@module/block/components/RecentBlocks/TableBlocksRow.vue'
 import AppIntersect from '@core/components/AppIntersect.vue'
 import { useDisplay } from 'vuetify/lib/framework.mjs'
 import { computed } from 'vue'

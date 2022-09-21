@@ -23,7 +23,7 @@
 
 <script setup lang="ts">
 import AppBtn from '@core/components/AppBtn.vue'
-import TableBlocks from '@/modules/block/components/RecentBlocks/BlocksTable.vue'
+import TableBlocks from '@module/block/components/RecentBlocks/TableBlocks.vue'
 import NoticeNewBlock from '@/modules/block/components/RecentBlocks/NoticeNewBlock.vue'
 import BN from 'bignumber.js'
 import {
