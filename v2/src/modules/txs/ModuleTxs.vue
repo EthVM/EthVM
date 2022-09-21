@@ -33,7 +33,7 @@ import {
     EthTransfersFragment
 } from './apollo/transfersQuery.generated'
 import { computed, onMounted, reactive, watch } from 'vue'
-import TxsTable from '@module/txs/components/TxsTable.vue'
+import TxsTable from '@module/txs/components/TableTxs.vue'
 import BN from 'bignumber.js'
 import { useDisplay } from 'vuetify'
 import { Q_BLOCKS_AND_TXS, ROUTE_NAME } from '@core/router/routesNames'

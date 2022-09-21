@@ -43,7 +43,7 @@
 <script setup lang="ts">
 import { useDisplay } from 'vuetify/lib/framework.mjs'
 import { computed } from 'vue'
-import TxsTableRow from '@module/txs/components/TxsTableRow.vue'
+import TxsTableRow from '@module/txs/components/TableTxsRow.vue'
 import AppIntersect from '@core/components/AppIntersect.vue'
 
 const { xs, mdAndDown } = useDisplay()

@@ -18,7 +18,7 @@
 </template>
 
 <script setup lang="ts">
-import TokenHoldersTable from '@module/tokens/components/TokenDetailsHolder/TokenHolderTable.vue'
+import TokenHoldersTable from '@module/tokens/components/TokenDetailsHolder/TableTokenHolder.vue'
 import { ErrorMessageToken } from '@module/tokens/models/ErrorMessagesForTokens'
 import { excpInvariantViolation } from '@/apollo/errorExceptions'
 import { reactive, computed, defineEmits } from 'vue'

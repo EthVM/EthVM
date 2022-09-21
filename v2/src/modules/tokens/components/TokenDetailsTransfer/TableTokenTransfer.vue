@@ -9,14 +9,16 @@
         <!-- Table Header -->
         <div v-if="!props.hasError">
             <v-row align="center" justify="start" class="text-body-1 text-info d-none d-sm-flex">
-                <v-col :md="!isERC721 ? 3 : 4"> Address </v-col>
-                <v-col sm="3" lg="4">
-                    {{ isERC721 ? 'ID' : 'Quantity' }}
+                <v-col sm="3" md="2"> Hash </v-col>
+                <v-col sm="3" lg="2" class="d-none d-sm-block"> From </v-col>
+                <v-spacer v-if="lgAndUp" />
+                <v-col sm="3" lg="2" class="d-none d-sm-block"> To </v-col>
+                <v-col sm="3" :md="isERC721 ? 1 : 2" :lg="isERC721 ? 1 : 3">
+                    <template v-if="!isERC721">Amount</template>
+                    <template v-else>ID</template>
                 </v-col>
-                <v-col v-if="!isERC721" md="3"> USD Value </v-col>
-                <v-col sm="3" lg="2">
-                    {{ isERC721 ? 'Image' : 'Percentage' }}
-                </v-col>
+                <v-col v-if="isERC721" sm="2"> Image </v-col>
+                <v-col md="2" class="d-none d-md-block"> Timestamp </v-col>
             </v-row>
             <v-divider class="my-0 mt-md-4 mx-n4 mx-sm-n6" />
             <!-- End Table Header -->
@@ -29,17 +31,12 @@
             </template>
             <div v-else>
                 <div v-if="!props.hasItems && !props.loading">
-                    <v-card-text class="text-xs-center secondary--text">There are no holders of this token</v-card-text>
+                    <v-card-text class="text-xs-center secondary--text">No transfers</v-card-text>
                 </div>
-                <div v-for="(holder, index) in props.holders" v-else :key="index">
-                    <holders-table-row
-                        :holder="holder"
-                        :token-address="props.address"
-                        :decimals="props.decimals"
-                        :holder-type="props.holderType"
-                        :price="tokenPrice"
-                    />
+                <div v-for="(transfer, index) in props.transfers" v-else :key="index" color="white" class="transparent" flat>
+                    <transfers-table-row :transfer="transfer" :decimals="props.decimals" :symbol="props.symbol" :transfer-type="props.transferType" />
                 </div>
+                <!-- End Rows -->
                 <app-intersect v-if="props.hasMore" @intersect="loadMoreData">
                     <div class="skeleton-box rounded-xl mt-1 my-4" style="height: 24px"></div>
                     <v-divider />
@@ -52,36 +49,31 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import AppIntersect from '@core/components/AppIntersect.vue'
-import HoldersTableRow from './TokenHolderTableRow.vue'
-import { MarketDataFragment as TokenMarketData } from '@core/composables/CoinData/getLatestPrices.generated'
-import BN from 'bignumber.js'
+import TransfersTableRow from './TableTokenTransferRow.vue'
+import { useDisplay } from 'vuetify'
+
 const TYPES = ['ERC20', 'ERC721']
+const { lgAndUp } = useDisplay()
 
 interface PropType {
-    holders: any[]
+    transfers: any[]
     hasItems: boolean
     hasMore: boolean
     showPagination: boolean
     loading: boolean
     initialLoad: boolean
     decimals?: number
+    symbol?: string
     hasError: boolean
     maxItems: number
     index: number
-    address: string
-    holderType: string
-    tokenData: TokenMarketData
+    transferType: string
 }
 const props = defineProps<PropType>()
 
 const emit = defineEmits<{
     (e: 'setPage', pageNumber: number, isReset: boolean): void
 }>()
-
-// Get price of token
-const tokenPrice = computed<BN>(() => {
-    return new BN(props.tokenData.current_price || 0)
-})
 
 /**
  * Sets page number and reset value and emit
@@ -99,7 +91,7 @@ const loadMoreData = (e: boolean): void => {
 }
 
 const isERC721 = computed<boolean>(() => {
-    return props.holderType === TYPES[1]
+    return props.transferType === TYPES[1]
 })
 </script>
 
