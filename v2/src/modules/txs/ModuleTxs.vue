@@ -99,7 +99,10 @@ const message = computed<string>(() => {
 })
 
 const tableTitle = computed<string>(() => {
-    return isBlock.value ? 'Block Transactions' : 'Last Transactions'
+    if (isBlock.value) {
+        return 'Block Transactions'
+    }
+    return isHome.value ? 'Last Transactions' : 'All Transactions'
 })
 
 const loading = computed<boolean>(() => {

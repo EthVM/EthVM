@@ -2,7 +2,7 @@
     <v-card :variant="isHome ? 'elevated' : 'flat'" :elevation="isHome ? 1 : 0" rounded="xl" class="pa-4 pa-sm-6">
         <v-card-title class="px-0 mb-5 d-flex align-center justify-space-between">
             <div class="d-flex align-center">
-                <h1 class="text-h6 font-weight-bold">Last Blocks</h1>
+                <h1 class="text-h6 font-weight-bold">{{ getTitle }}</h1>
                 <notice-new-block v-if="!isHome" @reload="setPage(0, true)" />
             </div>
             <app-btn v-if="isHome" text="More" isSmall icon="east" @click="goToBlocksPage"></app-btn>
@@ -87,7 +87,7 @@ const message = computed<string>(() => {
 
 const getTitle = computed<string>(() => {
     const titles = {
-        blocks: 'Last Blocks',
+        blocks: 'All Blocks',
         address: 'Mined Blocks',
         home: 'Last Blocks'
     }
