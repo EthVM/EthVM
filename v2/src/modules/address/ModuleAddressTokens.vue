@@ -19,7 +19,7 @@
             title="Token Balance"
             :is-loading="loadingTokens || loadingCoinData"
             :balance="tokenBalance"
-            :subtext="`${tokens.length} total tokens`"
+            :subtext="`${tokensLength} total tokens`"
             :class="{ 'd-sm-none': props.isOverview }"
         >
         </address-balance-totals>
@@ -106,7 +106,11 @@
             </v-col>
         </v-row>
         <!--Token Row -->
-        <div v-else :class="{ 'module-body mx-n4 mx-sm-n6 px-4 px-sm-6 mt-n1 mt-sm-n5 pt-1 pt-sm-5': props.isOverview }" :style="isOverview ? tableHeight : ''">
+        <div
+            v-else-if="renderState.renderTable"
+            :class="{ 'module-body mx-n4 mx-sm-n6 px-4 px-sm-6 mt-n1 mt-sm-n5 pt-1 pt-sm-5': props.isOverview }"
+            :style="tableHeight"
+        >
             <div v-for="token in tokens" :key="token.contract" :ref="el => assignRef(token.contract, el)">
                 <table-row-token-balance
                     :token="token"
@@ -121,23 +125,21 @@
 </template>
 
 <script setup lang="ts">
-import { computed, reactive, onMounted, ref } from 'vue'
+import { computed, reactive, onMounted, onBeforeUnmount } from 'vue'
 import AppBtn from '@/core/components/AppBtn.vue'
 import AppNewUpdate from '@core/components/AppNewUpdate.vue'
 import TableRowTokenBalance from './components/TableRowTokenBalance.vue'
 import { useCoinData } from '@core/composables/CoinData/coinData.composable'
 import { TOKEN_FILTER_VALUES, KEY, DIRECTION } from '@module/address/models/TokenSort'
-import BN from 'bignumber.js'
 import { useAddressToken } from '@core/composables/AddressTokens/addressTokens.composable'
 import { AddressEventType } from '@/apollo/types'
 import { useRouter } from 'vue-router'
 import { ROUTE_NAME, ADDRESS_ROUTE_QUERY } from '@core/router/routesNames'
 import AddressBalanceTotals from './components/AddressBalanceTotals.vue'
 import { useDisplay } from 'vuetify/lib/framework.mjs'
+import { useAppTableRowRender } from '@core/composables/AppTableRowRender/useAppTableRowRender.composable'
 const { xs } = useDisplay()
 const { loading: loadingCoinData } = useCoinData()
-
-const MAX_ITEMS = 10
 
 const props = defineProps({
     addressHash: {
@@ -187,9 +189,20 @@ const hasTokens = computed<boolean>(() => {
     return !!erc20Tokens.value
 })
 
+const tokensLength = computed<number>(() => {
+    if (!loadingTokens.value && hasTokens.value && tokenSort.value) {
+        return tokenSort.value?.getSortedTokens(state.sortKey).length
+    }
+    return 0
+})
+
+const { renderState } = useAppTableRowRender(tokensLength.value)
+
 const tokens = computed(() => {
     if (!loadingTokens.value && hasTokens.value && tokenSort.value) {
-        return tokenSort.value?.getSortedTokens(state.sortKey)
+        return renderState.isActive
+            ? tokenSort.value?.getSortedTokens(state.sortKey).slice(0, renderState.maxItems)
+            : tokenSort.value?.getSortedTokens(state.sortKey)
     }
     return []
 })
@@ -208,6 +221,7 @@ const routeToToken = (id: string) => {
     state.activeToken = id
     goToTokensBalancePage()
 }
+
 const goToTokensBalancePage = async () => {
     await router.push({
         name: ROUTE_NAME.ADDRESS_TOKENS.NAME,
@@ -234,18 +248,18 @@ onMounted(() => {
         }
     }
 })
-const tableHeight = computed<string>(() => {
+
+const tableHeight = computed(() => {
     if (props.isOverview && state.rowRefs) {
         const refIds = Object.getOwnPropertyNames(state.rowRefs)
         const rowHeight = state.rowRefs[refIds[0]]?.offsetHeight
         const offset = xs.value ? 4 : 20
         if (rowHeight) {
             const maxHeight = rowHeight * 7 + offset
-
-            return `height: ${maxHeight}px`
+            return { maxHeight: `${maxHeight}px` }
         }
     }
-    return ''
+    return {}
 })
 
 const sortTable = (key: KEY): void => {
@@ -255,9 +269,14 @@ const sortTable = (key: KEY): void => {
 const sortIcon = computed<string>(() => {
     return state.sortDirection === DIRECTION.HIGH ? 'south' : 'north'
 })
+
 const isActiveSort = (key: KEY): boolean => {
     return state.sortKey.includes(key)
 }
+onBeforeUnmount(() => {
+    state.rowRefs = {}
+})
+
 const SORT_KEY = KEY
 </script>
 <style scoped>
