@@ -10,7 +10,9 @@
         :index="state.index"
         :has-error="state.hasError"
         :address="props.address"
+        :token-data="tokenData"
         :holder-type="holderType"
+        :initial-load="initialLoad"
         @setPage="setPage"
     />
 </template>
@@ -26,6 +28,8 @@ import {
     useGetErc20TokenOwnersQuery,
     useGetErc721TokenOwnersQuery
 } from '@module/tokens/apollo/TokenDetailsHolder/tokenHolders.generated'
+import { useCoinData } from '@core/composables/CoinData/coinData.composable'
+import { MarketDataFragment as TokenMarketData } from '@core/composables/CoinData/getLatestPrices.generated'
 
 const TYPES = ['ERC20', 'ERC721']
 
@@ -46,15 +50,26 @@ interface ComponentState {
     page: number
     index: number
     isEnd: number
-    initialLoad: boolean
     hasError: boolean
 }
 const state: ComponentState = reactive({
     page: 0,
     index: 0,
     isEnd: 0,
-    initialLoad: true,
     hasError: false
+})
+
+const { getEthereumTokenByContract, loading: loadingCoinData } = useCoinData()
+const tokenData = computed<TokenMarketData | false>(() => {
+    if (props.address) {
+        try {
+            emitErrorState(false)
+            return getEthereumTokenByContract(props.address)
+        } catch (error) {
+            emitErrorState(true)
+        }
+    }
+    return false
 })
 
 const {
@@ -76,7 +91,7 @@ const erc20TokenHolders = computed<Erc20TokenOwnersType | undefined>(() => {
 })
 
 onErc20TokenHoldersError(() => {
-    emitErrorState(true, true)
+    emitErrorState(true)
 })
 
 const {
@@ -106,8 +121,12 @@ onErc721TokenHolderLoaded(({ data }) => {
     }
 })
 
+const initialLoad = computed<boolean>(() => {
+    return !erc721TokenHoldersResult.value && !erc20TokenHolderResult.value
+})
+
 onErc721TokenHolderError(() => {
-    emitErrorState(true, true)
+    emitErrorState(true)
 })
 
 const hasERC721Owners = computed<boolean>(() => {
@@ -115,16 +134,14 @@ const hasERC721Owners = computed<boolean>(() => {
 })
 
 const hasERC20Owners = computed<boolean>(() => {
-    return !!erc20TokenHolders.value && erc20TokenHolders.value.owners
+    return !!erc20TokenHolders.value && erc20TokenHolders.value?.owners.length > 0
 })
 
 const holders = computed<any[]>(() => {
-    if (hasERC20Owners.value && erc721TokenHolders.value) {
-        const data = hasERC721Owners.value ? erc721TokenHolders.value.owners : erc20TokenHolders.value?.owners
-        const start = state.index * MAX_ITEMS
+    if (hasERC20Owners.value || hasERC721Owners.value) {
+        const data = hasERC721Owners.value ? erc721TokenHolders.value?.owners : erc20TokenHolders.value?.owners
         if (data) {
-            const end = start + MAX_ITEMS > data.length ? data.length : start + MAX_ITEMS
-            return data.slice(start, end)
+            return data
         }
     }
     return []
@@ -135,7 +152,7 @@ const holderType = computed<string>(() => {
 })
 
 const loading = computed<boolean>(() => {
-    return loadingErc20TokenHolder.value || loadingErc721TokenHolders.value
+    return loadingErc20TokenHolder.value || loadingErc721TokenHolders.value || loadingCoinData.value
 })
 
 const hasMoreERC20Holders = computed<boolean>(() => {
@@ -155,7 +172,6 @@ const hasItems = computed<boolean>(() => {
 })
 
 /**
- * Emit error to Sentry
  * @param val {Boolean}
  * @param isErc20 {Boolean}
  */

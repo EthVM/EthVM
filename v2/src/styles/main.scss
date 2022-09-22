@@ -12,7 +12,7 @@
   $rounded: settings.$rounded,
   $spacer: settings.$spacer,
   $grid-gutter: settings.$grid-gutter,
-  $form-grid-gutter: settings.$form-grid-gutter, 
+  $form-grid-gutter: settings.$form-grid-gutter,
   $container-padding-x: settings.$container-padding-x,
   $grid-breakpoints: settings.$grid-breakpoints,
   $container-max-widths: settings.$container-max-widths,
@@ -47,4 +47,32 @@ a {
           transform: translateX(100%);
       }
   }
+}
+
+.text-ellipses {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    max-width: 100%;
+}
+
+.mobile-chip {
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-grow: 0;
+    &.bg-warning {
+        color: rgb(var(--v-theme-surface)) !important;
+    }
+}
+
+.row-bg {
+    top: -20px;
+    bottom: 0;
+    left: -24px;
+    right: -24px;
+    position: absolute;
+    z-index: -1;
 }

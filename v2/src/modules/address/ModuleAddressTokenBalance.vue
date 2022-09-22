@@ -15,7 +15,6 @@
 <script setup lang="ts">
 import { useAddressToken } from '@core/composables/AddressTokens/addressTokens.composable'
 import { useCoinData } from '@core/composables/CoinData/coinData.composable'
-import { computed } from 'vue'
 import AddressBalanceTotals from './components/AddressBalanceTotals.vue'
 
 const props = defineProps({
@@ -25,16 +24,8 @@ const props = defineProps({
     }
 })
 
-const { initialLoad, tokenBalance, erc20Tokens } = useAddressToken(props.addressRef)
+const { initialLoad, tokenBalanceValue, tokenCount } = useAddressToken(props.addressRef)
 const { loading: loadingMarketInfo } = useCoinData()
-
-const tokenCount = computed<number>(() => {
-    return erc20Tokens.value?.length || 0
-})
-
-const tokenBalanceValue = computed<string>(() => {
-    return tokenBalance.value || '0'
-})
 </script>
 
 <style scoped></style>

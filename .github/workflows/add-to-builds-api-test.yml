@@ -2,15 +2,8 @@ name: add to ethvmBuild
 
 on:
   push:
-    branches-ignore:
-      - 'gh-pages'
-      - 'develop'
-      - 'master'
-      - 'v2/develop'
-      -  'v2/api-test'
-    tags-ignore:
-      - '*'
-
+    branches:
+      - v2/api-test
 jobs:
   ethvmBuild:
     runs-on: ubuntu-latest
@@ -18,30 +11,25 @@ jobs:
       #Checkout the repository to the GitHub Actions runner
       - name: Checkout
         uses: actions/checkout@v3
-      # Use pnpm
-      - name: Use pnpm
-        uses: pnpm/action-setup@v2
-        with:
-          version: 6.32.10
-      # Use node in .nvmrc and cache dependencies
+      # Use node in .nvmrc and cache dependencies with yarn
       - name: Set up
         uses: actions/setup-node@v3
         with:
-          node-version-file: 'v2/.nvmrc'
-          cache: pnpm
-          cache-dependency-path: v2/pnpm-lock.yaml
-      #Install
-      - name: pnpm Install
-        run:  cd ./v2 && pnpm install
+          node-version-file: 'newclient/.nvmrc'
+          cache: yarn
+          cache-dependency-path: 'newclient/yarn.lock'
+      # Install
+      - name: Install
+        run: cd ./newclient && yarn install --frozen-lockfile # optional, --immutable
       # Lint Code
-      - name: pnpm Lint
-        run: cd ./v2 && pnpm lint
+      - name: yarn Lint
+        run: cd ./newclient && yarn lint
       #Generate code from most recent GraphQL schema
-      - name: pnpm generate schema
-        run: cd ./v2 && pnpm codegen-generate
+      - name: yarn generate schema
+        run: cd ./newclient && yarn apollo:codegen
       # Build (temp dev mode)
       - name: build
-        run: cd ./v2 && pnpm build:hash
+        run: cd ./newclient && yarn build:hash
         env:
           VUE_APP_SENTRY_SECURITY_TOKEN: ${{ secrets.VUE_APP_SENTRY_SECURITY_TOKEN }}
           VUE_APP_SENTRY_SECURITY_DSN: ${{ secrets.VUE_APP_SENTRY_SECURITY_DSN }}
@@ -60,7 +48,7 @@ jobs:
           VIRUS_TOTAL_API_KEY: ${{secrets.VIRUS_TOTAL_API_KEY}}
           GITHUB_TOKEN: ${{secrets.MEW_BOT_API_KEY}}
         run: |
-          cd ./v2
+          cd ./newclient
           pip install --user awscli
           aws s3 sync --delete --acl public-read dist/ s3://ethvm-mainnet-web/builds/$GITHUB_SHA
           aws s3 cp s3://ethvm-mainnet-web/builds/$GITHUB_SHA/index.html s3://ethvm-mainnet-web/builds/$GITHUB_SHA/index.html \

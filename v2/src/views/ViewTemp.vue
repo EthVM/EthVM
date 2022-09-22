@@ -16,6 +16,11 @@
                         <p class="text-caption">Color + Tooltip Prop</p>
                         <app-btn-icon icon="content_copy" color="warning" tooltip-text="Hello" />
                     </v-col>
+                    <v-col cols="12" class="px-10">
+                        <app-chip bg="success" text="From" />
+                        <app-chip bg="orange" text="To" />
+                        <app-chip bg="warning" color="text-info" text="Self" />
+                    </v-col>
                     <v-col cols="12">
                         <app-expansion-panel title="Default Expansion Panel" class="pt-3">
                             <template #visible-content>
@@ -57,6 +62,7 @@ import { useRoute } from 'vue-router'
 import { computed } from 'vue'
 import AppBtn from '@core/components/AppBtn.vue'
 import AppBtnIcon from '@/core/components/AppBtnIcon.vue'
+import AppChip from '@/core/components/AppChip.vue'
 import AppExpansionPanel from '@/core/components/AppExpansionPanel.vue'
 import { useAppViewGrid } from '@core/composables/AppViewGrid/AppViewGrid.composable'
 

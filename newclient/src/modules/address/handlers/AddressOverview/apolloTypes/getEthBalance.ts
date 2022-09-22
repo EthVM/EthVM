@@ -13,11 +13,6 @@ export interface getEthBalance_getEthBalance {
 }
 
 export interface getEthBalance {
-  /**
-   * ------------------------------------------------
-   * ETH:
-   * ------------------------------------------------
-   */
   getEthBalance: getEthBalance_getEthBalance;
 }
 

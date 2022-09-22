@@ -27,7 +27,7 @@ fragment ERC721TokenOwnerDetails on ERC721TokenOwner  {
         ...TokenDetails
     }
     owner
-    token
+    tokenId
 }
 
 fragment ERC721TokenOwners on ERC721TokenOwners {

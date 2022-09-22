@@ -28,7 +28,7 @@ export interface getERC721TokenTransfers_getERC721TokenTransfers_transfers_token
 export interface getERC721TokenTransfers_getERC721TokenTransfers_transfers {
   __typename: "ERC721Transfer";
   transfer: getERC721TokenTransfers_getERC721TokenTransfers_transfers_transfer;
-  token: string;
+  tokenId: string;
   contract: string;
   tokenInfo: getERC721TokenTransfers_getERC721TokenTransfers_transfers_tokenInfo;
 }

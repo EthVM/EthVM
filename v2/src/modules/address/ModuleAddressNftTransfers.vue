@@ -1,40 +1,44 @@
 <template>
-    <v-card :variant="!props.isOverview ? 'flat' : 'elevated'" :elevation="props.isOverview ? 1 : 0" rounded="xl" class="pa-4 pa-sm-6">
+    <v-card
+        :variant="!props.isOverview ? 'flat' : 'elevated'"
+        :elevation="props.isOverview ? 1 : 0"
+        rounded="xl"
+        class="pa-4 pa-sm-6"
+        :class="props.isOverview ? 'h-100' : null"
+    >
         <v-card-title class="card-title d-flex justify-space-between align-center mb-5 px-0">
             <div>
                 <v-row align="center" class="my-0 mx-0">
                     <div v-if="!props.isOverview && !mdAndDown" class="mr-10">
                         <address-balance-totals
-                            title="Token Balance"
+                            title="NFT Balance"
                             :is-loading="loadingAddressTokens || loadingMarketInfo"
                             :balance="tokenBalanceValue"
-                            :subtext="`${tokenCount} total tokens`"
+                            :subtext="`${tokenCount} total NFT's`"
                         />
                     </div>
-                    <span v-if="props.isOverview || mdAndDown" class="text-h6 font-weight-bold">Token History</span>
+                    <span v-if="props.isOverview || mdAndDown" class="text-h6 font-weight-bold">NFT History</span>
                     <app-new-update
                         :icon-only="props.isOverview"
                         text="New ERC20 Transfers"
-                        :update-count="props.newErc20Transfer"
+                        :update-count="props.newErc721Transfer"
                         @reload="setPage(0, true)"
                     />
                 </v-row>
             </div>
-            <app-btn v-if="props.isOverview && !mdAndDown" text="More" isSmall icon="east" @click="goToTokenTransfersPage"></app-btn>
-            <app-btn-icon v-if="props.isOverview && mdAndDown" icon="more_horiz" @click="goToTokenTransfersPage"></app-btn-icon>
+            <app-btn v-if="props.isOverview && !mdAndDown" text="More" isSmall icon="east" @click="goToNftTransfersPage"></app-btn>
+            <app-btn-icon v-if="props.isOverview && mdAndDown" icon="more_horiz" @click="goToNftTransfersPage"></app-btn-icon>
         </v-card-title>
         <div :class="!props.isOverview && !mdAndDown ? 'pt-13' : null">
             <!--            Table Header-->
 
             <v-row v-if="!mdAndDown" class="my-0 text-body-1 text-info">
-                <v-col :cols="props.isOverview ? 3 : 2" class="py-0"> Token </v-col>
-                <v-col v-if="!props.isOverview" cols="1" class="py-0"> Symbol </v-col>
-                <v-col :cols="props.isOverview ? 3 : 2" class="py-0"> Amount </v-col>
+                <v-col :cols="props.isOverview ? 4 : 3" class="py-0"> Name/Id </v-col>
+                <v-col :cols="props.isOverview ? 2 : 1" class="py-0"> Copies </v-col>
                 <v-col :cols="props.isOverview ? 2 : 1" class="py-0"> From/To </v-col>
-                <v-col :cols="props.isOverview ? 4 : 2" class="py-0"> Address </v-col>
+                <v-col :cols="props.isOverview ? 4 : 3" class="py-0"> Address </v-col>
                 <v-col v-if="!props.isOverview" cols="2" class="py-0"> Hash </v-col>
-                <v-col v-if="!props.isOverview" cols="1" class="py-0"> Timestamp </v-col>
-                <v-col v-if="!props.isOverview" cols="1" class="py-0 text-right"> More </v-col>
+                <v-col v-if="!props.isOverview" cols="2" class="py-0"> Timestamp </v-col>
             </v-row>
             <v-divider class="my-0 mt-md-4 mx-n4 mx-sm-n6" />
             <template v-if="initialLoad">
@@ -43,19 +47,18 @@
                 </div>
             </template>
             <template v-else>
-                <div v-for="(transfer, index) in transfers" :key="`${transfer.transfer.transactionHash} - ${index}`">
-                    <address-token-transfers-row
-                        :transfer="transfer"
-                        :index="index"
-                        :token-img="tokenImg"
-                        :is-overview="props.isOverview"
-                        :address-hash="props.addressHash"
-                    />
-                </div>
-                <app-intersect v-if="!props.isOverview && hasMore" @intersect="loadMoreData">
-                    <div class="skeleton-box rounded-xl mt-1 my-4" style="height: 24px"></div>
-                    <v-divider />
-                </app-intersect>
+                <template v-if="transfers.length < 1">
+                    <p class="text-h4 text-center my-2">This address does not hold any NFTs (ERC721 tokens)</p>
+                </template>
+                <template v-else>
+                    <div v-for="(transfer, index) in transfers" :key="`${transfer.transfer.transactionHash} - ${index}`" class="position-relative">
+                        <nft-transfers-table-row :transfer="transfer" :is-overview="props.isOverview" :address-hash="props.addressHash" />
+                    </div>
+                    <app-intersect v-if="!props.isOverview && hasMore" @intersect="loadMoreData">
+                        <div class="skeleton-box rounded-xl mt-1 my-4" style="height: 24px"></div>
+                        <v-divider />
+                    </app-intersect>
+                </template>
             </template>
         </div>
     </v-card>
@@ -67,18 +70,17 @@ import AppNewUpdate from '@core/components/AppNewUpdate.vue'
 import AppBtn from '@core/components/AppBtn.vue'
 import AppBtnIcon from '@core/components/AppBtnIcon.vue'
 import AddressBalanceTotals from './components/AddressBalanceTotals.vue'
+import NftTransfersTableRow from '@module/address/components/TableRowNftTransfers.vue'
 import AppIntersect from '@core/components/AppIntersect.vue'
-import AddressTokenTransfersRow from './components/TableRowAddressTokenTransfers.vue'
 import { MarketDataFragment as TokenMarketData } from '@core/composables/CoinData/getLatestPrices.generated'
 import { useCoinData } from '@core/composables/CoinData/coinData.composable'
 import { TOKEN_FILTER_VALUES } from '@module/address/models/TokenSort'
 import { useDisplay } from 'vuetify'
-import { TransferFragmentFragment as Transfer, useGetAddressErc20TransfersQuery } from './apollo/AddressTransfers/transfers.generated'
+import { Erc721TransferFragmentFragment as Transfer, useGetAddressErc721TransfersQuery } from './apollo/AddressTransfers/transfers.generated'
 import { AddressEventType } from '@/apollo/types'
 import { useAddressToken } from '@core/composables/AddressTokens/addressTokens.composable'
 import { useRouter } from 'vue-router'
 import { ADDRESS_ROUTE_QUERY, ROUTE_NAME } from '@core/router/routesNames'
-const { getEthereumTokensMap } = useCoinData()
 
 const MAX_ITEMS = 10
 const OVERVIEW_MAX_ITEMS = 6
@@ -90,7 +92,7 @@ const props = defineProps({
         type: String,
         required: true
     },
-    newErc20Transfer: Number,
+    newErc721Transfer: Number,
     isOverview: {
         type: Boolean,
         default: false
@@ -120,12 +122,7 @@ const state: ComponentState = reactive({
 const { tokenBalanceValue, tokenCount, initialLoad: loadingAddressTokens } = useAddressToken(props.addressHash)
 const { loading: loadingMarketInfo } = useCoinData()
 
-const {
-    result,
-    loading: loadingTransfers,
-    fetchMore,
-    refetch
-} = useGetAddressErc20TransfersQuery(
+const { result, fetchMore, refetch } = useGetAddressErc721TransfersQuery(
     () => ({
         hash: props.addressHash,
         _limit: MAX_ITEMS
@@ -134,10 +131,10 @@ const {
 )
 
 const hasMore = computed<boolean>(() => {
-    return result.value?.getERC20Transfers.nextKey !== null
+    return result.value?.getERC721Transfers.nextKey !== null
 })
 
-const transferHistory = computed<Array<Transfer | null>>(() => result.value?.getERC20Transfers.transfers || [])
+const transferHistory = computed<Array<Transfer | null>>(() => result.value?.getERC721Transfers.transfers || [])
 
 const transfers = computed<Array<Transfer | null>>(() => {
     if (transferHistory.value.length > 0) {
@@ -162,39 +159,24 @@ const initialLoad = computed<boolean>(() => {
     return !result.value
 })
 
-const tokenImg = computed<Map<string, TokenMarketData> | false>(() => {
-    if (!loadingTransfers.value) {
-        const contracts: string[] = []
-        transferHistory.value.forEach(token => {
-            if (token) {
-                contracts.push(token.contract)
-            }
-        })
-        if (contracts.length > 0) {
-            return getEthereumTokensMap(contracts)
-        }
-    }
-    return false
-})
-
 const setPage = (page: number, reset = false) => {
     if (reset) {
         refetch()
-        emit('resetCount', AddressEventType.NewErc20Transfer, true)
+        emit('resetCount', AddressEventType.NewErc721Transfer, true)
     } else {
         if (page > state.index && hasMore.value) {
             fetchMore({
                 variables: {
                     hash: props.addressHash,
                     _limit: MAX_ITEMS,
-                    _nextKey: result.value?.getERC20Transfers?.nextKey
+                    _nextKey: result.value?.getERC721Transfers?.nextKey
                 },
                 updateQuery: (prev, { fetchMoreResult }) => {
                     return {
-                        getERC20Transfers: {
-                            nextKey: fetchMoreResult?.getERC20Transfers.nextKey,
-                            transfers: [...prev.getERC20Transfers.transfers, ...(fetchMoreResult?.getERC20Transfers.transfers || [])],
-                            __typename: fetchMoreResult?.getERC20Transfers.__typename
+                        getERC721Transfers: {
+                            nextKey: fetchMoreResult?.getERC721Transfers.nextKey,
+                            transfers: [...prev.getERC721Transfers.transfers, ...(fetchMoreResult?.getERC721Transfers.transfers || [])],
+                            __typename: fetchMoreResult?.getERC721Transfers.__typename
                         }
                     }
                 }
@@ -211,10 +193,10 @@ const loadMoreData = (e: boolean): void => {
 }
 
 const router = useRouter()
-const goToTokenTransfersPage = async (): Promise<void> => {
+const goToNftTransfersPage = async (): Promise<void> => {
     await router.push({
-        name: ROUTE_NAME.ADDRESS_TOKENS.NAME,
-        query: { t: ADDRESS_ROUTE_QUERY.Q_TOKENS[1] }
+        name: ROUTE_NAME.ADDRESS_NFTS.NAME,
+        query: { t: ADDRESS_ROUTE_QUERY.Q_NFTS[1] }
     })
 }
 </script>

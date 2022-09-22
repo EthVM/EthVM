@@ -2,6 +2,7 @@
     <token-transfers-table
         :transfers="transferData"
         :loading="loading"
+        :initial-load="initialLoad"
         :show-pagination="showPagination"
         :decimals="props.decimals"
         :symbol="props.symbol"
@@ -46,14 +47,12 @@ interface ComponentState {
     page: number
     index: number
     isEnd: number
-    initialLoad: boolean
     hasError: boolean
 }
 const state: ComponentState = reactive({
     page: 0,
     index: 0,
     isEnd: 0,
-    initialLoad: true,
     hasError: false
 })
 
@@ -89,6 +88,10 @@ const {
     { notifyOnNetworkStatusChange: true }
 )
 
+const initialLoad = computed<boolean>(() => {
+    return !erc721TokenTransferResult.value && !erc20TokenTransferResult.value
+})
+
 const erc721TokenTransfer = computed(() => {
     return erc721TokenTransferResult.value?.getERC721TokenTransfers
 })
@@ -108,9 +111,9 @@ const hasERC721Transfers = computed<boolean>(() => {
 const transferData = computed<any[]>(() => {
     if (erc20TokenTransfer.value && erc721TokenTransfer.value) {
         const data = hasERC721Transfers.value ? erc721TokenTransfer.value.transfers : erc20TokenTransfer.value.transfers
-        const start = state.index * MAX_ITEMS
-        const end = start + MAX_ITEMS > data.length ? data.length : start + MAX_ITEMS
-        return data.slice(start, end)
+        if (data) {
+            return data
+        }
     }
     return []
 })

@@ -1,0 +1,66 @@
+<template>
+    <v-row :dense="xs" class="my-5 px-0 text-body-1 font-weight-regular" align="center">
+        <!-- Blocks Mined-->
+        <v-col cols="7" sm="3" class="py-0">
+            <v-row class="d-flex flex-sm-column ma-0 text-caption text-sm-body-1">
+                <v-col cols="6" sm="12" class="pa-0">
+                    <router-link :to="`/block/number/${props.reward.transfer.block}`" class="text-secondary">
+                        {{ props.reward.transfer.block }}
+                    </router-link>
+                </v-col>
+                <v-col cols="6" sm="12" class="pa-0 pt-sm-1">
+                    <p class="text-info font-regular">
+                        {{ timeAgo(new Date(props.reward.transfer.timestamp) * 1e3, xs) }}
+                    </p>
+                </v-col>
+            </v-row>
+        </v-col>
+        <!-- Mined Rewards -->
+        <v-col cols="5" sm="3" class="py-0">
+            <p class="text-right text-sm-left">+ {{ miningReward.value }} ETH</p>
+        </v-col>
+        <!-- Balance Before -->
+        <v-col md="3" class="d-none d-sm-block py-0"> {{ getRewardBalanceBefore.value }} ETH </v-col>
+        <!-- Balance After -->
+        <v-col md="3" class="d-none d-sm-block py-0"> {{ getRewardBalanceAfter.value }} ETH </v-col>
+    </v-row>
+</template>
+
+<script setup lang="ts">
+import { timeAgo } from '@core/helper'
+import { RewardTransferFragment } from '../apollo/AddressRewards/rewards.generated'
+import { formatNonVariableEthValue, FormattedNumber } from '@core/helper/number-format-helper'
+import BN from 'bignumber.js'
+import { computed } from 'vue'
+import { useDisplay } from 'vuetify'
+
+const { xs } = useDisplay()
+
+interface ComponentProps {
+    reward: RewardTransferFragment
+}
+
+const props = defineProps<ComponentProps>()
+
+const miningReward = computed<FormattedNumber | null>(() => {
+    if (props.reward) {
+        const _reward = new BN(props.reward.value)
+        return formatNonVariableEthValue(_reward)
+    }
+    return null
+})
+
+const getRewardBalanceBefore = computed<FormattedNumber | null>(() => {
+    if (props.reward.stateDiff && props.reward.stateDiff.to) {
+        return formatNonVariableEthValue(new BN(props.reward.stateDiff.to.before))
+    }
+    return { value: '0' }
+})
+
+const getRewardBalanceAfter = computed<FormattedNumber | null>(() => {
+    if (props.reward.stateDiff && props.reward.stateDiff.to) {
+        return formatNonVariableEthValue(new BN(props.reward.stateDiff.to.after))
+    }
+    return { value: '0' }
+})
+</script>

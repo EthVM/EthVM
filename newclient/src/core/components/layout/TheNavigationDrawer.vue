@@ -248,13 +248,13 @@ export default class TheNavigationDrawer extends Vue {
                     }
                 ]
             },
-            {
-                header: {
-                    icon: 'fas fa-chart-pie',
-                    text: this.$i18n.t('charts.name'),
-                    routerLink: '/charts'
-                }
-            },
+            // {
+            //     header: {
+            //         icon: 'fas fa-chart-pie',
+            //         text: this.$i18n.t('charts.name'),
+            //         routerLink: '/charts'
+            //     }
+            // },
             {
                 header: {
                     icon: 'fas fa-heart',
