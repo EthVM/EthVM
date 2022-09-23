@@ -9,6 +9,32 @@ import gql from 'graphql-tag'
 import * as VueApolloComposable from '@vue/apollo-composable'
 import * as VueCompositionApi from 'vue'
 export type ReactiveFunction<TParam> = () => TParam
+export type SummaryFragment = {
+    __typename?: 'Transfer'
+    transactionHash: string
+    to: string
+    block: number
+    timestamp: number
+    from: string
+    txFee: string
+    status?: boolean | null
+}
+
+export type TransferFragment = {
+    __typename?: 'EthTransfer'
+    value: string
+    transfer: {
+        __typename?: 'Transfer'
+        transactionHash: string
+        to: string
+        block: number
+        timestamp: number
+        from: string
+        txFee: string
+        status?: boolean | null
+    }
+}
+
 export type TxSummaryFragment = {
     __typename?: 'ETHTransfers'
     transfers: Array<{
@@ -25,17 +51,6 @@ export type TxSummaryFragment = {
             status?: boolean | null
         }
     } | null>
-}
-
-export type SummaryFragment = {
-    __typename?: 'Transfer'
-    transactionHash: string
-    to: string
-    block: number
-    timestamp: number
-    from: string
-    txFee: string
-    status?: boolean | null
 }
 
 export type GetBlockTransfersQueryVariables = Types.Exact<{
@@ -127,16 +142,22 @@ export const SummaryFragmentDoc = gql`
         status
     }
 `
+export const TransferFragmentDoc = gql`
+    fragment Transfer on EthTransfer {
+        transfer {
+            ...Summary
+        }
+        value
+    }
+    ${SummaryFragmentDoc}
+`
 export const TxSummaryFragmentDoc = gql`
     fragment TxSummary on ETHTransfers {
         transfers {
-            transfer {
-                ...Summary
-            }
-            value
+            ...Transfer
         }
     }
-    ${SummaryFragmentDoc}
+    ${TransferFragmentDoc}
 `
 export const EthTransfersFragmentDoc = gql`
     fragment EthTransfers on ETHTransfers {

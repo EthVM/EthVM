@@ -1,66 +1,49 @@
 <template>
-    <v-card flat class="pt-3 mt-0">
+    <div>
         <!--
-    =====================================================================================
-      isLoading / ERROR
-    =====================================================================================
-    -->
-        <!-- <app-error :has-error="hasMessage" :message="'error'" class="mb-4" /> -->
-        <!--
-    =====================================================================================
-      TABLE HEADER
-    =====================================================================================
-    -->
-        <v-row v-if="!smAndDown" sm12 class="my-0">
-            <v-col>
-                <v-card v-if="!hasMessage" color="info" flat class="white--text pl-3 table-blocks-header-card" height="40px">
-                    <v-row fill-height pr-3>
-                        <v-col sm="2">
-                            <h5>Block #</h5>
-                        </v-col>
-                        <v-spacer />
-                        <v-col sm="2">
-                            <h5>Transactions</h5>
-                        </v-col>
-                        <v-col sm="2">
-                            <h5>Reward</h5>
-                        </v-col>
-                    </v-row>
-                </v-card>
-            </v-col>
+            =====================================================================================
+              TABLE HEADER
+            =====================================================================================
+        -->
+        <v-row v-if="!xs" align="center" justify="start" class="text-body-1 text-info">
+            <v-col sm="2"> Block # </v-col>
+            <v-col sm="2"> Timestamp </v-col>
+            <v-col sm="2"> Transactions </v-col>
+            <v-col sm="3"> Miner </v-col>
+            <v-col sm="3"> Reward </v-col>
         </v-row>
+        <v-divider v-if="!xs" class="my-0 mt-md-4 mx-n4 mx-sm-n6" />
         <!--
-    =====================================================================================
-      TABLE BODY
-    =====================================================================================
-    -->
-        <v-container fluid v-if="!hasMessage" :style="getStyle" flat class="scroll-y pt-2 pr-2 pl-2 pb-0">
-            <v-row column class="mb-1">
-                <v-col>
-                    <template v-if="!props.isLoading">
-                        <div v-for="(block, index) in props.blockData" :key="index">
-                            <table-blocks-row :block="block" :page-type="props.pageType" />
-                        </div>
-                    </template>
-                    <div v-if="props.isLoading">
-                        <div v-for="i in props.maxItems" :key="i">
-                            <app-table-row-loading />
-                        </div>
-                    </div>
-                </v-col>
-            </v-row>
-        </v-container>
-    </v-card>
+            =====================================================================================
+              TABLE BODY
+            =====================================================================================
+        -->
+        <div v-if="!hasMessage">
+            <template v-if="!props.isLoading">
+                <div v-for="(block, index) in props.blockData" :key="index">
+                    <table-blocks-row :block="block" :page-type="props.pageType" />
+                </div>
+            </template>
+            <div v-if="props.isLoading">
+                <div v-for="i in props.maxItems" :key="i">
+                    <div class="skeleton-box rounded-xl mt-1 my-4" style="height: 24px"></div>
+                </div>
+            </div>
+            <app-intersect v-if="props.showIntersect" @intersect="$emit('loadMore')">
+                <div class="skeleton-box rounded-xl mt-1 my-4" style="height: 24px"></div>
+                <v-divider />
+            </app-intersect>
+        </div>
+    </div>
 </template>
 
 <script setup lang="ts">
 import TableBlocksRow from '@/modules/block/components/RecentBlocks/BlocksTableRow.vue'
-import AppTableRowLoading from '@core/components/AppTableRowLoading.vue'
+import AppIntersect from '@core/components/AppIntersect.vue'
 import { useDisplay } from 'vuetify/lib/framework.mjs'
 import { computed } from 'vue'
-const SCROLLVIEW = 'max-height: 450px'
 
-const { smAndDown } = useDisplay()
+const { xs } = useDisplay()
 
 const props = defineProps({
     blockData: Array,
@@ -78,15 +61,15 @@ const props = defineProps({
     isScrollView: {
         type: Boolean,
         default: false
+    },
+    showIntersect: {
+        type: Boolean,
+        default: false
     }
 })
 
 const hasMessage = computed<boolean>(() => {
     return props.tableMessage !== ''
-})
-
-const getStyle = computed<string>(() => {
-    return props.isScrollView ? SCROLLVIEW : ''
 })
 </script>
 
@@ -99,10 +82,5 @@ const getStyle = computed<string>(() => {
 }
 .table-row-mobile {
     border: 1px solid #b4bfd2;
-}
-
-.scroll-y {
-    overflow-y: auto;
-    overflow-x: hidden;
 }
 </style>

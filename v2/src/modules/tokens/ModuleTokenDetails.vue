@@ -71,10 +71,10 @@ import {
 } from '@module/tokens/apollo/TokenDetails/tokenDetails.generated'
 import { eth } from '@core/helper'
 import { ErrorMessageToken } from '@module/tokens/models/ErrorMessagesForTokens'
-import { TOKEN_DETAILS } from '@core/router/routesNames'
+import { Q_TOKEN_DETAILS } from '@core/router/routesNames'
 import { onBeforeRouteUpdate, useRoute, useRouter } from 'vue-router'
 
-const routes = TOKEN_DETAILS
+const routes = Q_TOKEN_DETAILS
 
 const props = defineProps({
     addressRef: {
