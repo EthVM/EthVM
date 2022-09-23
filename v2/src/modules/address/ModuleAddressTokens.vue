@@ -25,7 +25,7 @@
         </address-balance-totals>
 
         <!--Table Header-->
-        <v-row :dense="xs" class="d-flex text-body-1 text-info mt-2 mt-sm-5 mb-sm-3">
+        <v-row :dense="xs" :class="[isOverview ? 'mt-sm-5' : 'mt-sm-4', 'd-flex text-body-1 text-info mb-sm-3']" justify="xs? 'end">
             <!--
                 Token on Overview:
                 XS: NONE
@@ -97,18 +97,25 @@
                     </v-col>
                 </v-row>
             </v-col>
+            <v-spacer class="d-flex d-sm-none" />
+            <v-col class="d-flex d-sm-none justify-end">
+                <v-btn variant="text" color="info" class="font-weight-regular mr-n3" rounded="pill" size="small" @click="sortTable(SORT_KEY.USD)">
+                    USD Value <v-icon v-if="isActiveSort(SORT_KEY.USD)" class="ml-1" size="x-small">{{ sortIcon }}</v-icon></v-btn
+                >
+            </v-col>
         </v-row>
-        <v-divider class="my-0 mx-n4 mx-sm-n6 mb-1 mb-sm-5" />
+
+        <v-divider class="mx-n4 mx-sm-n6 mb-1 mb-sm-5" />
         <!--Loading -->
         <v-row v-if="loadingTokens || loadingCoinData">
-            <v-col v-for="col in 10" :key="col" cols="12" class="my-1">
+            <v-col v-for="col in 7" :key="col" cols="12" class="my-1">
                 <div class="skeleton-box rounded-xl" style="min-height: 44px"></div>
             </v-col>
         </v-row>
         <!--Token Row -->
         <div
             v-else-if="renderState.renderTable"
-            :class="{ 'module-body mx-n4 mx-sm-n6 px-4 px-sm-6 mt-n1 mt-sm-n5 pt-1 pt-sm-5': props.isOverview }"
+            :class="['mx-n4 mx-sm-n6 px-4 px-sm-6 mt-2', { 'module-body mt-n1 mt-sm-n5 pt-1 pt-sm-5': props.isOverview }]"
             :style="tableHeight"
         >
             <div v-for="token in tokens" :key="token.contract" :ref="el => assignRef(token.contract, el)">
@@ -255,7 +262,7 @@ const tableHeight = computed(() => {
         const rowHeight = state.rowRefs[refIds[0]]?.offsetHeight
         const offset = xs.value ? 4 : 20
         if (rowHeight) {
-            const maxHeight = rowHeight * 7 + offset
+            const maxHeight = rowHeight * 6 + offset
             return { maxHeight: `${maxHeight}px` }
         }
     }

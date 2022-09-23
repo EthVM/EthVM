@@ -11,11 +11,11 @@
                 SM : 4
                 LG: 2 
              -->
-            <v-col cols="6" sm="4" :lg="props.isOverview ? 4 : 2" :class="['pb-0', 'd-flex align-center']">
-                <app-token-icon :token-icon="token.image || undefined" />
+            <v-col cols="6" sm="4" :lg="props.isOverview ? 4 : 2" :class="['py-0', 'd-flex align-center']">
+                <app-token-icon :token-icon="token.image || undefined" img-size="32px" />
                 <p class="text-truncate ml-4">
                     {{ token.name }}
-                    <span v-if="props.isOverview || mdAndDown" class="text-info text-uppercase text-truncate d-block">{{ token.symbol }}</span>
+                    <span v-if="props.isOverview || mdAndDown" class="text-info text-uppercase text-truncate d-block pt-1">{{ token.symbol }}</span>
                 </p>
             </v-col>
             <!--
@@ -26,7 +26,7 @@
                 XS: NONE
                 LG: 1
              -->
-            <v-col v-if="!props.isOverview" cols="1" class="pb-0 d-none d-lg-block">
+            <v-col v-if="!props.isOverview" cols="1" class="py-0 d-none d-lg-block">
                 <p class="text-uppercase text-truncate text-info">{{ token.symbol }}</p>
             </v-col>
             <!--
@@ -39,7 +39,7 @@
                 SM: 8
                 LG: 9
              -->
-            <v-col cols="6" sm="8" :lg="props.isOverview ? 8 : 9">
+            <v-col cols="6" sm="8" :lg="props.isOverview ? 8 : 9" class="py-0">
                 <v-row :dense="xs" class="align-start align-lg-center">
                     <!-- Price-->
                     <v-col cols="4" :lg="props.isOverview ? 4 : 3" class="pb-0 d-none d-sm-block">

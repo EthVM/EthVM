@@ -1,6 +1,6 @@
 <template>
     <v-card :variant="!props.isOverview ? 'flat' : 'elevated'" :elevation="props.isOverview ? 1 : 0" rounded="xl" class="pa-4 pa-sm-6">
-        <v-card-title class="card-title d-flex justify-space-between align-center mb-5 px-0">
+        <v-card-title class="d-flex justify-space-between align-center pa-0">
             <div>
                 <v-row align="center" class="my-0 mx-0">
                     <div v-if="!props.isOverview && !mdAndDown" class="mr-10">
@@ -23,7 +23,7 @@
             <app-btn v-if="props.isOverview && !mdAndDown" text="More" isSmall icon="east" @click="goToTokenTransfersPage"></app-btn>
             <app-btn-icon v-if="props.isOverview && mdAndDown" icon="more_horiz" @click="goToTokenTransfersPage"></app-btn-icon>
         </v-card-title>
-        <div :class="!props.isOverview && !mdAndDown ? 'pt-13' : null">
+        <div class="mt-2 mt-sm-5 mb-n5">
             <!--            Table Header-->
 
             <v-row v-if="!mdAndDown" class="my-0 text-body-1 text-info">
@@ -36,7 +36,7 @@
                 <v-col v-if="!props.isOverview" cols="1" class="py-0"> Timestamp </v-col>
                 <v-col v-if="!props.isOverview" cols="1" class="py-0 text-right"> More </v-col>
             </v-row>
-            <v-divider class="my-0 mt-md-4 mx-n4 mx-sm-n6" />
+            <v-divider class="my-0 mt-md-5 mx-n4 mx-sm-n6" />
             <template v-if="initialLoad">
                 <div v-for="item in 10" :key="item" class="my-2">
                     <div class="skeleton-box rounded-xl mt-1 my-4" style="height: 24px"></div>
@@ -81,7 +81,7 @@ import { ADDRESS_ROUTE_QUERY, ROUTE_NAME } from '@core/router/routesNames'
 const { getEthereumTokensMap } = useCoinData()
 
 const MAX_ITEMS = 10
-const OVERVIEW_MAX_ITEMS = 6
+const OVERVIEW_MAX_ITEMS = 7
 const MOBILE_MAX_ITEMS = 4
 
 const { mdAndDown } = useDisplay()
