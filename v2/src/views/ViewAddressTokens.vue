@@ -1,19 +1,27 @@
 <template>
     <v-row :class="rowMargin">
         <v-col cols="12" :class="columnPadding">
-            <v-card elevation="1" rounded="xl">
+            <v-card elevation="1" rounded="xl" class="pt-6">
                 <v-tabs v-model="state.tab" color="primary" end @update:model-value="setLastViewedTab()">
-                    <v-tab :value="routes[0]" class="py-3 text-h5 text-capitalize rounded-b-xl" @click="changeRoute">Balance</v-tab>
-                    <v-tab :value="routes[1]" class="py-3 text-h5 text-capitalize rounded-b-xl" @click="changeRoute">Transfers</v-tab>
+                    <v-tab :value="routes[0]" class="py-3 text-h5 text-capitalize rounded-t-xl" @click="changeRoute">Balance</v-tab>
+                    <v-tab :value="routes[1]" class="py-3 text-h5 text-capitalize rounded-t-xl" @click="changeRoute">Transfers</v-tab>
                 </v-tabs>
-                <v-window v-model="state.tab" class="mt-6">
-                    <v-window-item :value="routes[0]" :key="routes[0]">
-                        <module-address-tokens :address-hash="props.addressRef" :new-erc20-transfer="newErc20Transfer" @resetCount="resetCount" />
-                    </v-window-item>
-                    <v-window-item :value="routes[1]" :key="routes[1]">
-                        <module-address-token-transfers :address-hash="props.addressRef" :new-erc20-transfer="newErc20Transfer" @resetCount="resetCount" />
-                    </v-window-item>
-                </v-window>
+                <module-address-tokens
+                    v-if="state.tab === routes[0]"
+                    class="mb-4"
+                    :address-hash="props.addressRef"
+                    :new-erc20-transfer="newErc20Transfer"
+                    :scroll-id="scrollId"
+                    @resetCount="resetCount"
+                    :key="routes[0]"
+                />
+                <module-address-token-transfers
+                    v-if="state.tab === routes[1]"
+                    :address-hash="props.addressRef"
+                    :new-erc20-transfer="newErc20Transfer"
+                    @resetCount="resetCount"
+                    :key="routes[1]"
+                />
             </v-card>
         </v-col>
     </v-row>
@@ -38,6 +46,10 @@ const props = defineProps({
     tab: {
         type: String,
         required: true
+    },
+    scrollId: {
+        type: String,
+        required: false
     }
 })
 const routes = ADDRESS_ROUTE_QUERY.Q_TOKENS

@@ -1,25 +1,32 @@
 import { TokenOwnersFragment as ERC20TokensType } from '@module/address/apollo/AddressTokens/tokens.generated'
 import { MarketDataFragment as TokenMarketData } from '@core/composables/CoinData/getLatestPrices.generated'
 import BN from 'bignumber.js'
+import { formatUsdValue, formatFloatingPointValue, formatPercentageValue } from '@core/helper/number-format-helper'
 
-const KEY_NAME = 'name'
-const KEY_BALANCE = 'balance'
-const KEY_PERCENTAGE_CHANGE = 'price_change_percentage_24h'
-const KEY_USD = 'usdValue'
-const KEY_SYMBOL = 'symbol'
-const KEY_PRICE = 'current_price'
+enum DIRECTION {
+    HIGH = 'high',
+    LOW = 'low'
+}
+enum KEY {
+    NAME = 'name',
+    BALANCE = 'balance',
+    PERCENTAGE_CHANGE = 'price_change_percentage_24h',
+    USD = 'usdValue',
+    SYMBOL = 'symbol',
+    PRICE = 'current_price'
+}
 
 const TOKEN_FILTER_VALUES = [
-    'name_high',
-    'name_low',
-    'balance_high',
-    'balance_low',
-    'amount_usd_high',
-    'amount_usd_low',
-    'change_high',
-    'change_low',
-    'price_high',
-    'price_low'
+    `${KEY.NAME}_${DIRECTION.LOW}`,
+    `${KEY.NAME}_${DIRECTION.HIGH}`,
+    `${KEY.BALANCE}_${DIRECTION.LOW}`,
+    `${KEY.BALANCE}_${DIRECTION.HIGH}`,
+    `${KEY.USD}_${DIRECTION.LOW}`,
+    `${KEY.USD}_${DIRECTION.HIGH}`,
+    `${KEY.PERCENTAGE_CHANGE}_${DIRECTION.LOW}`,
+    `${KEY.PERCENTAGE_CHANGE}_${DIRECTION.HIGH}`,
+    `${KEY.PRICE}_${DIRECTION.LOW}`,
+    `${KEY.PRICE}_${DIRECTION.HIGH}`
 ]
 /*
 ===================================================================================
@@ -112,6 +119,26 @@ class Token implements TokenInterface {
         }
         return new BN(0)
     }
+
+    public getBalanceFormatted(): string {
+        if (this.balance.gt(0)) {
+            return formatFloatingPointValue(this.balance).value
+        }
+        return ''
+    }
+
+    public getUSDValueFormatted(): string {
+        if (this.usdValue.gt(0)) {
+            return formatUsdValue(this.usdValue).value
+        }
+        return ''
+    }
+    public getPriceChangeFormatted(): string {
+        if (this.price_change_percentage_24h) {
+            return `${formatPercentageValue(this.price_change_percentage_24h).value}%`
+        }
+        return ''
+    }
 }
 
 /*
@@ -121,20 +148,18 @@ class Token implements TokenInterface {
 */
 
 interface SortedInterface {
-    key: string
+    key: KEY
     ascend: Token[]
     desend: Token[]
 }
 
-type Keys = 'isERC20' | 'symbol' | 'name' | 'image' | 'contract' | 'current_price' | 'price_change_percentage_24h' | 'balance' | 'decimals' | 'usdValue'
-
 class Sorted implements SortedInterface {
     /* Properties: */
-    key: string
+    key: KEY
     ascend: Token[] = []
     desend: Token[] = []
     /* Constructor: */
-    constructor(data: Token[], sortKey: Keys) {
+    constructor(data: Token[], sortKey: KEY) {
         this.key = sortKey
         if (data.length > 0) {
             this.desend = [...this.sortByDescend(data, sortKey)]
@@ -149,7 +174,7 @@ class Sorted implements SortedInterface {
      * - Returns { ascend } - otherwise
      */
     getTokens(sortKey: string): Token[] {
-        return sortKey.includes('high') ? this.getDesend() : this.getAscend()
+        return sortKey.includes(DIRECTION.HIGH) ? this.getDesend() : this.getAscend()
     }
 
     /**
@@ -173,9 +198,9 @@ class Sorted implements SortedInterface {
      * When sorting by balance or USD, since values are BN, it needs to be converted to Number
      * @returns { Token[] } - sorted array
      */
-    private sortByDescend(data: Token[], key: Keys): Token[] {
+    private sortByDescend(data: Token[], key: KEY): Token[] {
         if (data?.length && key) {
-            if (key === KEY_BALANCE || key === KEY_USD) {
+            if (key === KEY.BALANCE || key === KEY.USD) {
                 return data.sort((x, y) => {
                     const a = y[key].toNumber()
                     const b = x[key].toNumber()
@@ -183,7 +208,7 @@ class Sorted implements SortedInterface {
                 })
             }
             // convert to lowercase for name and symbol sort
-            if (key === KEY_NAME || key === KEY_SYMBOL) {
+            if (key === KEY.NAME || key === KEY.SYMBOL) {
                 return data.sort((x, y) => {
                     const a = y[key]?.toString().toLowerCase()
                     const b = x[key]?.toString().toLowerCase()
@@ -229,14 +254,14 @@ class TokenSort implements TokenSortInterface {
                 this.tokens.push(new Token(token, _tokenPrices))
             }
         })
-        this.name = new Sorted(this.tokens, KEY_NAME)
-        this.balance = new Sorted(this.tokens, KEY_BALANCE)
+        this.name = new Sorted(this.tokens, KEY.NAME)
+        this.balance = new Sorted(this.tokens, KEY.BALANCE)
 
         if (isErc20) {
-            this.usdValue = new Sorted(this.tokens, KEY_USD)
-            this.price24h = new Sorted(this.tokens, KEY_PERCENTAGE_CHANGE)
-            this.symbol = new Sorted(this.tokens, KEY_SYMBOL)
-            this.currentPrice = new Sorted(this.tokens, KEY_PRICE)
+            this.usdValue = new Sorted(this.tokens, KEY.USD)
+            this.price24h = new Sorted(this.tokens, KEY.PERCENTAGE_CHANGE)
+            this.symbol = new Sorted(this.tokens, KEY.SYMBOL)
+            this.currentPrice = new Sorted(this.tokens, KEY.PRICE)
         }
     }
     /**
@@ -250,18 +275,20 @@ class TokenSort implements TokenSortInterface {
      */
     getSortedTokens(sortKey: string): Token[] {
         switch (true) {
-            case sortKey.includes('balance'):
+            case sortKey.includes(KEY.BALANCE):
                 return this.balance.getTokens(sortKey)
-            case sortKey.includes('amount'):
+            case sortKey.includes(KEY.USD):
                 return this.usdValue ? this.usdValue.getTokens(sortKey) : []
-            case sortKey.includes('change'):
+            case sortKey.includes(KEY.PERCENTAGE_CHANGE):
                 return this.price24h ? this.price24h.getTokens(sortKey) : []
-            case sortKey.includes('symbol'):
+            case sortKey.includes(KEY.SYMBOL):
                 return this.symbol ? this.symbol.getTokens(sortKey) : []
+            case sortKey.includes(KEY.PRICE):
+                return this.currentPrice ? this.currentPrice.getTokens(sortKey) : []
             default:
                 return this.name.getTokens(sortKey)
         }
     }
 }
 
-export { TOKEN_FILTER_VALUES, TokenSort, Token }
+export { TOKEN_FILTER_VALUES, KEY, DIRECTION, TokenSort, Token }
