@@ -8,7 +8,7 @@
                     :icon-only="props.isOverview"
                     text="Token's Balance Changed, Refresh"
                     :update-count="props.newErc20Transfer"
-                    @reload="setPage(0, true)"
+                    @reload="resetCount"
                 />
             </div>
             <template v-if="props.isOverview">
@@ -145,6 +145,7 @@ import { ROUTE_NAME, ADDRESS_ROUTE_QUERY } from '@core/router/routesNames'
 import AddressBalanceTotals from './components/AddressBalanceTotals.vue'
 import { useDisplay } from 'vuetify/lib/framework.mjs'
 import { useAppTableRowRender } from '@core/composables/AppTableRowRender/useAppTableRowRender.composable'
+
 const { xs } = useDisplay()
 const { loading: loadingCoinData } = useCoinData()
 
@@ -189,8 +190,10 @@ const state: ComponentState = reactive({
     index: 0,
     rowRefs: {}
 })
-
-const { erc20Tokens, loadingTokens, refetchTokens, tokenSort, tokenBalance, initialLoad } = useAddressToken(props.addressHash)
+/**------------------------
+ * Tokens Data
+ -------------------------*/
+const { erc20Tokens, loadingTokens, refetchTokens, tokenSort, tokenBalance } = useAddressToken(props.addressHash)
 
 const hasTokens = computed<boolean>(() => {
     return !!erc20Tokens.value
@@ -214,14 +217,35 @@ const tokens = computed(() => {
     return []
 })
 
-const setPage = (page: number, reset = false): void => {
-    if (reset) {
-        refetchTokens()
-        emit('resetCount', AddressEventType.NewErc20Transfer, true)
-    }
-    state.index = page
+/**------------------------
+ * Table Sorting
+ -------------------------*/
+
+const sortTable = (key: KEY): void => {
+    state.sortDirection = state.sortDirection === DIRECTION.HIGH ? DIRECTION.LOW : DIRECTION.HIGH
+    state.sortKey = `${key}_${state.sortDirection}`
+}
+const sortIcon = computed<string>(() => {
+    return state.sortDirection === DIRECTION.HIGH ? 'south' : 'north'
+})
+
+const isActiveSort = (key: KEY): boolean => {
+    return state.sortKey.includes(key)
 }
 
+const SORT_KEY = KEY
+
+/**------------------------
+ * Refetch Tokens
+ -------------------------*/
+const resetCount = (): void => {
+    refetchTokens()
+    emit('resetCount', AddressEventType.NewErc20Transfer, true)
+}
+
+/**------------------------
+ * Route Changes
+ -------------------------*/
 const router = useRouter()
 
 const routeToToken = (id: string) => {
@@ -237,7 +261,9 @@ const goToTokensBalancePage = async () => {
     })
 }
 
-// Scroll Bahavior
+/**------------------------
+ * Scroll to Element Handling
+ -------------------------*/
 const assignRef = (contract: string, el: HTMLInputElement | null) => {
     state.rowRefs[contract] = el
 }
@@ -256,6 +282,10 @@ onMounted(() => {
     }
 })
 
+onBeforeUnmount(() => {
+    state.rowRefs = {}
+})
+
 const tableHeight = computed(() => {
     if (props.isOverview && state.rowRefs) {
         const refIds = Object.getOwnPropertyNames(state.rowRefs)
@@ -268,24 +298,8 @@ const tableHeight = computed(() => {
     }
     return {}
 })
-
-const sortTable = (key: KEY): void => {
-    state.sortDirection = state.sortDirection === DIRECTION.HIGH ? DIRECTION.LOW : DIRECTION.HIGH
-    state.sortKey = `${key}_${state.sortDirection}`
-}
-const sortIcon = computed<string>(() => {
-    return state.sortDirection === DIRECTION.HIGH ? 'south' : 'north'
-})
-
-const isActiveSort = (key: KEY): boolean => {
-    return state.sortKey.includes(key)
-}
-onBeforeUnmount(() => {
-    state.rowRefs = {}
-})
-
-const SORT_KEY = KEY
 </script>
+
 <style scoped>
 .module-body {
     overflow-y: overlay;
