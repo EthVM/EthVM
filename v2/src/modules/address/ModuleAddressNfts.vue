@@ -40,9 +40,14 @@ const tokenVisible = (isVisible: boolean, contract: string) => {
 const initialLoad = ref(true)
 
 // Load ERC721 tokens
-const { result: ercOwner721Balances, onResult: onNftLoaded } = useGetOwnersErc721BalancesQuery(() => ({
-    hash: props.addressHash
-}))
+const { result: ercOwner721Balances, onResult: onNftLoaded } = useGetOwnersErc721BalancesQuery(
+    () => ({
+        hash: props.addressHash
+    }),
+    () => ({
+        fetchPolicy: 'cache-and-network'
+    })
+)
 
 onNftLoaded(() => {
     initialLoad.value = false
