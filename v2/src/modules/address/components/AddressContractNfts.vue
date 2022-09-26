@@ -2,8 +2,8 @@
     <div class="nft-container">
         <app-expansion-panel v-if="!loading && tokens.tokens.length > 0" :title="props.name" class="pt-3" @expand="showMoreTokens">
             <template #visible-content>
-                <v-row class="tokens-list">
-                    <v-col cols="4" md="2" v-for="token in visibleTokens.slice(0, 6)" :key="token.token">
+                <v-row class="tokens-list" :dense="xs">
+                    <v-col cols="6" sm="4" md="3" lg="2" v-for="token in visibleTokens.slice(0, endIndex)" :key="token.token">
                         <div>
                             <v-img :src="getImage(token.token)" max-height="150" />
                             <p class="text-caption">{{ props.name }} #{{ getTokenId(token.token) }}</p>
@@ -12,8 +12,8 @@
                 </v-row>
             </template>
             <template v-if="hasMore" #expand-content>
-                <v-row class="tokens-list">
-                    <v-col cols="4" md="2" v-for="token in visibleTokens.slice(6, state.end)" :key="token.token">
+                <v-row class="tokens-list" :dense="xs">
+                    <v-col cols="6" sm="4" md="3" lg="2" v-for="token in visibleTokens.slice(endIndex, state.end)" :key="token.token">
                         <div>
                             <v-img :src="getImage(token.token)" max-height="150" />
                             <p class="text-caption">{{ props.name }} #{{ getTokenId(token.token) }}</p>
@@ -38,7 +38,7 @@
             </template>
         </app-expansion-panel>
         <template v-else>
-            <v-row>
+            <v-row :dense="xs">
                 <v-col cols="4" md="2">
                     <div>
                         <v-img :src="getImage()" max-height="150" />
@@ -47,7 +47,6 @@
                 </v-col>
             </v-row>
         </template>
-        <v-divider class="my-3" />
     </div>
 </template>
 
@@ -58,7 +57,9 @@ import BigNumber from 'bignumber.js'
 import AppExpansionPanel from '@core/components/AppExpansionPanel.vue'
 import AppIntersect from '@core/components/AppIntersect.vue'
 import configs from '@/configs'
+import { useDisplay } from 'vuetify/lib/framework.mjs'
 
+const { xs, sm, md } = useDisplay()
 const props = defineProps({
     contract: { type: String, required: true },
     addressHash: { type: String, required: true },
@@ -67,7 +68,7 @@ const props = defineProps({
 
 const state = reactive({
     showMore: false,
-    end: 6
+    end: 24
 })
 
 const { result, loading } = useGetOwnersErc721TokensQuery(
@@ -80,6 +81,18 @@ const { result, loading } = useGetOwnersErc721TokensQuery(
     }
 )
 
+const endIndex = computed<number>(() => {
+    if (xs) {
+        return 2
+    }
+    if (sm) {
+        return 3
+    }
+    if (md) {
+        return 4
+    }
+    return 6
+})
 const tokens = computed<OwnerErc721Fragment | undefined>(() => {
     return result.value?.getOwnersERC721Tokens
 })
@@ -89,7 +102,7 @@ const visibleTokens = computed<TokenFragment[] | undefined>(() => {
 })
 
 const hasMore = computed<boolean>(() => {
-    return tokens.value?.tokens.length > 6
+    return tokens.value?.tokens.length > endIndex.value
 })
 
 const showMoreTokens = () => {
