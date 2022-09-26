@@ -6,7 +6,7 @@
         <v-col cols="12" md="6" lg="4" :class="columnPadding">
             <module-address-balance :address-ref="props.addressRef" is-overview />
         </v-col>
-        <v-col cols="12" md="6" lg="4" :class="columnPadding">
+        <v-col cols="12" md="6" lg="4" :class="[columnPadding, 'd-none d-sm-block']">
             <module-address-token-balance :address-ref="props.addressRef" />
         </v-col>
         <v-col cols="12" lg="6" :class="columnPadding">

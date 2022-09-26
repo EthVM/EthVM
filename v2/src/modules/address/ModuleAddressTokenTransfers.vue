@@ -1,5 +1,5 @@
 <template>
-    <v-card :variant="!props.isOverview ? 'flat' : 'elevated'" :elevation="props.isOverview ? 1 : 0" rounded="xl" class="pa-4 pa-sm-6">
+    <v-card :variant="!props.isOverview ? 'flat' : 'elevated'" :elevation="props.isOverview ? 1 : 0" rounded="xl" class="pa-4 pa-sm-6 fill-height">
         <v-card-title class="d-flex justify-space-between align-center pa-0">
             <div>
                 <v-row align="center" class="my-0 mx-0">
@@ -20,8 +20,8 @@
                     />
                 </v-row>
             </div>
-            <app-btn v-if="props.isOverview && !mdAndDown" text="More" isSmall icon="east" @click="goToTokenTransfersPage"></app-btn>
-            <app-btn-icon v-if="props.isOverview && mdAndDown" icon="more_horiz" @click="goToTokenTransfersPage"></app-btn-icon>
+            <app-btn v-if="props.isOverview && !xs" text="More" isSmall icon="east" @click="goToTokenTransfersPage"></app-btn>
+            <app-btn-icon v-if="props.isOverview && xs" icon="more_horiz" @click="goToTokenTransfersPage"></app-btn-icon>
         </v-card-title>
         <div class="mt-2 mt-sm-5 mb-n5">
             <!--            Table Header-->
@@ -86,7 +86,7 @@ const MAX_ITEMS = 10
 const OVERVIEW_MAX_ITEMS = 7
 const MOBILE_MAX_ITEMS = 4
 
-const { mdAndDown } = useDisplay()
+const { mdAndDown, xs } = useDisplay()
 const props = defineProps({
     addressHash: {
         type: String,

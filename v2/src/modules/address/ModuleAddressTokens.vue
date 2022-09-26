@@ -1,5 +1,5 @@
 <template>
-    <v-card :variant="!props.isOverview ? 'flat' : 'elevated'" :elevation="props.isOverview ? 1 : 0" rounded="xl" class="pa-4 pa-sm-6">
+    <v-card :variant="!props.isOverview ? 'flat' : 'elevated'" :elevation="props.isOverview ? 1 : 0" rounded="xl" class="pa-4 pa-sm-6 fill-height">
         <v-card-title class="d-none d-sm-flex justify-space-between align-center pa-0">
             <div>
                 <span v-if="props.isOverview" class="text-h6 font-weight-bold">Token Balance</span>
@@ -290,7 +290,7 @@ const tableHeight = computed(() => {
     if (props.isOverview && state.rowRefs) {
         const refIds = Object.getOwnPropertyNames(state.rowRefs)
         const rowHeight = state.rowRefs[refIds[0]]?.offsetHeight
-        const offset = xs.value ? 4 : 20
+        const offset = xs.value ? 4 : 16
         if (rowHeight) {
             const maxHeight = rowHeight * 6 + offset
             return { maxHeight: `${maxHeight}px` }
