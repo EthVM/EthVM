@@ -20,7 +20,7 @@
                 <v-col md="3" class="py-0"> Balance After </v-col>
             </v-row>
             <v-divider class="my-0 mt-sm-4 mx-n4 mx-sm-n6" />
-            <template v-if="!initialLoad">
+            <template v-if="!initialLoad && renderState.renderTable">
                 <template v-if="rewards.length > 0">
                     <div v-for="(reward, index) in rewards" :key="index">
                         <minor-blocks-table-row :reward="reward" />
@@ -56,6 +56,7 @@ import { AddressEventType } from '@/apollo/types'
 import { useRouter } from 'vue-router'
 import { useDisplay } from 'vuetify'
 import { ROUTE_NAME, ADDRESS_ROUTE_QUERY } from '@core/router/routesNames'
+import { useAppTableRowRender } from '@core/composables/AppTableRowRender/useAppTableRowRender.composable'
 const { smAndDown, mdAndDown } = useDisplay()
 
 const MOBILE_MAX_ITEMS = 4
@@ -147,7 +148,30 @@ const headerTitle = computed<string>(() => {
 })
 
 /*
- * Handle result pagination
+ * Initial load will be true only when the data is being loaded initially
+ */
+const initialLoad = computed<boolean>(() => {
+    if (props.rewardType === 'block') {
+        return !addressRewardsBlockQueryResult.value
+    }
+    return !addressRewardsUncleQueryResult.value
+})
+
+/**
+ * Render State Tracking
+ */
+
+const rewardsLength = computed<number>(() => {
+    if (!initialLoad.value && addressRewards.value) {
+        return addressRewards.value?.transfers.length
+    }
+    return 0
+})
+
+const { renderState } = useAppTableRowRender(rewardsLength.value)
+
+/*
+ * Handle result and render on preloaded tables
  */
 const rewards = computed<Array<RewardTransferFragment | null>>(() => {
     if (!initialLoad.value && addressRewards.value) {
@@ -159,19 +183,9 @@ const rewards = computed<Array<RewardTransferFragment | null>>(() => {
         if (props.isOverview) {
             return addressRewards.value?.transfers.slice(start, props.maxItems)
         }
-        return addressRewards.value?.transfers
+        return renderState.isActive ? addressRewards.value?.transfers.slice(0, renderState.maxItems) : addressRewards.value?.transfers
     }
     return []
-})
-
-/*
- * Initial load will be true only when the data is being loaded initially
- */
-const initialLoad = computed<boolean>(() => {
-    if (props.rewardType === 'block') {
-        return !addressRewardsBlockQueryResult.value
-    }
-    return !addressRewardsUncleQueryResult.value
 })
 
 const isLoadingRewards = computed<boolean>(() => {

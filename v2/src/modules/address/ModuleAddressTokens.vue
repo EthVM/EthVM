@@ -25,7 +25,7 @@
         </address-balance-totals>
 
         <!--Table Header-->
-        <v-row :dense="xs" :class="[isOverview ? 'mt-sm-5' : 'mt-sm-4', 'd-flex text-body-1 text-info mb-sm-3']" justify="xs? 'end">
+        <v-row :dense="xs" :class="[isOverview ? 'mt-sm-5' : 'mt-sm-4', 'd-flex text-body-1 text-info mb-sm-3']" :justify="xs ? 'end' : 'start'">
             <!--
                 Token on Overview:
                 XS: NONE
