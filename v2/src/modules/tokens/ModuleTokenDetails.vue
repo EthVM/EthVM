@@ -22,20 +22,16 @@
                     <v-tab :value="routes[0]" class="py-3 text-h5 text-capitalize rounded-b-xl" @click="changeRoute">Transfers</v-tab>
                     <v-tab :value="routes[1]" class="py-3 text-h5 text-capitalize rounded-b-xl" @click="changeRoute">Holders</v-tab>
                 </v-tabs>
-                <v-window v-model="state.tab" class="mt-6">
-                    <v-window-item :value="routes[0]" :key="routes[0]">
-                        <token-transfers
-                            :address="props.addressRef"
-                            :page-type="'token'"
-                            :decimals="decimals"
-                            :symbol="symbol"
-                            @errorDetails="emitErrorState"
-                        />
-                    </v-window-item>
-                    <v-window-item :value="routes[1]" :key="routes[1]">
-                        <token-holders :address="props.addressRef" :decimals="decimals" @errorDetails="emitErrorState" @isNft="setTokenType" />
-                    </v-window-item>
-                </v-window>
+                <div class="mt-6">
+                    <token-transfers :address="props.addressRef" :page-type="'token'" :decimals="decimals" :symbol="symbol" @errorDetails="emitErrorState" />
+                    <token-holders
+                        v-show="state.tab === routes[1]"
+                        :address="props.addressRef"
+                        :decimals="decimals"
+                        @errorDetails="emitErrorState"
+                        @isNft="setTokenType"
+                    />
+                </div>
             </v-card>
         </div>
         <!--

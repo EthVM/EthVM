@@ -9,14 +9,10 @@
                     <v-tab :value="routes[0]" class="py-3 text-h5 text-capitalize rounded-b-xl" @click="changeRoute">Blocks</v-tab>
                     <v-tab :value="routes[1]" class="py-3 text-h5 text-capitalize rounded-b-xl" @click="changeRoute">Transactions</v-tab>
                 </v-tabs>
-                <v-window v-model="state.tab" class="mt-6">
-                    <v-window-item :value="routes[0]" :key="routes[0]">
-                        <recent-blocks :max-items="10" page-type="blocks" />
-                    </v-window-item>
-                    <v-window-item :value="routes[1]" :key="routes[1]">
-                        <module-txs :max-items="10" page-type="txs" />
-                    </v-window-item>
-                </v-window>
+                <div class="mt-6">
+                    <recent-blocks v-show="state.tab === routes[0]" :max-items="10" page-type="blocks" />
+                    <module-txs v-show="state.tab === routes[1]" :max-items="10" page-type="txs" />
+                </div>
             </v-card>
         </v-col>
     </v-row>
