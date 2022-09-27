@@ -42,7 +42,7 @@
                     <div class="skeleton-box rounded-xl mt-1 my-4" style="height: 24px"></div>
                 </div>
             </template>
-            <template v-else>
+            <template v-else-if="!initialLoad && renderState.renderTable">
                 <div v-for="(transfer, index) in transfers" :key="`${transfer.transfer.transactionHash} - ${index}`">
                     <address-token-transfers-row
                         :transfer="transfer"
@@ -78,6 +78,8 @@ import { AddressEventType } from '@/apollo/types'
 import { useAddressToken } from '@core/composables/AddressTokens/addressTokens.composable'
 import { useRouter } from 'vue-router'
 import { ADDRESS_ROUTE_QUERY, ROUTE_NAME } from '@core/router/routesNames'
+import { useAppTableRowRender } from '@core/composables/AppTableRowRender/useAppTableRowRender.composable'
+
 const { getEthereumTokensMap } = useCoinData()
 
 const MAX_ITEMS = 10
@@ -139,6 +141,16 @@ const hasMore = computed<boolean>(() => {
 
 const transferHistory = computed<Array<Transfer | null>>(() => result.value?.getERC20Transfers.transfers || [])
 
+/**
+ * Render State Tracking
+ */
+
+const transfersLength = computed<number>(() => {
+    return transferHistory.value.length
+})
+
+const { renderState } = useAppTableRowRender(transfersLength.value)
+
 const transfers = computed<Array<Transfer | null>>(() => {
     if (transferHistory.value.length > 0) {
         const start = OVERVIEW_MAX_ITEMS * state.index
@@ -150,7 +162,7 @@ const transfers = computed<Array<Transfer | null>>(() => {
         if (props.isOverview) {
             return transferHistory.value.slice(start, end)
         }
-        return transferHistory.value
+        return renderState.isActive ? transferHistory.value.slice(0, renderState.maxItems) : transferHistory.value
     }
     return []
 })

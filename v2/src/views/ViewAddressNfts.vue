@@ -6,14 +6,10 @@
                     <v-tab :value="routes[0]" class="py-3 text-h5 text-capitalize rounded-b-xl" @click="changeRoute">Collection</v-tab>
                     <v-tab :value="routes[1]" class="py-3 text-h5 text-capitalize rounded-b-xl" @click="changeRoute">Transfers</v-tab>
                 </v-tabs>
-                <v-window v-model="state.tab" class="mt-6">
-                    <v-window-item :value="routes[0]" :key="routes[0]">
-                        <module-address-nfts class="mb-4" :address-hash="props.addressRef" />
-                    </v-window-item>
-                    <v-window-item :value="routes[1]" :key="routes[1]">
-                        <module-address-nft-transfers class="mb-4" :address-hash="props.addressRef" />
-                    </v-window-item>
-                </v-window>
+                <div class="mt-6">
+                    <module-address-nfts v-show="state.tab === routes[0]" class="mb-4" :address-hash="props.addressRef" />
+                    <module-address-nft-transfers v-show="state.tab === routes[1]" class="mb-4" :address-hash="props.addressRef" />
+                </div>
             </v-card>
         </v-col>
     </v-row>
