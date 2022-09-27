@@ -46,7 +46,8 @@ import { useBlockSubscription } from '@core/composables/NewBlock/newBlock.compos
 import { useQuery } from '@vue/apollo-composable'
 import { timeAgo, eth } from '@core/helper'
 import { useRoute, useRouter } from 'vue-router'
-const routes = ['transaction', 'more']
+import { Q_BLOCK_DETAILS } from '@core/router/routesNames'
+const routes = Q_BLOCK_DETAILS
 
 const props = defineProps({
     blockRef: String,
@@ -59,8 +60,8 @@ const props = defineProps({
 
 const emit = defineEmits(['errorDetails', 'isMined', 'setBlockNumber'])
 
-const blockDetails = computed<Map<string, Detail>>(() => {
-    const details: Map<string, Detail> = {
+const blockDetails = computed<{ [key: string]: Detail }>(() => {
+    const details: { [key: string]: Detail } = {
         height: {
             title: 'Height',
             detail: formatNumber(blockDetailsData.value?.summary.number)

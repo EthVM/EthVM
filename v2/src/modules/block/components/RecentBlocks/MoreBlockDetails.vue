@@ -92,7 +92,7 @@ import { timeAgo, eth } from '@core/helper'
 import { Detail } from '@core/components/props'
 
 interface ComponentProps {
-    blockDetails: Map<string, Detail>
+    blockDetails: { [key: string]: Detail }
     uncleHashes: string[]
     isLoading: boolean
 }
