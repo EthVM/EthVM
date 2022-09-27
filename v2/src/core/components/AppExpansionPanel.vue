@@ -13,8 +13,6 @@
             >{{ props.title }} <v-icon class="ml-4" size="large">{{ icon }}</v-icon></v-btn
         >
         <p v-else class="text-h6 mr-3 font-weight-bold">{{ props.title }}</p>
-
-        <!-- <app-btn-icon  :icon="icon" size="default" ></app-btn-icon> -->
     </v-row>
     <v-divider></v-divider>
     <v-card fluid width="auto" flat class="mx-6">
@@ -35,7 +33,6 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue'
-import AppBtnIcon from './AppBtnIcon.vue'
 /**
  * title @string - title of the expansion panel
  */
