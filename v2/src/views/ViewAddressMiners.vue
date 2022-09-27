@@ -1,10 +1,10 @@
 <template>
     <v-row :class="rowMargin">
         <v-col cols="12" :class="columnPadding">
-            <v-card elevation="1" rounded="xl" class="py-6">
+            <v-card elevation="1" rounded="xl" class="pt-2 pt-sm-6">
                 <v-tabs v-model="state.tab" color="primary" end @update:model-value="setLastViewedTab()">
-                    <v-tab :value="routes[0]" class="py-3 text-h5 text-capitalize rounded-b-xl" @click="changeRoute">Blocks</v-tab>
-                    <v-tab :value="routes[1]" class="py-3 text-h5 text-capitalize rounded-b-xl" @click="changeRoute">Uncles</v-tab>
+                    <v-tab :value="routes[0]" class="py-3 text-h5 text-capitalize rounded-t-xl" @click="changeRoute">Blocks</v-tab>
+                    <v-tab :value="routes[1]" class="py-3 text-h5 text-capitalize rounded-t-xl" @click="changeRoute">Uncles</v-tab>
                 </v-tabs>
                 <div class="mt-6">
                     <module-address-miner-block
