@@ -1,5 +1,5 @@
 <template>
-    <v-card color="greyCard" class="pa-4 pa-sm-6 align-center d-flex justify-center" flat :min-height="xs ? 66 : 112">
+    <v-card color="greyCard" class="pa-4 pa-sm-6 align-center d-flex justify-center" flat :min-height="xs ? 66 : 112" rounded="xl">
         <p class="text-info text-center">
             <span><v-icon class="mr-2">info</v-icon></span
             >{{ props.text }}

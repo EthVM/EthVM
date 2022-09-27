@@ -43,19 +43,22 @@
                 </div>
             </template>
             <template v-else-if="!initialLoad && renderState.renderTable">
-                <div v-for="(transfer, index) in transfers" :key="`${transfer.transfer.transactionHash} - ${index}`">
-                    <address-token-transfers-row
-                        :transfer="transfer"
-                        :index="index"
-                        :token-img="tokenImg"
-                        :is-overview="props.isOverview"
-                        :address-hash="props.addressHash"
-                    />
+                <div v-if="transfers.length > 0">
+                    <div v-for="(transfer, index) in transfers" :key="`${transfer.transfer.transactionHash} - ${index}`">
+                        <address-token-transfers-row
+                            :transfer="transfer"
+                            :index="index"
+                            :token-img="tokenImg"
+                            :is-overview="props.isOverview"
+                            :address-hash="props.addressHash"
+                        />
+                    </div>
+                    <app-intersect v-if="!props.isOverview && hasMore" @intersect="loadMoreData">
+                        <div class="skeleton-box rounded-xl mt-1 my-4" style="height: 24px"></div>
+                        <v-divider />
+                    </app-intersect>
                 </div>
-                <app-intersect v-if="!props.isOverview && hasMore" @intersect="loadMoreData">
-                    <div class="skeleton-box rounded-xl mt-1 my-4" style="height: 24px"></div>
-                    <v-divider />
-                </app-intersect>
+                <app-no-result v-else text="This address does not have any token transfer history" class="mt-4 mt-sm-6 mb-5 mb-lg-0"></app-no-result>
             </template>
         </div>
     </v-card>
@@ -79,6 +82,7 @@ import { useAddressToken } from '@core/composables/AddressTokens/addressTokens.c
 import { useRouter } from 'vue-router'
 import { ADDRESS_ROUTE_QUERY, ROUTE_NAME } from '@core/router/routesNames'
 import { useAppTableRowRender } from '@core/composables/AppTableRowRender/useAppTableRowRender.composable'
+import AppNoResult from '@/core/components/AppNoResult.vue'
 
 const { getEthereumTokensMap } = useCoinData()
 

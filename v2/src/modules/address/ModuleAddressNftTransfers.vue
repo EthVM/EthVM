@@ -48,7 +48,7 @@
             </template>
             <template v-else>
                 <template v-if="transfers.length < 1">
-                    <p class="text-h4 text-center my-2">This address does not hold any NFTs (ERC721 tokens)</p>
+                    <app-no-result text="This address does not have any NFT transfer history" class="mt-4 mt-sm-6"></app-no-result>
                 </template>
                 <template v-else-if="transfers.length > 0 && renderState.renderTable">
                     <div v-for="(transfer, index) in transfers" :key="`${transfer.transfer.transactionHash} - ${index}`" class="position-relative">
@@ -82,6 +82,7 @@ import { useAddressToken } from '@core/composables/AddressTokens/addressTokens.c
 import { useRouter } from 'vue-router'
 import { ADDRESS_ROUTE_QUERY, ROUTE_NAME } from '@core/router/routesNames'
 import { useAppTableRowRender } from '@core/composables/AppTableRowRender/useAppTableRowRender.composable'
+import AppNoResult from '@/core/components/AppNoResult.vue'
 
 const MAX_ITEMS = 10
 const OVERVIEW_MAX_ITEMS = 6

@@ -118,15 +118,18 @@
             :class="['mx-n4 mx-sm-n6 px-4 px-sm-6 mt-2', { 'module-body mt-n1 mt-sm-n5 pt-1 pt-sm-5': props.isOverview }]"
             :style="tableHeight"
         >
-            <div v-for="token in tokens" :key="token.contract" :ref="el => assignRef(token.contract, el)">
-                <table-row-token-balance
-                    :token="token"
-                    :is-overview="props.isOverview"
-                    @setActiveToken="routeToToken"
-                    :is-active="props.scrollId === token.contract"
-                >
-                </table-row-token-balance>
+            <div v-if="tokens.length > 0">
+                <div v-for="token in tokens" :key="token.contract" :ref="el => assignRef(token.contract, el)">
+                    <table-row-token-balance
+                        :token="token"
+                        :is-overview="props.isOverview"
+                        @setActiveToken="routeToToken"
+                        :is-active="props.scrollId === token.contract"
+                    >
+                    </table-row-token-balance>
+                </div>
             </div>
+            <app-no-result v-else text="This address does not hold any tokens" class="mt-3 mt-sm-1"></app-no-result>
         </div>
     </v-card>
 </template>
@@ -143,6 +146,7 @@ import { AddressEventType } from '@/apollo/types'
 import { useRouter } from 'vue-router'
 import { ROUTE_NAME, ADDRESS_ROUTE_QUERY } from '@core/router/routesNames'
 import AddressBalanceTotals from './components/AddressBalanceTotals.vue'
+import AppNoResult from '@/core/components/AppNoResult.vue'
 import { useDisplay } from 'vuetify/lib/framework.mjs'
 import { useAppTableRowRender } from '@core/composables/AppTableRowRender/useAppTableRowRender.composable'
 
