@@ -58,7 +58,7 @@
                         <v-divider />
                     </app-intersect>
                 </div>
-                <app-no-result v-else text="This address does not have any token transfer history" class="mt-4 mt-sm-6 mb-5 mb-lg-0"></app-no-result>
+                <app-no-result v-else text="This address does not have any token transfer history" class="mt-4 mt-sm-6 mb-5"></app-no-result>
             </template>
         </div>
     </v-card>
