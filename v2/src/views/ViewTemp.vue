@@ -34,7 +34,7 @@
                     <v-col cols="12">
                         <app-expansion-panel title="EP with img slot" class="pt-3">
                             <template #title-content>
-                                <v-img :src="require('@/assets/icon-token.png')" height="24" max-width="24" class="mr-2"></v-img>
+                                <v-img :src="require('@/assets/icon-token.png')" height="24" max-width="24" class="mr-4"></v-img>
                             </template>
                             <template #visible-content>
                                 <p v-for="i in 3" :key="i">Hello {{ i }}</p></template

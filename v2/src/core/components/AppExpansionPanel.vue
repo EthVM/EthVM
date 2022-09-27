@@ -4,8 +4,17 @@
             Use title-content slot to insert image before title
         -->
         <slot name="title-content"></slot>
-        <p class="text-h6 mr-4">{{ props.title }}</p>
-        <app-btn-icon v-if="$slots['expand-content']" :icon="icon" size="default" @click="expandPanel"></app-btn-icon>
+        <v-btn
+            v-if="$slots['expand-content']"
+            variant="text"
+            rounded="pill"
+            :class="[{ 'ml-n4': !$slots['title-content'] }, 'text-h6 font-weight-bold']"
+            @click="expandPanel"
+            >{{ props.title }} <v-icon class="ml-4" size="large">{{ icon }}</v-icon></v-btn
+        >
+        <p v-else class="text-h6 mr-3 font-weight-bold">{{ props.title }}</p>
+
+        <!-- <app-btn-icon  :icon="icon" size="default" ></app-btn-icon> -->
     </v-row>
     <v-divider></v-divider>
     <v-card fluid width="auto" flat class="mx-6">

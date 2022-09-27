@@ -2,7 +2,7 @@
     <div class="nft-container">
         <app-expansion-panel v-if="!loading && tokens.tokens.length > 0" :title="props.name" class="pt-3" @expand="showMoreTokens">
             <template #title-content>
-                <v-img :src="image" contain @error="imgLoadFail" max-height="60" max-width="60" class="mr-4"></v-img>
+                <v-img :src="image" contain @error="imgLoadFail" max-height="60" max-width="60" :class="[{ 'mr-4': !hasMore }]"></v-img>
             </template>
             <template #visible-content>
                 <v-row class="tokens-list mt-3" :dense="xs">
