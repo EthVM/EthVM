@@ -5,11 +5,11 @@
                 <v-img :src="image" contain @error="imgLoadFail" max-height="60" max-width="60" class="mr-4"></v-img>
             </template>
             <template #visible-content>
-                <v-row class="tokens-list" :dense="xs">
+                <v-row class="tokens-list mt-3" :dense="xs">
                     <v-col cols="6" sm="4" md="3" lg="2" v-for="token in visibleTokens.slice(0, endIndex)" :key="token.token">
                         <div>
-                            <v-img :src="getImage(token.token)" max-height="150" />
-                            <p class="text-caption">{{ props.name }} #{{ getTokenId(token.token) }}</p>
+                            <v-img :src="getImage(token.token)" cover />
+                            <p class="mt-2">{{ props.name }} #{{ getTokenId(token.token) }}</p>
                         </div>
                     </v-col>
                 </v-row>
@@ -18,21 +18,21 @@
                 <v-row class="tokens-list" :dense="xs">
                     <v-col cols="6" sm="4" md="3" lg="2" v-for="token in visibleTokens.slice(endIndex, state.end)" :key="token.token">
                         <div>
-                            <v-img :src="getImage(token.token)" max-height="150" />
-                            <p class="text-caption">{{ props.name }} #{{ getTokenId(token.token) }}</p>
+                            <v-img :src="getImage(token.token)" cover />
+                            <p class="mt-2">{{ props.name }} #{{ getTokenId(token.token) }}</p>
                         </div>
                     </v-col>
                     <template v-if="visibleTokens.length > 6">
                         <app-intersect @intersect="onIntersect">
                             <v-row class="ma-0">
-                                <v-col cols="4" md="2">
-                                    <v-img :src="getImage()" height="150" />
+                                <v-col c cols="6" sm="4" md="3" lg="2">
+                                    <v-img :src="getImage()" cover />
                                 </v-col>
-                                <v-col cols="4" md="2">
-                                    <v-img :src="getImage()" height="150" />
+                                <v-col cols="6" sm="4" md="3" lg="2">
+                                    <v-img :src="getImage()" cover />
                                 </v-col>
-                                <v-col cols="4" md="2">
-                                    <v-img :src="getImage()" height="150" />
+                                <v-col cols="6" sm="4" md="3" lg="2">
+                                    <v-img :src="getImage()" cover />
                                 </v-col>
                             </v-row>
                         </app-intersect>
@@ -42,10 +42,10 @@
         </app-expansion-panel>
         <template v-else>
             <v-row :dense="xs">
-                <v-col cols="4" md="2">
+                <v-col cols="6" sm="4" md="3" lg="2">
                     <div>
                         <v-img :src="getImage()" max-height="150" />
-                        <p class="text-caption">{{ props.name }}</p>
+                        <p class="mt-2">{{ props.name }}</p>
                     </div>
                 </v-col>
             </v-row>
