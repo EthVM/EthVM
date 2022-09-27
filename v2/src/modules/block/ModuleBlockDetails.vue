@@ -12,14 +12,15 @@
             <v-tab :value="routes[0]" class="py-3 text-h5 text-capitalize rounded-b-xl" @click="changeRoute">Transactions</v-tab>
             <v-tab :value="routes[1]" class="py-3 text-h5 text-capitalize rounded-b-xl" @click="changeRoute">More</v-tab>
         </v-tabs>
-        <v-window v-model="state.tab">
-            <v-window-item :value="routes[0]" :key="routes[0]">
-                <block-txs :max-items="10" :block-ref="props.blockRef" :is-hash="isHash" :is-mined="state.isMined" page-type="blockDetails" />
-            </v-window-item>
-            <v-window-item :value="routes[1]" :key="routes[1]">
-                <more-block-details :block-details="blockDetails" :uncle-hashes="uncleHashes" :is-loading="isLoading" />
-            </v-window-item>
-        </v-window>
+        <block-txs
+            v-show="state.tab === routes[0]"
+            :max-items="10"
+            :block-ref="props.blockRef"
+            :is-hash="isHash"
+            :is-mined="state.isMined"
+            page-type="blockDetails"
+        />
+        <more-block-details v-show="state.tab === routes[1]" :block-details="blockDetails" :uncle-hashes="uncleHashes" :is-loading="isLoading" />
     </v-card>
 </template>
 
