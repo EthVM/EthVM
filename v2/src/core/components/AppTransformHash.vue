@@ -1,6 +1,6 @@
 <template>
     <div class="hash-container font-mono">
-        <div v-if="!hasLink" :class="props.isBlue ? `secondary--text` : `black--text`">
+        <div v-if="!hasLink" :class="props.isBlue ? `text-secondary` : `black--text`">
             <div class="firstPart">{{ start }}</div>
             <span v-if="props.isShort">...</span>
             <div class="lastPart">{{ end }}</div>
