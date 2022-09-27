@@ -1,6 +1,9 @@
 <template>
     <div class="nft-container">
         <app-expansion-panel v-if="!loading && tokens.tokens.length > 0" :title="props.name" class="pt-3" @expand="showMoreTokens">
+            <template #title-content>
+                <v-img :src="image" contain @error="imgLoadFail" max-height="60" max-width="60" class="mr-4"></v-img>
+            </template>
             <template #visible-content>
                 <v-row class="tokens-list" :dense="xs">
                     <v-col cols="6" sm="4" md="3" lg="2" v-for="token in visibleTokens.slice(0, endIndex)" :key="token.token">
@@ -63,12 +66,14 @@ const { xs, sm, md } = useDisplay()
 const props = defineProps({
     contract: { type: String, required: true },
     addressHash: { type: String, required: true },
-    name: { type: String, required: true }
+    name: { type: String, required: true },
+    img: { type: String, required: true }
 })
 
 const state = reactive({
     showMore: false,
-    end: 24
+    end: 24,
+    imageExhist: true
 })
 
 const { result, loading } = useGetOwnersErc721TokensQuery(
@@ -124,11 +129,24 @@ const getImage = (token: string): string => {
     }
     return require('@/assets/icon-token.png')
 }
-const onIntersect = (e: boolean): false => {
+const onIntersect = (e: boolean): void => {
     if (e) {
         state.end += 24
     }
 }
+/**
+ * Image loading failed catcher
+ */
+const imgLoadFail = (): void => {
+    state.imageExhist = false
+}
+
+const image = computed<string>(() => {
+    if (props.img !== '') {
+        return props.img
+    }
+    return require('@/assets/icon-token.png')
+})
 </script>
 
 <style lang="scss" scoped>
