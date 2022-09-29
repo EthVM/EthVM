@@ -1,5 +1,5 @@
 <template>
-    <v-menu close-delay="100" max-height="500" open-delay="60" :open-on-hover="openOnHover" transition="slide-y-transition" location="bottom">
+    <v-menu close-delay="100" max-height="500" open-delay="60" :open-on-hover="openOnHover" location="bottom">
         <template #activator="{ props }">
             <slot name="activator" v-bind="props" />
         </template>
