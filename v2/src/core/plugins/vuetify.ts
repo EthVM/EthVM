@@ -1,4 +1,3 @@
-import { aliases } from 'vuetify/iconsets/md'
 // Styles
 import 'material-design-icons-iconfont/dist/material-design-icons.css'
 import '@/styles/main.scss'
@@ -87,7 +86,7 @@ const mainnetDarkTheme: ThemeDefinition = {
         'on-surface-tabs': COLORS.lightBlue,
         pillGrey: COLORS.greyBackdroundDM,
         tableGrey: COLORS.greyBackdroundDM,
-        whiteLogo: COLORS.white
+        whiteLogo: COLORS.white,
         greyCard: COLORS.greyBackdroundDM
     },
     variables: {
