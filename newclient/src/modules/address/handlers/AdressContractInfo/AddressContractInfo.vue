@@ -577,7 +577,7 @@ export default class AddressContractInfo extends Vue {
             .query({
                 query: getContractInput,
                 variables: {
-                    address: this.address,
+                    address: this.address.toLowerCase(),
                     chainId: 1
                 },
                 client: 'ContractsClient',
@@ -594,7 +594,6 @@ export default class AddressContractInfo extends Vue {
             })
             .catch(error => {
                 this.isLoadingInput = false
-                console.log('Error in input: ', error)
                 // this.emitErrorState(true, ErrorMessage.contractTimestampNotFound)
             })
     }
@@ -604,7 +603,7 @@ export default class AddressContractInfo extends Vue {
             .query({
                 query: getContractConfigs,
                 variables: {
-                    address: this.address,
+                    address: this.address.toLowerCase(),
                     chainId: 1
                 },
                 client: 'ContractsClient',
@@ -618,7 +617,6 @@ export default class AddressContractInfo extends Vue {
             })
             .catch(error => {
                 this.isLoadingConfigs = false
-                console.log('Error in configs: ', error)
                 // this.emitErrorState(true, ErrorMessage.contractTimestampNotFound)
             })
     }
@@ -627,7 +625,7 @@ export default class AddressContractInfo extends Vue {
             .query({
                 query: getContractMetaVerified,
                 variables: {
-                    address: this.address,
+                    address: this.address.toLowerCase(),
                     chainId: 1
                 },
                 client: 'ContractsClient',
@@ -641,7 +639,6 @@ export default class AddressContractInfo extends Vue {
             })
             .catch(error => {
                 this.isLoadingMeta = false
-                console.log('Error in meta: ', error)
                 // this.emitErrorState(true, ErrorMessage.contractTimestampNotFound)
             })
     }
