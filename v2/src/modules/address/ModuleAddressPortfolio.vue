@@ -3,7 +3,7 @@
         <address-balance-totals title="Portfolio Value" :is-loading="isLoading" :balance="portfolioValue"> </address-balance-totals>
         <v-row class="mt-2" align="start">
             <v-col v-if="isLoading" cols="12">
-                <div class="skeleton-box rounded-xl" style="min-height: 140px"></div>
+                <div class="skeleton-box rounded-xl" style="min-height: 161px"></div>
             </v-col>
             <v-col v-if="!isLoading && portfolioValueBN.gt(0)" cols="12" sm="4" md="5">
                 <chart-pie :chart-data="chartData" :loading="false"></chart-pie>

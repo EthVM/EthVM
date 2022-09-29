@@ -1,10 +1,10 @@
 <template>
     <v-row :class="rowMargin">
         <v-col cols="12" :class="columnPadding">
-            <v-card elevation="1" rounded="xl">
+            <v-card elevation="1" rounded="xl" class="pt-2 pt-sm-6">
                 <v-tabs v-model="state.tab" color="primary" end @update:model-value="setLastViewedTab()">
-                    <v-tab :value="routes[0]" class="py-3 text-h5 text-capitalize rounded-b-xl" @click="changeRoute">Collection</v-tab>
-                    <v-tab :value="routes[1]" class="py-3 text-h5 text-capitalize rounded-b-xl" @click="changeRoute">Transfers</v-tab>
+                    <v-tab :value="routes[0]" class="py-3 text-h5 text-capitalize rounded-t-xl" @click="changeRoute">Collection</v-tab>
+                    <v-tab :value="routes[1]" class="py-3 text-h5 text-capitalize rounded-t-xl" @click="changeRoute">Transfers</v-tab>
                 </v-tabs>
                 <div class="mt-6">
                     <module-address-nfts v-show="state.tab === routes[0]" class="mb-4" :address-hash="props.addressRef" />

@@ -1,9 +1,7 @@
 <template>
     <v-row :class="rowMargin">
         <v-col cols="12" :class="columnPadding">
-            <v-card elevation="1" rounded="xl">
-                <module-address-balance :address-ref="props.addressRef" />
-            </v-card>
+            <module-address-balance :address-ref="props.addressRef" />
         </v-col>
     </v-row>
 </template>

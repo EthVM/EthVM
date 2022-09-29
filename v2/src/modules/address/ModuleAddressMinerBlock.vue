@@ -1,5 +1,5 @@
 <template>
-    <v-card :variant="!props.isOverview ? 'flat' : 'elevated'" :elevation="props.isOverview ? 1 : 0" rounded="xl" class="pa-4 pa-sm-6">
+    <v-card :variant="!props.isOverview ? 'flat' : 'elevated'" :elevation="props.isOverview ? 1 : 0" rounded="xl" class="pa-4 pa-sm-6 fill-height">
         <v-card-title class="card-title d-flex justify-space-between align-center mb-5 px-0">
             <div>
                 <span v-if="props.isOverview" class="text-h6 font-weight-bold">{{ headerTitle }}</span>
@@ -31,7 +31,7 @@
                     </app-intersect>
                 </template>
                 <template v-if="rewards.length < 1 && !isLoadingRewards">
-                    <p class="text-h4 text-center my-2">No mining history available for this address</p>
+                    <app-no-result text="This address does not have any mining history" class="mt-4 mt-sm-6"></app-no-result>
                 </template>
             </template>
         </div>
@@ -45,6 +45,8 @@ import AppNewUpdate from '@core/components/AppNewUpdate.vue'
 import AppBtn from '@core/components/AppBtn.vue'
 import AppBtnIcon from '@core/components/AppBtnIcon.vue'
 import AppIntersect from '@core/components/AppIntersect.vue'
+import AppNoResult from '@/core/components/AppNoResult.vue'
+
 import {
     RewardSummaryFragment,
     RewardTransferFragment,

@@ -1,5 +1,5 @@
 <template>
-    <v-card :variant="!props.isOverview ? 'flat' : 'elevated'" :elevation="props.isOverview ? 1 : 0" rounded="xl" class="pa-4 pa-sm-6">
+    <v-card :variant="!props.isOverview ? 'flat' : 'elevated'" :elevation="props.isOverview ? 1 : 0" rounded="xl" class="pa-4 pa-sm-6 fill-height">
         <v-card-title class="d-flex justify-space-between align-center pa-0">
             <div>
                 <v-row align="center" class="my-0 mx-0">
@@ -20,8 +20,8 @@
                     />
                 </v-row>
             </div>
-            <app-btn v-if="props.isOverview && !mdAndDown" text="More" isSmall icon="east" @click="goToTokenTransfersPage"></app-btn>
-            <app-btn-icon v-if="props.isOverview && mdAndDown" icon="more_horiz" @click="goToTokenTransfersPage"></app-btn-icon>
+            <app-btn v-if="props.isOverview && !xs" text="More" isSmall icon="east" @click="goToTokenTransfersPage"></app-btn>
+            <app-btn-icon v-if="props.isOverview && xs" icon="more_horiz" @click="goToTokenTransfersPage"></app-btn-icon>
         </v-card-title>
         <div class="mt-2 mt-sm-5 mb-n5">
             <!--            Table Header-->
@@ -43,19 +43,22 @@
                 </div>
             </template>
             <template v-else-if="!initialLoad && renderState.renderTable">
-                <div v-for="(transfer, index) in transfers" :key="`${transfer.transfer.transactionHash} - ${index}`">
-                    <address-token-transfers-row
-                        :transfer="transfer"
-                        :index="index"
-                        :token-img="tokenImg"
-                        :is-overview="props.isOverview"
-                        :address-hash="props.addressHash"
-                    />
+                <div v-if="transfers.length > 0">
+                    <div v-for="(transfer, index) in transfers" :key="`${transfer.transfer.transactionHash} - ${index}`">
+                        <address-token-transfers-row
+                            :transfer="transfer"
+                            :index="index"
+                            :token-img="tokenImg"
+                            :is-overview="props.isOverview"
+                            :address-hash="props.addressHash"
+                        />
+                    </div>
+                    <app-intersect v-if="!props.isOverview && hasMore" @intersect="loadMoreData">
+                        <div class="skeleton-box rounded-xl mt-1 my-4" style="height: 24px"></div>
+                        <v-divider />
+                    </app-intersect>
                 </div>
-                <app-intersect v-if="!props.isOverview && hasMore" @intersect="loadMoreData">
-                    <div class="skeleton-box rounded-xl mt-1 my-4" style="height: 24px"></div>
-                    <v-divider />
-                </app-intersect>
+                <app-no-result v-else text="This address does not have any token transfer history" class="mt-4 mt-sm-6 mb-5"></app-no-result>
             </template>
         </div>
     </v-card>
@@ -79,6 +82,7 @@ import { useAddressToken } from '@core/composables/AddressTokens/addressTokens.c
 import { useRouter } from 'vue-router'
 import { ADDRESS_ROUTE_QUERY, ROUTE_NAME } from '@core/router/routesNames'
 import { useAppTableRowRender } from '@core/composables/AppTableRowRender/useAppTableRowRender.composable'
+import AppNoResult from '@/core/components/AppNoResult.vue'
 
 const { getEthereumTokensMap } = useCoinData()
 
@@ -86,7 +90,7 @@ const MAX_ITEMS = 10
 const OVERVIEW_MAX_ITEMS = 7
 const MOBILE_MAX_ITEMS = 4
 
-const { mdAndDown } = useDisplay()
+const { mdAndDown, xs } = useDisplay()
 const props = defineProps({
     addressHash: {
         type: String,
