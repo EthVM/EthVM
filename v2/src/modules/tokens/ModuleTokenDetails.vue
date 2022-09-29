@@ -23,7 +23,14 @@
                     <v-tab :value="routes[1]" class="py-3 text-h5 text-capitalize rounded-b-xl" @click="changeRoute">Holders</v-tab>
                 </v-tabs>
                 <div class="mt-6">
-                    <token-transfers :address="props.addressRef" :page-type="'token'" :decimals="decimals" :symbol="symbol" @errorDetails="emitErrorState" />
+                    <token-transfers
+                        v-show="state.tab === routes[0]"
+                        :address="props.addressRef"
+                        :page-type="'token'"
+                        :decimals="decimals"
+                        :symbol="symbol"
+                        @errorDetails="emitErrorState"
+                    />
                     <token-holders
                         v-show="state.tab === routes[1]"
                         :address="props.addressRef"
