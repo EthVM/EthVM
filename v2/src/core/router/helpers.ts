@@ -1,6 +1,6 @@
 import { RouteLocationNormalized, NavigationGuardNext } from 'vue-router'
 
-export const addressRouteGuard = (tab: string) => {
+export const tabViewRouteGuard = (tab: string) => {
     return async (to: RouteLocationNormalized, from: RouteLocationNormalized, next: NavigationGuardNext) => {
         // check if TO query exhists and valid
         if (!to.query.t) {

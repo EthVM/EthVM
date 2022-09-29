@@ -1,5 +1,5 @@
 <template>
-    <v-card fluid class="pa-4 pa-sm-6" elevation="1" rounded="xl" height="100%">
+    <v-card fluid class="pa-4 pa-sm-6 fill-height" elevation="1" rounded="xl">
         <address-balance-totals
             title="Token Balance"
             :is-loading="initialLoad || loadingMarketInfo"
@@ -15,7 +15,6 @@
 <script setup lang="ts">
 import { useAddressToken } from '@core/composables/AddressTokens/addressTokens.composable'
 import { useCoinData } from '@core/composables/CoinData/coinData.composable'
-import { computed } from 'vue'
 import AddressBalanceTotals from './components/AddressBalanceTotals.vue'
 
 const props = defineProps({

@@ -1,11 +1,9 @@
 <template>
-    <v-btn v-if="state.display" class="new-block-alert text-capitalize ma-0" flat @click="onReload" color="primary">
-        {{ buttonText }}
-        <v-icon class="ml-2 secondary--text fas fa-sync small-global-icon-font">sync</v-icon>
-    </v-btn>
+    <app-new-update icon-only text="New blocks" :update-count="state.valueString" @reload="onReload" />
 </template>
 
 <script setup lang="ts">
+import AppNewUpdate from '@core/components/AppNewUpdate.vue'
 import { computed, reactive } from 'vue'
 import { useBlockSubscription } from '@core/composables/NewBlock/newBlock.composable'
 

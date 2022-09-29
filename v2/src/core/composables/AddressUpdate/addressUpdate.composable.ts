@@ -4,6 +4,7 @@ import { AddressEventType } from '@/apollo/types'
 
 export function useAddressUpdate(addressRef: string) {
     const newErc20Transfer = ref(0)
+    const newErc721Transfer = ref(0)
     const newMinedBlocks = ref(0)
     const newMinedUncles = ref(0)
 
@@ -14,6 +15,9 @@ export function useAddressUpdate(addressRef: string) {
     onResult(data => {
         if (data?.data?.addressEvent.event === AddressEventType.NewErc20Transfer) {
             newErc20Transfer.value += 1
+        }
+        if (data?.data?.addressEvent.event === AddressEventType.NewErc721Transfer) {
+            newErc721Transfer.value += 1
         }
         if (data?.data?.addressEvent.event === AddressEventType.NewMinedBlock) {
             newMinedBlocks.value += 1
@@ -28,6 +32,9 @@ export function useAddressUpdate(addressRef: string) {
             case newEvent === AddressEventType.NewErc20Transfer:
                 reset ? (newErc20Transfer.value = 0) : (newErc20Transfer.value += 1)
                 return
+            case newEvent === AddressEventType.NewErc721Transfer:
+                reset ? (newErc721Transfer.value = 0) : (newErc721Transfer.value += 1)
+                return
             case newEvent === AddressEventType.NewMinedBlock:
                 reset ? (newMinedBlocks.value = 0) : (newMinedBlocks.value += 1)
                 return
@@ -38,5 +45,5 @@ export function useAddressUpdate(addressRef: string) {
                 return
         }
     }
-    return { newErc20Transfer, resetCount, onAddressUpdate: onResult, newMinedBlocks, newMinedUncles }
+    return { newErc20Transfer, newErc721Transfer, resetCount, onAddressUpdate: onResult, newMinedBlocks, newMinedUncles }
 }

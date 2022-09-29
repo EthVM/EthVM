@@ -1,33 +1,29 @@
 <template>
-    <v-card flat class="pt-3 pb-3">
-        <v-container fluid>
-            <app-table-title :title="getTitle" :has-pagination="showPagination" :page-type="props.pageType" page-link="/blocks">
-                <template v-if="!isHome" #update>
-                    <notice-new-block @reload="setPage(0, true)" />
-                </template>
-                <template v-if="showPagination && !state.initialLoad" #pagination>
-                    <app-paginate :total="state.totalPages" :current-page="currentPage" @newPage="setPage" />
-                </template>
-            </app-table-title>
-            <table-blocks
-                :max-items="props.maxItems"
-                :index="state.index"
-                :is-loading="loading"
-                :table-message="message"
-                :block-data="blocks"
-                :is-scroll-view="isHome"
-            />
-            <v-row v-if="showPagination && !state.initialLoad" justify="end" row class="pb-1 pr-3 pl-2">
-                <app-paginate :total="state.totalPages" :current-page="currentPage" @newPage="setPage" />
-            </v-row>
-        </v-container>
+    <v-card :variant="isHome ? 'elevated' : 'flat'" :elevation="isHome ? 1 : 0" rounded="xl" class="pa-4 pa-sm-6">
+        <v-card-title class="px-0 mb-5 d-flex align-center justify-space-between">
+            <div class="d-flex align-center">
+                <h1 class="text-h6 font-weight-bold">{{ getTitle }}</h1>
+                <notice-new-block v-if="!isHome" @reload="setPage(0, true)" />
+            </div>
+            <app-btn v-if="isHome" text="More" isSmall icon="east" @click="goToBlocksPage"></app-btn>
+        </v-card-title>
+        <table-blocks
+            :class="isHome && !smAndDown ? 'pt-13' : null"
+            :max-items="props.maxItems"
+            :index="state.index"
+            :is-loading="state.initialLoad"
+            :table-message="message"
+            :block-data="blocks"
+            :is-scroll-view="isHome"
+            :show-intersect="showPagination"
+            @loadMore="loadMoreData"
+        />
     </v-card>
 </template>
 
 <script setup lang="ts">
-import AppTableTitle from '@core/components/AppTableTitle.vue'
+import AppBtn from '@core/components/AppBtn.vue'
 import TableBlocks from '@/modules/block/components/RecentBlocks/BlocksTable.vue'
-import AppPaginate from '@core/components/AppPaginate.vue'
 import NoticeNewBlock from '@/modules/block/components/RecentBlocks/NoticeNewBlock.vue'
 import BN from 'bignumber.js'
 import {
@@ -38,6 +34,10 @@ import {
     NewBlockTableSubscription
 } from './apollo/RecentBlocks/recentBlocks.generated'
 import { computed, reactive, onMounted } from 'vue'
+import { useDisplay } from 'vuetify'
+import { Q_BLOCKS_AND_TXS, ROUTE_NAME } from '@core/router/routesNames'
+import { useRouter } from 'vue-router'
+const { smAndDown } = useDisplay()
 
 interface BlockMap {
     [key: number]: TypeBlocks
@@ -75,8 +75,8 @@ const props = defineProps({
  * =======================================================
  */
 const blocks = computed<TypeBlocks | []>(() => {
-    if (state.indexedBlocks && state.indexedBlocks[state.index]) {
-        return state.indexedBlocks[state.index]
+    if (blockArrays.value && !state.initialLoad) {
+        return blockArrays.value.getBlocksArrayByNumber
     }
     return []
 })
@@ -87,7 +87,7 @@ const message = computed<string>(() => {
 
 const getTitle = computed<string>(() => {
     const titles = {
-        blocks: 'Last Blocks',
+        blocks: 'All Blocks',
         address: 'Mined Blocks',
         home: 'Last Blocks'
     }
@@ -122,6 +122,7 @@ const showPagination = computed<boolean>(() => {
  * =======================================================
  */
 const {
+    result: blockArrays,
     loading: loadingBlocks,
     onResult: onBlockArrayLoaded,
     subscribeToMore,
@@ -179,7 +180,9 @@ const setPage = async (page: number, reset = false): Promise<boolean> => {
                     limit: props.maxItems
                 },
                 updateQuery: (previousResult, { fetchMoreResult }) => {
-                    return fetchMoreResult
+                    return {
+                        getBlocksArrayByNumber: [...previousResult.getBlocksArrayByNumber, ...fetchMoreResult.getBlocksArrayByNumber]
+                    }
                 }
             })
         }
@@ -204,6 +207,18 @@ onBlockArrayLoaded(result => {
         state.indexedBlocks[state.index] = props.pageType === 'home' ? newBlocks.slice(0, props.maxItems) : newBlocks
     }
 })
+
+const loadMoreData = () => {
+    setPage(state.index + 1)
+}
+
+const router = useRouter()
+const goToBlocksPage = async (): Promise<void> => {
+    await router.push({
+        name: ROUTE_NAME.ALL_BLOCKS_AND_TXS.NAME,
+        query: { t: Q_BLOCKS_AND_TXS[0] }
+    })
+}
 
 onMounted(() => {
     if (isHome.value) {

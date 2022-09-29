@@ -1,33 +1,31 @@
 <template>
     <v-row :class="rowMargin">
         <v-col cols="12" :class="columnPadding">
-            <v-card elevation="1" rounded="xl" class="py-6">
+            <v-card elevation="1" rounded="xl" class="pt-2 pt-sm-6">
                 <v-tabs v-model="state.tab" color="primary" end @update:model-value="setLastViewedTab()">
-                    <v-tab :value="routes[0]" class="py-3 text-h5 text-capitalize rounded-b-xl" @click="changeRoute">Blocks</v-tab>
-                    <v-tab :value="routes[1]" class="py-3 text-h5 text-capitalize rounded-b-xl" @click="changeRoute">Uncles</v-tab>
+                    <v-tab :value="routes[0]" class="py-3 text-h5 text-capitalize rounded-t-xl" @click="changeRoute">Blocks</v-tab>
+                    <v-tab :value="routes[1]" class="py-3 text-h5 text-capitalize rounded-t-xl" @click="changeRoute">Uncles</v-tab>
                 </v-tabs>
-                <v-window v-model="state.tab" class="mt-6">
-                    <v-window-item :value="routes[0]" :key="routes[0]">
-                        <module-address-miner-block
-                            class="mb-4"
-                            reward-type="block"
-                            :address-hash="props.addressRef"
-                            :max-items="MAX_ITEMS"
-                            :new-rewards="newMinedBlocks"
-                            @resetUpdateCount="resetCount"
-                        />
-                    </v-window-item>
-                    <v-window-item :value="routes[1]" :key="routes[1]">
-                        <module-address-miner-block
-                            class="mb-4"
-                            reward-type="uncle"
-                            :address-hash="props.addressRef"
-                            :max-items="MAX_ITEMS"
-                            :new-rewards="newMinedUncles"
-                            @resetUpdateCount="resetCount"
-                        />
-                    </v-window-item>
-                </v-window>
+                <div class="mt-6">
+                    <module-address-miner-block
+                        v-show="state.tab === routes[0]"
+                        class="mb-4"
+                        reward-type="block"
+                        :address-hash="props.addressRef"
+                        :max-items="MAX_ITEMS"
+                        :new-rewards="newMinedBlocks"
+                        @resetUpdateCount="resetCount"
+                    />
+                    <module-address-miner-block
+                        v-show="state.tab === routes[1]"
+                        class="mb-4"
+                        reward-type="uncle"
+                        :address-hash="props.addressRef"
+                        :max-items="MAX_ITEMS"
+                        :new-rewards="newMinedUncles"
+                        @resetUpdateCount="resetCount"
+                    />
+                </div>
             </v-card>
         </v-col>
     </v-row>

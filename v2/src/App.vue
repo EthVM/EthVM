@@ -2,8 +2,8 @@
     <v-app class="app-view">
         <the-app-navigation-drawer-vue />
         <the-app-header />
-        <v-main :class="{ 'mx-2 mx-sm-6 mx-md-auto mx-lg-6 mx-xl-auto': !isAddressView }">
-            <v-container :class="[isAddressView ? 'pa-0' : 'px-0 pt-4 pt-sm-6']" :fluid="isAddressView">
+        <v-main class="w-100">
+            <v-container :class="[isAddressView ? 'pa-0' : 'px-2 px-sm-6 pt-4 pt-sm-6']" :fluid="isAddressView">
                 <app-btn @click="toggleTheme" text="toggle theme"></app-btn>
                 <router-view />
             </v-container>

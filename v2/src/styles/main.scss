@@ -3,7 +3,7 @@
 
 @use 'vuetify/styles' with (
   $color-pack: false,
-  $font-size-root: 15px,
+  $font-size-root: 14px,
   $typography: settings.$typography,
   $shadow-key-umbra-opacity: settings.$shadow-key-umbra-opacity,
   $shadow-key-penumbra-opacity: settings.$shadow-key-umbra-opacity,
@@ -12,7 +12,7 @@
   $rounded: settings.$rounded,
   $spacer: settings.$spacer,
   $grid-gutter: settings.$grid-gutter,
-  $form-grid-gutter: settings.$form-grid-gutter, 
+  $form-grid-gutter: settings.$form-grid-gutter,
   $container-padding-x: settings.$container-padding-x,
   $grid-breakpoints: settings.$grid-breakpoints,
   $container-max-widths: settings.$container-max-widths,
@@ -63,4 +63,16 @@ a {
     align-items: center;
     justify-content: center;
     flex-grow: 0;
+    &.bg-warning {
+        color: rgb(var(--v-theme-surface)) !important;
+    }
+}
+
+.row-bg {
+    top: -20px;
+    bottom: 0;
+    left: -24px;
+    right: -24px;
+    position: absolute;
+    z-index: -1;
 }

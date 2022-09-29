@@ -5,7 +5,7 @@
             <span v-if="props.isShort">...</span>
             <div class="lastPart">{{ end }}</div>
         </div>
-        <router-link v-else :to="props.link || ''" :class="props.isBlue ? `text-secondary` : `black--text`">
+        <router-link v-else :to="props.link || ''" :class="props.isBlue ? 'text-secondary' : 'black--text'">
             <div class="firstPart">{{ start }}</div>
             <span v-if="props.isShort">...</span>
             <div class="lastPart">{{ end }}</div>

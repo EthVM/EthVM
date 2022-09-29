@@ -1,7 +1,8 @@
 import { createRouter, createWebHistory, createWebHashHistory, RouteRecordRaw } from 'vue-router'
-import { ADDRESS_ROUTE_QUERY, ROUTE_NAME } from './routesNames'
+import { ADDRESS_ROUTE_QUERY, ROUTE_NAME, Q_TOKEN_DETAILS, Q_BLOCKS_AND_TXS } from './routesNames'
 import HomeView from '@view/ViewHome.vue'
 import BlocksView from '@view/ViewBlocks.vue'
+import BlocksAndTxsView from '@view/ViewBlocksAndTransactions.vue'
 import TxDetailsView from '@view/ViewTxDetails.vue'
 import BlockDetailsView from '@view/ViewBlockDetails.vue'
 import UncleDetailsView from '@view/ViewUncleDetails.vue'
@@ -16,7 +17,7 @@ import ViewTokens from '@view/ViewTokens.vue'
 import ViewAddressNfts from '@view/ViewAddressNfts.vue'
 import ViewTemp from '@view/ViewTemp.vue'
 import configs from '@/configs'
-import { addressRouteGuard } from './helpers'
+import { tabViewRouteGuard } from './helpers'
 const routes: Array<RouteRecordRaw> = [
     {
         path: ROUTE_NAME.HOME.PATH,
@@ -27,6 +28,13 @@ const routes: Array<RouteRecordRaw> = [
         path: ROUTE_NAME.BLOCKS.PATH,
         name: ROUTE_NAME.BLOCKS.NAME,
         component: BlocksView
+    },
+    {
+        path: ROUTE_NAME.ALL_BLOCKS_AND_TXS.PATH,
+        name: ROUTE_NAME.ALL_BLOCKS_AND_TXS.NAME,
+        component: BlocksAndTxsView,
+        props: route => ({ tab: route.query.t }),
+        beforeEnter: tabViewRouteGuard(Q_BLOCKS_AND_TXS[0])
     },
     {
         path: ROUTE_NAME.BLOCK_NUMBER.PATH,
@@ -66,7 +74,8 @@ const routes: Array<RouteRecordRaw> = [
         path: ROUTE_NAME.TOKEN.PATH,
         name: ROUTE_NAME.TOKEN.NAME,
         component: TokenDetailsView,
-        props: true
+        props: true,
+        beforeEnter: tabViewRouteGuard(Q_TOKEN_DETAILS[0])
     },
     {
         path: ROUTE_NAME.CHARTS.PATH,
@@ -95,14 +104,14 @@ const routes: Array<RouteRecordRaw> = [
                 name: ROUTE_NAME.ADDRESS_TOKENS.NAME,
                 component: AddressTokensView,
                 props: route => ({ tab: route.query.t }),
-                beforeEnter: addressRouteGuard(ADDRESS_ROUTE_QUERY.Q_TOKENS[0])
+                beforeEnter: tabViewRouteGuard(ADDRESS_ROUTE_QUERY.Q_TOKENS[0])
             },
             {
                 path: ROUTE_NAME.ADDRESS_NFTS.PATH,
                 name: ROUTE_NAME.ADDRESS_NFTS.NAME,
                 component: ViewAddressNfts,
-                props: true
-                // props: route => ({ tab: route.query.t })
+                props: route => ({ tab: route.query.t }),
+                beforeEnter: tabViewRouteGuard(ADDRESS_ROUTE_QUERY.Q_NFTS[0])
             },
             {
                 path: ROUTE_NAME.ADDRESS_CONTRACT.PATH,
@@ -115,7 +124,7 @@ const routes: Array<RouteRecordRaw> = [
                 name: ROUTE_NAME.ADDRESS_MINER.NAME,
                 component: ViewAddressMiners,
                 props: route => ({ tab: route.query.t }),
-                beforeEnter: addressRouteGuard(ADDRESS_ROUTE_QUERY.Q_MINER[0])
+                beforeEnter: tabViewRouteGuard(ADDRESS_ROUTE_QUERY.Q_MINER[0])
             }
         ]
     },

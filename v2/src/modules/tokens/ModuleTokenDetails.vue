@@ -17,14 +17,29 @@
                 :is-loading="loadingTokenDetails || state.hasError"
                 @errorDetails="emitErrorState"
             />
-            <app-tabs :tabs="tabsTokenDetails">
-                <v-window-item value="tab-0">
-                    <token-transfers :address="props.addressRef" :page-type="'token'" :decimals="decimals" :symbol="symbol" @errorDetails="emitErrorState" />
-                </v-window-item>
-                <v-window-item value="tab-1">
-                    <token-holders :address="props.addressRef" :decimals="decimals" @errorDetails="emitErrorState" />
-                </v-window-item>
-            </app-tabs>
+            <v-card elevation="1" rounded="xl">
+                <v-tabs v-model="state.tab" color="primary" end>
+                    <v-tab :value="routes[0]" class="py-3 text-h5 text-capitalize rounded-b-xl" @click="changeRoute">Transfers</v-tab>
+                    <v-tab :value="routes[1]" class="py-3 text-h5 text-capitalize rounded-b-xl" @click="changeRoute">Holders</v-tab>
+                </v-tabs>
+                <div class="mt-6">
+                    <token-transfers
+                        v-show="state.tab === routes[0]"
+                        :address="props.addressRef"
+                        :page-type="'token'"
+                        :decimals="decimals"
+                        :symbol="symbol"
+                        @errorDetails="emitErrorState"
+                    />
+                    <token-holders
+                        v-show="state.tab === routes[1]"
+                        :address="props.addressRef"
+                        :decimals="decimals"
+                        @errorDetails="emitErrorState"
+                        @isNft="setTokenType"
+                    />
+                </div>
+            </v-card>
         </div>
         <!--
     =====================================================================================
@@ -48,7 +63,6 @@
 
 <script setup lang="ts">
 import { reactive, computed, onMounted } from 'vue'
-import AppTabs from '@core/components/AppTabs'
 import TokenDetailsList from '@module/tokens/components/TokenDetailsList.vue'
 import TokenTransfers from '@module/tokens/components/TokenTransfers.vue'
 import TokenHolders from '@module/tokens/components/TokenHolders.vue'
@@ -60,7 +74,10 @@ import {
 } from '@module/tokens/apollo/TokenDetails/tokenDetails.generated'
 import { eth } from '@core/helper'
 import { ErrorMessageToken } from '@module/tokens/models/ErrorMessagesForTokens'
-import { Tab } from '@core/components/props'
+import { Q_TOKEN_DETAILS } from '@core/router/routesNames'
+import { onBeforeRouteUpdate, useRoute, useRouter } from 'vue-router'
+
+const routes = Q_TOKEN_DETAILS
 
 const props = defineProps({
     addressRef: {
@@ -74,6 +91,10 @@ const props = defineProps({
     holderAddress: {
         type: String,
         required: true
+    },
+    tab: {
+        type: String,
+        required: true
     }
 })
 
@@ -81,15 +102,45 @@ interface ComponentState {
     address: string
     hasError: boolean
     isNft: boolean
+    tab: string
 }
 
 const state: ComponentState = reactive({
     address: '',
     hasError: false,
-    isNft: true
+    isNft: true,
+    tab: ''
+})
+/**------------------------
+ * Route Handling
+ -------------------------*/
+
+const router = useRouter()
+const route = useRoute()
+/**
+ * Sets route query if new tab is selected
+ */
+const changeRoute = () => {
+    if (route.query.t !== state.tab) {
+        router.push({
+            query: { t: state.tab }
+        })
+    }
+}
+/**
+ * Watches for changes in the router
+ * in case user manipulates history
+ * and updates tab accordingly
+ */
+onBeforeRouteUpdate(async to => {
+    if (to.query.t !== state.tab) {
+        state.tab = state.tab === routes[0] ? routes[1] : routes[0]
+    }
 })
 
-const emit = defineEmits(['errorDetails'])
+const emit = defineEmits<{
+    (e: 'errorDetails', value: boolean, message: string): void
+}>()
 
 onMounted(() => {
     if (!isValid.value) {
@@ -97,7 +148,7 @@ onMounted(() => {
         emitErrorState(true, ErrorMessageToken.invalid)
         return
     }
-    window.scrollTo(0, 0)
+    state.tab = props.tab
 })
 
 const {
@@ -156,22 +207,6 @@ const decimals = computed<string | null>(() => {
     return null
 })
 
-const tabsTokenDetails = computed<Tab[]>(() => {
-    const tabs = [
-        {
-            id: 0,
-            title: 'Transfers',
-            isActive: true
-        },
-        {
-            id: 1,
-            title: 'Holders',
-            isActive: false
-        }
-    ]
-    return tabs
-})
-
 /*
 ===================================================================================
 METHODS:
@@ -186,5 +221,13 @@ METHODS:
 const emitErrorState = (val: boolean, message: ErrorMessageToken): void => {
     state.hasError = val
     emit('errorDetails', val, message)
+}
+
+/**
+ * Sets whether a token is erc721 or erc20
+ * @param val {Boolean}
+ */
+const setTokenType = (val: boolean) => {
+    state.isNft = val
 }
 </script>

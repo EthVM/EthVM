@@ -1,7 +1,6 @@
 import { reactive } from 'vue'
 import { ROUTE_NAME } from '@core/router/routesNames'
 import { useRouter } from 'vue-router'
-
 export function useAppNavigation() {
     /**
      * Nav Items
@@ -14,79 +13,103 @@ export function useAppNavigation() {
     interface NavLink {
         text: string
         routerLink: string
+        subtext?: string
+        img?: string
+        imgClass?: string
+        isExternal?: boolean
     }
 
     interface NavHeader {
         text: string
-        icon: string
+        icon?: string
         routerLink?: string
     }
 
     const navItems = reactive<NavMenuEntry[]>([
         {
             header: {
-                icon: 'home',
                 text: 'Home',
-                routerLink: ROUTE_NAME.HOME.NAME
+                routerLink: ROUTE_NAME.HOME.PATH
             }
         },
         {
             header: {
-                text: 'Top Tokens',
-                icon: 'insights',
-                routerLink: ROUTE_NAME.TOKENS.NAME
+                text: 'Tokens',
+                routerLink: ROUTE_NAME.TOKENS.PATH
             }
         },
 
         {
             header: {
-                icon: 'area_chart',
-                text: 'Charts',
-                routerLink: ROUTE_NAME.CHARTS.NAME
-            }
-        },
-        {
-            header: {
-                icon: 'view_in_ar',
                 text: 'Blockchain'
             },
             links: [
                 {
                     text: 'Blocks',
-                    routerLink: ROUTE_NAME.BLOCKS.NAME
+                    routerLink: ROUTE_NAME.BLOCKS.PATH
                 },
                 {
                     text: 'Transaction',
-                    routerLink: ROUTE_NAME.TXS.NAME
-                },
-                {
-                    text: 'Pending Transactions',
-                    routerLink: ROUTE_NAME.TXS_PENDING.NAME
+                    routerLink: ROUTE_NAME.TXS.PATH
                 }
             ]
         },
         {
             header: {
-                text: 'Watchlist',
-                icon: 'favorite'
+                text: 'MEW Products'
             },
             links: [
                 {
-                    text: 'My Addresses',
-                    routerLink: ROUTE_NAME.FAV_TOKENS.NAME
+                    text: 'MyEtherWallet',
+                    routerLink: 'https://www.myetherwallet.com/',
+                    subtext: 'Ethereum desktop wallet',
+                    img: require('@/assets/logo/mew.svg'),
+                    imgClass: 'pa-1',
+                    isExternal: true
                 },
                 {
-                    text: 'My Tokens',
-                    routerLink: ROUTE_NAME.FAV_ADDRESS.NAME
+                    text: 'MEW wallet',
+                    routerLink: 'https://www.mewwallet.com/',
+                    subtext: 'IOS and Android wallet',
+                    img: require('@/assets/logo/mewwallet.svg'),
+                    isExternal: true
+                },
+                {
+                    text: 'Enkrypt',
+                    routerLink: 'https://www.enkrypt.com',
+                    subtext: 'Multichain extension wallet',
+                    img: require('@/assets/logo/enkrypt1.svg'),
+                    isExternal: true
+                },
+                {
+                    text: 'MEWtopia',
+                    routerLink: 'https://www.mewtopia.com/',
+                    subtext: 'Education Blog',
+                    img: require('@/assets/logo/mewtopia.svg'),
+                    imgClass: 'pa-2',
+                    isExternal: true
+                },
+                {
+                    text: 'Help Center',
+                    routerLink: 'https://help.myetherwallet.com/',
+                    subtext: 'How to use MEW products',
+                    img: require('@/assets/logo/help-center.svg'),
+                    imgClass: 'pa-2',
+                    isExternal: true
                 }
             ]
+        },
+        {
+            header: {
+                text: 'Your Portfolio',
+                icon: 'folder_special',
+                routerLink: ROUTE_NAME.FAV_ADDRESS.PATH
+            }
         }
     ])
     const router = useRouter()
-    const navigateTo = (name: string) => {
-        router.push({
-            name: name
-        })
+    const navigateTo = (path: string) => {
+        router.push(path)
     }
     return {
         navItems,

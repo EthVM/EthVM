@@ -31,7 +31,7 @@ export type Erc20TokenOwnersFragment = {
 export type Erc721TokenOwnerDetailsFragment = {
     __typename?: 'ERC721TokenOwner'
     owner: string
-    token: string
+    tokenId: string
     tokenInfo: {
         __typename?: 'EthTokenInfo'
         name?: string | null
@@ -48,7 +48,7 @@ export type Erc721TokenOwnersFragment = {
     owners: Array<{
         __typename?: 'ERC721TokenOwner'
         owner: string
-        token: string
+        tokenId: string
         tokenInfo: {
             __typename?: 'EthTokenInfo'
             name?: string | null
@@ -101,7 +101,7 @@ export type GetErc721TokenOwnersQuery = {
         owners: Array<{
             __typename?: 'ERC721TokenOwner'
             owner: string
-            token: string
+            tokenId: string
             tokenInfo: {
                 __typename?: 'EthTokenInfo'
                 name?: string | null
@@ -129,7 +129,7 @@ export const Erc721TokenOwnerDetailsFragmentDoc = gql`
             ...TokenDetails
         }
         owner
-        token
+        tokenId
     }
     ${TokenDetailsFragmentDoc}
 `
