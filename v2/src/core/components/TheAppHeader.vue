@@ -5,7 +5,7 @@
                 <v-app-bar-nav-icon v-if="showDrawerBtn" @click="appStore.appDrawer = !appStore.appDrawer" />
                 <v-img :src="require('@/assets/logo-compact.png')" height="30" max-width="30" contain class="mr-2" />
                 <v-spacer />
-                <module-search class="mb-n2 mt-8" />
+                <module-search />
                 <template v-if="!showDrawerBtn">
                     <template v-for="(item, index) in navItems" :key="index">
                         <v-btn

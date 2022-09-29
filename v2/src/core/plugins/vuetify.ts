@@ -1,3 +1,4 @@
+import { aliases } from 'vuetify/iconsets/md'
 // Styles
 import 'material-design-icons-iconfont/dist/material-design-icons.css'
 import '@/styles/main.scss'
@@ -5,6 +6,8 @@ import { md, aliases } from 'vuetify/iconsets/md'
 import * as components from 'vuetify/components'
 import * as directives from 'vuetify/directives'
 import { createVuetify, ThemeDefinition } from 'vuetify'
+// import type { IconAliases } from 'vuetify'
+
 type ThemeDefinition = typeof ThemeDefinition
 
 const COLORS = {
@@ -86,6 +89,7 @@ const mainnetDarkTheme: ThemeDefinition = {
         'skeleton-gradient': 0.03
     }
 }
+aliases.clear = 'close'
 
 export default createVuetify({
     components,
