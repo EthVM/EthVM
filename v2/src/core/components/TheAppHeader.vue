@@ -5,14 +5,14 @@
                 <v-app-bar-nav-icon v-if="showDrawerBtn" @click="appStore.appDrawer = !appStore.appDrawer" />
                 <v-img :src="require('@/assets/logo-compact.png')" height="30" max-width="30" contain class="mr-2" />
                 <v-spacer />
-                <module-search />
+                <module-search class="mr-2" />
                 <template v-if="!showDrawerBtn">
                     <template v-for="(item, index) in navItems" :key="index">
-                        <v-btn v-if="!item.links" rounded="pill" :to="item.header.routerLink" class="text-subtitle-1 font-weight-regular">
+                        <v-btn v-if="!item.links" rounded="pill" :active="false" :to="item.header.routerLink" class="text-subtitle-1 font-weight-regular">
                             {{ item.header.text }}
                             <v-icon v-if="item.header.icon" class="ml-3">{{ item.header.icon }}</v-icon>
                         </v-btn>
-                        <v-btn v-else class="text-subtitle-1 font-weight-regular" rounded="xl">
+                        <v-btn v-else class="text-subtitle-1 font-weight-regular" rounded="pill">
                             {{ item.header.text }}
                             <v-icon class="ml-1">expand_more</v-icon>
                             <app-menu min-width="180" activator="parent" :items="item.links">
