@@ -44,6 +44,7 @@ const mainnetLightTheme: ThemeDefinition = {
         surface: COLORS.surfaceLM,
         background: COLORS.greyBackgroundLM,
         white: COLORS.white,
+        whiteLogo: COLORS.white,
         'on-background': COLORS.navy,
         'on-surface': COLORS.navy,
         'on-primary': COLORS.white,
@@ -80,7 +81,8 @@ const mainnetDarkTheme: ThemeDefinition = {
         'on-success': COLORS.surfaceDM,
         'on-surface-tabs': COLORS.lightBlue,
         pillGrey: COLORS.greyBackdroundDM,
-        tableGrey: COLORS.greyBackdroundDM
+        tableGrey: COLORS.greyBackdroundDM,
+        whiteLogo: COLORS.white
     },
     variables: {
         'skeleton-gradient': 0.03
