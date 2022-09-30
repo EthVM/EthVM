@@ -1,6 +1,6 @@
 <template>
     <v-card variant="elevated" elevation="1" rounded="xl" class="pa-4 pa-sm-6">
-        <template v-if="isLoading">
+        <template v-if="isLoading || !props.blockDetails">
             <div class="skeleton-box rounded-xl mt-1" style="height: 300px"></div>
         </template>
         <template v-else>
@@ -17,7 +17,7 @@
                 {{ props.timestamp }}
             </span>
             <v-row class="my-7">
-                <v-col md="12" lg="6" class="text-textPrimary">
+                <v-col cols="12" lg="6" class="text-textPrimary">
                     <div class="block-info mb-5">
                         <p class="text-button mb-1">Miner</p>
                         <div class="d-flex align-center">
@@ -34,7 +34,7 @@
                         <app-transform-hash is-blue :hash="props.blockDetails.parentHash.detail" :link="props.blockDetails.parentHash.link" class="w-100" />
                     </div>
                 </v-col>
-                <v-col md="12" lg="5">
+                <v-col cols="12" lg="5">
                     <div class="rounded-xl bg-tableGrey pa-5 text-textPrimary">
                         <v-row>
                             <v-col cols="6" sm="4">

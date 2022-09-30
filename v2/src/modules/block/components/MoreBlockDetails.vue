@@ -1,6 +1,6 @@
 <template>
     <v-card variant="flat" class="pa-4 pa-sm-6">
-        <template v-if="props.isLoading">
+        <template v-if="props.isLoading || !props.blockDetails">
             <v-row class="my-2">
                 <v-col cols="12" md="6">
                     <div class="skeleton-box rounded-xl mt-1" style="height: 24px"></div>
@@ -92,7 +92,7 @@ import { timeAgo, eth } from '@core/helper'
 import { Detail } from '@core/components/props'
 
 interface ComponentProps {
-    blockDetails: { [key: string]: Detail }
+    blockDetails: { [key: string]: Detail } | null
     uncleHashes: string[]
     isLoading: boolean
 }

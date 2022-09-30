@@ -7,7 +7,7 @@
         :previous-block="previousBlock"
         :is-loading="isLoading"
     />
-    <v-card variant="elevated" elevation="1" rounded="xl" class="mt-5">
+    <v-card v-if="state.blockNumber" variant="elevated" elevation="1" rounded="xl" class="mt-5">
         <v-tabs v-model="state.tab" color="primary" end>
             <v-tab :value="routes[0]" class="py-3 text-h5 text-capitalize rounded-b-xl" @click="changeRoute">Transactions</v-tab>
             <v-tab :value="routes[1]" class="py-3 text-h5 text-capitalize rounded-b-xl" @click="changeRoute">More</v-tab>
@@ -15,7 +15,7 @@
         <block-txs
             v-show="state.tab === routes[0]"
             :max-items="10"
-            :block-ref="props.blockRef"
+            :block-ref="blockNumber"
             :is-hash="isHash"
             :is-mined="state.isMined"
             page-type="blockDetails"
@@ -28,7 +28,7 @@
 import AppDetailsList from '@/core/components/AppDetailsList.vue'
 import BlockDetailsTitle from '@module/block/components/BlockDetails.vue'
 import BlockDetails from '@module/block/components/BlockDetails.vue'
-import MoreBlockDetails from '@module/block/components/RecentBlocks/MoreBlockDetails.vue'
+import MoreBlockDetails from '@module/block/components/MoreBlockDetails.vue'
 import BlockTxs from '@module/txs/ModuleTxs.vue'
 import { reactive, computed, ref, onMounted, watch } from 'vue'
 import BN from 'bignumber.js'
@@ -61,95 +61,98 @@ const props = defineProps({
 
 const emit = defineEmits(['errorDetails', 'isMined', 'setBlockNumber'])
 
-const blockDetails = computed<{ [key: string]: Detail }>(() => {
-    const details: { [key: string]: Detail } = {
-        height: {
-            title: 'Height',
-            detail: formatNumber(blockDetailsData.value?.summary.number)
-        },
-        hash: {
-            title: 'Hash',
-            detail: blockDetailsData.value?.hash
-        },
-        parentHash: {
-            title: 'Parent Hash',
-            detail: blockDetailsData.value?.parentHash,
-            link: `/block/hash/${blockDetailsData.value?.parentHash}`
-        },
-        miner: {
-            title: 'Miner',
-            detail: blockDetailsData.value?.summary.miner,
-            link: `/address/${blockDetailsData.value?.summary.miner}`
-        },
-        totalRewards: {
-            title: 'Total Rewards',
-            detail: `${rewards.value.value} ${rewards.value.unit}`,
-            tooltip: rewards.value.tooltipText ? `${rewards.value.tooltipText} ETH` : undefined
-        },
-        txsFees: {
-            title: 'Txs Fees',
-            detail: `${transactionFees.value.value} ${transactionFees.value.unit}`,
-            tooltip: transactionFees.value.tooltipText ? `${transactionFees.value.tooltipText} ETH` : undefined
-        },
-        uncleReward: {
-            title: 'Uncle Reward',
-            detail: `${uncleRewards.value.value} ${uncleRewards.value.unit}`,
-            tooltip: uncleRewards.value.tooltipText ? `${uncleRewards.value.tooltipText} ETH` : undefined
-        },
-        transactions: {
-            title: 'Transactions',
-            detail: transactionsCount.value
-        },
-        difficulty: {
-            title: 'Difficulty',
-            detail: formatNumber(new BN(blockDetailsData.value?.difficulty).toNumber())
-        },
-        totalDifficulty: {
-            title: 'Total Difficulty',
-            detail: formatNumber(new BN(blockDetailsData.value?.totalDifficulty).toNumber())
-        },
-        blockSize: {
-            title: 'Size',
-            detail: `${formatNumber(blockDetailsData.value?.size)} Bytes`
-        },
-        nonce: {
-            title: 'Nonce',
-            detail: formatNumber(new BN(blockDetailsData.value?.nonce).toNumber())
-        },
-        stateRoot: {
-            title: 'State Root',
-            detail: blockDetailsData.value?.stateRoot
-        },
-        extraData: {
-            title: 'Extra Data',
-            detail: blockDetailsData.value?.extraData
-        },
-        gasLimit: {
-            title: 'Gas Limit',
-            detail: formatNumber(blockDetailsData.value?.gasLimit)
-        },
-        gasUsed: {
-            title: 'Gas Used',
-            detail: formatNumber(blockDetailsData.value?.gasUsed)
-        },
-        logs: {
-            title: 'Logs',
-            detail: blockDetailsData.value?.logsBloom
-        },
-        transactionsRoot: {
-            title: 'Transactions Root',
-            detail: blockDetailsData.value?.transactionsRoot
-        },
-        receiptsRoot: {
-            title: 'Receipts Root',
-            detail: blockDetailsData.value?.receiptsRoot
-        },
-        unclesSHA3: {
-            title: 'Uncles SHA3',
-            detail: blockDetailsData.value?.sha3Uncles
+const blockDetails = computed<{ [key: string]: Detail } | null>(() => {
+    if (blockDetailsData.value) {
+        const details: { [key: string]: Detail } = {
+            height: {
+                title: 'Height',
+                detail: formatNumber(blockDetailsData.value?.summary.number)
+            },
+            hash: {
+                title: 'Hash',
+                detail: blockDetailsData.value?.hash
+            },
+            parentHash: {
+                title: 'Parent Hash',
+                detail: blockDetailsData.value?.parentHash,
+                link: `/block/hash/${blockDetailsData.value?.parentHash}`
+            },
+            miner: {
+                title: 'Miner',
+                detail: blockDetailsData.value?.summary.miner,
+                link: `/address/${blockDetailsData.value?.summary.miner}`
+            },
+            totalRewards: {
+                title: 'Total Rewards',
+                detail: `${rewards.value.value} ${rewards.value.unit}`,
+                tooltip: rewards.value.tooltipText ? `${rewards.value.tooltipText} ETH` : undefined
+            },
+            txsFees: {
+                title: 'Txs Fees',
+                detail: `${transactionFees.value.value} ${transactionFees.value.unit}`,
+                tooltip: transactionFees.value.tooltipText ? `${transactionFees.value.tooltipText} ETH` : undefined
+            },
+            uncleReward: {
+                title: 'Uncle Reward',
+                detail: `${uncleRewards.value.value} ${uncleRewards.value.unit}`,
+                tooltip: uncleRewards.value.tooltipText ? `${uncleRewards.value.tooltipText} ETH` : undefined
+            },
+            transactions: {
+                title: 'Transactions',
+                detail: transactionsCount.value
+            },
+            difficulty: {
+                title: 'Difficulty',
+                detail: formatNumber(new BN(blockDetailsData.value?.difficulty).toNumber())
+            },
+            totalDifficulty: {
+                title: 'Total Difficulty',
+                detail: formatNumber(new BN(blockDetailsData.value?.totalDifficulty).toNumber())
+            },
+            blockSize: {
+                title: 'Size',
+                detail: `${formatNumber(blockDetailsData.value?.size)} Bytes`
+            },
+            nonce: {
+                title: 'Nonce',
+                detail: formatNumber(new BN(blockDetailsData.value?.nonce).toNumber())
+            },
+            stateRoot: {
+                title: 'State Root',
+                detail: blockDetailsData.value?.stateRoot
+            },
+            extraData: {
+                title: 'Extra Data',
+                detail: blockDetailsData.value?.extraData
+            },
+            gasLimit: {
+                title: 'Gas Limit',
+                detail: formatNumber(blockDetailsData.value?.gasLimit)
+            },
+            gasUsed: {
+                title: 'Gas Used',
+                detail: formatNumber(blockDetailsData.value?.gasUsed)
+            },
+            logs: {
+                title: 'Logs',
+                detail: blockDetailsData.value?.logsBloom
+            },
+            transactionsRoot: {
+                title: 'Transactions Root',
+                detail: blockDetailsData.value?.transactionsRoot
+            },
+            receiptsRoot: {
+                title: 'Receipts Root',
+                detail: blockDetailsData.value?.receiptsRoot
+            },
+            unclesSHA3: {
+                title: 'Uncles SHA3',
+                detail: blockDetailsData.value?.sha3Uncles
+            }
         }
+        return details
     }
-    return details
+    return null
 })
 
 const timestamp = computed<string>(() => {
@@ -174,7 +177,7 @@ const state: ModuleState = reactive({
     hasError: false,
     tab: routes[0],
     isMined: true,
-    blockNumber: ''
+    blockNumber: !props.isHash ? props.blockRef : ''
 })
 
 const subscriptionEnabled = ref(false)
@@ -289,6 +292,14 @@ const currBlockNumber = computed<string | null>(() => {
     return blockDetailsData.value && blockDetailsData.value.summary ? blockDetailsData.value.summary.number.toString() : null
 })
 
+// This returns the block number or the block hash depending on the url
+const blockNumber = computed<string | number>(() => {
+    if (props.isHash) {
+        return state.blockNumber
+    }
+    return props.blockRef
+})
+
 /**
  * Emit error to Sentry
  * @param val {Boolean}
@@ -322,8 +333,10 @@ onMounted(() => {
 
 watch(
     () => props.blockRef,
-    data => {
-        refetchBlockDetails({ blockRef: parseInt(data) })
+    () => {
+        if (props.isHash) {
+            state.blockNumber = ''
+        }
     }
 )
 </script>
