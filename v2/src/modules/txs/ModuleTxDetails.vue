@@ -13,19 +13,45 @@
             </app-details-list>
         </v-col>
     </v-row>
+    <v-card variant="elevated" elevation="1" rounded="xl" class="pa-4 pa-sm-6">
+        <template v-if="loadingTransactionHash">Loading Hash</template>
+        <template v-else>
+            <div class="d-flex">
+                <h2 class="text-h6 font-weight-bold mr-10">Transaction Summary</h2>
+                <app-chip :text="titleStatus" :bg="titleBg" rounded="xl" />
+            </div>
+            <v-row class="mt-5">
+                <v-col lg="6">
+                    <div class="tx-info">
+                        <p class="text-button mb-1">Tx Hash</p>
+                        <app-transform-hash is-blue :hash="transactionData.hash" class="text-body-1" />
+                        <p class="text-body-2 text-info mt-1">({{ timestamp }})</p>
+                    </div>
+                </v-col>
+                <v-col lg="2">
+                    <div class="tx-info">
+                        <p class="text-button mb-1">Block Mined</p>
+                        <p class="text-body-1 text-secondary mt-1">{{ blockMined }}</p>
+                    </div>
+                </v-col>
+            </v-row>
+        </template>
+    </v-card>
 </template>
 
 <script setup lang="ts">
-import { reactive, computed, ref, onMounted } from 'vue'
-import BN from 'bignumber.js'
 import AppDetailsList from '@/core/components/AppDetailsList.vue'
 import TxDetailsTitle from '@module/txs/components/TxDetailsTitle.vue'
+import AppChip from '@core/components/AppChip.vue'
+import AppTransformHash from '@core/components/AppTransformHash.vue'
+import { computed, onMounted, reactive, ref } from 'vue'
+import BN from 'bignumber.js'
 import { Detail } from '@/core/components/props'
-import { TxDetailsFragment as TxDetailsType, useGetTransactionByHashQuery, useTransactionEventSubscription } from './apollo/TxDetails.generated'
+import { TxDetailsFragment as TxDetailsType, useGetTransactionByHashWithTracesQuery, useTransactionEventSubscription } from './apollo/TxDetails.generated'
 import { ErrorMessageTx, TitleStatus } from '@/modules/txs/models/ErrorMessagesForTx'
 import { excpTxDoNotExists } from '@/apollo/errorExceptions'
-import { FormattedNumber, FormattedNumberUnit, formatNumber, formatVariableUnitEthValue, formatNonVariableGWeiValue } from '@/core/helper/number-format-helper'
-
+import { formatNonVariableGWeiValue, formatNumber, FormattedNumber, FormattedNumberUnit, formatVariableUnitEthValue } from '@/core/helper/number-format-helper'
+import { timeAgo } from '@core/helper'
 const props = defineProps({
     txRef: String
 })
@@ -77,6 +103,33 @@ const titleStatus = computed<TitleStatus>(() => {
         }
     }
     return TitleStatus.replaced
+})
+
+const titleBg = computed<string>(() => {
+    switch (titleStatus.value) {
+        case TitleStatus.success:
+            return 'success'
+        default:
+            return 'blue'
+    }
+})
+
+const timestamp = computed<string>(() => {
+    if (transactionData.value) {
+        const date = new Date(transactionData.value?.timestamp * 1e3).toLocaleDateString()
+        const time = new Date(transactionData.value?.timestamp * 1e3).toTimeString().split('GMT')[0]
+        const timeago = timeAgo(new Date(transactionData.value?.timestamp * 1e3))
+        const [month, day, year] = date.split('/')
+        return `${year}-${month}-${day}, ${time}, ${timeago}`
+    }
+    return ''
+})
+
+const blockMined = computed<string | null>(() => {
+    if (txStatus.value !== TxStatus.pending && !isReplaced.value) {
+        return formatNumber(transactionData.value?.blockNumber || 0)
+    }
+    return null
 })
 
 const txFee = computed<FormattedNumber>(() => {
@@ -210,7 +263,7 @@ const {
     onError: onTransactionHashError,
     loading: loadingTransactionHash,
     refetch: refetchTransactionHash
-} = useGetTransactionByHashQuery(() => ({ hash: props.txRef }), { notifyOnNetworkStatusChange: true, fetchPolicy: 'network-only' })
+} = useGetTransactionByHashWithTracesQuery(() => ({ hash: props.txRef }), { notifyOnNetworkStatusChange: true, fetchPolicy: 'network-only' })
 
 onTransactionHashLoaded(({ data }) => {
     if (data && data.getTransactionByHash) {
@@ -222,7 +275,7 @@ onTransactionHashLoaded(({ data }) => {
 })
 
 const transactionData = computed<TxDetailsType>(() => {
-    return transactionHashResult?.value?.getTransactionByHash
+    return transactionHashResult?.value?.getTransactionByHashWithTraces
 })
 
 onTransactionHashError(error => {
