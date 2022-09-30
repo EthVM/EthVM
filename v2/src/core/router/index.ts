@@ -47,7 +47,8 @@ const routes: Array<RouteRecordRaw> = [
         path: ROUTE_NAME.BLOCK_HASH.PATH,
         name: ROUTE_NAME.BLOCK_HASH.NAME,
         component: BlockDetailsView,
-        props: true
+        props: route => ({ tab: route.query.t, blockRef: route.params.blockRef }),
+        beforeEnter: tabViewRouteGuard(Q_BLOCK_DETAILS[0])
     },
     {
         path: ROUTE_NAME.UNCLE_HASH.PATH,
