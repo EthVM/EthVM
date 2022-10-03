@@ -1,5 +1,5 @@
 <template>
-    <v-btn :to="props.link" icon color="textPrimary" variant="text" height="34px" width="34px" @click="btnClick()">
+    <v-btn :to="props.link" icon color="textPrimary" variant="text" height="34px" width="34px" @click.stop="btnClick()">
         <v-icon v-bind="$attrs" :class="buttonFontSize"></v-icon>
         <v-tooltip v-if="tooltipText !== ''" activator="parent" location="top">
             {{ props.tooltipText }}
