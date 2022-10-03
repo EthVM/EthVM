@@ -21,7 +21,6 @@ import { reactive, computed, onMounted, watch } from 'vue'
 import AppMessage from '@core/components/AppMessage.vue'
 import AppError from '@core/components/AppError.vue'
 import ModuleBlockDetails from '@module/block/ModuleBlockDetails.vue'
-import BlockTxs from '@module/txs/ModuleTxs.vue'
 import { eth } from '@core/helper'
 import { ErrorMessageBlock } from '@module/block/models/ErrorMessagesForBlock'
 import { useAppViewGrid } from '@core/composables/AppViewGrid/AppViewGrid.composable'
@@ -50,10 +49,6 @@ const isValid = computed<boolean>(() => {
 
 const isHash = computed<boolean>(() => {
     return eth.isValidHash(props.blockRef)
-})
-
-const showBlockTxs = computed<boolean>(() => {
-    return isValid.value && state.blockNumber !== ''
 })
 
 onMounted(() => {

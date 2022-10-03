@@ -23,12 +23,12 @@
         -->
         <div v-if="!hasMessage">
             <template v-if="!props.isLoading">
-                <template v-if="displayData.length > 0">
+                <template v-if="txsData.length > 0">
                     <div v-for="(tx, index) in displayData" :key="index">
                         <txs-table-row :tx="tx" :is-pending="props.pending" :is-block="props.isBlock" />
                     </div>
                 </template>
-                <app-no-result text="This block does not have any transactions" class="mt-4 mt-sm-6" />
+                <app-no-result v-else text="This block does not have any transactions" class="mt-4 mt-sm-6" />
             </template>
             <template v-if="props.isLoading">
                 <div v-for="i in props.maxItems" :key="i" class="my-5">

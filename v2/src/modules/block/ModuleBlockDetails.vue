@@ -5,12 +5,13 @@
         :curr-block-number="currBlockNumber"
         :next-block="nextBlock"
         :previous-block="previousBlock"
+        :is-mined="state.isMined"
         :is-loading="isLoading"
     />
     <v-card v-if="state.blockNumber" variant="elevated" elevation="1" rounded="xl" class="mt-5">
         <v-tabs v-model="state.tab" color="primary" end>
-            <v-tab :value="routes[0]" class="py-3 text-h5 text-capitalize rounded-b-xl" @click="changeRoute">Transactions</v-tab>
-            <v-tab :value="routes[1]" class="py-3 text-h5 text-capitalize rounded-b-xl" @click="changeRoute">More</v-tab>
+            <v-tab :value="routes[0]" :disabled="!state.isMined" class="py-3 text-h5 text-capitalize rounded-b-xl" @click="changeRoute">Transactions</v-tab>
+            <v-tab :value="routes[1]" :disabled="!state.isMined" class="py-3 text-h5 text-capitalize rounded-b-xl" @click="changeRoute">More</v-tab>
         </v-tabs>
         <block-txs
             v-show="state.tab === routes[0]"
@@ -213,10 +214,10 @@ onBlockDetailsLoaded(() => {
 
 onBlockDetailsError(error => {
     const newError = JSON.stringify(error.message)
+    console.log(newError.toLowerCase().includes(excpBlockNotMined))
     if (newError.toLowerCase().includes(excpBlockNotMined) && !subscriptionEnabled.value && !props.isHash) {
         subscriptionEnabled.value = true
-    } else {
-        emitErrorState(true)
+        state.isMined = false
     }
 })
 
@@ -258,8 +259,7 @@ const transactionFees = computed<FormattedNumber>(() => {
 })
 
 const transactionsCount = computed<string>(() => {
-    const failedString = blockDetailsData.value?.summary.txFail > 0 ? `, ${formatNumber(blockDetailsData.value?.summary.txFail)} Failed Txs` : ''
-    return `${formatNumber(blockDetailsData.value?.summary.txCount)} ${failedString}`.trim()
+    return `${formatNumber(blockDetailsData.value?.summary.txCount)}`.trim()
 })
 
 const { newBlockNumber } = useBlockSubscription()

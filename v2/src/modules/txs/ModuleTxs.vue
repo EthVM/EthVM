@@ -150,6 +150,10 @@ const {
     }
 )
 
+const enableBlockTranfersQuery = computed<boolean>(() => {
+    return props.isMined && isBlock.value
+})
+
 const {
     result: getAllBlockTransfersResult,
     onResult: onBlockTransfersArrayLoaded,
@@ -158,16 +162,19 @@ const {
     () => ({
         _number: props.blockRef ? parseInt(props.blockRef) : undefined
     }),
-    {
+    () => ({
         notifyOnNetworkStatusChange: true,
-        enabled: props.isMined && isBlock.value
-    }
+        enabled: enableBlockTranfersQuery.value
+    })
 )
 
-onBlockTransfersArrayLoaded(() => {
-    setTimeout(() => {
-        state.initialLoad = false
-    }, 1000)
+onBlockTransfersArrayLoaded(data => {
+    // data.loading is going to be true when the block hasn't been mined and the useGetBlockTransfersQuery is skipped
+    if (!data.loading) {
+        setTimeout(() => {
+            state.initialLoad = false
+        }, 1000)
+    }
 })
 
 const { onResult: onNewTransferLoaded } = useNewTransfersCompleteFeedSubscription()

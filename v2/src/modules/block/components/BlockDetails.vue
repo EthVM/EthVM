@@ -1,7 +1,13 @@
 <template>
     <v-card variant="elevated" elevation="1" rounded="xl" class="pa-4 pa-sm-6">
+        <template v-if="!props.isMined && isLoading">
+            <p class="text-h6 font-weight-bold">
+                This block has not been mined yet
+                <v-progress-circular :size="20" color="secondary" indeterminate></v-progress-circular>
+            </p>
+        </template>
         <template v-if="isLoading || !props.blockDetails">
-            <div class="skeleton-box rounded-xl mt-1" style="height: 300px"></div>
+            <div class="skeleton-box rounded-xl mt-1" :style="skeletonLoaderStyle"></div>
         </template>
         <template v-else>
             <div class="d-flex align-center mx-n3">
@@ -80,6 +86,8 @@ import AppTransformHash from '@core/components/AppTransformHash.vue'
 import AppAddressBlockie from '@core/components/AppAddressBlockie.vue'
 import AppBtnIcon from '@core/components/AppBtnIcon.vue'
 import { formatNumber } from '@core/helper/number-format-helper'
+import { computed } from 'vue'
+import { useDisplay } from 'vuetify'
 
 const props = defineProps({
     nextBlock: String,
@@ -90,6 +98,16 @@ const props = defineProps({
     isLoading: {
         type: Boolean,
         default: false
+    },
+    isMined: Boolean
+})
+
+const { mdAndDown } = useDisplay()
+
+const skeletonLoaderStyle = computed<string>(() => {
+    if (!mdAndDown.value) {
+        return 'height: 300px'
     }
+    return 'height: 500px'
 })
 </script>
