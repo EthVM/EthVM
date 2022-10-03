@@ -59,25 +59,12 @@
             Search
             <!-- <v-icon>search</v-icon> -->
         </v-btn>
-        <v-menu location="bottom" activator="#search-options-activator" v-model="search.isActive">
+        <v-menu location="bottom" activator="#search-options-activator">
             <v-card width="380" max-height="300px" rounded="xl" class="mt-1">
-                <v-list v-if="searchOptions.length > 0">
-                    <v-list-subheader>Tokens</v-list-subheader>
-                    <v-list-item
-                        v-for="item in searchOptions"
-                        :key="item.contract"
-                        prepend-icon="image"
-                        :title="item.text"
-                        :subtitle="item.contract"
-                        class="overflow-hidden"
-                        @click="onSelectToken(item.contract)"
-                    >
-                        <template v-slot:append>
-                            <v-list-item-subtitle end> $12.99 </v-list-item-subtitle>
-                        </template>
-                    </v-list-item>
-                </v-list></v-card
-            >
+                <app-no-result v-if="props.hasError" :text="`We could not find anything mathching: ${search.value}`"></app-no-result>
+                <slot v-else name="search-results"> </slot>
+                <v-progress-linear v-if="isLoading" class="position-absolute" style="z-index: 1" color="secondary" height="5" indeterminate></v-progress-linear
+            ></v-card>
             <!-- <v-card  min-width="380" max-height="300px">
                 <v-list>
                     <v-list-subheader>Tokens</v-list-subheader>
@@ -127,7 +114,7 @@
 </template>
 
 <script setup lang="ts">
-import AppMenu from './AppMenu.vue'
+import AppNoResult from './AppNoResult.vue'
 import { PropType } from 'vue'
 import { defineProps, defineEmits, reactive, computed, ref } from 'vue'
 import { SearchTokenOption } from './props/index'
