@@ -6,6 +6,7 @@
         :search-options="search.partialResults"
         @onSearch="executeSearch"
         @tokenSelected="routeToToken"
+        @onSearchEnter="routeToFirst"
     >
         <template #search-results>
             <!-- 
@@ -14,11 +15,12 @@
             <v-list v-if="tokensResult.length > 0">
                 <v-list-subheader>Tokens</v-list-subheader>
                 <v-list-item
-                    v-for="item in tokensResult"
+                    v-for="(item, index) in tokensResult"
                     :key="item.contract"
                     :title="item.text"
                     :subtitle="item.subtext"
                     class="overflow-hidden"
+                    :active="index === 0"
                     @click="routeToToken(item.contract)"
                 >
                     <template #prepend>
@@ -32,7 +34,7 @@
             -->
             <v-list v-if="search.hashType === HASH_TYPE.AddressHash">
                 <v-list-subheader>Address</v-list-subheader>
-                <v-list-item :title="search.param" class="overflow-hidden" @click="routeTo(search.param)">
+                <v-list-item :title="search.param" class="overflow-hidden" @click="routeTo(search.param)" :active="tokensResult.length === 0">
                     <template v-slot:prepend>
                         <app-address-blockie :address="search.param || ''" :size="6" class="mr-5" />
                     </template>
@@ -43,21 +45,43 @@
             -->
             <v-list v-if="search.hashType === HASH_TYPE.TxHash" lines="one">
                 <v-list-subheader>Transaction hash:</v-list-subheader>
-                <v-list-item :title="search.param" prepend-icon="image" class="overflow-hidden" singli @click="routeTo(search.param)"> </v-list-item>
+                <v-list-item
+                    :title="search.param"
+                    prepend-icon="image"
+                    class="overflow-hidden"
+                    singli
+                    @click="routeTo(search.param)"
+                    :active="tokensResult.length === 0"
+                >
+                </v-list-item>
             </v-list>
             <!-- 
                 Search has Block result
             -->
             <v-list v-if="search.isBlockNumber || search.hashType === HASH_TYPE.BlockHash">
                 <v-list-subheader>Block</v-list-subheader>
-                <v-list-item prepend-icon="image" :title="search.param" class="overflow-hidden" @click="routeTo(search.param, true)"> </v-list-item>
+                <v-list-item
+                    prepend-icon="image"
+                    :title="search.param"
+                    class="overflow-hidden"
+                    @click="routeTo(search.param, true)"
+                    :active="tokensResult.length === 0"
+                >
+                </v-list-item>
             </v-list>
             <!-- 
                 Search has Uncle result
             -->
             <v-list v-if="search.hashType === HASH_TYPE.UncleHash">
                 <v-list-subheader>Uncle</v-list-subheader>
-                <v-list-item prepend-icon="image" :title="search.param" class="overflow-hidden" @click="routeTo(search.param, true)"> </v-list-item>
+                <v-list-item
+                    prepend-icon="image"
+                    :title="search.param"
+                    class="overflow-hidden"
+                    @click="routeTo(search.param, true)"
+                    :active="tokensResult.length === 0"
+                >
+                </v-list-item>
             </v-list>
         </template>
     </app-search>
@@ -95,6 +119,7 @@ interface Search {
     partialResults: SearchTokenOption[]
     isBlockNumber: boolean
     hashType: string
+    reroute: boolean
 }
 
 const search: Search = reactive({
@@ -105,7 +130,8 @@ const search: Search = reactive({
     partialResults: [],
     filterItems: ['All', 'Address', 'Transaction', 'Token', 'Block', 'Uncle'],
     isBlockNumber: false,
-    hashType: ''
+    hashType: '',
+    reroute: false
 })
 interface FilterRoutesMapInterface {
     [key: string]: {
@@ -172,7 +198,7 @@ const removeSpaces = (val: string): string => {
  * @param {string} filterParam -  value of the current seelcted filter
  */
 
-const executeSearch = (searchParam: string, filterParam?: string): void => {
+const executeSearch = (searchParam: string): void => {
     search.enabledTokenSearch = false
     search.enabledHashType = false
     search.isBlockNumber = false
@@ -233,13 +259,6 @@ onHashTypeResult(({ data }) => {
             search.hasErrorHahType = true
         } else {
             search.hashType = data.getHashType
-            console.log('Recieved', search.hashType)
-            // const routeProp = `${search.param}`
-            // try {
-            //     router.push({ name: filterRoutesMap[data.getHashType].NAME, params: { [filterRoutesMap[data.getHashType].PROP]: routeProp } })
-            // } catch (err) {
-            //     //Catch on SENTRY
-            // }
         }
     }
 })
@@ -247,17 +266,6 @@ onHashTypeError(() => {
     search.hasErrorHahType = true
     search.enabledHashType = false
 })
-/**
- * Watching changes in the hashtype loading query
- * sets isLoading in search to give the proper ui responce
- *
- */
-// watch(
-//     () => loadingHashType,
-//     newVal => {
-//         search.isLoading = newVal.value
-//     }
-// )
 
 /*
 ===================================================================================
@@ -334,6 +342,21 @@ const isLoading = computed(() => {
 })
 
 /**
+ * Watching changes in the hashtype loading query
+ * sets isLoading in search to give the proper ui responce
+ *
+ */
+watch(
+    () => isLoading.value,
+    newVal => {
+        if (!newVal && search.reroute) {
+            search.reroute = false
+            routeToFirst(search.param || '')
+        }
+    }
+)
+
+/**
  * Routes to the token contract page
  * @param {string} contract - token contract address
  */
@@ -368,12 +391,17 @@ const routeTo = (param: string, isBlock = false): void => {
     }
 }
 
-// const startSearch = (): void => {
-//     if (!hasError.value) {
-//        //Find First result in a list
-//         if (tokensResult.value.length > 0) {
-
-//        }
-//     }
-// }
+const routeToFirst = (param: string): void => {
+    if (!hasError.value && !isLoading.value) {
+        //Find First result in a list
+        if (tokensResult.value.length > 0) {
+            routeToToken(tokensResult.value[0].contract)
+        } else {
+            const isBlock = search.isBlockNumber || search.hashType === HASH_TYPE.BlockHash || search.hashType === HASH_TYPE.UncleHash
+            routeTo(param, isBlock)
+        }
+    } else {
+        search.reroute = true
+    }
+}
 </script>

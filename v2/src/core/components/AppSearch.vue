@@ -15,7 +15,7 @@
                 @update:modelValue="onSearch"
                 @focus="search.focus = true"
                 @blur="search.focus = false"
-                @keyup.enter="onSearch"
+                @keyup.enter="onSearchEnter"
             >
                 <template v-slot:prepend-inner>
                     <v-icon :color="search.value ? (props.hasError ? 'error' : 'secondary') : 'info'" icon="search" />
@@ -61,10 +61,10 @@
         </v-btn>
         <v-menu location="bottom" activator="#search-options-activator">
             <v-card width="380" max-height="300px" rounded="xl" class="mt-1">
+                <v-progress-linear v-if="isLoading" class="position-absolute" style="z-index: 1" color="secondary" height="5" indeterminate></v-progress-linear>
                 <app-no-result v-if="props.hasError" :text="`We could not find anything mathching: ${search.value}`"></app-no-result>
                 <slot v-else name="search-results"> </slot>
-                <v-progress-linear v-if="isLoading" class="position-absolute" style="z-index: 1" color="secondary" height="5" indeterminate></v-progress-linear
-            ></v-card>
+            </v-card>
             <!-- <v-card  min-width="380" max-height="300px">
                 <v-list>
                     <v-list-subheader>Tokens</v-list-subheader>
@@ -138,7 +138,7 @@ const props = defineProps({
 
 const emit = defineEmits<{
     (e: 'onSearch', searchValue: string, filterValue: string | undefined): void
-    (e: 'tokenSelected', contract: string): void
+    (e: 'onSearchEnter', searchValue: string): void
 }>()
 
 const selected = ref(props.selectItems[0])
@@ -151,30 +151,27 @@ const selected = ref(props.selectItems[0])
 interface Search {
     focus: boolean
     timeout: number
+    timeoutEnter: number
     value: string
     optionsTimeout: number
     isActive: boolean
 }
 
-const search: Search = reactive({ focus: false, timeout: 0, value: '', optionsTimeout: 0, isActive: true })
+const search: Search = reactive({ focus: false, timeout: 0, value: '', optionsTimeout: 0, isActive: true, timeoutEnter: 0 })
 /**
  * Emits user input to parent with the timeout of 600
  */
 const onSearch = (): void => {
-    // if (_selected) {
-    //     selected.value = _selected
-    // }
     clearTimeout(search.timeout)
     search.timeout = window.setTimeout(() => {
         emit('onSearch', search.value, selected.value)
     }, 600)
 }
-/**
- * Emits selected token contract from the parent provided options
- * @param {string} contract - token contract to emit
- */
-const onSelectToken = (contract: string): void => {
-    emit('tokenSelected', contract)
+const onSearchEnter = (): void => {
+    clearTimeout(search.timeoutEnter)
+    search.timeoutEnter = window.setTimeout(() => {
+        emit('onSearchEnter', search.value)
+    }, 600)
 }
 
 /**
@@ -182,13 +179,9 @@ const onSelectToken = (contract: string): void => {
  */
 const resetValues = (): void => {
     clearTimeout(search.timeout)
+    clearTimeout(search.timeoutEnter)
     emit('onSearch', search.value, selected.value)
 }
-
-/* TEMP SOLUTIONS: SINCE VUETIFY ERROR STATE IS BROKEN */
-const errorMes = computed<string>(() => {
-    return props.hasError ? 'ERROR: INVALID SEARCH' : ''
-})
 </script>
 <style lang="scss">
 .v-field.v-field--no-label.v-field--variant-solo {
