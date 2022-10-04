@@ -26,7 +26,9 @@
                     <template #prepend>
                         <app-token-icon :token-icon="item.icon" class="mr-2"></app-token-icon>
                     </template>
-                    <template #append> {{ item.price }} </template>
+                    <template #append v-if="item.price">
+                        <p class="pl-6">{{ item.price }}</p></template
+                    >
                 </v-list-item>
             </v-list>
             <!-- 
@@ -100,8 +102,9 @@ import { ROUTE_NAME, ROUTE_PROP } from '@core/router/routesNames'
 import { useRouter } from 'vue-router'
 import { Buffer } from 'buffer'
 import { useCoinData } from '@core/composables/CoinData/coinData.composable'
-import { tabViewRouteGuard } from '@/core/router/helpers'
-
+import { MarketDataFragment } from '@/core/composables/CoinData/getLatestPrices.generated'
+import { formatUsdValue } from '@/core/helper/number-format-helper'
+import BN from 'bignumber.js'
 /*
   ===================================================================================
     Initial Data
@@ -273,7 +276,7 @@ onHashTypeError(() => {
     Returns options to the child component
 ===================================================================================
 */
-const { loading: loadingCoinData, getEthereumTokenByContract } = useCoinData()
+const { loading: loadingCoinData, getEthereumTokenByContract, ethereumTokens } = useCoinData()
 
 const {
     onResult: onTokenSearchResult,
@@ -294,7 +297,8 @@ onTokenSearchResult(({ data }) => {
         if (data.getTokensBeginsWith.length > 0) {
             search.partialResults = []
             data.getTokensBeginsWith.forEach(i => {
-                if (i) {
+                const isNotDuplicate = search.partialResults.find(item => item.contract === i?.contract) === undefined
+                if (i && isNotDuplicate) {
                     search.partialResults.push({
                         text: i.keyword,
                         contract: i.contract
@@ -310,19 +314,49 @@ onTokenSearchResult(({ data }) => {
 onTokenSearchError(() => {
     search.hasErrorTokenSearch = true
 })
+
+const tokensWithMarketCap = computed(() => {
+    if (ethereumTokens.value.length > 0) {
+        const nonEmpty = ethereumTokens.value.filter((x): x is MarketDataFragment => x !== null)
+        const filteredRes = nonEmpty.filter(token => token && token.market_cap && token.market_cap > 0)
+        return filteredRes
+    }
+    return []
+})
 const tokensResult = computed(() => {
     if (!loadingCoinData.value && search.partialResults.length > 0) {
-        const tokens = search.partialResults.map(i => {
-            const marketData = getEthereumTokenByContract(i.contract)
-            return {
-                text: i.text,
-                subtext: marketData ? marketData.symbol : i.contract,
-                price: marketData ? marketData.current_price : undefined,
-                icon: marketData ? marketData.image : undefined,
-                contract: i.contract
-            }
-        })
-        return tokens.sort((x, y) => (y.price! < x.price! ? -1 : y.price! > x.price ? 1 : 0))
+        const tokensInMarket = tokensWithMarketCap.value
+            .filter(i => i.symbol.toLowerCase().includes(search.param.toLowerCase()) || i.name.toLowerCase().includes(search.param.toLowerCase()))
+            .map(i => {
+                const flag = i.name.toLowerCase().startsWith(search.param) || i.symbol.toLowerCase().startsWith(search.param)
+                return {
+                    text: i.name,
+                    subtext: i.symbol ? i.symbol : i.contract,
+                    price: i.current_price ? formatUsdValue(new BN(i.current_price)).value : undefined,
+                    icon: i.image,
+                    contract: i.contract,
+                    flag: flag
+                }
+            })
+        const tokenFromPartialResult = search.partialResults
+            .filter(i => {
+                const exhists = tokensInMarket.find(market => market?.contract === i.contract)
+                return exhists === undefined
+            })
+            .map(i => {
+                const marketData = getEthereumTokenByContract(i.contract)
+                return {
+                    text: i.text,
+                    subtext: marketData ? marketData.symbol : i.contract,
+                    price: marketData && marketData.current_price ? formatUsdValue(new BN(marketData.current_price)).value : undefined,
+                    icon: marketData ? marketData.image : undefined,
+                    contract: i.contract,
+                    flag: marketData !== false
+                }
+            })
+        const flagged = [...tokensInMarket.filter(i => i.flag), ...tokenFromPartialResult.filter(i => i.flag)]
+        const notFlagged = [...tokensInMarket.filter(i => !i.flag), ...tokenFromPartialResult.filter(i => !i.flag)]
+        return [...flagged, ...notFlagged]
     }
     return []
 })
@@ -337,7 +371,6 @@ const hasError = computed(() => {
  * Returns true if search results are empty
  */
 const isLoading = computed(() => {
-    console.log('Loading', loadingTokenSearch.value || loadingHashType.value || loadingCoinData.value)
     return loadingCoinData.value || loadingHashType.value || loadingTokenSearch.value
 })
 
@@ -395,7 +428,7 @@ const routeTo = (_param: string, isBlock = false): void => {
 const routeToFirst = (param: string): void => {
     if (!hasError.value && !isLoading.value) {
         //Find First result in a list
-        if (tokensResult.value.length > 0) {
+        if (tokensResult.value.length > 0 && tokensResult.value[0].contract) {
             routeToToken(tokensResult.value[0].contract)
         } else {
             const isBlock = search.isBlockNumber || search.hashType === HASH_TYPE.BlockHash || search.hashType === HASH_TYPE.UncleHash
