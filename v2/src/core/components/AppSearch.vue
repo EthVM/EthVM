@@ -1,15 +1,15 @@
 <template>
-    <v-row align="center" justify="end" class="my-0">
-        <v-card class="rounded-s-pill rounded-e-0" width="380" id="search-options-activator">
+    <v-row align="center" justify="end" class="my-0 flex-nowrap">
+        <v-card class="rounded-s-pill rounded-e-0 d-flex flex-grow-1 flex-shrink-0" max-width="380" id="search-options-activator">
             <v-text-field
                 v-model="search.value"
                 color="secondary"
-                density="compact"
+                :density="xs ? 'compact' : 'comfortable'"
                 variant="solo"
-                placeholder="Search by address/transaction/token"
+                :placeholder="xs ? 'Search' : 'Search by address/transaction/token'"
                 hide-details
                 clearable
-                height="32px"
+                max-width="380"
                 class="text-caption"
                 @click:clear="resetValues"
                 @update:modelValue="onUserInput"
@@ -17,12 +17,23 @@
                 @blur="onBlur"
                 @keyup.enter="onSearchEnter"
             >
-                <template v-slot:prepend-inner>
+                <template v-slot:prepend-inner v-if="!xs">
                     <v-icon :color="search.value ? (props.hasError ? 'error' : 'secondary') : 'info'" icon="search" />
                 </template>
             </v-text-field>
         </v-card>
-        <v-btn variant="flat" color="secondary" height="40" width="130px" class="rounded-e-pill rounded-s-0 px-0" @click="onSearchEnter"> Search </v-btn>
+        <v-btn
+            variant="flat"
+            color="secondary"
+            :height="xs ? '32px' : '40px'"
+            :width="xs ? '50px' : '130px'"
+            class="rounded-e-pill rounded-s-0 px-0"
+            icon
+            @click="onSearchEnter"
+        >
+            <v-icon v-if="xs">search</v-icon>
+            <div v-else>Search</div>
+        </v-btn>
         <v-menu location="bottom" activator="#search-options-activator" v-model="search.focus" :open-on-click="false">
             <v-card v-if="search.value !== ''" width="380" max-height="300px" rounded="xl" class="mt-1">
                 <v-progress-linear v-if="isLoading" class="position-absolute" style="z-index: 1" color="secondary" height="5" indeterminate></v-progress-linear>
@@ -37,6 +48,9 @@
 import AppNoResult from './AppNoResult.vue'
 import { PropType } from 'vue'
 import { defineProps, defineEmits, reactive, onBeforeUnmount } from 'vue'
+import { useDisplay } from 'vuetify/lib/framework.mjs'
+
+const { xs } = useDisplay()
 const props = defineProps({
     selectItems: {
         type: Array as PropType<string[]>,

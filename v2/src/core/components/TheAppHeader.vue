@@ -1,11 +1,12 @@
 <template>
     <v-app-bar app color="primary" class="pa-0">
         <v-container class="mx-2 mx-sm-6 mx-md-auto mx-lg-6 mx-xl-auto pa-0">
-            <v-row align="center" class="mr-0 mx-lg-0">
+            <v-row align="center" justify="start" class="mr-0 mx-lg-0 flex-nowrap">
                 <v-app-bar-nav-icon v-if="showDrawerBtn" @click="appStore.appDrawer = !appStore.appDrawer" />
-                <v-img :src="require('@/assets/logo-compact.png')" height="30" max-width="30" contain class="mr-2" />
-                <v-spacer />
-                <module-search class="mr-2" />
+                <div class="mr-4">
+                    <v-img :src="require('@/assets/logo-compact.png')" height="30" width="30" contain class="mr-auto" />
+                </div>
+                <module-search class="mr-2 ml-auto" />
                 <template v-if="!showDrawerBtn">
                     <template v-for="(item, index) in navItems" :key="index">
                         <v-btn v-if="!item.links" rounded="pill" :active="false" :to="item.header.routerLink" class="text-subtitle-1 font-weight-regular">

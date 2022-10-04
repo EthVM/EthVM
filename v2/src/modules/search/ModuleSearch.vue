@@ -393,7 +393,6 @@ const routeToToken = (contract: string): void => {
  * @param {string} contract - token contract address
  */
 const routeTo = (_param: string, isBlock = false): void => {
-    console.log('route to')
     const param = removeSpaces(_param)
     if (isBlock) {
         if (search.isBlockNumber) {
