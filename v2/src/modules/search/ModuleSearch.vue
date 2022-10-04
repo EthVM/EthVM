@@ -13,6 +13,7 @@
             -->
             <v-list v-if="tokensResult.length > 0">
                 <v-list-subheader>Tokens</v-list-subheader>
+                <v-divider />
                 <v-list-item
                     v-for="(item, index) in tokensResult"
                     :key="item.contract"
@@ -314,6 +315,7 @@ const tokensResult = computed(() => {
                     flag: flag
                 }
             })
+            .slice(0, 9)
         const tokenFromPartialResult = search.partialResults
             .filter(i => {
                 const exhists = tokensInMarket.find(market => market?.contract === i.contract)
@@ -391,6 +393,7 @@ const routeToToken = (contract: string): void => {
  * @param {string} contract - token contract address
  */
 const routeTo = (_param: string, isBlock = false): void => {
+    console.log('route to')
     const param = removeSpaces(_param)
     if (isBlock) {
         if (search.isBlockNumber) {
