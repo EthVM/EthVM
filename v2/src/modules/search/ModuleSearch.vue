@@ -3,8 +3,7 @@
         :select-items="search.filterItems"
         :is-loading="isLoading"
         :has-error="hasError"
-        :search-options="search.partialResults"
-        @onSearch="executeSearch"
+        @onUserInput="executeSearch"
         @tokenSelected="routeToToken"
         @onSearchEnter="routeToFirst"
     >
@@ -137,34 +136,6 @@ const search: Search = reactive({
     reroute: false,
     param: ''
 })
-interface FilterRoutesMapInterface {
-    [key: string]: {
-        NAME: string
-        PROP: string
-    }
-}
-const filterRoutesMap: FilterRoutesMapInterface = {
-    [HashType.AddressHash]: {
-        NAME: ROUTE_NAME.ADDRESS.NAME,
-        PROP: ROUTE_PROP.ADDRESS
-    },
-    [HashType.BlockHash]: {
-        NAME: ROUTE_NAME.BLOCK_HASH.NAME,
-        PROP: ROUTE_PROP.BLOCK
-    },
-    [HashType.TokenHash]: {
-        NAME: ROUTE_NAME.TOKEN.NAME,
-        PROP: ROUTE_PROP.TOKEN
-    },
-    [HashType.TxHash]: {
-        NAME: ROUTE_NAME.TX_HASH.NAME,
-        PROP: ROUTE_PROP.TX
-    },
-    [HashType.UncleHash]: {
-        NAME: ROUTE_NAME.UNCLE_HASH.NAME,
-        PROP: ROUTE_PROP.UNCLE
-    }
-}
 
 /*
 ===================================================================================
@@ -183,19 +154,6 @@ const removeSpaces = (val: string): string => {
 }
 
 /**
- * Sets error and cancels loading
- * @param param {Any}
- */
-// const setError = (isError = true): void => {
-//     search.enabledHashType = false
-//     search.enabledTokenSearch = false
-//     search.isLoading = false
-//     if (!search.isBlockNumber || search.hashType === '') {
-//         console.log(search.hashType)
-//         search.hasError = isError
-//     }
-// }
-/**
  * Executes search functionality.
  * if searchParam is empty, aborts search
  * @param {string} searchParam - value to search
@@ -209,7 +167,7 @@ const executeSearch = (searchParam: string): void => {
     search.hasErrorHahType = false
     search.hasErrorTokenSearch = false
     search.hashType = ''
-    ///checks for string length
+    // checks for string length
     if (Buffer.byteLength(searchParam, 'utf8') > 1024) {
         search.hasErrorHahType = true
         search.hasErrorHahType = true
@@ -225,7 +183,6 @@ const executeSearch = (searchParam: string): void => {
             if (eth.isValidBlockNumber(removeSpaces(param))) {
                 search.isBlockNumber = true
                 search.param = param
-                // router.push({ name: ROUTE_NAME.BLOCK_NUMBER.NAME, params: { [ROUTE_PROP.BLOCK]: param } })
             } else {
                 search.isBlockNumber = false
             }
@@ -237,7 +194,7 @@ const executeSearch = (searchParam: string): void => {
 }
 /*
 ===================================================================================
-    Fetch HasType
+    Fetch HashType
     If results are valid, reroutes user to the requested page
 ===================================================================================
 */
@@ -254,7 +211,6 @@ const {
         fetchPolicy: 'cache-and-network'
     })
 )
-const router = useRouter()
 
 onHashTypeResult(({ data }) => {
     if (data && data.getHashType) {
@@ -265,6 +221,7 @@ onHashTypeResult(({ data }) => {
         }
     }
 })
+
 onHashTypeError(() => {
     search.hasErrorHahType = true
     search.enabledHashType = false
@@ -272,8 +229,7 @@ onHashTypeError(() => {
 
 /*
 ===================================================================================
-    Fetches Possible token names from the user input
-    Returns options to the child component
+    Fetches Possible token names from the user input from the backend
 ===================================================================================
 */
 const { loading: loadingCoinData, getEthereumTokenByContract, ethereumTokens } = useCoinData()
@@ -315,6 +271,18 @@ onTokenSearchError(() => {
     search.hasErrorTokenSearch = true
 })
 
+/*
+===================================================================================
+    Tokens Result Handling
+    Returns options to the child component
+
+===================================================================================
+*/
+
+/**
+ * Computed property that returns tokens only with market cap and non empty elements
+ * Used to reduce number of items to filter through the market data
+ */
 const tokensWithMarketCap = computed(() => {
     if (ethereumTokens.value.length > 0) {
         const nonEmpty = ethereumTokens.value.filter((x): x is MarketDataFragment => x !== null)
@@ -323,6 +291,14 @@ const tokensWithMarketCap = computed(() => {
     }
     return []
 })
+
+/**
+ * Computed property that returns results into the search component list.
+ * Filters results in the market data by match.
+ * Removes duplicates from the tokens search result and market data.
+ * Flags elements that begins with the search param
+ * Returns Result in this order: items that have market data and begins with search param, them partial matches with market data, everything else
+ */
 const tokensResult = computed(() => {
     if (!loadingCoinData.value && search.partialResults.length > 0) {
         const tokensInMarket = tokensWithMarketCap.value
@@ -361,6 +337,12 @@ const tokensResult = computed(() => {
     return []
 })
 
+/*
+===================================================================================
+   Module Error and Loading
+===================================================================================
+*/
+
 /**
  * Returns true if search results are empty
  */
@@ -368,7 +350,7 @@ const hasError = computed(() => {
     return search.hasErrorTokenSearch && search.hasErrorHahType && !search.isBlockNumber
 })
 /**
- * Returns true if search results are empty
+ * Returns true if search is loading
  */
 const isLoading = computed(() => {
     return loadingCoinData.value || loadingHashType.value || loadingTokenSearch.value
@@ -376,8 +358,7 @@ const isLoading = computed(() => {
 
 /**
  * Watching changes in the hashtype loading query
- * sets isLoading in search to give the proper ui responce
- *
+ * If User pressed enter on load finish will reroute to the first result in the shown results
  */
 watch(
     () => isLoading.value,
@@ -389,6 +370,14 @@ watch(
     }
 )
 
+/*
+===================================================================================
+    Routing
+===================================================================================
+*/
+
+const router = useRouter()
+
 /**
  * Routes to the token contract page
  * @param {string} contract - token contract address
@@ -396,6 +385,11 @@ watch(
 const routeToToken = (contract: string): void => {
     router.push({ name: ROUTE_NAME.TOKEN.NAME, params: { [ROUTE_PROP.TOKEN]: contract } })
 }
+
+/**
+ * Routes to the hashType
+ * @param {string} contract - token contract address
+ */
 const routeTo = (_param: string, isBlock = false): void => {
     const param = removeSpaces(_param)
     if (isBlock) {
@@ -425,6 +419,10 @@ const routeTo = (_param: string, isBlock = false): void => {
     }
 }
 
+/**
+ * Routes to the first result loaded
+ * @param {string} param - search param
+ */
 const routeToFirst = (param: string): void => {
     if (!hasError.value && !isLoading.value) {
         //Find First result in a list
