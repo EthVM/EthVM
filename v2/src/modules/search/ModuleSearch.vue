@@ -34,7 +34,7 @@
             -->
             <v-list v-if="search.hashType === HASH_TYPE.AddressHash">
                 <v-list-subheader>Address</v-list-subheader>
-                <v-list-item :title="search.param" class="overflow-hidden" @click="routeTo(search.param)" :active="tokensResult.length === 0">
+                <v-list-item :title="removeSpaces(search.param)" class="overflow-hidden" @click="routeTo(search.param)" :active="tokensResult.length === 0">
                     <template v-slot:prepend>
                         <app-address-blockie :address="search.param || ''" :size="6" class="mr-5" />
                     </template>
@@ -46,7 +46,7 @@
             <v-list v-if="search.hashType === HASH_TYPE.TxHash" lines="one">
                 <v-list-subheader>Transaction hash:</v-list-subheader>
                 <v-list-item
-                    :title="search.param"
+                    :title="removeSpaces(search.param)"
                     prepend-icon="image"
                     class="overflow-hidden"
                     singli
@@ -62,7 +62,7 @@
                 <v-list-subheader>Block</v-list-subheader>
                 <v-list-item
                     prepend-icon="image"
-                    :title="search.param"
+                    :title="removeSpaces(search.param)"
                     class="overflow-hidden"
                     @click="routeTo(search.param, true)"
                     :active="tokensResult.length === 0"
@@ -76,7 +76,7 @@
                 <v-list-subheader>Uncle</v-list-subheader>
                 <v-list-item
                     prepend-icon="image"
-                    :title="search.param"
+                    :title="removeSpaces(search.param)"
                     class="overflow-hidden"
                     @click="routeTo(search.param, true)"
                     :active="tokensResult.length === 0"
@@ -111,7 +111,7 @@ import { tabViewRouteGuard } from '@/core/router/helpers'
 const HASH_TYPE = HashType
 interface Search {
     filterItems: string[]
-    param?: string
+    param: string
     enabledHashType: boolean
     enabledTokenSearch: boolean
     hasErrorHahType: boolean
@@ -131,7 +131,8 @@ const search: Search = reactive({
     filterItems: ['All', 'Address', 'Transaction', 'Token', 'Block', 'Uncle'],
     isBlockNumber: false,
     hashType: '',
-    reroute: false
+    reroute: false,
+    param: ''
 })
 interface FilterRoutesMapInterface {
     [key: string]: {
@@ -210,15 +211,15 @@ const executeSearch = (searchParam: string): void => {
         search.hasErrorHahType = true
         search.hasErrorHahType = true
     } else {
-        const param = removeSpaces(searchParam)
+        const param = searchParam
         if (param.length > 0) {
-            if (eth.isValidAddress(param) || eth.isValidHash(param)) {
-                search.enabledHashType = true
+            if (eth.isValidAddress(removeSpaces(param)) || eth.isValidHash(removeSpaces(param))) {
                 search.param = param
+                search.enabledHashType = true
             } else {
                 search.hasErrorHahType = true
             }
-            if (eth.isValidBlockNumber(param)) {
+            if (eth.isValidBlockNumber(removeSpaces(param))) {
                 search.isBlockNumber = true
                 search.param = param
                 // router.push({ name: ROUTE_NAME.BLOCK_NUMBER.NAME, params: { [ROUTE_PROP.BLOCK]: param } })
@@ -226,7 +227,6 @@ const executeSearch = (searchParam: string): void => {
                 search.isBlockNumber = false
             }
             // Search For Tokens:
-            /// add search for market data first
             search.param = param
             search.enabledTokenSearch = true
         }
@@ -244,7 +244,7 @@ const {
     loading: loadingHashType
 } = useGetHashTypeQuery(
     () => ({
-        hash: search.param || ''
+        hash: removeSpaces(search.param)
     }),
     () => ({
         enabled: search.enabledHashType,
@@ -281,7 +281,7 @@ const {
     loading: loadingTokenSearch
 } = useGetTokensBeginsWithQuery(
     () => ({
-        keyword: search.param || ''
+        keyword: search.param
     }),
     () => ({
         enabled: search.enabledTokenSearch,
@@ -351,7 +351,7 @@ watch(
     newVal => {
         if (!newVal && search.reroute) {
             search.reroute = false
-            routeToFirst(search.param || '')
+            routeToFirst(search.param)
         }
     }
 )
@@ -363,7 +363,8 @@ watch(
 const routeToToken = (contract: string): void => {
     router.push({ name: ROUTE_NAME.TOKEN.NAME, params: { [ROUTE_PROP.TOKEN]: contract } })
 }
-const routeTo = (param: string, isBlock = false): void => {
+const routeTo = (_param: string, isBlock = false): void => {
+    const param = removeSpaces(_param)
     if (isBlock) {
         if (search.isBlockNumber) {
             router.push({ name: ROUTE_NAME.BLOCK_NUMBER.NAME, params: { [ROUTE_PROP.BLOCK]: param } })
