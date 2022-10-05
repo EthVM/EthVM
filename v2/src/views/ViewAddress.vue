@@ -45,14 +45,16 @@
             Desktop Menu
         =========================
         -->
-        <v-tabs v-if="!smAndDown" v-model="state.tab" background-color="primary" centered hide-slider>
+        <v-tabs v-if="!smAndDown" v-model="state.tab" color="primary" centered hide-slider>
             <v-tab
                 v-for="i in tabs"
                 @click="navigateTo(i.routeName, i.secondaryTab)"
                 :value="i.routeName"
                 :key="i.routeName"
                 class="py-3 text-h5 text-capitalize rounded-b-xl"
-                >{{ i.text }}</v-tab
+                color="primary"
+                selected-class="bg-surface t"
+                ><p :class="activeTabText === i.text ? 'text-primary' : 'text-white'">{{ i.text }}</p></v-tab
             >
         </v-tabs>
         <!--
