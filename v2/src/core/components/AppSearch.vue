@@ -46,16 +46,11 @@
 
 <script setup lang="ts">
 import AppNoResult from './AppNoResult.vue'
-import { PropType } from 'vue'
 import { defineProps, defineEmits, reactive, onBeforeUnmount } from 'vue'
 import { useDisplay } from 'vuetify/lib/framework.mjs'
 
 const { xs } = useDisplay()
 const props = defineProps({
-    selectItems: {
-        type: Array as PropType<string[]>,
-        required: true
-    },
     isLoading: {
         type: Boolean,
         default: true

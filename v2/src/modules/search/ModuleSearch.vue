@@ -1,19 +1,11 @@
 <template>
-    <app-search
-        :select-items="search.filterItems"
-        :is-loading="isLoading"
-        :has-error="hasError"
-        @onUserInput="executeSearch"
-        @tokenSelected="routeToToken"
-        @onSearchEnter="routeToFirst"
-    >
+    <app-search :is-loading="isLoading" :has-error="hasError" @onUserInput="executeSearch" @tokenSelected="routeToToken" @onSearchEnter="routeToFirst">
         <template #search-results>
             <!-- 
                 Search has Token result
             -->
             <v-list v-if="tokensResult.length > 0">
                 <v-list-subheader>Tokens</v-list-subheader>
-                <v-divider />
                 <v-list-item
                     v-for="(item, index) in tokensResult"
                     :key="item.contract"
@@ -46,7 +38,7 @@
                 Search has Tx result
             -->
             <v-list v-if="search.hashType === HASH_TYPE.TxHash" lines="one">
-                <v-list-subheader>Transaction hash:</v-list-subheader>
+                <v-list-subheader>Transaction</v-list-subheader>
                 <v-list-item
                     :title="removeSpaces(search.param)"
                     prepend-icon="image"
@@ -113,7 +105,6 @@ import BN from 'bignumber.js'
 
 const HASH_TYPE = HashType
 interface Search {
-    filterItems: string[]
     param: string
     enabledHashType: boolean
     enabledTokenSearch: boolean
@@ -131,7 +122,6 @@ const search: Search = reactive({
     hasErrorTokenSearch: false,
     enabledTokenSearch: false,
     partialResults: [],
-    filterItems: ['All', 'Address', 'Transaction', 'Token', 'Block', 'Uncle'],
     isBlockNumber: false,
     hashType: '',
     reroute: false,
@@ -158,7 +148,6 @@ const removeSpaces = (val: string): string => {
  * Executes search functionality.
  * if searchParam is empty, aborts search
  * @param {string} searchParam - value to search
- * @param {string} filterParam -  value of the current seelcted filter
  */
 
 const executeSearch = (searchParam: string): void => {
@@ -171,7 +160,7 @@ const executeSearch = (searchParam: string): void => {
     // checks for string length
     if (Buffer.byteLength(searchParam, 'utf8') > 1024) {
         search.hasErrorHahType = true
-        search.hasErrorHahType = true
+        search.hasErrorTokenSearch = true
     } else {
         const param = searchParam
         if (param.length > 0) {
@@ -301,7 +290,7 @@ const tokensWithMarketCap = computed(() => {
  * Returns Result in this order: items that have market data and begins with search param, them partial matches with market data, everything else
  */
 const tokensResult = computed(() => {
-    if (!loadingCoinData.value && search.partialResults.length > 0) {
+    if (!loadingCoinData.value) {
         const tokensInMarket = tokensWithMarketCap.value
             .filter(i => i.symbol.toLowerCase().includes(search.param.toLowerCase()) || i.name.toLowerCase().includes(search.param.toLowerCase()))
             .map(i => {
@@ -434,7 +423,7 @@ const routeToFirst = (param: string): void => {
             const isBlock = search.isBlockNumber || search.hashType === HASH_TYPE.BlockHash || search.hashType === HASH_TYPE.UncleHash
             routeTo(param, isBlock)
         }
-    } else {
+    } else if (isLoading.value && !hasError.value) {
         search.reroute = true
     }
 }
