@@ -5,6 +5,8 @@ import { md, aliases } from 'vuetify/iconsets/md'
 import * as components from 'vuetify/components'
 import * as directives from 'vuetify/directives'
 import { createVuetify, ThemeDefinition } from 'vuetify'
+// import type { IconAliases } from 'vuetify'
+
 type ThemeDefinition = typeof ThemeDefinition
 
 const COLORS = {
@@ -84,13 +86,14 @@ const mainnetDarkTheme: ThemeDefinition = {
         'on-surface-tabs': COLORS.lightBlue,
         pillGrey: COLORS.greyBackdroundDM,
         tableGrey: COLORS.greyBackdroundDM,
-        whiteLogo: COLORS.white
+        whiteLogo: COLORS.white,
         greyCard: COLORS.greyBackdroundDM
     },
     variables: {
         'skeleton-gradient': 0.03
     }
 }
+aliases.clear = 'close'
 
 export default createVuetify({
     components,

@@ -37,7 +37,7 @@
         "vue": "^3.2.13",
         "vue-chartjs": "^4.1.1",
         "vue-router": "^4.1.3",
-        "vuetify": "^3.0.0-beta.8",
+        "vuetify": "^3.0.0-beta.11",
         "web3-utils": "^1.7.3",
         "webfontloader": "^1.0.0"
     },

@@ -39,7 +39,7 @@
                             <template v-if="link.img" v-slot:prepend>
                                 <v-avatar rounded="lg" color="whiteLogo" :class="link.imgClass"><v-img :src="link.img"></v-img></v-avatar>
                             </template>
-                            <v-list-subtitle v-if="link.subtext" class="text-caption font-weight-light">{{ link.subtext }} </v-list-subtitle>
+                            <p v-if="link.subtext" class="text-caption font-weight-light">{{ link.subtext }}</p>
                         </v-list-item>
                     </template>
                 </v-list-group>

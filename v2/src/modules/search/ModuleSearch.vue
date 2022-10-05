@@ -1,76 +1,132 @@
 <template>
-    <app-search
-        :select-items="search.filterItems"
-        :is-loading="search.isLoading"
-        :has-error="search.hasError"
-        :search-options="search.partialResults"
-        @onSearch="executeSearch"
-        @tokenSelected="routeToToken"
-    />
+    <app-search :is-loading="isLoading" :has-error="hasError" @onUserInput="executeSearch" @tokenSelected="routeToToken" @onSearchEnter="routeToFirst">
+        <template #search-results>
+            <!-- 
+                Search has Token result
+            -->
+            <v-list v-if="tokensResult.length > 0">
+                <v-list-subheader>Tokens</v-list-subheader>
+                <v-list-item
+                    v-for="(item, index) in tokensResult"
+                    :key="item.contract"
+                    :title="item.text"
+                    :subtitle="item.subtext"
+                    class="overflow-hidden"
+                    :active="index === 0"
+                    @click="routeToToken(item.contract)"
+                >
+                    <template #prepend>
+                        <app-token-icon :token-icon="item.icon" class="mr-2"></app-token-icon>
+                    </template>
+                    <template #append v-if="item.price">
+                        <p class="pl-6">{{ item.price }}</p></template
+                    >
+                </v-list-item>
+            </v-list>
+            <!-- 
+                Search has Address result
+            -->
+            <v-list v-if="search.hashType === HASH_TYPE.AddressHash">
+                <v-list-subheader>Address</v-list-subheader>
+                <v-list-item :title="removeSpaces(search.param)" class="overflow-hidden" @click="routeTo(search.param)" :active="tokensResult.length === 0">
+                    <template v-slot:prepend>
+                        <app-address-blockie :address="search.param || ''" :size="6" class="mr-5" />
+                    </template>
+                </v-list-item>
+            </v-list>
+            <!-- 
+                Search has Tx result
+            -->
+            <v-list v-if="search.hashType === HASH_TYPE.TxHash" lines="one">
+                <v-list-subheader>Transaction</v-list-subheader>
+                <v-list-item
+                    :title="removeSpaces(search.param)"
+                    prepend-icon="image"
+                    class="overflow-hidden"
+                    singli
+                    @click="routeTo(search.param)"
+                    :active="tokensResult.length === 0"
+                >
+                </v-list-item>
+            </v-list>
+            <!-- 
+                Search has Block result
+            -->
+            <v-list v-if="search.isBlockNumber || search.hashType === HASH_TYPE.BlockHash">
+                <v-list-subheader>Block</v-list-subheader>
+                <v-list-item
+                    prepend-icon="image"
+                    :title="removeSpaces(search.param)"
+                    class="overflow-hidden"
+                    @click="routeTo(search.param, true)"
+                    :active="tokensResult.length === 0"
+                >
+                </v-list-item>
+            </v-list>
+            <!-- 
+                Search has Uncle result
+            -->
+            <v-list v-if="search.hashType === HASH_TYPE.UncleHash">
+                <v-list-subheader>Uncle</v-list-subheader>
+                <v-list-item
+                    prepend-icon="image"
+                    :title="removeSpaces(search.param)"
+                    class="overflow-hidden"
+                    @click="routeTo(search.param, true)"
+                    :active="tokensResult.length === 0"
+                >
+                </v-list-item>
+            </v-list>
+        </template>
+    </app-search>
 </template>
 
 <script setup lang="ts">
 import AppSearch from '@core/components/AppSearch.vue'
+import AppAddressBlockie from '@/core/components/AppAddressBlockie.vue'
 import { SearchTokenOption } from '@core/components/props/index'
+import AppTokenIcon from '@/core/components/AppTokenIcon.vue'
 import { eth } from '@core/helper/eth'
-import { reactive, watch } from 'vue'
+import { reactive, watch, computed } from 'vue'
 import { useGetHashTypeQuery, useGetTokensBeginsWithQuery } from './apollo/searchDetails.generated'
 import { HashType } from '@/apollo/types'
 import { ROUTE_NAME, ROUTE_PROP } from '@core/router/routesNames'
 import { useRouter } from 'vue-router'
 import { Buffer } from 'buffer'
-
+import { useCoinData } from '@core/composables/CoinData/coinData.composable'
+import { MarketDataFragment } from '@/core/composables/CoinData/getLatestPrices.generated'
+import { formatUsdValue } from '@/core/helper/number-format-helper'
+import BN from 'bignumber.js'
 /*
   ===================================================================================
     Initial Data
   ===================================================================================
   */
+
+const HASH_TYPE = HashType
 interface Search {
-    hasError?: boolean
-    isLoading: boolean
-    filterItems: string[]
-    param?: string
+    param: string
     enabledHashType: boolean
     enabledTokenSearch: boolean
+    hasErrorHahType: boolean
+    hasErrorTokenSearch: boolean
     partialResults: SearchTokenOption[]
+    isBlockNumber: boolean
+    hashType: string
+    reroute: boolean
 }
 
 const search: Search = reactive({
-    hasError: false,
-    isLoading: false,
     enabledHashType: false,
+    hasErrorHahType: false,
+    hasErrorTokenSearch: false,
     enabledTokenSearch: false,
     partialResults: [],
-    filterItems: ['All', 'Address', 'Transaction', 'Token', 'Block', 'Uncle']
+    isBlockNumber: false,
+    hashType: '',
+    reroute: false,
+    param: ''
 })
-interface FilterRoutesMapInterface {
-    [key: string]: {
-        NAME: string
-        PROP: string
-    }
-}
-const filterRoutesMap: FilterRoutesMapInterface = {
-    [HashType.AddressHash]: {
-        NAME: ROUTE_NAME.ADDRESS.NAME,
-        PROP: ROUTE_PROP.ADDRESS
-    },
-    [HashType.BlockHash]: {
-        NAME: ROUTE_NAME.BLOCK_HASH.NAME,
-        PROP: ROUTE_PROP.BLOCK
-    },
-    [HashType.TokenHash]: {
-        NAME: ROUTE_NAME.TOKEN.NAME,
-        PROP: ROUTE_PROP.TOKEN
-    },
-    [HashType.TxHash]: {
-        NAME: ROUTE_NAME.TX_HASH.NAME,
-        PROP: ROUTE_PROP.TX
-    },
-    [HashType.UncleHash]: {
-        NAME: ROUTE_NAME.UNCLE_HASH.NAME,
-        PROP: ROUTE_PROP.UNCLE
-    }
-}
 
 /*
 ===================================================================================
@@ -89,40 +145,36 @@ const removeSpaces = (val: string): string => {
 }
 
 /**
- * Sets error and cancels loading
- * @param param {Any}
- */
-const setError = (isError = true): void => {
-    search.enabledHashType = false
-    search.enabledTokenSearch = false
-    search.hasError = isError
-    search.isLoading = false
-}
-/**
  * Executes search functionality.
  * if searchParam is empty, aborts search
  * @param {string} searchParam - value to search
- * @param {string} filterParam -  value of the current seelcted filter
  */
 
-const executeSearch = (searchParam: string, filterParam?: string): void => {
-    search.hasError = false
+const executeSearch = (searchParam: string): void => {
     search.enabledTokenSearch = false
     search.enabledHashType = false
-    ///checks for string length
+    search.isBlockNumber = false
+    search.hasErrorHahType = false
+    search.hasErrorTokenSearch = false
+    search.hashType = ''
+    // checks for string length
     if (Buffer.byteLength(searchParam, 'utf8') > 1024) {
-        setError()
+        search.hasErrorHahType = true
+        search.hasErrorTokenSearch = true
     } else {
-        const param = removeSpaces(searchParam)
+        const param = searchParam
         if (param.length > 0) {
-            if (eth.isValidAddress(param) || eth.isValidHash(param)) {
-                search.enabledHashType = true
+            if (eth.isValidAddress(removeSpaces(param)) || eth.isValidHash(removeSpaces(param))) {
                 search.param = param
-                return
+                search.enabledHashType = true
+            } else {
+                search.hasErrorHahType = true
             }
-            if (filterParam === search.filterItems[4] && eth.isValidBlockNumber(param)) {
-                router.push({ name: ROUTE_NAME.BLOCK_NUMBER.NAME, params: { [ROUTE_PROP.BLOCK]: param } })
-                return
+            if (eth.isValidBlockNumber(removeSpaces(param))) {
+                search.isBlockNumber = true
+                search.param = param
+            } else {
+                search.isBlockNumber = false
             }
             // Search For Tokens:
             search.param = param
@@ -132,63 +184,53 @@ const executeSearch = (searchParam: string, filterParam?: string): void => {
 }
 /*
 ===================================================================================
-    Fetch HasType
+    Fetch HashType
     If results are valid, reroutes user to the requested page
 ===================================================================================
 */
 const {
     onResult: onHashTypeResult,
-    // onError: onHashTypeError,
+    onError: onHashTypeError,
     loading: loadingHashType
 } = useGetHashTypeQuery(
     () => ({
-        hash: search.param || ''
+        hash: removeSpaces(search.param)
     }),
     () => ({
         enabled: search.enabledHashType,
         fetchPolicy: 'cache-and-network'
     })
 )
-const router = useRouter()
 
 onHashTypeResult(({ data }) => {
     if (data && data.getHashType) {
         if (data.getHashType === HashType.CodeHash) {
-            setError()
+            search.hasErrorHahType = true
         } else {
-            const routeProp = `${search.param}`
-            try {
-                router.push({ name: filterRoutesMap[data.getHashType].NAME, params: { [filterRoutesMap[data.getHashType].PROP]: routeProp } })
-            } catch (err) {
-                //Catch on SENTRY
-            }
+            search.hashType = data.getHashType
         }
     }
 })
-// onHashTypeError(error => {
-//     const newError = JSON.stringify(error.message)
-// })
-/**
- * Watching changes in the hashtype loading query
- * sets isLoading in search to give the proper ui responce
- *
- */
-watch(
-    () => loadingHashType,
-    newVal => {
-        search.isLoading = newVal.value
-    }
-)
+
+onHashTypeError(() => {
+    search.hasErrorHahType = true
+    search.enabledHashType = false
+})
 
 /*
 ===================================================================================
-    Fetches Possible token names from the user input
-    Returns options to the child component
+    Fetches Possible token names from the user input from the backend
 ===================================================================================
 */
-const { onResult: onTokenSearchResult } = useGetTokensBeginsWithQuery(
+const { loading: loadingCoinData, getEthereumTokenByContract, ethereumTokens } = useCoinData()
+
+const {
+    onResult: onTokenSearchResult,
+    onError: onTokenSearchError,
+    loading: loadingTokenSearch
+} = useGetTokensBeginsWithQuery(
     () => ({
-        keyword: search.param || ''
+        keyword: search.param
     }),
     () => ({
         enabled: search.enabledTokenSearch,
@@ -201,7 +243,8 @@ onTokenSearchResult(({ data }) => {
         if (data.getTokensBeginsWith.length > 0) {
             search.partialResults = []
             data.getTokensBeginsWith.forEach(i => {
-                if (i) {
+                const isNotDuplicate = search.partialResults.find(item => item.contract === i?.contract) === undefined
+                if (i && isNotDuplicate) {
                     search.partialResults.push({
                         text: i.keyword,
                         contract: i.contract
@@ -209,15 +252,179 @@ onTokenSearchResult(({ data }) => {
                 }
             })
         } else {
-            setError()
+            search.partialResults = []
+            search.hasErrorTokenSearch = true
         }
     }
 })
+onTokenSearchError(() => {
+    search.hasErrorTokenSearch = true
+})
+
+/*
+===================================================================================
+    Tokens Result Handling
+    Returns options to the child component
+
+===================================================================================
+*/
+
+/**
+ * Computed property that returns tokens only with market cap and non empty elements
+ * Used to reduce number of items to filter through the market data
+ */
+const tokensWithMarketCap = computed(() => {
+    if (ethereumTokens.value.length > 0) {
+        const nonEmpty = ethereumTokens.value.filter((x): x is MarketDataFragment => x !== null)
+        const filteredRes = nonEmpty.filter(token => token && token.market_cap && token.market_cap > 0)
+        return filteredRes
+    }
+    return []
+})
+
+/**
+ * Computed property that returns results into the search component list.
+ * Filters results in the market data by match.
+ * Removes duplicates from the tokens search result and market data.
+ * Flags elements that begins with the search param
+ * Returns Result in this order: items that have market data and begins with search param, them partial matches with market data, everything else
+ */
+const tokensResult = computed(() => {
+    if (!loadingCoinData.value) {
+        const tokensInMarket = tokensWithMarketCap.value
+            .filter(i => i.symbol.toLowerCase().includes(search.param.toLowerCase()) || i.name.toLowerCase().includes(search.param.toLowerCase()))
+            .map(i => {
+                const flag = i.name.toLowerCase().startsWith(search.param) || i.symbol.toLowerCase().startsWith(search.param)
+                return {
+                    text: i.name,
+                    subtext: i.symbol ? i.symbol : i.contract,
+                    price: i.current_price ? formatUsdValue(new BN(i.current_price)).value : undefined,
+                    icon: i.image,
+                    contract: i.contract,
+                    flag: flag
+                }
+            })
+            .slice(0, 9)
+        const tokenFromPartialResult = search.partialResults
+            .filter(i => {
+                const exhists = tokensInMarket.find(market => market?.contract === i.contract)
+                return exhists === undefined
+            })
+            .map(i => {
+                const marketData = getEthereumTokenByContract(i.contract)
+                return {
+                    text: i.text,
+                    subtext: marketData ? marketData.symbol : i.contract,
+                    price: marketData && marketData.current_price ? formatUsdValue(new BN(marketData.current_price)).value : undefined,
+                    icon: marketData ? marketData.image : undefined,
+                    contract: i.contract,
+                    flag: marketData !== false
+                }
+            })
+        const flagged = [...tokensInMarket.filter(i => i.flag), ...tokenFromPartialResult.filter(i => i.flag)]
+        const notFlagged = [...tokensInMarket.filter(i => !i.flag), ...tokenFromPartialResult.filter(i => !i.flag)]
+        return [...flagged, ...notFlagged]
+    }
+    return []
+})
+
+/*
+===================================================================================
+   Module Error and Loading
+===================================================================================
+*/
+
+/**
+ * Returns true if search results are empty
+ */
+const hasError = computed(() => {
+    return search.hasErrorTokenSearch && search.hasErrorHahType && !search.isBlockNumber
+})
+/**
+ * Returns true if search is loading
+ */
+const isLoading = computed(() => {
+    return loadingCoinData.value || loadingHashType.value || loadingTokenSearch.value
+})
+
+/**
+ * Watching changes in the hashtype loading query
+ * If User pressed enter on load finish will reroute to the first result in the shown results
+ */
+watch(
+    () => isLoading.value,
+    newVal => {
+        if (!newVal && search.reroute) {
+            search.reroute = false
+            routeToFirst(search.param)
+        }
+    }
+)
+
+/*
+===================================================================================
+    Routing
+===================================================================================
+*/
+
+const router = useRouter()
+
 /**
  * Routes to the token contract page
  * @param {string} contract - token contract address
  */
 const routeToToken = (contract: string): void => {
     router.push({ name: ROUTE_NAME.TOKEN.NAME, params: { [ROUTE_PROP.TOKEN]: contract } })
+}
+
+/**
+ * Routes to the hashType
+ * @param {string} contract - token contract address
+ */
+const routeTo = (_param: string, isBlock = false): void => {
+    const param = removeSpaces(_param)
+    if (isBlock) {
+        if (search.isBlockNumber) {
+            router.push({ name: ROUTE_NAME.BLOCK_NUMBER.NAME, params: { [ROUTE_PROP.BLOCK]: param } })
+        } else {
+            const routeName = search.hashType === HASH_TYPE.BlockHash ? ROUTE_NAME.BLOCK_HASH.NAME : ROUTE_NAME.UNCLE_HASH.NAME
+            const routeProp = search.hashType === HASH_TYPE.BlockHash ? ROUTE_PROP.BLOCK : ROUTE_PROP.UNCLE
+            router.push({
+                name: routeName,
+                params: { [routeProp]: param }
+            })
+        }
+    } else {
+        if (search.hashType === HASH_TYPE.AddressHash) {
+            router.push({
+                name: ROUTE_NAME.ADDRESS.NAME,
+                params: { [ROUTE_PROP.ADDRESS]: param }
+            })
+        }
+        if (search.hashType === HASH_TYPE.TxHash) {
+            router.push({
+                name: ROUTE_NAME.TX_HASH.NAME,
+                params: { [ROUTE_PROP.TX]: param }
+            })
+        }
+    }
+}
+
+/**
+ * Routes to the first result loaded
+ * @param {string} param - search param
+ */
+const routeToFirst = (param: string): void => {
+    if (!hasError.value && !isLoading.value) {
+        //Find First result in a list
+        if (tokensResult.value.length > 0 && tokensResult.value[0].contract) {
+            routeToToken(tokensResult.value[0].contract)
+        } else {
+            const isBlock = search.isBlockNumber || search.hashType === HASH_TYPE.BlockHash || search.hashType === HASH_TYPE.UncleHash
+            routeTo(param, isBlock)
+        }
+    } else if (isLoading.value && !hasError.value) {
+        search.reroute = true
+    }
 }
 </script>

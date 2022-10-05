@@ -67,6 +67,13 @@ $typography:
     'weight': $font-normal,
     'line-height': 20px,
     'letter-spacing': 0.42px,
+  ),
+  'input': (
+    'size': 12px,
+    'weight': $font-medium,
+    'line-height': 14px,
+    'letter-spacing': 0.42px,
+    'text-transform': none
   )
 );
 /**
@@ -117,3 +124,4 @@ $grid-gutter: 12px; //24
 $form-grid-gutter: $spacer*2;
 $container-padding-x: $spacer * 12;
 
+$input-density: ('default': 0, 'comfortable': -4, 'compact': -6) !default;
