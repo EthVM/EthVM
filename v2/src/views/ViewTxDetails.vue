@@ -7,7 +7,7 @@
           TX DETAILS LIST
         =====================================================================================
         -->
-        <tx-details v-if="isValid && !hasError" :tx-ref="props.txRef" @errorDetails="setError" />
+        <tx-details v-if="isValid && !hasError" :tx-ref="props.txRef" :tab="props.tab" @errorDetails="setError" />
     </div>
 </template>
 
@@ -30,7 +30,8 @@ const state: ComponentState = reactive({
 })
 
 const props = defineProps({
-    txRef: String
+    txRef: String,
+    tab: String
 })
 
 const isValid = computed<boolean>(() => {
