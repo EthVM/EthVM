@@ -807,6 +807,11 @@ export enum TransferDirection {
 export enum TransferSubtype {
     BlockReward = 'BLOCK_REWARD',
     DaoHardFork = 'DAO_HARD_FORK',
+    Erc20 = 'ERC20',
+    Erc721 = 'ERC721',
+    Erc1155 = 'ERC1155',
+    EthItx = 'ETH_ITX',
+    EthTx = 'ETH_TX',
     Genesis = 'GENESIS',
     UncleReward = 'UNCLE_REWARD'
 }

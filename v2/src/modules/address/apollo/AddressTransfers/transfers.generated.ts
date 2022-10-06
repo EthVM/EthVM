@@ -115,6 +115,8 @@ export type GetAddressErc721TransfersQuery = {
     }
 }
 
+export type StateDiffFragmentFragment = { __typename?: 'TxStateDiff'; owner: string; from: string; to: string }
+
 export type GetTransactionStateDiffQueryVariables = Types.Exact<{
     hash: Types.Scalars['String']
 }>
@@ -168,6 +170,13 @@ export const Erc721TransferFragmentFragmentDoc = gql`
         }
     }
     ${TransferSummaryFragmentDoc}
+`
+export const StateDiffFragmentFragmentDoc = gql`
+    fragment StateDiffFragment on TxStateDiff {
+        owner
+        from
+        to
+    }
 `
 export const GetAddressEthTransfersDocument = gql`
     query getAddressEthTransfers($hash: String, $filter: TransferDirection, $_limit: Int, $_nextKey: String) {
@@ -378,11 +387,10 @@ export type GetAddressErc721TransfersQueryCompositionFunctionResult = VueApolloC
 export const GetTransactionStateDiffDocument = gql`
     query getTransactionStateDiff($hash: String!) {
         getTransactionStateDiff(hash: $hash) {
-            owner
-            from
-            to
+            ...StateDiffFragment
         }
     }
+    ${StateDiffFragmentFragmentDoc}
 `
 
 /**
