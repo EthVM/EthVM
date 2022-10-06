@@ -10,7 +10,7 @@
         </template>
         <template v-else>
             <v-row>
-                <v-col lg="1">
+                <v-col cols="12">
                     <div class="block-info mb-5">
                         <p class="text-button mb-1">Size</p>
                         <p class="text-info">
@@ -18,7 +18,7 @@
                         </p>
                     </div>
                 </v-col>
-                <v-col lg="1">
+                <v-col cols="12">
                     <div class="block-info mb-5">
                         <p class="text-button mb-1">Nonce</p>
                         <p class="text-info">
@@ -26,7 +26,7 @@
                         </p>
                     </div>
                 </v-col>
-                <v-col lg="1">
+                <v-col cols="12">
                     <div class="block-info mb-5">
                         <p class="text-button mb-1">Difficulty</p>
                         <p class="text-info">
@@ -34,7 +34,7 @@
                         </p>
                     </div>
                 </v-col>
-                <v-col lg="3">
+                <v-col cols="12">
                     <div class="block-info mb-5">
                         <p class="text-button mb-1">Total Difficulty</p>
                         <p class="text-info">
