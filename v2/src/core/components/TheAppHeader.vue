@@ -1,12 +1,14 @@
 <template>
-    <v-app-bar app color="primary" class="pa-0">
+    <v-app-bar app flat color="primary" class="pa-0">
         <v-container class="mx-2 mx-sm-6 mx-md-auto mx-lg-6 mx-xl-auto pa-0">
             <v-row align="center" justify="start" class="mr-0 mx-lg-0 flex-nowrap">
                 <v-app-bar-nav-icon v-if="showDrawerBtn" @click="appStore.appDrawer = !appStore.appDrawer" />
                 <div class="mr-4">
                     <v-img :src="require('@/assets/logo-compact.png')" height="30" width="30" contain class="mr-auto" />
                 </div>
-                <module-search class="mr-2 ml-auto" />
+                <v-spacer v-if="props.hideSearchBar"></v-spacer>
+                <module-search v-else class="mr-2 ml-auto justify-end" />
+
                 <template v-if="!showDrawerBtn">
                     <template v-for="(item, index) in navItems" :key="index">
                         <v-btn v-if="!item.links" rounded="pill" :active="false" :to="item.header.routerLink" class="text-subtitle-1 font-weight-regular">
@@ -42,13 +44,21 @@
 
 <script setup lang="ts">
 import { useDisplay } from 'vuetify/lib/framework.mjs'
-import { computed } from 'vue'
+import { computed, defineProps } from 'vue'
 import { useAppNavigation } from '../composables/AppNavigation/useAppNavigation.composable'
 import { useStore } from '@/store'
 import ModuleSearch from '@module/search/ModuleSearch.vue'
 import AppMenu from './AppMenu.vue'
 /* Vuetify BreakPoints */
 const { name } = useDisplay()
+
+const props = defineProps({
+    hideSearchBar: {
+        default: true,
+        type: Boolean
+    }
+})
+
 const showDrawerBtn = computed<boolean>(() => {
     return name.value === 'xs' || name.value === 'sm' || name.value === 'md'
 })

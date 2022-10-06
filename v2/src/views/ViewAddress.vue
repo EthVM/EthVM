@@ -1,45 +1,41 @@
 <template>
     <app-error v-if="hasError" :has-error="hasError" :message="state.error" />
 
-    <div v-if="isValid && props.addressRef" :class="{ 'adr-core-background pb-6': !smAndDown }">
-        <v-card class="px-xl-auto mx-2 mx-sm-6 mx-md-0" :flat="!smAndDown" :rounded="smAndDown ? 'xl' : '0'" :min-height="smAndDown ? '100%' : '92px'">
-            <v-container fluid class="core-container fill-height px-a pa-sm-6">
-                <v-row align="center" justify="center">
-                    <v-col cols="12" md="8" lg="7" class="d-flex align-center">
-                        <app-address-blockie :address="props.addressRef || ''" :size="10" />
-                        <app-transform-hash :hash="props.addressRef" class="text-h4 px-2 px-sm-4"></app-transform-hash>
-                        <v-spacer />
-                        <app-copy-to-clip :value-to-copy="props.addressRef || ''" />
-                        <app-btn-icon icon="favorite"></app-btn-icon>
-                        <app-btn-icon icon="qr_code"></app-btn-icon>
-                    </v-col>
-                    <v-divider :vertical="!smAndDown" class="my-1 my-sm-3 mx-n1 mx-sm-n3 mx-md-none"></v-divider>
-                    <v-col cols="12" md="4" lg="3" class="d-flex align-center"> </v-col>
+    <div v-if="isValid && props.addressRef" :class="[xs ? 'adr-core-background-mobile' : 'adr-core-background', 'pb-6']">
+        <v-card class="px-xl-auto mx-0" flat rounded="0" :min-height="smAndDown ? '100%' : '92px'">
+            <v-container fluid class="core-container fill-height pa-4 pa-sm-6">
+                <v-row align="center" justify="center" class="flex-nowrap">
+                    <app-address-blockie :address="props.addressRef || ''" :size="10" />
+                    <app-transform-hash v-if="smAndDown" :hash="props.addressRef" class="text-h4 px-2 px-sm-4"></app-transform-hash>
+                    <p v-else class="mx-sm-4 text-h4">{{ props.addressRef }}</p>
+                    <app-copy-to-clip :value-to-copy="props.addressRef || ''" class="ml-3" />
+                    <app-btn-icon icon="favorite"></app-btn-icon>
+                    <app-btn-icon icon="qr_code"></app-btn-icon>
+                    <!-- <v-divider :vertical="!smAndDown" class="my-1 my-sm-3 mx-n1 mx-sm-n3 mx-md-none"></v-divider>
+                    <v-col cols="12" md="4" lg="3" class="d-flex align-center"> </v-col> -->
                 </v-row>
             </v-container>
-            <!--
+        </v-card>
+        <!--
             ========================
                 Mobile Menu
             =========================
             -->
-            <v-btn
-                v-if="smAndDown"
-                flat
-                color="primary"
-                height="40px"
-                width="100%"
-                class="no-opacity text-subtitle-1 rounded-b-xl rounded-t-0 v-btn--mobile-menu"
-            >
-                <p class="text-right">{{ activeTabText }}</p>
-                <v-icon class="ml-2">expand_more</v-icon>
-                <app-menu activator="parent" :items="tabs" :open-on-hovet="false" bg-color="primary">
+        <div v-if="smAndDown" class="d-flex justify-end">
+            <v-btn flat color="primary" size="small" class="no-opacity text-subtitle-1 rounded-xl mx-3 mt-3 mb-2 v-btn--mobile-menu" id="address-core-menu">
+                <p class="text-right font-weight-regular">{{ activeTabText }}</p>
+                <v-icon class="ml-3">expand_more</v-icon>
+            </v-btn>
+            <v-menu activator="#address-core-menu" :items="tabs">
+                <v-list bg-color="primary" class="rounded-xl">
                     <template v-for="(item, j) in tabs" :key="j">
                         <v-list-item @click="navigateTo(item.routeName, item.secondaryTab)" :value="item.routeName" :title="item.text" class="text-right">
                         </v-list-item>
                     </template>
-                </app-menu>
-            </v-btn>
-        </v-card>
+                </v-list>
+            </v-menu>
+        </div>
+
         <!--
         ========================
             Desktop Menu
@@ -51,9 +47,9 @@
                 @click="navigateTo(i.routeName, i.secondaryTab)"
                 :value="i.routeName"
                 :key="i.routeName"
-                class="py-3 text-h5 text-capitalize rounded-b-xl"
+                class="py-3 text-h5 text-capitalize rounded-b-xl font-weight-regular"
                 color="primary"
-                selected-class="bg-surface t"
+                selected-class="bg-surface"
                 ><p :class="activeTabText === i.text ? 'text-primary' : 'text-white'">{{ i.text }}</p></v-tab
             >
         </v-tabs>
@@ -88,7 +84,7 @@ import AppTransformHash from '@/core/components/AppTransformHash.vue'
 import AppMenu from '@/core/components/AppMenu.vue'
 import { useDisplay } from 'vuetify/lib/framework.mjs'
 
-const { smAndDown } = useDisplay()
+const { smAndDown, xs } = useDisplay()
 
 const tabs = reactive([
     {
@@ -228,6 +224,9 @@ if (!isValid.value) {
 .adr-core-background {
     background: linear-gradient(to bottom, rgb(var(--v-theme-primary)) 316px, rgb(var(--v-theme-background)) 316px, rgb(var(--v-theme-background)) 100%);
 }
+.adr-core-background-mobile {
+    background: linear-gradient(to bottom, rgb(var(--v-theme-primary)) 150px, rgb(var(--v-theme-background)) 150px, rgb(var(--v-theme-background)) 100%);
+}
 /* FADE TRANSITION */
 .fade-enter-active,
 .fade-leave-active {
@@ -242,5 +241,8 @@ if (!isValid.value) {
 /* Mobile Menu content alignment-left */
 .v-btn--mobile-menu {
     justify-content: end;
+}
+div.v-overlay__content {
+    // left: 0px !important;
 }
 </style>

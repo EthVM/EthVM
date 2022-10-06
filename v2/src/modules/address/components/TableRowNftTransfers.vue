@@ -147,7 +147,7 @@ const tokenImg = computed<string>(() => {
 })
 
 const totalTokens = computed<FormattedNumber | string>(() => {
-    return formatNumber(new BN(props.transfer.token).toNumber())
+    return formatNumber(new BN(props.transfer.token || 1).toNumber())
 })
 
 const TYPES = ['in', 'out', 'self']

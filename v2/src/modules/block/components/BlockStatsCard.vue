@@ -1,18 +1,24 @@
 <template>
-    <v-card :color="getColor" :class="getBackground" flat class="mt-1 pr-1 white--text info-card" height="150px">
-        <v-container fluid wrap fill-height row>
-            <v-row v-if="!props.isLoading" xs="12" class="my-0 text-white">
-                <p v-if="!props.isDate" class="text-h4 text-truncate font-weight-medium pb-0 pl-1 mb-0">{{ props.value }}</p>
-                <p v-else class="text-h4 text-truncate font-weight-medium pb-0 pl-1 mb-0">{{ timeFrom }}</p>
-                <p v-if="props.metrics" class="headline pl-1 mb-0">{{ props.metrics }}</p>
-            </v-row>
-            <v-row v-else xs="12" class="my-0">
-                <v-progress-linear :color="colorLoading" background-color="white" background-opacity="0.3" value="40" indeterminate height="21" class="ma-0" />
-            </v-row>
-            <v-row xs="12" class="my-0">
-                <v-card-text class="text-uppercase pt-0 pl-1 mt-4 text-white">{{ props.title }}</v-card-text>
-            </v-row>
-        </v-container>
+    <v-card elevation="1" rounded="xl">
+        <v-row justify="start" align="center" class="py-4 pl-6">
+            <v-btn icon color="info" height="34px" width="34px" @click.stop="btnClick()">
+                <v-icon icon="bar_chart"></v-icon>
+            </v-btn>
+            <div class="ml-4">
+                <p class="text-info">{{ props.title }}</p>
+                <div v-if="!props.isLoading">
+                    <p v-if="!props.isDate" class="text-h4 text-subtitle-1 font-weight-bold">
+                        {{ props.value }} <span>{{ props.metrics }}</span>
+                    </p>
+                    <p v-else class="text-h4 text-subtitle-1 font-weight-bold pb-0">
+                        {{ timeFrom }} <span>{{ props.metrics }}</span>
+                    </p>
+                </div>
+                <v-col v-else cols="12" class="pa-0">
+                    <div class="skeleton-box rounded-xl ml-n1" style="min-height: 24px; width: 100px"></div>
+                </v-col>
+            </div>
+        </v-row>
     </v-card>
 </template>
 <script setup lang="ts">
@@ -20,14 +26,17 @@ import { computed, onMounted, ref, watch } from 'vue'
 
 // refs
 const timeFrom = ref(0)
-let interval
+const interval = ref(0)
 
 const props = defineProps({
-    value: String,
+    value: {
+        type: String,
+        required: true
+    },
     title: String,
-    colorType: String,
+
     metrics: String,
-    backType: String,
+
     isDate: {
         type: Boolean,
         default: false
@@ -35,23 +44,11 @@ const props = defineProps({
     isLoading: Boolean
 })
 
-const getColor = computed<string>(() => {
-    return props.colorType
-})
-
-const colorLoading = computed<string>(() => {
-    return `${props.colorType}Light`
-})
-
-const getBackground = computed<string>(() => {
-    return props.backType
-})
-
 const startTimer = () => {
-    if (interval) {
-        clearInterval(interval)
+    if (interval.value) {
+        clearInterval(interval.value)
     }
-    interval = setInterval(() => {
+    interval.value = setInterval(() => {
         timeFrom.value += 1
     }, 1000)
 }
@@ -67,7 +64,9 @@ watch(
 )
 
 onMounted(() => {
-    timeFrom.value = parseInt((new Date().getTime() - new Date(props.value).getTime()) / 1000)
-    startTimer()
+    if (props.isDate) {
+        timeFrom.value = parseInt(((new Date().getTime() - new Date(props.value).getTime()) / 1000).toString())
+        startTimer()
+    }
 })
 </script>

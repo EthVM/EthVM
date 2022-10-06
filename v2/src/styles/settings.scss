@@ -7,9 +7,9 @@ $font-normal: 400;
 $typography:
 (
   'h1': (
-    'size': 35px,
-    'weight': $font-bold,
-    'line-height': 40px,
+    'size': 40px,
+    'weight': $font-normal,
+    'line-height': 52px,
     'letter-spacing': 0.49px,
     'text-transform': none
   ),
@@ -46,7 +46,7 @@ $typography:
   'subtitle-1': (
     'size': 16px,
     'weight': $font-normal,
-    'line-height': 15px,
+    'line-height': 24px,
     'letter-spacing': 0.49px,
   ),
   'body-1': (

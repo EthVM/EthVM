@@ -39,7 +39,7 @@
                     </p>
                 </v-col>
                 <v-col :cols="props.isOverview ? 2 : 1" class="py-0">
-                    <app-chip :bg="transferType === 'in' ? 'success' : 'orange'" :text="transferType === 'in' ? 'From' : 'To'" />
+                    <app-chip :bg="transferType === 'in' ? 'success' : 'warning'" :text="transferType === 'in' ? 'From' : 'To'" />
                 </v-col>
                 <v-col :cols="props.isOverview ? 4 : 2" class="text-secondary py-0">
                     <div class="d-flex align-center">

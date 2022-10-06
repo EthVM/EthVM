@@ -1,5 +1,5 @@
 <template>
-    <v-row align="center" justify="end" class="my-0 flex-nowrap">
+    <v-row align="center" class="my-0 flex-nowrap">
         <v-card class="rounded-s-pill rounded-e-0 d-flex flex-grow-1 flex-shrink-0" max-width="380" id="search-options-activator">
             <v-text-field
                 v-model="search.value"
