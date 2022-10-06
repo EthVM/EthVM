@@ -273,7 +273,6 @@ onMounted(() => {
 watch(
     () => props.blockRef,
     () => {
-        console.log(props.blockRef)
         state.initialLoad = true
         state.hasError = false
         refetchBlockTransfers({ _number: parseInt(props.blockRef) })

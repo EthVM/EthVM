@@ -214,7 +214,6 @@ onBlockDetailsLoaded(() => {
 
 onBlockDetailsError(error => {
     const newError = JSON.stringify(error.message)
-    console.log(newError.toLowerCase().includes(excpBlockNotMined))
     if (newError.toLowerCase().includes(excpBlockNotMined) && !subscriptionEnabled.value && !props.isHash) {
         subscriptionEnabled.value = true
         state.isMined = false

@@ -33,7 +33,7 @@
                     </div>
                     <div class="block-info mb-5">
                         <p class="text-button mb-1">Hash</p>
-                        <app-transform-hash is-blue :hash="props.blockDetails.hash.detail" class="w-100" />
+                        <app-transform-hash :hash="props.blockDetails.hash.detail" class="w-100" />
                     </div>
                     <div class="block-info mb-5">
                         <p class="text-button mb-1">Parent Hash</p>
@@ -46,13 +46,13 @@
                             <v-col cols="6" sm="4">
                                 <div class="block-info mb-5">
                                     <p class="text-button mb-1">Block Reward</p>
-                                    <p class="text-body-1">{{ props.blockDetails.totalRewards.detail }}</p>
+                                    <p class="text-body-1 text-uppercase">{{ props.blockDetails.totalRewards.detail }}</p>
                                 </div>
                             </v-col>
                             <v-col cols="6" sm="4">
                                 <div class="block-info mb-5">
                                     <p class="text-button mb-1">Uncle Reward</p>
-                                    <p class="text-body-1">{{ props.blockDetails.uncleReward.detail }}</p>
+                                    <p class="text-body-1 text-uppercase">{{ props.blockDetails.uncleReward.detail }}</p>
                                 </div>
                             </v-col>
                             <v-col cols="6" sm="4">
@@ -88,19 +88,19 @@ import AppBtnIcon from '@core/components/AppBtnIcon.vue'
 import { formatNumber } from '@core/helper/number-format-helper'
 import { computed } from 'vue'
 import { useDisplay } from 'vuetify'
+import { Detail } from '@core/components/props'
 
-const props = defineProps({
-    nextBlock: String,
-    previousBlock: String,
-    currBlockNumber: String,
-    timestamp: String,
-    blockDetails: Object,
-    isLoading: {
-        type: Boolean,
-        default: false
-    },
-    isMined: Boolean
-})
+interface ComponentProps {
+    nextBlock: string
+    previousBlock: string
+    currBlockNumber: string
+    timestamp: string
+    blockDetails: { [key: string]: Detail }
+    isLoading: boolean
+    isMined: boolean
+}
+
+const props = defineProps<ComponentProps>()
 
 const { mdAndDown } = useDisplay()
 
