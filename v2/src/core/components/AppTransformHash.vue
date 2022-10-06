@@ -1,7 +1,7 @@
 <template>
     <div class="hash-container font-mono">
         <div v-if="!hasLink" :class="{ 'text-secondary': props.isBlue }">
-            <div class="firstPart">{{ start }}</div>
+            <div v-if="start" class="firstPart">{{ start }}</div>
             <span v-if="props.isShort">...</span>
             <div class="lastPart">{{ end }}</div>
         </div>

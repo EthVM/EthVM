@@ -50,19 +50,19 @@
             <v-col cols="12">
                 <div class="tx-info">
                     <p class="text-button mb-1">R</p>
-                    <p class="text-no-wrap text-secondary">{{ props.txData.r }}</p>
+                    <app-transform-hash :hash="eth.toCheckSum(props.txData.r)" />
                 </div>
             </v-col>
             <v-col cols="12">
                 <div class="tx-info">
                     <p class="text-button mb-1">S</p>
-                    <p class="text-no-wrap text-secondary">{{ props.txData.s }}</p>
+                    <app-transform-hash :hash="eth.toCheckSum(props.txData.s)" />
                 </div>
             </v-col>
             <v-col cols="12">
                 <div class="tx-info">
                     <p class="text-button mb-1">V</p>
-                    <p class="text-no-wrap text-secondary">{{ props.txData.v }}</p>
+                    <app-transform-hash :hash="eth.toCheckSum(props.txData.v)" />
                 </div>
             </v-col>
         </v-row>
@@ -74,6 +74,8 @@ import { TxDetailsFragment as TxDetailsType } from '../apollo/TxDetails.generate
 import { computed } from 'vue'
 import { formatNonVariableGWeiValue, formatNumber, FormattedNumber } from '@core/helper/number-format-helper'
 import BN from 'bignumber.js'
+import AppTransformHash from '@core/components/AppTransformHash.vue'
+import { eth } from '@core/helper'
 
 interface ComponentProps {
     txData: TxDetailsType | undefined
