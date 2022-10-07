@@ -8,19 +8,19 @@
                 </div>
             </v-col>
             <v-spacer />
-            <v-col v-if="!mdAndDown" md="3" class="text-uppercase"> {{ balanceBefore.tooltipText }} {{ balanceBefore.unit }} </v-col>
-            <v-col v-if="!mdAndDown" md="3" class="text-uppercase"> {{ balanceAfter.tooltipText }} {{ balanceAfter.unit }} </v-col>
-            <v-col lg="2" :class="`text-${balanceDiffTextColor}`"> {{ balanceDiff.tooltipText }} </v-col>
+            <v-col v-if="!mdAndDown" md="3" class="text-uppercase"> {{ balanceBefore.tooltipText || balanceBefore.value }} {{ balanceBefore.unit }} </v-col>
+            <v-col v-if="!mdAndDown" md="3" class="text-uppercase"> {{ balanceAfter.tooltipText || balanceAfter.value }} {{ balanceAfter.unit }} </v-col>
+            <v-col lg="2" :class="`text-${balanceDiffTextColor}`"> {{ balanceDiff.tooltipText || balanceDiff.value }} </v-col>
             <div v-if="mdAndDown && state.showMoreDetails" class="row-bg bg-tableGrey"></div>
         </v-row>
         <div v-if="mdAndDown && state.showMoreDetails" class="d-sm-flex justify-sm-space-between">
             <div class="d-flex d-sm-block v-col-sm-6 align-center py-2">
                 <p class="text-subtitle-2 text-info mr-3">Before</p>
-                <p class="text-uppercase">{{ balanceBefore.tooltipText }} {{ balanceBefore.unit }}</p>
+                <p class="text-uppercase">{{ balanceBefore.tooltipText || balanceBefore.value }} {{ balanceBefore.unit }}</p>
             </div>
             <div class="d-flex d-sm-block v-col-sm-6 align-center py-2">
                 <p class="text-subtitle-2 text-info mr-3">After</p>
-                <p class="text-uppercase">{{ balanceAfter.tooltipText }} {{ balanceAfter.unit }}</p>
+                <p class="text-uppercase">{{ balanceAfter.tooltipText || balanceAfter.value }} {{ balanceAfter.unit }}</p>
             </div>
         </div>
     </div>

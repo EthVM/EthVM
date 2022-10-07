@@ -3,7 +3,10 @@
         <v-card variant="elevated" elevation="1" rounded="xl" class="pa-4 pa-sm-6">
             <div class="d-flex">
                 <h2 class="text-h6 font-weight-bold mr-10">Transaction Summary</h2>
-                <app-chip :bg="titleBg" rounded="xl">
+                <template v-if="loadingTransactionHash">
+                    <div class="skeleton-box rounded-xl" style="height: 24px; width: 100px"></div>
+                </template>
+                <app-chip v-else :bg="titleBg" rounded="xl">
                     <div class="d-flex align-center">
                         <p>{{ titleStatus }}</p>
                         <v-progress-circular v-if="txStatus === TxStatus.pending" indeterminate color="white" size="15" width="3" class="ml-2" />
@@ -121,15 +124,12 @@
 </template>
 
 <script setup lang="ts">
-import AppDetailsList from '@/core/components/AppDetailsList.vue'
-import TxDetailsTitle from '@module/txs/components/TxDetailsTitle.vue'
 import AppChip from '@core/components/AppChip.vue'
 import AppTransformHash from '@core/components/AppTransformHash.vue'
 import AppAddressBlockie from '@core/components/AppAddressBlockie.vue'
 import TabMore from '@module/txs/components/TabMore.vue'
 import { computed, onMounted, reactive, ref } from 'vue'
 import BN from 'bignumber.js'
-import { Detail } from '@/core/components/props'
 import { TxDetailsFragment as TxDetailsType, useGetTransactionByHashWithTracesQuery, useTransactionEventSubscription } from './apollo/TxDetails.generated'
 import { ErrorMessageTx, TitleStatus } from '@/modules/txs/models/ErrorMessagesForTx'
 import { excpTxDoNotExists } from '@/apollo/errorExceptions'
@@ -137,7 +137,7 @@ import { formatNonVariableGWeiValue, formatNumber, FormattedNumber, FormattedNum
 import { eth, timeAgo } from '@core/helper'
 import { useGetLatestBlockInfoQuery } from '@module/block/apollo/BlockStats/blockStats.generated'
 import { useBlockSubscription } from '@core/composables/NewBlock/newBlock.composable'
-import { Q_TXS_DETAILS, ROUTE_NAME } from '@core/router/routesNames'
+import { Q_TXS_DETAILS } from '@core/router/routesNames'
 import { useRoute, useRouter } from 'vue-router'
 import TabState from '@module/txs/components/TabState.vue'
 import { useDisplay } from 'vuetify'
@@ -193,10 +193,6 @@ const changeRoute = () => {
 
 const txAmount = computed<FormattedNumber>(() => {
     return formatVariableUnitEthValue(new BN(transactionData.value?.value || 0))
-})
-
-const gasPrice = computed<FormattedNumber>(() => {
-    return formatNonVariableGWeiValue(new BN(transactionData.value?.gasPrice || 0))
 })
 
 const isReplaced = computed<boolean>(() => {
@@ -287,10 +283,6 @@ const txFee = computed<FormattedNumber>(() => {
     return { value: '0', unit: FormattedNumberUnit.ETH }
 })
 
-const pendingString = computed<string>(() => {
-    return !isReplaced.value && txStatus.value === TxStatus.pending ? 'Estimated Fee' : 'Tx Fee'
-})
-
 /**
  * Start apollo subscription
  */
@@ -323,10 +315,6 @@ onTransactionHashError(error => {
     } else {
         emitErrorState(true)
     }
-})
-
-const isLoading = computed<boolean | undefined>(() => {
-    return loadingTransactionHash.value || state.hasError
 })
 
 const subscriptionEnabled = ref(true)
