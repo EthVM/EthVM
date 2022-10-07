@@ -2,7 +2,7 @@
     <v-card v-if="props.txHash" variant="flat" rounded="xl" class="pa-4 pa-sm-6">
         <div>
             <!-- Table Header -->
-            <v-row align="center" justify="start" class="text-body-1 text-info d-none d-sm-flex">
+            <v-row :dense="xs" align="center" justify="start" class="text-body-1 text-info d-none d-sm-flex">
                 <v-col lg="2"> Address </v-col>
                 <v-spacer />
                 <v-col v-if="!mdAndDown" md="3"> Before </v-col>
@@ -19,6 +19,9 @@
                     </div>
                 </template>
             </div>
+            <template v-else>
+                <div v-for="i in 5" :key="i" class="skeleton-box rounded-xl my-4" style="height: 24px"></div>
+            </template>
         </div>
     </v-card>
 </template>
@@ -29,7 +32,7 @@ import { computed } from 'vue'
 import TableTabStateRow from '@module/txs/components/TableTabStateRow.vue'
 import { useDisplay } from 'vuetify'
 
-const { mdAndDown } = useDisplay()
+const { mdAndDown, xs } = useDisplay()
 
 interface ComponentProps {
     txHash: string

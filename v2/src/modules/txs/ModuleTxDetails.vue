@@ -1,41 +1,51 @@
 <template>
     <template v-if="!state.hasError">
         <v-card variant="elevated" elevation="1" rounded="xl" class="pa-4 pa-sm-6">
-            <template v-if="loadingTransactionHash && !transactionData">Loading Hash</template>
-            <template v-else>
-                <div class="d-flex">
-                    <h2 class="text-h6 font-weight-bold mr-10">Transaction Summary</h2>
-                    <app-chip :text="titleStatus" :bg="titleBg" rounded="xl" />
-                </div>
-                <v-row class="mt-5">
-                    <v-col cols="12" lg="6">
-                        <div class="tx-info">
-                            <p class="text-button mb-1">Tx Hash</p>
+            <div class="d-flex">
+                <h2 class="text-h6 font-weight-bold mr-10">Transaction Summary</h2>
+                <app-chip :text="titleStatus" :bg="titleBg" rounded="xl" />
+            </div>
+            <v-row class="mt-5">
+                <v-col cols="12" lg="6">
+                    <div class="tx-info">
+                        <p class="text-button mb-1">Tx Hash</p>
+                        <template v-if="loadingTransactionHash">
+                            <div class="skeleton-box rounded-xl mt-1 my-4" style="height: 24px"></div>
+                        </template>
+                        <template v-else>
                             <app-transform-hash is-blue :hash="transactionData.hash" class="text-body-1" />
                             <p v-if="txStatus !== TxStatus.pending && !isReplaced" class="text-body-2 text-info mt-1">({{ timestamp }})</p>
+                        </template>
+                    </div>
+                </v-col>
+                <template v-if="txStatus !== TxStatus.pending && !isReplaced">
+                    <v-col cols="12" lg="2">
+                        <div class="tx-info">
+                            <p class="text-button mb-1">Block Mined</p>
+                            <template v-if="loadingTransactionHash">
+                                <div class="skeleton-box rounded-xl mt-1 my-4" style="height: 24px"></div>
+                            </template>
+                            <p v-else class="text-body-1 text-secondary mt-1">{{ formatNumber(blockMined) }}</p>
                         </div>
                     </v-col>
-                    <template v-if="txStatus !== TxStatus.pending && !isReplaced">
-                        <v-col cols="12" lg="2">
-                            <div class="tx-info">
-                                <p class="text-button mb-1">Block Mined</p>
-                                <p class="text-body-1 text-secondary mt-1">{{ formatNumber(blockMined) }}</p>
-                            </div>
-                        </v-col>
-                        <v-col cols="12" lg="2">
-                            <div class="tx-info">
-                                <p class="text-button mb-1">Confirmations</p>
-                                <p v-if="!loadingBlockInfo" class="text-body-1 text-secondary mt-1">{{ confirmations }}</p>
-                                <div v-else class="skeleton-box rounded-xl mt-1" style="height: 24px"></div>
-                            </div>
-                        </v-col>
-                    </template>
-                </v-row>
-                <v-row align="center" class="mt-5">
-                    <v-col cols="12" lg="5">
-                        <div class="rounded-lg bg-tableGrey pa-6">
-                            <div class="tx-info">
-                                <p class="text-button mb-1">From</p>
+                    <v-col cols="12" lg="2">
+                        <div class="tx-info">
+                            <p class="text-button mb-1">Confirmations</p>
+                            <p v-if="!loadingBlockInfo" class="text-body-1 text-secondary mt-1">{{ confirmations }}</p>
+                            <div v-else class="skeleton-box rounded-xl mt-1" style="height: 24px"></div>
+                        </div>
+                    </v-col>
+                </template>
+            </v-row>
+            <v-row align="center" class="mt-5">
+                <v-col cols="12" lg="5">
+                    <div class="rounded-lg bg-tableGrey pa-6">
+                        <div class="tx-info">
+                            <p class="text-button mb-1">From</p>
+                            <template v-if="loadingTransactionHash">
+                                <div class="skeleton-box rounded-xl mt-1 my-4" style="height: 24px"></div>
+                            </template>
+                            <template v-else>
                                 <div class="d-flex align-center">
                                     <app-address-blockie :address="transactionData.from || ''" :size="8" class="mr-1 mr-sm-2" />
                                     <app-transform-hash
@@ -45,14 +55,19 @@
                                         class="text-body-1"
                                     />
                                 </div>
-                            </div>
+                            </template>
                         </div>
-                    </v-col>
-                    <v-icon class="mx-3" :class="{ 'mx-auto': mdAndDown }">{{ mdAndDown ? 'expand_more' : 'chevron_right' }}</v-icon>
-                    <v-col cols="12" lg="5">
-                        <div class="rounded-lg bg-tableGrey pa-6">
-                            <div class="tx-info">
-                                <p class="text-button mb-1">To</p>
+                    </div>
+                </v-col>
+                <v-icon class="mx-3" :class="{ 'mx-auto': mdAndDown }">{{ mdAndDown ? 'expand_more' : 'chevron_right' }}</v-icon>
+                <v-col cols="12" lg="5">
+                    <div class="rounded-lg bg-tableGrey pa-6">
+                        <div class="tx-info">
+                            <p class="text-button mb-1">To</p>
+                            <template v-if="loadingTransactionHash">
+                                <div class="skeleton-box rounded-xl mt-1 my-4" style="height: 24px"></div>
+                            </template>
+                            <template v-else>
                                 <div class="d-flex align-center">
                                     <app-address-blockie :address="transactionData.to || ''" :size="8" class="mr-1 mr-sm-2" />
                                     <app-transform-hash
@@ -62,29 +77,31 @@
                                         class="text-body-1"
                                     />
                                 </div>
-                            </div>
+                            </template>
                         </div>
-                    </v-col>
-                </v-row>
-                <v-row align="center" class="mt-5">
-                    <v-col cols="12" sm="6" md="4" lg="2" class="flex-grow-0 mr-lg-6">
-                        <div class="rounded-lg bg-tableGrey pa-6">
-                            <div class="tx-info">
-                                <p class="text-button mb-1">Value</p>
-                                <p class="text-no-wrap">{{ txAmount.value }} ETH</p>
-                            </div>
+                    </div>
+                </v-col>
+            </v-row>
+            <v-row align="center" class="mt-5">
+                <v-col cols="12" sm="6" md="4" lg="2" class="flex-grow-0 mr-lg-6">
+                    <div class="rounded-lg bg-tableGrey pa-6">
+                        <div class="tx-info">
+                            <p class="text-button mb-1">Value</p>
+                            <div v-if="loadingTransactionHash" class="skeleton-box rounded-xl mt-1 my-4" style="height: 24px"></div>
+                            <p v-else class="text-no-wrap">{{ txAmount.value }} ETH</p>
                         </div>
-                    </v-col>
-                    <v-col cols="12" sm="6" md="4" lg="2" class="flex-grow-0">
-                        <div class="rounded-lg bg-tableGrey pa-6">
-                            <div class="tx-info">
-                                <p class="text-button mb-1">Fee</p>
-                                <p class="text-no-wrap">{{ txFee.value }} ETH</p>
-                            </div>
+                    </div>
+                </v-col>
+                <v-col cols="12" sm="6" md="4" lg="2" class="flex-grow-0">
+                    <div class="rounded-lg bg-tableGrey pa-6">
+                        <div class="tx-info">
+                            <p class="text-button mb-1">Fee</p>
+                            <div v-if="loadingTransactionHash" class="skeleton-box rounded-xl mt-1 my-4" style="height: 24px"></div>
+                            <p v-else class="text-no-wrap">{{ txFee.value }} ETH</p>
                         </div>
-                    </v-col>
-                </v-row>
-            </template>
+                    </div>
+                </v-col>
+            </v-row>
         </v-card>
         <v-card variant="elevated" elevation="1" rounded="xl" class="mt-5">
             <v-tabs v-model="state.tab" color="primary" end>

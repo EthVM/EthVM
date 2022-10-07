@@ -1,16 +1,19 @@
 <template>
-    <v-card v-if="props.txData" variant="flat" rounded="xl" class="pa-4 pa-sm-6">
+    <app-no-result v-if="!props.txData && !props.loading" text="No data available for this transaction" />
+    <v-card v-else variant="flat" rounded="xl" class="pa-4 pa-sm-6">
         <v-row class="mt-5">
             <v-col lg="2">
                 <div class="tx-info">
                     <p class="text-button mb-1">Gas limit</p>
-                    <p class="text-no-wrap">{{ gasLimit }}</p>
+                    <div v-if="props.loading" class="skeleton-box rounded-xl" style="height: 24px"></div>
+                    <p v-else class="text-no-wrap">{{ gasLimit }}</p>
                 </div>
             </v-col>
             <v-col lg="2">
                 <div class="tx-info">
                     <p class="text-button mb-1">Gas used</p>
-                    <p class="text-no-wrap">{{ gasUsed }} ({{ percentageOfGasUsed }})</p>
+                    <div v-if="props.loading" class="skeleton-box rounded-xl" style="height: 24px"></div>
+                    <p v-else class="text-no-wrap">{{ gasUsed }} ({{ percentageOfGasUsed }})</p>
                 </div>
             </v-col>
         </v-row>
@@ -18,31 +21,36 @@
             <v-col lg="2">
                 <div class="tx-info">
                     <p class="text-button mb-1">Base fee</p>
-                    <p class="text-no-wrap">{{ baseFeePerGas.value }} {{ baseFeePerGas.unit }}</p>
+                    <div v-if="props.loading" class="skeleton-box rounded-xl" style="height: 24px"></div>
+                    <p v-else class="text-no-wrap">{{ baseFeePerGas.value }} {{ baseFeePerGas.unit }}</p>
                 </div>
             </v-col>
             <v-col lg="2">
                 <div class="tx-info">
                     <p class="text-button mb-1">Max fee per gas</p>
-                    <p class="text-no-wrap">{{ maxFeePerGas.value }} {{ maxFeePerGas.unit }}</p>
+                    <div v-if="props.loading" class="skeleton-box rounded-xl" style="height: 24px"></div>
+                    <p v-else class="text-no-wrap">{{ maxFeePerGas.value }} {{ maxFeePerGas.unit }}</p>
                 </div>
             </v-col>
         </v-row>
         <div class="rounded-lg bg-tableGrey pa-5 mt-5 border-sm">
             <p class="text-button mb-1">Input</p>
-            <p class="">{{ props.txData.input }}</p>
+            <div v-if="props.loading" class="skeleton-box rounded-xl" style="height: 80px"></div>
+            <p v-else class="">{{ props.txData.input }}</p>
         </div>
         <v-row class="mt-5">
             <v-col lg="2">
                 <div class="tx-info">
                     <p class="text-button mb-1">Nonce</p>
-                    <p class="text-no-wrap">{{ props.txData.nonce }}</p>
+                    <div v-if="props.loading" class="skeleton-box rounded-xl" style="height: 24px"></div>
+                    <p v-else class="text-no-wrap">{{ props.txData.nonce }}</p>
                 </div>
             </v-col>
             <v-col lg="2">
                 <div class="tx-info">
                     <p class="text-button mb-1">TX Index</p>
-                    <p class="text-no-wrap">{{ props.txData.transactionIndex }}</p>
+                    <div v-if="props.loading" class="skeleton-box rounded-xl" style="height: 24px"></div>
+                    <p v-else class="text-no-wrap">{{ props.txData.transactionIndex }}</p>
                 </div>
             </v-col>
         </v-row>
@@ -50,19 +58,22 @@
             <v-col cols="12">
                 <div class="tx-info">
                     <p class="text-button mb-1">R</p>
-                    <app-transform-hash :hash="eth.toCheckSum(props.txData.r)" />
+                    <div v-if="props.loading" class="skeleton-box rounded-xl" style="height: 24px"></div>
+                    <app-transform-hash v-else :hash="eth.toCheckSum(props.txData.r)" />
                 </div>
             </v-col>
             <v-col cols="12">
                 <div class="tx-info">
                     <p class="text-button mb-1">S</p>
-                    <app-transform-hash :hash="eth.toCheckSum(props.txData.s)" />
+                    <div v-if="props.loading" class="skeleton-box rounded-xl" style="height: 24px"></div>
+                    <app-transform-hash v-else :hash="eth.toCheckSum(props.txData.s)" />
                 </div>
             </v-col>
             <v-col cols="12">
                 <div class="tx-info">
                     <p class="text-button mb-1">V</p>
-                    <app-transform-hash :hash="eth.toCheckSum(props.txData.v)" />
+                    <div v-if="props.loading" class="skeleton-box rounded-xl" style="height: 24px"></div>
+                    <app-transform-hash v-else :hash="eth.toCheckSum(props.txData.v)" />
                 </div>
             </v-col>
         </v-row>
@@ -70,11 +81,12 @@
 </template>
 
 <script setup lang="ts">
+import AppNoResult from '@core/components/AppNoResult.vue'
+import AppTransformHash from '@core/components/AppTransformHash.vue'
 import { TxDetailsFragment as TxDetailsType } from '../apollo/TxDetails.generated'
 import { computed } from 'vue'
 import { formatNonVariableGWeiValue, formatNumber, FormattedNumber } from '@core/helper/number-format-helper'
 import BN from 'bignumber.js'
-import AppTransformHash from '@core/components/AppTransformHash.vue'
 import { eth } from '@core/helper'
 
 interface ComponentProps {
