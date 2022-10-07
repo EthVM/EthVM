@@ -44,7 +44,8 @@ const start = computed<string>(() => {
     if (props.isShort) {
         return props.hash?.slice(0, firstPartCount)
     }
-    return props.hash?.slice(0, n - 4)
+    const sliceStop = n - 4 > 4 ? n - 4 : 4
+    return props.hash?.slice(0, sliceStop)
 })
 
 const end = computed<string>(() => {
@@ -52,7 +53,8 @@ const end = computed<string>(() => {
     if (props.isShort) {
         return props.hash?.slice(n - lastPartCount, n)
     }
-    return props.hash?.slice(n - 4, n)
+    const sliceStart = n - 4 > 4 ? n - 4 : 4
+    return props.hash?.slice(sliceStart, n)
 })
 
 const hasLink = computed<boolean>(() => {

@@ -3,7 +3,12 @@
         <v-card variant="elevated" elevation="1" rounded="xl" class="pa-4 pa-sm-6">
             <div class="d-flex">
                 <h2 class="text-h6 font-weight-bold mr-10">Transaction Summary</h2>
-                <app-chip :text="titleStatus" :bg="titleBg" rounded="xl" />
+                <app-chip :bg="titleBg" rounded="xl">
+                    <div class="d-flex align-center">
+                        <p>{{ titleStatus }}</p>
+                        <v-progress-circular v-if="txStatus === TxStatus.pending" indeterminate color="white" size="15" width="3" class="ml-2" />
+                    </div>
+                </app-chip>
             </div>
             <v-row class="mt-5">
                 <v-col cols="12" lg="6">
@@ -109,7 +114,7 @@
                     {{ tab.text }}
                 </v-tab>
             </v-tabs>
-            <tab-state v-if="state.tab === routes[0]" :tx-hash="props.txRef" :loading="loadingTransactionHash" />
+            <tab-state v-if="state.tab === routes[0]" :tx-hash="props.txRef" :tx-status="txStatus" :loading="loadingTransactionHash" />
             <tab-more v-if="state.tab === routes[1]" :tx-data="transactionData" :loading="loadingTransactionHash" />
         </v-card>
     </template>
@@ -136,6 +141,7 @@ import { Q_TXS_DETAILS, ROUTE_NAME } from '@core/router/routesNames'
 import { useRoute, useRouter } from 'vue-router'
 import TabState from '@module/txs/components/TabState.vue'
 import { useDisplay } from 'vuetify'
+import { TxStatus } from '@module/txs/models/ErrorMessagesForTx'
 
 const props = defineProps({
     txRef: {
@@ -197,13 +203,6 @@ const isReplaced = computed<boolean>(() => {
     return !!transactionData.value && transactionData.value?.replacedBy !== null
 })
 
-const enum TxStatus {
-    success = 'Successful Tx',
-    failed = 'Failed Tx',
-    pending = 'Pending Tx',
-    replaced = 'Replaced Tx'
-}
-
 const txStatus = computed<TxStatus>(() => {
     if (isReplaced.value) {
         return TxStatus.replaced
@@ -239,7 +238,7 @@ const titleBg = computed<string>(() => {
         case TitleStatus.failed:
             return 'error'
         default:
-            return 'blue'
+            return 'warning'
     }
 })
 

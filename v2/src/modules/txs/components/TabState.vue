@@ -11,32 +11,37 @@
             </v-row>
             <v-divider class="my-0 mt-md-4 mx-n4 mx-sm-n6" />
             <!-- End Table Header -->
-            <div v-if="!loading">
-                <template v-if="stateDiff.length < 1"> </template>
+            <template v-if="loading || props.txStatus === TxStatus.pending">
+                <div v-for="i in 5" :key="i" class="skeleton-box rounded-xl my-4" style="height: 24px"></div>
+            </template>
+            <div v-else>
+                <template v-if="!stateDiff || stateDiff.length < 1">
+                    <app-no-result text="No transaction state difference avaialble" class="mt-5" />
+                </template>
                 <template v-else>
                     <div v-for="(diff, index) in stateDiff" :key="index">
                         <table-tab-state-row :diff="diff" />
                     </div>
                 </template>
             </div>
-            <template v-else>
-                <div v-for="i in 5" :key="i" class="skeleton-box rounded-xl my-4" style="height: 24px"></div>
-            </template>
         </div>
     </v-card>
 </template>
 
 <script setup lang="ts">
+import AppNoResult from '@core/components/AppNoResult.vue'
+import TableTabStateRow from '@module/txs/components/TableTabStateRow.vue'
 import { StateDiffFragmentFragment as StateDiffType, useGetTransactionStateDiffQuery } from '@module/address/apollo/AddressTransfers/transfers.generated'
 import { computed } from 'vue'
-import TableTabStateRow from '@module/txs/components/TableTabStateRow.vue'
 import { useDisplay } from 'vuetify'
+import { TxStatus } from '@module/txs/models/ErrorMessagesForTx'
 
 const { mdAndDown, xs } = useDisplay()
 
 interface ComponentProps {
     txHash: string
     loading: boolean
+    txStatus: TxStatus
 }
 const props = defineProps<ComponentProps>()
 
