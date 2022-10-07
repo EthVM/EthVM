@@ -1,10 +1,11 @@
 <template>
     <v-card elevation="1" rounded="xl">
-        <v-row justify="start" align="center" class="py-4 pl-6">
-            <v-btn icon color="info" height="34px" width="34px" @click.stop="btnClick()">
+        <v-row justify="start" align="center" class="py-4 pl-3 pl-sm-6">
+            <!-- <v-btn icon color="info" height="34px" width="34px" @click.stop="btnClick()">
                 <v-icon icon="bar_chart"></v-icon>
-            </v-btn>
-            <div class="ml-4">
+            </v-btn> -->
+            <v-img :src="props.img" :max-width="[xs ? '40' : '56']" contain class="ml-sm-8 ml-md-0 ml-lg-8"></v-img>
+            <div class="ml-2 ml-sm-4">
                 <p class="text-info">{{ props.title }}</p>
                 <div v-if="!props.isLoading">
                     <p v-if="!props.isDate" class="text-h4 text-subtitle-1 font-weight-bold">
@@ -22,7 +23,10 @@
     </v-card>
 </template>
 <script setup lang="ts">
-import { computed, onMounted, ref, watch } from 'vue'
+import { onMounted, ref, watch } from 'vue'
+import { useDisplay } from 'vuetify/lib/framework.mjs'
+
+const { xs } = useDisplay()
 
 // refs
 const timeFrom = ref(0)
@@ -41,7 +45,11 @@ const props = defineProps({
         type: Boolean,
         default: false
     },
-    isLoading: Boolean
+    isLoading: Boolean,
+    img: {
+        type: String,
+        required: true
+    }
 })
 
 const startTimer = () => {

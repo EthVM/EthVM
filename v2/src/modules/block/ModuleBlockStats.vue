@@ -1,10 +1,15 @@
 <template>
     <v-container fluid class="pa-0">
         <v-row :class="[rowMargin, 'fill-height']" align-content="center" justify="center">
-            <v-col cols="12" sm="6" md="3" :class="columnPadding">
-                <BlockStatsCard :is-loading="loading" title="Last Block" :value="blockNumber.toString()" />
+            <v-col cols="6" md="3" :class="columnPadding">
+                <BlockStatsCard
+                    :is-loading="loading"
+                    title="Last Block"
+                    :value="blockNumber.toString()"
+                    :img="require('@/assets/block-stats-icons/block.svg')"
+                />
             </v-col>
-            <v-col cols="12" sm="6" md="3" :class="columnPadding">
+            <v-col cols="6" md="3" :class="columnPadding">
                 <BlockStatsCard
                     title="Last update"
                     :value="timestamp"
@@ -13,13 +18,14 @@
                     metrics="sec"
                     color-type="success"
                     back-type="time-since"
+                    :img="require('@/assets/block-stats-icons/time.svg')"
                 />
             </v-col>
-            <v-col cols="12" sm="6" md="3" :class="columnPadding">
-                <BlockStatsCard title="Gas Price" value="24" mertrics="Gwei" :is-loading="loading" />
+            <v-col cols="6" md="3" :class="columnPadding">
+                <BlockStatsCard title="Gas Price" value="24" mertrics="Gwei" :is-loading="loading" :img="require('@/assets/block-stats-icons/gas.svg')" />
             </v-col>
-            <v-col cols="12" sm="6" md="3" :class="columnPadding">
-                <BlockStatsCard title="Eth Price" :value="ethPrice" :is-loading="loadingMarketInfo" />
+            <v-col cols="6" md="3" :class="columnPadding">
+                <BlockStatsCard title="Eth Price" :value="ethPrice" :is-loading="loadingMarketInfo" :img="require('@/assets/block-stats-icons/eth.svg')" />
             </v-col>
         </v-row>
     </v-container>
@@ -29,7 +35,7 @@
 //Vue
 import { ref, computed } from 'vue'
 //Apollo
-import { BlockInfoFragment, useGetLatestBlockInfoQuery } from './apollo/BlockStats/blockStats.generated'
+import { useGetLatestBlockInfoQuery } from './apollo/BlockStats/blockStats.generated'
 import { useBlockSubscription } from '@core/composables/NewBlock/newBlock.composable'
 // Component imports
 import BlockStatsCard from './components/BlockStatsCard.vue'
