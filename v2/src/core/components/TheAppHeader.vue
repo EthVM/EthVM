@@ -1,21 +1,22 @@
 <template>
-    <v-app-bar app flat color="primary" class="pa-0">
+    <v-app-bar app flat color="primary" class="py-0 px-0 py-sm-2">
         <v-container class="mx-2 mx-sm-6 mx-md-auto mx-lg-6 mx-xl-auto pa-0">
             <v-row align="center" justify="start" class="mr-0 mx-lg-0 flex-nowrap">
-                <v-app-bar-nav-icon v-if="showDrawerBtn" @click="appStore.appDrawer = !appStore.appDrawer" />
-                <div class="mr-4">
-                    <v-img :src="require('@/assets/logo-compact.png')" height="30" width="30" contain class="mr-auto" />
+                <div class="mr-4 ml-4">
+                    <v-img :src="require('@/assets/logo.svg')" height="35" :width="xs ? '80' : '100'" contain class="ml-3 ml-sm-none mr-auto" />
                 </div>
-                <v-spacer v-if="props.hideSearchBar"></v-spacer>
-                <module-search v-else class="mr-2 ml-auto justify-end" />
+                <v-fade-transition hide-on-leave>
+                    <module-search v-if="showSearchbar" class="justify-center mx-2 mx-sm-4" />
+                </v-fade-transition>
+                <v-spacer v-if="props.hideSearchBar && !showSearchbar"></v-spacer>
 
                 <template v-if="!showDrawerBtn">
                     <template v-for="(item, index) in navItems" :key="index">
-                        <v-btn v-if="!item.links" rounded="pill" :active="false" :to="item.header.routerLink" class="text-subtitle-1 font-weight-regular">
+                        <v-btn v-if="!item.links" rounded="pill" :active="false" :to="item.header.routerLink" class="text-subtitle-1 font-weight-light">
                             {{ item.header.text }}
                             <v-icon v-if="item.header.icon" class="ml-3">{{ item.header.icon }}</v-icon>
                         </v-btn>
-                        <v-btn v-else class="text-subtitle-1 font-weight-regular" rounded="pill">
+                        <v-btn v-else class="text-subtitle-1 font-weight-light" rounded="pill">
                             {{ item.header.text }}
                             <v-icon class="ml-1">expand_more</v-icon>
                             <app-menu min-width="180" activator="parent" :items="item.links">
@@ -37,6 +38,7 @@
                         </v-btn>
                     </template>
                 </template>
+                <v-app-bar-nav-icon v-if="showDrawerBtn" @click="appStore.appDrawer = !appStore.appDrawer" />
             </v-row>
         </v-container>
     </v-app-bar>
@@ -44,13 +46,13 @@
 
 <script setup lang="ts">
 import { useDisplay } from 'vuetify/lib/framework.mjs'
-import { computed, defineProps } from 'vue'
+import { computed, ref, onMounted, nextTick, watch } from 'vue'
 import { useAppNavigation } from '../composables/AppNavigation/useAppNavigation.composable'
 import { useStore } from '@/store'
 import ModuleSearch from '@module/search/ModuleSearch.vue'
 import AppMenu from './AppMenu.vue'
 /* Vuetify BreakPoints */
-const { name } = useDisplay()
+const { name, xs } = useDisplay()
 
 const props = defineProps({
     hideSearchBar: {
@@ -68,4 +70,48 @@ const appStore = useStore()
 /*Define Emit Events */
 defineEmits(['openDrawer'])
 const { navItems } = useAppNavigation()
+
+/*
+===================================================================================
+   Search Bar Handling
+===================================================================================
+*/
+
+const offset = ref(0)
+
+/**
+ * Attaches event to the hide search bar prop on home page
+ */
+watch(
+    () => props.hideSearchBar,
+    newVal => {
+        if (newVal) {
+            window.addEventListener('scroll', onScroll)
+        } else {
+            window.addEventListener('scroll', onScroll)
+        }
+    }
+)
+
+onMounted(() => {
+    if (props.hideSearchBar) {
+        window.addEventListener('scroll', onScroll)
+    }
+})
+
+/**
+ * Shows search bar whenever scroll threshhold is below 500
+ */
+const showSearchbar = computed<boolean>(() => {
+    if (props.hideSearchBar) {
+        return offset.value > 500
+    }
+    return true
+})
+
+const onScroll = e => {
+    nextTick(() => {
+        offset.value = window.scrollY
+    })
+}
 </script>

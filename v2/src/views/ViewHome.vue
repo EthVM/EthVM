@@ -1,15 +1,18 @@
 <template>
-    <div :class="[xs ? 'adr-core-background-mobile' : 'adr-core-background']">
-        <div class="mx-2 mx-sm-6 mx-xl-auto">
-            <v-container class="px-0 pt-16">
-                <div class="mt-16 pt-9 pl-11 pb-16 mb-16">
-                    <p class="mt-9 text-white font-weight-light text-h1">Track, analyze and explore</p>
-                    <p class="text-white font-weight-light text-h1">on the Ethereum blockchain.</p>
-                    <div class="mb-12">
-                        <module-search class="justify-start mt-5 mb-16" />
+    <div>
+        <v-card color="primary" width="100%" flat min-height="400" rounded="0" class="px-2 px-sm-6 mx-xl-auto mt-n16 pt-16">
+            <v-container :class="[{ 'top-card-lg': lgAndUp }, { 'top-card-md': md }, { 'top-card-xs': smAndDown }, 'px-7 px-lg-12 pb-0']">
+                <div class="ml-lg-16 pl-lg-14">
+                    <p class="mt-16 text-white font-weight-light text-h3 text-sm-h2 text-md-h1 text-center text-lg-left">Track, analyze and explore</p>
+                    <p class="text-white font-weight-light text-h3 text-sm-h2 text-md-h1 text-center text-lg-left">on the Ethereum blockchain.</p>
+                    <div class="ml-1">
+                        <module-search class="justify-center justify-lg-start mt-5" />
                     </div>
                 </div>
-
+            </v-container>
+        </v-card>
+        <div class="mx-2 mx-sm-6 mx-xl-auto">
+            <v-container class="pt-3 px-0">
                 <v-row :class="rowMargin">
                     <v-col cols="12" :class="columnPadding">
                         <block-stats-module />
@@ -35,7 +38,7 @@ import ModuleSearch from '@module/search/ModuleSearch.vue'
 
 import { useAppViewGrid } from '@core/composables/AppViewGrid/AppViewGrid.composable'
 import { useDisplay } from 'vuetify/lib/framework.mjs'
-const { xs } = useDisplay()
+const { smAndDown, lgAndUp, md } = useDisplay()
 const { columnPadding, rowMargin } = useAppViewGrid()
 </script>
 
@@ -44,6 +47,21 @@ const { columnPadding, rowMargin } = useAppViewGrid()
     background: linear-gradient(to bottom, rgb(var(--v-theme-primary)) 544px, rgb(var(--v-theme-background)) 544px, rgb(var(--v-theme-background)) 100%);
 }
 .adr-core-background-mobile {
-    background: linear-gradient(to bottom, rgb(var(--v-theme-primary)) 150px, rgb(var(--v-theme-background)) 150px, rgb(var(--v-theme-background)) 100%);
+    background: linear-gradient(to bottom, rgb(var(--v-theme-primary)) 466px, rgb(var(--v-theme-background)) 466px, rgb(var(--v-theme-background)) 100%);
+}
+
+.top-card-lg {
+    margin-bottom: 228px;
+    margin-top: 164px;
+}
+
+.top-card-md {
+    margin-bottom: 84px;
+    margin-top: 205px;
+}
+
+.top-card-xs {
+    margin-bottom: 84px;
+    margin-top: 205px;
 }
 </style>

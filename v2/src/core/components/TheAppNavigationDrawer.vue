@@ -1,8 +1,8 @@
 <template>
     <v-navigation-drawer v-model="appStore.appDrawer" color="primary" temporary>
-        <v-row dense justify="space-between" align="center" class="mt-2">
-            <v-col cols="3">
-                <v-img :src="require('@/assets/logo-compact.png')" height="30px" width="30px" contain class="mx-auto" />
+        <v-row justify="space-between" align="center" class="mt-2">
+            <v-col cols="5">
+                <v-img :src="require('@/assets/logo.svg')" height="35px" width="80px" contain class="ml-7" />
             </v-col>
             <v-col cols="2">
                 <app-btn-icon icon="close" @click="appStore.appDrawer = false" color="white" />

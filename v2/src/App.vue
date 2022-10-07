@@ -6,8 +6,6 @@
         <v-main class="w-100">
             <v-container :class="[isAddressView || isHomeView ? 'pa-0' : 'px-2 px-sm-6 pt-4 pt-sm-6']" :fluid="isAddressView || isHomeView">
                 <router-view />
-                <p class="my-5">{{ offset }}</p>
-
                 <app-btn @click="toggleTheme" text="toggle theme"></app-btn>
             </v-container>
         </v-main>
@@ -26,7 +24,6 @@ import { useRoute } from 'vue-router'
 import { ROUTE_NAME } from '@core/router/routesNames'
 
 const store = useStore()
-const offset = ref(0)
 
 const { result: coinData, loading: loadingCoinData, onResult } = useGetLatestPricesQuery({ pollInterval: 30000 })
 store.loadingCoinData = loadingCoinData.value
