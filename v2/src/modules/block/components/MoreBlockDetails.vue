@@ -9,40 +9,41 @@
             <div v-for="i in 5" :key="i" class="skeleton-box rounded-xl my-5" style="height: 24px"></div>
         </template>
         <template v-else>
-            <v-row>
-                <v-col cols="12">
-                    <div class="block-info mb-5">
-                        <p class="text-button mb-1">Size</p>
-                        <p class="text-info">
-                            {{ props.blockDetails.blockSize.detail }}
-                        </p>
-                    </div>
-                </v-col>
-                <v-col cols="12">
-                    <div class="block-info mb-5">
-                        <p class="text-button mb-1">Nonce</p>
-                        <p class="text-info">
-                            {{ props.blockDetails.nonce.detail }}
-                        </p>
-                    </div>
-                </v-col>
-                <v-col cols="12">
-                    <div class="block-info mb-5">
-                        <p class="text-button mb-1">Difficulty</p>
-                        <p class="text-info">
-                            {{ props.blockDetails.difficulty.detail }}
-                        </p>
-                    </div>
-                </v-col>
-                <v-col cols="12">
-                    <div class="block-info mb-5">
-                        <p class="text-button mb-1">Total Difficulty</p>
-                        <p class="text-info">
-                            {{ props.blockDetails.totalDifficulty.detail }}
-                        </p>
-                    </div>
-                </v-col>
-            </v-row>
+            <div class="block-info mb-5">
+                <p class="text-button mb-1">Size</p>
+                <p class="text-info">
+                    {{ props.blockDetails.blockSize.detail }}
+                </p>
+            </div>
+            <div v-if="props.uncleHashes && props.uncleHashes.length > 0" class="block-info mb-5">
+                <p class="text-button mb-1">Uncles</p>
+                <app-transform-hash
+                    is-blue
+                    v-for="uncle in props.uncleHashes"
+                    :key="uncle"
+                    :hash="eth.toCheckSum(uncle)"
+                    :link="`/uncle/${uncle}`"
+                    class="w-100"
+                />
+            </div>
+            <div class="block-info mb-5">
+                <p class="text-button mb-1">Nonce</p>
+                <p class="text-info">
+                    {{ props.blockDetails.nonce.detail }}
+                </p>
+            </div>
+            <div class="block-info mb-5">
+                <p class="text-button mb-1">Difficulty</p>
+                <p class="text-info">
+                    {{ props.blockDetails.difficulty.detail }}
+                </p>
+            </div>
+            <div class="block-info mb-5">
+                <p class="text-button mb-1">Total Difficulty</p>
+                <p class="text-info">
+                    {{ props.blockDetails.totalDifficulty.detail }}
+                </p>
+            </div>
             <div class="block-info mb-5">
                 <p class="text-button mb-1">State Root</p>
                 <app-transform-hash :hash="props.blockDetails.stateRoot.detail" class="w-100" />
@@ -66,10 +67,6 @@
                 <p>
                     {{ props.blockDetails.extraData.detail }}
                 </p>
-            </div>
-            <div v-if="props.uncleHashes && props.uncleHashes.length > 0" class="block-info mb-5">
-                <p class="text-button mb-1">Uncles</p>
-                <app-transform-hash v-for="uncle in props.uncleHashes" :key="uncle" :hash="eth.toCheckSum(uncle)" :link="`/uncle/${uncle}`" class="w-100" />
             </div>
             <div class="block-info mb-5">
                 <p class="text-button mb-1">SHA3 Uncles</p>
