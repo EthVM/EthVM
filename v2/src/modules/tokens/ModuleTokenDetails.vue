@@ -17,11 +17,8 @@
                 :is-loading="loadingTokenDetails || state.hasError"
                 @errorDetails="emitErrorState"
             />
-            <v-card elevation="1" rounded="xl">
-                <v-tabs v-model="state.tab" color="primary" end>
-                    <v-tab :value="routes[0]" class="py-3 text-h5 text-capitalize rounded-b-xl" @click="changeRoute">Transfers</v-tab>
-                    <v-tab :value="routes[1]" class="py-3 text-h5 text-capitalize rounded-b-xl" @click="changeRoute">Holders</v-tab>
-                </v-tabs>
+            <v-card elevation="1" rounded="xl" class="pt-4 pt-sm-6">
+                <app-tabs v-model="state.tab" :routes="routes" :tabs="tabs"></app-tabs>
                 <div class="mt-6">
                     <token-transfers
                         v-show="state.tab === routes[0]"
@@ -66,6 +63,8 @@ import { reactive, computed, onMounted } from 'vue'
 import TokenDetailsList from '@module/tokens/components/TokenDetailsList.vue'
 import TokenTransfers from '@module/tokens/components/TokenTransfers.vue'
 import TokenHolders from '@module/tokens/components/TokenHolders.vue'
+import AppTabs from '@/core/components/AppTabs.vue'
+import { Tab } from '@core/components/props'
 import {
     Erc20TokenOwnerDetailsFragment as TokenOwnerInfo,
     TokenDetailsFragment as TokenInfo,
@@ -75,9 +74,18 @@ import {
 import { eth } from '@core/helper'
 import { ErrorMessageToken } from '@module/tokens/models/ErrorMessagesForTokens'
 import { Q_TOKEN_DETAILS } from '@core/router/routesNames'
-import { onBeforeRouteUpdate, useRoute, useRouter } from 'vue-router'
 
 const routes = Q_TOKEN_DETAILS
+const tabs: Tab[] = [
+    {
+        value: routes[0],
+        title: 'Transfers'
+    },
+    {
+        value: routes[1],
+        title: 'Holders'
+    }
+]
 
 const props = defineProps({
     addressRef: {
@@ -109,34 +117,11 @@ const state: ComponentState = reactive({
     address: '',
     hasError: false,
     isNft: true,
-    tab: ''
+    tab: props.tab
 })
 /**------------------------
  * Route Handling
  -------------------------*/
-
-const router = useRouter()
-const route = useRoute()
-/**
- * Sets route query if new tab is selected
- */
-const changeRoute = () => {
-    if (route.query.t !== state.tab) {
-        router.push({
-            query: { t: state.tab }
-        })
-    }
-}
-/**
- * Watches for changes in the router
- * in case user manipulates history
- * and updates tab accordingly
- */
-onBeforeRouteUpdate(async to => {
-    if (to.query.t !== state.tab) {
-        state.tab = state.tab === routes[0] ? routes[1] : routes[0]
-    }
-})
 
 const emit = defineEmits<{
     (e: 'errorDetails', value: boolean, message: string): void
@@ -148,7 +133,6 @@ onMounted(() => {
         emitErrorState(true, ErrorMessageToken.invalid)
         return
     }
-    state.tab = props.tab
 })
 
 const {

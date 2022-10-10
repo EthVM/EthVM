@@ -7,27 +7,26 @@ $font-normal: 400;
 $typography:
 (
   'h1': (
-    'size': 35px,
-    'weight': $font-bold,
-    'line-height': 40px,
+    'size': 40px,
+    'weight': $font-normal,
+    'line-height': 52px,
     'letter-spacing': 0.49px,
     'text-transform': none
   ),
   'h2': (
-    'size': 29px,
+    'size': 28px,
     'weight': $font-bold,
-    'line-height': 32px,
+    'line-height': 40px,
     'letter-spacing': 0.49px,
   ),
   'h3': (
     'size': 24px,
     'weight': $font-bold,
-    'line-height': 28px,
+    'line-height': 32px,
     'letter-spacing': 0.49px,
   ),
   'h4': (
     'size': 20px,
-    'weight': $font-bold,
     'line-height': 28px,
     'letter-spacing': 0.49px,
   ),
@@ -46,7 +45,7 @@ $typography:
   'subtitle-1': (
     'size': 16px,
     'weight': $font-normal,
-    'line-height': 15px,
+    'line-height': 24px,
     'letter-spacing': 0.49px,
   ),
   'body-1': (
@@ -74,6 +73,13 @@ $typography:
     'line-height': 14px,
     'letter-spacing': 0.42px,
     'text-transform': none
+  ),
+  'subtitle-2': (
+    'size': 18px,
+    'weight': $font-medium,
+    'line-height': 28px,
+    'letter-spacing': 0.49px,
+    'text-transform': capitalize
   )
 );
 /**

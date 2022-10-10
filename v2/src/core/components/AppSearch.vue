@@ -1,5 +1,5 @@
 <template>
-    <v-row align="center" justify="end" class="my-0 flex-nowrap">
+    <v-row align="center" class="my-0 flex-nowrap">
         <v-card class="rounded-s-pill rounded-e-0 d-flex flex-grow-1 flex-shrink-0" max-width="380" id="search-options-activator">
             <v-text-field
                 v-model="search.value"
@@ -35,7 +35,7 @@
             <div v-else>Search</div>
         </v-btn>
         <v-menu location="bottom" activator="#search-options-activator" v-model="search.focus" :open-on-click="false">
-            <v-card v-if="search.value !== ''" width="380" max-height="300px" rounded="xl" class="mt-1">
+            <v-card v-if="search.value !== ''" max-width="380" max-height="300px" rounded="xl" class="mt-1">
                 <v-progress-linear v-if="isLoading" class="position-absolute" style="z-index: 1" color="secondary" height="5" indeterminate></v-progress-linear>
                 <app-no-result v-if="props.hasError" :text="`We could not find anything mathching: ${search.value}`"></app-no-result>
                 <slot v-else name="search-results"> </slot>

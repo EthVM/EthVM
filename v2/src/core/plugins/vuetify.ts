@@ -34,7 +34,7 @@ const COLORS = {
 const mainnetLightTheme: ThemeDefinition = {
     dark: false,
     colors: {
-        primary: COLORS.blue,
+        primary: COLORS.navy,
         secondary: COLORS.brightBlue,
         warning: COLORS.orange,
         error: COLORS.red,
@@ -52,10 +52,11 @@ const mainnetLightTheme: ThemeDefinition = {
         'on-surface': COLORS.navy,
         'on-primary': COLORS.white,
         'on-success': COLORS.surfaceLM,
-        'on-surface-tabs': COLORS.blue,
+        'on-surface-tabs': COLORS.navy,
         pillGrey: COLORS.greyLight,
         tableGrey: COLORS.greyTableBGLight,
-        greyCard: COLORS.greyCardLM
+        greyCard: COLORS.greyCardLM,
+        tabActive: COLORS.blue
     },
     variables: {
         'skeleton-gradient': 0.3
@@ -65,7 +66,7 @@ const mainnetLightTheme: ThemeDefinition = {
 const mainnetDarkTheme: ThemeDefinition = {
     dark: true,
     colors: {
-        primary: COLORS.blue,
+        primary: COLORS.navy,
         secondary: COLORS.brightBlue,
         warning: COLORS.orange,
         error: COLORS.red,
@@ -87,7 +88,8 @@ const mainnetDarkTheme: ThemeDefinition = {
         pillGrey: COLORS.greyBackdroundDM,
         tableGrey: COLORS.greyBackdroundDM,
         whiteLogo: COLORS.white,
-        greyCard: COLORS.greyBackdroundDM
+        greyCard: COLORS.greyBackdroundDM,
+        tabActive: COLORS.blue
     },
     variables: {
         'skeleton-gradient': 0.03

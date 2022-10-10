@@ -1,11 +1,12 @@
 <template>
     <v-app class="app-view">
         <the-app-navigation-drawer-vue />
-        <the-app-header />
+        <the-app-header :hide-search-bar="isHomeView" />
+
         <v-main class="w-100">
-            <v-container :class="[isAddressView ? 'pa-0' : 'px-2 px-sm-6 pt-4 pt-sm-6']" :fluid="isAddressView">
-                <app-btn @click="toggleTheme" text="toggle theme"></app-btn>
+            <v-container :class="[isAddressView || isHomeView ? 'pa-0' : 'px-2 px-sm-6 pt-4 pt-sm-6']" :fluid="isAddressView || isHomeView">
                 <router-view />
+                <app-btn @click="toggleTheme" text="toggle theme"></app-btn>
             </v-container>
         </v-main>
     </v-app>
@@ -18,7 +19,7 @@ import TheAppNavigationDrawerVue from './core/components/TheAppNavigationDrawer.
 import { useStore } from '@/store'
 import { useGetLatestPricesQuery } from '@core/composables/CoinData/getLatestPrices.generated'
 import { useTheme } from 'vuetify'
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { ROUTE_NAME } from '@core/router/routesNames'
 
@@ -54,6 +55,10 @@ const isAddressView = computed<boolean>(() => {
         route.name === ROUTE_NAME.ADDRESS_CONTRACT.NAME ||
         route.name === ROUTE_NAME.ADDRESS_MINER.NAME
     )
+})
+
+const isHomeView = computed<boolean>(() => {
+    return route.name === ROUTE_NAME.HOME.NAME
 })
 </script>
 <style lang="scss">
