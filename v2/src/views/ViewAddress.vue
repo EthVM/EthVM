@@ -3,10 +3,10 @@
 
     <div v-if="isValid && props.addressRef" :class="[xs ? 'adr-core-background-mobile' : 'adr-core-background', 'pb-6']">
         <v-card class="px-xl-auto mx-0" flat rounded="0" :min-height="smAndDown ? '100%' : '92px'">
-            <v-container fluid class="core-container fill-height pa-4 pa-sm-6">
-                <v-row align="center" justify="center" class="flex-nowrap">
+            <v-container fluid class="core-container fill-height px-5 px-sm-6 pb-4 pb-sm-6 pt-4 pt-sm-10">
+                <v-row align="center" justify="center" class="flex-nowrap px-0">
                     <app-address-blockie :address="props.addressRef || ''" :size="10" />
-                    <app-transform-hash v-if="smAndDown" :hash="props.addressRef" class="text-h4 px-2 px-sm-4"></app-transform-hash>
+                    <app-transform-hash v-if="smAndDown" :hash="props.addressRef" class="text-h4 font-weight-regular px-2 px-sm-4"></app-transform-hash>
                     <p v-else class="mx-sm-4 text-h4">{{ props.addressRef }}</p>
                     <app-copy-to-clip :value-to-copy="props.addressRef || ''" class="ml-3" />
                     <app-btn-icon icon="favorite"></app-btn-icon>
@@ -47,10 +47,10 @@
                 @click="navigateTo(i.routeName, i.secondaryTab)"
                 :value="i.routeName"
                 :key="i.routeName"
-                class="py-3 text-h5 text-capitalize rounded-b-xl font-weight-regular"
+                class="py-3 text-h5 text-capitalize rounded-b-xl font-weight-light"
                 color="primary"
                 selected-class="bg-surface"
-                ><p :class="activeTabText === i.text ? 'text-primary' : 'text-white'">{{ i.text }}</p></v-tab
+                ><p :class="activeTabText === i.text ? 'text-primary font-weight-regular' : 'text-white'">{{ i.text }}</p></v-tab
             >
         </v-tabs>
         <!--
@@ -176,15 +176,16 @@ const navigateTo = async (_name: string, _query?: string) => {
  * Track last viewable tab within the token/nfts/miner views
  * @param {string} tab - route query, MUST BE FROM  imported ADDRESS_ROUTE_QUERY variables in the appropriate route names
  */
-const setLastViewedTab = (tab: string) => {
-    // ERC20 Tokens:
-    if (tab === ADDRESS_ROUTE_QUERY.Q_TOKENS[0] || tab === ADDRESS_ROUTE_QUERY.Q_TOKENS[1]) {
+const setLastViewedTab = (tab: string, isNFT: false) => {
+    if (isNFT) {
+        //NFT
+        tabs[2].secondaryTab = tab
+    } else if (tab === ADDRESS_ROUTE_QUERY.Q_TOKENS[0] || tab === ADDRESS_ROUTE_QUERY.Q_TOKENS[1]) {
+        // ERC20 Tokens:
         tabs[3].secondaryTab = tab
     } else if (tab === ADDRESS_ROUTE_QUERY.Q_MINER[0] || tab === ADDRESS_ROUTE_QUERY.Q_MINER[1]) {
         // Mining history:
         tabs[4].secondaryTab = tab
-    } else {
-        tabs[2].secondaryTab = tab
     }
 }
 

@@ -1,11 +1,8 @@
 <template>
     <v-row :class="rowMargin">
         <v-col cols="12" :class="columnPadding">
-            <v-card elevation="1" rounded="xl" class="pt-2 pt-sm-6">
-                <v-tabs v-model="state.tab" color="primary" end @update:model-value="setLastViewedTab()">
-                    <v-tab :value="routes[0]" class="py-3 text-h5 text-capitalize rounded-t-xl" @click="changeRoute">Balance</v-tab>
-                    <v-tab :value="routes[1]" class="py-3 text-h5 text-capitalize rounded-t-xl" @click="changeRoute">Transfers</v-tab>
-                </v-tabs>
+            <v-card elevation="1" rounded="xl" class="pt-4 pt-sm-6">
+                <app-tabs v-model="state.tab" :routes="routes" :tabs="tabs" @update:modelValue="setLastViewedTab()" class="mb-4 mb-sm-0"></app-tabs>
                 <module-address-tokens
                     v-if="state.tab === routes[0]"
                     class="mb-4"
@@ -31,12 +28,26 @@
 import { reactive, onMounted } from 'vue'
 import ModuleAddressTokens from '@module/address/ModuleAddressTokens.vue'
 import ModuleAddressTokenTransfers from '@module/address/ModuleAddressTokenTransfers.vue'
+import AppTabs from '@/core/components/AppTabs.vue'
+import { Tab } from '@core/components/props'
 import { useAddressUpdate } from '@core/composables/AddressUpdate/addressUpdate.composable'
 import { ADDRESS_ROUTE_QUERY } from '@core/router/routesNames'
-import { useRouter, useRoute, onBeforeRouteUpdate } from 'vue-router'
 import { useAppViewGrid } from '@core/composables/AppViewGrid/AppViewGrid.composable'
 
 const { columnPadding, rowMargin } = useAppViewGrid()
+
+const routes = ADDRESS_ROUTE_QUERY.Q_TOKENS
+
+const tabs: Tab[] = [
+    {
+        value: routes[0],
+        title: 'Balance'
+    },
+    {
+        value: routes[1],
+        title: 'Transfers'
+    }
+]
 
 const props = defineProps({
     addressRef: {
@@ -52,13 +63,11 @@ const props = defineProps({
         required: false
     }
 })
-const routes = ADDRESS_ROUTE_QUERY.Q_TOKENS
 
 const state = reactive({
     error: '',
     tab: props.tab
 })
-
 const { newErc20Transfer, resetCount } = useAddressUpdate(props.addressRef)
 
 /**------------------------
@@ -69,30 +78,6 @@ const { newErc20Transfer, resetCount } = useAddressUpdate(props.addressRef)
  */
 onMounted(() => {
     if (props.tab !== routes[0]) {
-        setLastViewedTab()
-    }
-})
-
-const router = useRouter()
-const route = useRoute()
-/**
- * Sets route query if new tab is selected
- */
-const changeRoute = () => {
-    if (route.query.t !== state.tab) {
-        router.push({
-            query: { t: state.tab }
-        })
-    }
-}
-/**
- * Watches for changes in the router
- * in case user manipulates history
- * and updates tab accordingly
- */
-onBeforeRouteUpdate(async to => {
-    if (to.query.t !== state.tab) {
-        state.tab = state.tab === routes[0] ? routes[1] : routes[0]
         setLastViewedTab()
     }
 })

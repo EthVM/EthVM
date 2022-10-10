@@ -2,10 +2,7 @@
     <v-row :class="rowMargin">
         <v-col cols="12" :class="columnPadding">
             <v-card elevation="1" rounded="xl" class="pt-2 pt-sm-6">
-                <v-tabs v-model="state.tab" color="primary" end @update:model-value="setLastViewedTab()">
-                    <v-tab :value="routes[0]" class="py-3 text-h5 text-capitalize rounded-t-xl" @click="changeRoute">Blocks</v-tab>
-                    <v-tab :value="routes[1]" class="py-3 text-h5 text-capitalize rounded-t-xl" @click="changeRoute">Uncles</v-tab>
-                </v-tabs>
+                <app-tabs v-model="state.tab" :routes="routes" :tabs="tabs" @update:modelValue="setLastViewedTab()" class="mb-4 mb-sm-0"></app-tabs>
                 <div class="mt-6">
                     <module-address-miner-block
                         v-show="state.tab === routes[0]"
@@ -33,15 +30,29 @@
 
 <script setup lang="ts">
 import { ADDRESS_ROUTE_QUERY } from '@core/router/routesNames'
-import { onBeforeRouteUpdate, useRoute, useRouter } from 'vue-router'
 import { onMounted, reactive } from 'vue'
 import ModuleAddressMinerBlock from '@module/address/ModuleAddressMinerBlock.vue'
+import AppTabs from '@/core/components/AppTabs.vue'
+import { Tab } from '@core/components/props'
 import { useAddressUpdate } from '@core/composables/AddressUpdate/addressUpdate.composable'
 import { useAppViewGrid } from '@core/composables/AppViewGrid/AppViewGrid.composable'
 
 const { columnPadding, rowMargin } = useAppViewGrid()
 
 const MAX_ITEMS = 10
+
+const routes = ADDRESS_ROUTE_QUERY.Q_MINER
+
+const tabs: Tab[] = [
+    {
+        value: routes[0],
+        title: 'Blocks'
+    },
+    {
+        value: routes[1],
+        title: 'Uncles'
+    }
+]
 
 const props = defineProps({
     addressRef: {
@@ -53,7 +64,6 @@ const props = defineProps({
         required: true
     }
 })
-const routes = ADDRESS_ROUTE_QUERY.Q_MINER
 
 const { newMinedBlocks, newMinedUncles, resetCount } = useAddressUpdate(props.addressRef)
 
@@ -70,31 +80,6 @@ const state = reactive({
  */
 onMounted(() => {
     if (props.tab !== routes[0]) {
-        setLastViewedTab()
-    }
-})
-
-const router = useRouter()
-const route = useRoute()
-/**
- * Sets route query if new tab is selected
- */
-const changeRoute = () => {
-    if (route.query.t !== state.tab) {
-        router.push({
-            query: { t: state.tab }
-        })
-    }
-}
-
-/**
- * Watches for changes in the router
- * in case user manipulates history
- * and updates tab accordingly
- */
-onBeforeRouteUpdate(async to => {
-    if (to.query.t !== state.tab) {
-        state.tab = state.tab === routes[0] ? routes[1] : routes[0]
         setLastViewedTab()
     }
 })

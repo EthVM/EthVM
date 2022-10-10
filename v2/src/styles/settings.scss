@@ -73,6 +73,13 @@ $typography:
     'line-height': 14px,
     'letter-spacing': 0.42px,
     'text-transform': none
+  ),
+  'subtitle-2': (
+    'size': 18px,
+    'weight': $font-medium,
+    'line-height': 28px,
+    'letter-spacing': 0.49px,
+    'text-transform': capitalize
   )
 );
 /**

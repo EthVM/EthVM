@@ -1,4 +1,4 @@
-import {FormattedNumber} from "@core/helper/number-format-helper";
+import { FormattedNumber } from '@core/helper/number-format-helper'
 
 export interface NavMenuEntry {
     header: NavHeader
@@ -24,9 +24,8 @@ export interface Footnote {
 }
 
 export interface Tab {
-    id: number
+    value: string
     title: string
-    isActive: boolean
 }
 
 export interface Detail {
