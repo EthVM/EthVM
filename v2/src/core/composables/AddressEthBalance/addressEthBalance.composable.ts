@@ -2,12 +2,12 @@ import { useCoinData } from '@core/composables/CoinData/coinData.composable'
 import { eth } from '@/core/helper'
 
 import { useGetEthBalanceQuery } from './addressBalance.generated'
-import { computed, ref } from 'vue'
+import { computed, ref, Ref, watch } from 'vue'
 
 import { formatUsdValue, formatVariableUnitEthValue } from '@core/helper/number-format-helper'
 import BN from 'bignumber.js'
 
-export function useAddressEthBalance(addressHash: string) {
+export function useAddressEthBalance(addressHash: Ref<string>) {
     const { loading: loadingMarketInfo, ethMarketInfo } = useCoinData()
 
     const initialLoad = ref(true)
@@ -19,7 +19,7 @@ export function useAddressEthBalance(addressHash: string) {
         onResult
     } = useGetEthBalanceQuery(
         () => ({
-            hash: addressHash
+            hash: addressHash.value
         }),
         () => ({
             fetchPolicy: 'cache-and-network'
@@ -32,7 +32,6 @@ export function useAddressEthBalance(addressHash: string) {
     onResult(({ data }) => {
         if (data && data.getEthBalance) {
             initialLoad.value = false
-            // emitErrorState(false)
         }
     })
     /**
@@ -67,6 +66,16 @@ export function useAddressEthBalance(addressHash: string) {
             return formatUsdValue(balanceFiatBN.value).value
         }
         return '$0.00'
+    })
+
+    /**
+     * Watches for changes in the addressHash string
+     * Resets initial load to true if new hash
+     */
+    watch(addressHash, (newHash, oldHash) => {
+        if (newHash !== oldHash) {
+            initialLoad.value = true
+        }
     })
 
     return { balanceData, initialLoad, refetchBalance, balanceFiatFormatted, balanceWei, balanceFormatted, balanceFiatBN }
