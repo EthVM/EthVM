@@ -135,7 +135,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, reactive, onMounted, onBeforeUnmount } from 'vue'
+import { computed, reactive, onMounted, onBeforeUnmount, toRefs } from 'vue'
 import AppBtn from '@/core/components/AppBtn.vue'
 import AppNewUpdate from '@core/components/AppNewUpdate.vue'
 import TableRowTokenBalance from './components/TableRowTokenBalance.vue'
@@ -197,7 +197,9 @@ const state: ComponentState = reactive({
 /**------------------------
  * Tokens Data
  -------------------------*/
-const { erc20Tokens, loadingTokens, refetchTokens, tokenSort, tokenBalance } = useAddressToken(props.addressHash)
+const { addressHash } = toRefs(props)
+
+const { erc20Tokens, loadingTokens, refetchTokens, tokenSort, tokenBalance } = useAddressToken(addressHash)
 
 const hasTokens = computed<boolean>(() => {
     return !!erc20Tokens.value
