@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory, createWebHashHistory, RouteRecordRaw } from 'vue-router'
-import { ADDRESS_ROUTE_QUERY, ROUTE_NAME, Q_TOKEN_DETAILS, Q_BLOCKS_AND_TXS, Q_BLOCK_DETAILS } from './routesNames'
+import { ADDRESS_ROUTE_QUERY, ROUTE_NAME, Q_TOKEN_DETAILS, Q_BLOCKS_AND_TXS, Q_BLOCK_DETAILS, Q_ADDRESS_TRANSFERS } from './routesNames'
 import HomeView from '@view/ViewHome.vue'
 import BlocksView from '@view/ViewBlocks.vue'
 import BlocksAndTxsView from '@view/ViewBlocksAndTransactions.vue'
@@ -99,7 +99,8 @@ const routes: Array<RouteRecordRaw> = [
                 path: ROUTE_NAME.ADDRESS_BALANCE.PATH,
                 name: ROUTE_NAME.ADDRESS_BALANCE.NAME,
                 component: ViewAddressEthBalance,
-                props: true
+                props: route => ({ tab: route.query.t }),
+                beforeEnter: tabViewRouteGuard(Q_ADDRESS_TRANSFERS[0])
             },
             {
                 path: ROUTE_NAME.ADDRESS_TOKENS.PATH,
