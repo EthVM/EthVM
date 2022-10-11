@@ -1,9 +1,11 @@
 <template>
     <app-tabs v-model="state.tab" :routes="routes" :tabs="tabs" @update:modelValue="setLastViewedTab()" class="mb-4 mb-sm-0"></app-tabs>
+    <table-mined-and-pending v-if="state.tab === routes[0] || state.tab === routes[1]" :tab="state.tab" />
 </template>
 
 <script setup lang="ts">
 import AppTabs from '@/core/components/AppTabs'
+import TableMinedAndPending from '@module/address/components/EthBalanceTabs/TableMinedAndPending.vue'
 import { Tab } from '@/core/components/props'
 import { reactive } from 'vue'
 import { Q_ADDRESS_TRANSFERS } from '@core/router/routesNames'
