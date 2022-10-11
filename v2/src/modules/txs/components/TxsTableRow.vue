@@ -67,7 +67,7 @@
                     <v-icon v-if="!props.isBlock" color="success" class="ml-5">east</v-icon>
                 </div>
             </v-col>
-            <v-col v-if="!mdAndDown">
+            <v-col v-if="!mdAndDown && props.isBlock">
                 <v-icon color="success" class="ml-5">east</v-icon>
             </v-col>
             <v-spacer v-else />

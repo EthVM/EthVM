@@ -9,10 +9,7 @@
         :is-loading="isLoading"
     />
     <v-card v-if="state.blockNumber" variant="elevated" elevation="1" rounded="xl" class="mt-5">
-        <v-tabs v-model="state.tab" color="primary" end>
-            <v-tab :value="routes[0]" :disabled="!state.isMined" class="py-3 text-h5 text-capitalize rounded-b-xl" @click="changeRoute">Transactions</v-tab>
-            <v-tab :value="routes[1]" :disabled="!state.isMined" class="py-3 text-h5 text-capitalize rounded-b-xl" @click="changeRoute">More</v-tab>
-        </v-tabs>
+        <app-tabs v-model="state.tab" :routes="routes" :tabs="tabs" class="mb-4 mb-sm-0"></app-tabs>
         <block-txs
             v-show="state.tab === routes[0]"
             :max-items="10"
@@ -26,14 +23,13 @@
 </template>
 
 <script setup lang="ts">
-import AppDetailsList from '@/core/components/AppDetailsList.vue'
-import BlockDetailsTitle from '@module/block/components/BlockDetails.vue'
+import AppTabs from '@/core/components/AppTabs.vue'
 import BlockDetails from '@module/block/components/BlockDetails.vue'
 import MoreBlockDetails from '@module/block/components/MoreBlockDetails.vue'
 import BlockTxs from '@module/txs/ModuleTxs.vue'
 import { reactive, computed, ref, onMounted, watch } from 'vue'
 import BN from 'bignumber.js'
-import { Detail } from '@/core/components/props'
+import { Detail, Tab } from '@/core/components/props'
 import {
     BlockDetailsFragment as BlockDetailsType,
     GetBlockByHashDocument,
@@ -50,6 +46,17 @@ import { timeAgo, eth } from '@core/helper'
 import { useRoute, useRouter } from 'vue-router'
 import { Q_BLOCK_DETAILS } from '@core/router/routesNames'
 const routes = Q_BLOCK_DETAILS
+
+const tabs: Tab[] = [
+    {
+        value: routes[0],
+        title: 'Transactions'
+    },
+    {
+        value: routes[1],
+        title: 'More'
+    }
+]
 
 const props = defineProps({
     blockRef: String,
