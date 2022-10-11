@@ -38,7 +38,6 @@ const route = useRoute()
  * @param {string} activeTab
  */
 const changeTab = (): void => {
-    console.log('ChangeTab')
     if (route.query.t !== state.activeTab) {
         router.push({
             query: { t: state.activeTab }
@@ -55,7 +54,6 @@ watch(
     () => props.modelValue,
     newVal => {
         if (newVal !== state.activeTab) {
-            console.log('update inside tab')
             state.activeTab = newVal
         }
     }
@@ -67,7 +65,6 @@ watch(
  * and updates tab accordingly
  */
 onBeforeRouteUpdate(async to => {
-    console.log('BEFORE ROUTE UPDATE', to.query)
     if (to.query.t && to.query.t !== state.activeTab) {
         if (typeof to.query.t === 'string') {
             const exhists = props.routes.find(i => i === to.query.t)
@@ -81,8 +78,4 @@ onBeforeRouteUpdate(async to => {
 </script>
 
 <style lang="css">
-.tabs-capitilize {
-    height: 4px;
-    text-transform: capitalize !important;
-}
 </style>
