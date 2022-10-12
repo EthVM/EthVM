@@ -67,9 +67,10 @@
                     <v-icon v-if="!props.isBlock" color="success" class="ml-5">east</v-icon>
                 </div>
             </v-col>
-            <v-col v-if="props.isBlock">
+            <v-col v-if="!mdAndDown && props.isBlock">
                 <v-icon color="success" class="ml-5">east</v-icon>
             </v-col>
+            <v-spacer v-else />
             <v-col v-if="!mdAndDown" lg="2">
                 <div class="d-flex align-center">
                     <app-address-blockie :address="transaction.to || ''" :size="8" class="mr-1 mr-sm-2" />

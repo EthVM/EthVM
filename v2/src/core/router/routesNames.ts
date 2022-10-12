@@ -121,5 +121,6 @@ const ADDRESS_ROUTE_QUERY = {
 const Q_TOKEN_DETAILS = ['transfers', 'holders']
 
 const Q_BLOCKS_AND_TXS = ['blocks', 'transactions']
+const Q_BLOCK_DETAILS = ['transaction', 'more']
 
-export { ROUTE_NAME, ROUTE_PROP, ADDRESS_ROUTE_QUERY, Q_TOKEN_DETAILS, Q_BLOCKS_AND_TXS }
+export { ROUTE_NAME, ROUTE_PROP, ADDRESS_ROUTE_QUERY, Q_TOKEN_DETAILS, Q_BLOCKS_AND_TXS, Q_BLOCK_DETAILS }

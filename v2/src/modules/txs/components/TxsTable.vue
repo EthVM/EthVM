@@ -23,9 +23,12 @@
         -->
         <div v-if="!hasMessage">
             <template v-if="!props.isLoading">
-                <div v-for="(tx, index) in displayData" :key="index">
-                    <txs-table-row :tx="tx" :is-pending="props.pending" :is-block="props.isBlock" />
-                </div>
+                <template v-if="txsData.length > 0">
+                    <div v-for="(tx, index) in displayData" :key="index">
+                        <txs-table-row :tx="tx" :is-pending="props.pending" :is-block="props.isBlock" />
+                    </div>
+                </template>
+                <app-no-result v-else text="This block does not have any transactions" class="mt-4 mt-sm-6" />
             </template>
             <template v-if="props.isLoading">
                 <div v-for="i in props.maxItems" :key="i" class="my-5">
@@ -45,6 +48,7 @@ import { useDisplay } from 'vuetify/lib/framework.mjs'
 import { computed } from 'vue'
 import TxsTableRow from '@module/txs/components/TxsTableRow.vue'
 import AppIntersect from '@core/components/AppIntersect.vue'
+import AppNoResult from '@core/components/AppNoResult.vue'
 
 const { xs, mdAndDown } = useDisplay()
 
