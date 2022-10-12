@@ -111,12 +111,8 @@
                 </v-col>
             </v-row>
         </v-card>
-        <v-card variant="elevated" elevation="1" rounded="xl" class="mt-5">
-            <v-tabs v-model="state.tab" color="primary" end>
-                <v-tab v-for="tab in tabs" @click="changeRoute" :value="tab.routeName" :key="tab.routeName" class="py-3 text-h5 text-capitalize rounded-t-xl">
-                    {{ tab.text }}
-                </v-tab>
-            </v-tabs>
+        <v-card variant="elevated" elevation="1" rounded="xl" class="pt-4 pt-sm-6 mt-5">
+            <app-tabs v-model="state.tab" :routes="routes" :tabs="tabs" @update:modelValue="changeRoute" class="mb-4 mb-sm-0"></app-tabs>
             <tab-state v-if="state.tab === routes[0]" :tx-hash="props.txRef" :tx-status="txStatus" :loading="loadingTransactionHash" />
             <tab-more v-if="state.tab === routes[1]" :tx-data="transactionData" :loading="loadingTransactionHash" />
         </v-card>
@@ -128,6 +124,7 @@ import AppChip from '@core/components/AppChip.vue'
 import AppTransformHash from '@core/components/AppTransformHash.vue'
 import AppAddressBlockie from '@core/components/AppAddressBlockie.vue'
 import TabMore from '@module/txs/components/TabMore.vue'
+import AppTabs from '@/core/components/AppTabs.vue'
 import { computed, onMounted, reactive, ref } from 'vue'
 import BN from 'bignumber.js'
 import { TxDetailsFragment as TxDetailsType, useGetTransactionByHashWithTracesQuery, useTransactionEventSubscription } from './apollo/TxDetails.generated'
@@ -142,6 +139,7 @@ import { useRoute, useRouter } from 'vue-router'
 import TabState from '@module/txs/components/TabState.vue'
 import { useDisplay } from 'vuetify'
 import { TxStatus } from '@module/txs/models/ErrorMessagesForTx'
+import { Tab } from '@core/components/props'
 
 const props = defineProps({
     txRef: {
@@ -152,6 +150,18 @@ const props = defineProps({
 })
 
 const routes = Q_TXS_DETAILS
+
+const tabs: Tab[] = [
+    {
+        value: routes[0],
+        title: 'State'
+    },
+    {
+        value: routes[1],
+        title: 'More'
+    }
+]
+
 const { mdAndDown } = useDisplay()
 interface ModuleState {
     hasError: boolean
@@ -166,19 +176,6 @@ const state: ModuleState = reactive({
 })
 
 const emit = defineEmits(['errorDetails'])
-
-const tabs = [
-    {
-        id: 0,
-        text: 'State',
-        routeName: routes[0]
-    },
-    {
-        id: 1,
-        text: 'More',
-        routeName: routes[1]
-    }
-]
 
 const route = useRoute()
 const router = useRouter()

@@ -1,6 +1,6 @@
 <template>
     <div class="position-relative">
-        <v-row class="my-5 px-0 text-subtitle-2 font-weight-regular" align="center" @click="toggleMoreDetails">
+        <v-row class="my-5 px-0" align="center" @click="toggleMoreDetails">
             <v-col lg="2">
                 <div class="d-flex align-center">
                     <app-address-blockie :address="props.diff.owner || ''" :size="8" class="mr-2" />
