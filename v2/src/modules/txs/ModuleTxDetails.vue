@@ -17,11 +17,11 @@
                 <v-col cols="12" lg="6">
                     <div class="tx-info">
                         <p class="text-button mb-1">Tx Hash</p>
+                        <app-transform-hash :hash="props.txRef" class="text-body-1" />
                         <template v-if="loadingTransactionHash">
-                            <div class="skeleton-box rounded-xl mt-1 my-4" style="height: 24px"></div>
+                            <div class="skeleton-box rounded-xl mt-1" style="height: 18px; max-width: 300px"></div>
                         </template>
                         <template v-else>
-                            <app-transform-hash is-blue :hash="transactionData.hash" class="text-body-1" />
                             <p v-if="txStatus !== TxStatus.pending && !isReplaced" class="text-body-2 text-info mt-1">({{ timestamp }})</p>
                         </template>
                     </div>
@@ -31,7 +31,7 @@
                         <div class="tx-info">
                             <p class="text-button mb-1">Block Mined</p>
                             <template v-if="loadingTransactionHash">
-                                <div class="skeleton-box rounded-xl mt-1 my-4" style="height: 24px"></div>
+                                <div class="skeleton-box rounded-xl mt-1" style="height: 24px"></div>
                             </template>
                             <p v-else class="text-body-1 text-secondary mt-1">{{ formatNumber(blockMined) }}</p>
                         </div>
@@ -51,7 +51,10 @@
                         <div class="tx-info">
                             <p class="text-button mb-1">From</p>
                             <template v-if="loadingTransactionHash">
-                                <div class="skeleton-box rounded-xl mt-1 my-4" style="height: 24px"></div>
+                                <div class="d-flex align-center">
+                                    <div class="skeleton-box rounded-circle mr-1 mr-sm-2 flex-shrink-0" style="height: 32px; width: 32px"></div>
+                                    <div class="skeleton-box rounded-xl" style="height: 20px"></div>
+                                </div>
                             </template>
                             <template v-else>
                                 <div class="d-flex align-center">
@@ -73,7 +76,10 @@
                         <div class="tx-info">
                             <p class="text-button mb-1">To</p>
                             <template v-if="loadingTransactionHash">
-                                <div class="skeleton-box rounded-xl mt-1 my-4" style="height: 24px"></div>
+                                <div class="d-flex align-center">
+                                    <div class="skeleton-box rounded-circle mr-1 mr-sm-2 flex-shrink-0" style="height: 32px; width: 32px"></div>
+                                    <div class="skeleton-box rounded-xl" style="height: 20px"></div>
+                                </div>
                             </template>
                             <template v-else>
                                 <div class="d-flex align-center">
@@ -95,7 +101,7 @@
                     <div class="rounded-lg bg-tableGrey pa-6">
                         <div class="tx-info">
                             <p class="text-button mb-1">Value</p>
-                            <div v-if="loadingTransactionHash" class="skeleton-box rounded-xl mt-1 my-4" style="height: 24px"></div>
+                            <div v-if="loadingTransactionHash" class="skeleton-box rounded-xl" style="height: 21px"></div>
                             <p v-else class="text-no-wrap">{{ txAmount.value }} ETH</p>
                         </div>
                     </div>
@@ -104,7 +110,7 @@
                     <div class="rounded-lg bg-tableGrey pa-6">
                         <div class="tx-info">
                             <p class="text-button mb-1">Fee</p>
-                            <div v-if="loadingTransactionHash" class="skeleton-box rounded-xl mt-1 my-4" style="height: 24px"></div>
+                            <div v-if="loadingTransactionHash" class="skeleton-box rounded-xl" style="height: 21px"></div>
                             <p v-else class="text-no-wrap">{{ txFee.value }} ETH</p>
                         </div>
                     </div>
