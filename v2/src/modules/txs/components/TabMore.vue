@@ -55,21 +55,21 @@
             </v-col>
         </v-row>
         <v-row class="mt-5">
-            <v-col v-if="props.txData.r" cols="12">
+            <v-col v-if="!hideR" cols="12">
                 <div class="tx-info">
                     <p class="text-button mb-1">R</p>
                     <div v-if="props.loading" class="skeleton-box rounded-xl" style="height: 24px"></div>
                     <app-transform-hash v-else :hash="eth.toCheckSum(props.txData.r)" />
                 </div>
             </v-col>
-            <v-col v-if="props.txData.s" cols="12">
+            <v-col v-if="!hideS" cols="12">
                 <div class="tx-info">
                     <p class="text-button mb-1">S</p>
                     <div v-if="props.loading" class="skeleton-box rounded-xl" style="height: 24px"></div>
                     <app-transform-hash v-else :hash="eth.toCheckSum(props.txData.s)" />
                 </div>
             </v-col>
-            <v-col v-if="props.txData.v" cols="12">
+            <v-col v-if="!hideV" cols="12">
                 <div class="tx-info">
                     <p class="text-button mb-1">V</p>
                     <div v-if="props.loading" class="skeleton-box rounded-xl" style="height: 24px"></div>
@@ -133,5 +133,18 @@ const maxFeePerGas = computed<FormattedNumber>(() => {
     return {
         value: '0'
     }
+})
+
+// Hide R, S or V if the data is done loading and r, s, or v don't exist in the txData
+const hideR = computed<boolean>(() => {
+    return !props.loading && !props.txData?.r
+})
+
+const hideS = computed<boolean>(() => {
+    return !props.loading && !props.txData?.s
+})
+
+const hideV = computed<boolean>(() => {
+    return !props.loading && !props.txData?.v
 })
 </script>

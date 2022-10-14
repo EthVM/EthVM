@@ -69,9 +69,9 @@ export type TxDetailsFragment = {
     transactionIndex?: number | null
     value: string
     replacedBy?: string | null
-    v: string
-    r: string
-    s: string
+    v?: string | null
+    r?: string | null
+    s?: string | null
     contractAddress?: string | null
     logs: Array<{ __typename?: 'Log'; address: string; data: string; logIndex: number; removed: boolean; topics: Array<string>; type?: string | null }>
     trace?: Array<{
@@ -119,9 +119,9 @@ export type GetTransactionByHashWithTracesQuery = {
         transactionIndex?: number | null
         value: string
         replacedBy?: string | null
-        v: string
-        r: string
-        s: string
+        v?: string | null
+        r?: string | null
+        s?: string | null
         contractAddress?: string | null
         logs: Array<{ __typename?: 'Log'; address: string; data: string; logIndex: number; removed: boolean; topics: Array<string>; type?: string | null }>
         trace?: Array<{
