@@ -55,21 +55,21 @@
             </v-col>
         </v-row>
         <v-row class="mt-5">
-            <v-col cols="12">
+            <v-col v-if="props.txData.r" cols="12">
                 <div class="tx-info">
                     <p class="text-button mb-1">R</p>
                     <div v-if="props.loading" class="skeleton-box rounded-xl" style="height: 24px"></div>
                     <app-transform-hash v-else :hash="eth.toCheckSum(props.txData.r)" />
                 </div>
             </v-col>
-            <v-col cols="12">
+            <v-col v-if="props.txData.s" cols="12">
                 <div class="tx-info">
                     <p class="text-button mb-1">S</p>
                     <div v-if="props.loading" class="skeleton-box rounded-xl" style="height: 24px"></div>
                     <app-transform-hash v-else :hash="eth.toCheckSum(props.txData.s)" />
                 </div>
             </v-col>
-            <v-col cols="12">
+            <v-col v-if="props.txData.v" cols="12">
                 <div class="tx-info">
                     <p class="text-button mb-1">V</p>
                     <div v-if="props.loading" class="skeleton-box rounded-xl" style="height: 24px"></div>
