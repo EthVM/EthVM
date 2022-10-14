@@ -5,6 +5,7 @@ fragment TransferSummary on Transfer {
     to
     txFee
 }
+
 fragment TokenFragment on EthTokenInfo {
     name
     symbol

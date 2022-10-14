@@ -4,7 +4,7 @@
       VIEW: Overview
     =========================
     -->
-    <div v-if="isOverview">
+    <v-card v-if="isOverview" class="pa-4 pa-sm-6" elevation="1" rounded="xl" height="100%">
         <address-balance-totals title="ETH Balance" :is-loading="loadingBalanceData" :balance="`${balanceFormatted} ETH`">
             <template #extra>
                 <v-col v-if="loadingMarketInfo || loadingBalanceData" cols="6" sm="4" md="6" class="pa-0">
@@ -16,7 +16,7 @@
         <div class="temp-chart pa-4 rounded-xl">
             <p>Chart Area</p>
         </div>
-    </div>
+    </v-card>
     <!--
     ========================
       VIEW: Eth Balance and History
