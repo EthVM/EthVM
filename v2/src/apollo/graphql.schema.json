@@ -1604,11 +1604,23 @@
             },
             {
                 "kind": "OBJECT",
-                "name": "ERC1155TokenBalances",
+                "name": "ERC1155TokenOwners",
                 "description": null,
                 "fields": [
                     {
-                        "name": "balances",
+                        "name": "nextKey",
+                        "description": null,
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "String",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "owners",
                         "description": null,
                         "args": [],
                         "type": {
@@ -1618,27 +1630,11 @@
                                 "kind": "LIST",
                                 "name": null,
                                 "ofType": {
-                                    "kind": "NON_NULL",
-                                    "name": null,
-                                    "ofType": {
-                                        "kind": "OBJECT",
-                                        "name": "ERC1155TokenBalance",
-                                        "ofType": null
-                                    }
+                                    "kind": "OBJECT",
+                                    "name": "ERC1155TokenBalance",
+                                    "ofType": null
                                 }
                             }
-                        },
-                        "isDeprecated": false,
-                        "deprecationReason": null
-                    },
-                    {
-                        "name": "nextKey",
-                        "description": null,
-                        "args": [],
-                        "type": {
-                            "kind": "SCALAR",
-                            "name": "String",
-                            "ofType": null
                         },
                         "isDeprecated": false,
                         "deprecationReason": null
@@ -1666,18 +1662,6 @@
                                 "name": "String",
                                 "ofType": null
                             }
-                        },
-                        "isDeprecated": false,
-                        "deprecationReason": null
-                    },
-                    {
-                        "name": "stateDiff",
-                        "description": null,
-                        "args": [],
-                        "type": {
-                            "kind": "OBJECT",
-                            "name": "StateDiffChange",
-                            "ofType": null
                         },
                         "isDeprecated": false,
                         "deprecationReason": null
@@ -1783,124 +1767,6 @@
                                     "kind": "OBJECT",
                                     "name": "ERC1155Transfer",
                                     "ofType": null
-                                }
-                            }
-                        },
-                        "isDeprecated": false,
-                        "deprecationReason": null
-                    }
-                ],
-                "inputFields": null,
-                "interfaces": [],
-                "enumValues": null,
-                "possibleTypes": null
-            },
-            {
-                "kind": "OBJECT",
-                "name": "ETHTransactionTransfer",
-                "description": null,
-                "fields": [
-                    {
-                        "name": "stateDiff",
-                        "description": null,
-                        "args": [],
-                        "type": {
-                            "kind": "OBJECT",
-                            "name": "StateDiffChange",
-                            "ofType": null
-                        },
-                        "isDeprecated": false,
-                        "deprecationReason": null
-                    },
-                    {
-                        "name": "transactionStateDiff",
-                        "description": null,
-                        "args": [],
-                        "type": {
-                            "kind": "NON_NULL",
-                            "name": null,
-                            "ofType": {
-                                "kind": "OBJECT",
-                                "name": "TransactionStateDiffChange",
-                                "ofType": null
-                            }
-                        },
-                        "isDeprecated": false,
-                        "deprecationReason": null
-                    },
-                    {
-                        "name": "transfer",
-                        "description": null,
-                        "args": [],
-                        "type": {
-                            "kind": "NON_NULL",
-                            "name": null,
-                            "ofType": {
-                                "kind": "OBJECT",
-                                "name": "Transfer",
-                                "ofType": null
-                            }
-                        },
-                        "isDeprecated": false,
-                        "deprecationReason": null
-                    },
-                    {
-                        "name": "value",
-                        "description": null,
-                        "args": [],
-                        "type": {
-                            "kind": "NON_NULL",
-                            "name": null,
-                            "ofType": {
-                                "kind": "SCALAR",
-                                "name": "String",
-                                "ofType": null
-                            }
-                        },
-                        "isDeprecated": false,
-                        "deprecationReason": null
-                    }
-                ],
-                "inputFields": null,
-                "interfaces": [],
-                "enumValues": null,
-                "possibleTypes": null
-            },
-            {
-                "kind": "OBJECT",
-                "name": "ETHTransactionTransfers",
-                "description": null,
-                "fields": [
-                    {
-                        "name": "nextKey",
-                        "description": null,
-                        "args": [],
-                        "type": {
-                            "kind": "SCALAR",
-                            "name": "String",
-                            "ofType": null
-                        },
-                        "isDeprecated": false,
-                        "deprecationReason": null
-                    },
-                    {
-                        "name": "transfers",
-                        "description": null,
-                        "args": [],
-                        "type": {
-                            "kind": "NON_NULL",
-                            "name": null,
-                            "ofType": {
-                                "kind": "LIST",
-                                "name": null,
-                                "ofType": {
-                                    "kind": "NON_NULL",
-                                    "name": null,
-                                    "ofType": {
-                                        "kind": "OBJECT",
-                                        "name": "ETHTransactionTransfer",
-                                        "ofType": null
-                                    }
                                 }
                             }
                         },
@@ -2558,9 +2424,13 @@
                                 "name": "gasPrice",
                                 "description": "WEI per gas price for the transaction\n\nFormat: WEI Hex string",
                                 "type": {
-                                    "kind": "SCALAR",
-                                    "name": "String",
-                                    "ofType": null
+                                    "kind": "NON_NULL",
+                                    "name": null,
+                                    "ofType": {
+                                        "kind": "SCALAR",
+                                        "name": "String",
+                                        "ofType": null
+                                    }
                                 },
                                 "defaultValue": null,
                                 "isDeprecated": false,
@@ -2688,7 +2558,7 @@
                             "name": null,
                             "ofType": {
                                 "kind": "SCALAR",
-                                "name": "Int",
+                                "name": "String",
                                 "ofType": null
                             }
                         },
@@ -2835,128 +2705,6 @@
             },
             {
                 "kind": "OBJECT",
-                "name": "NFTTokenBalance",
-                "description": null,
-                "fields": [
-                    {
-                        "name": "balance",
-                        "description": null,
-                        "args": [],
-                        "type": {
-                            "kind": "NON_NULL",
-                            "name": null,
-                            "ofType": {
-                                "kind": "SCALAR",
-                                "name": "String",
-                                "ofType": null
-                            }
-                        },
-                        "isDeprecated": false,
-                        "deprecationReason": null
-                    },
-                    {
-                        "name": "owner",
-                        "description": null,
-                        "args": [],
-                        "type": {
-                            "kind": "NON_NULL",
-                            "name": null,
-                            "ofType": {
-                                "kind": "SCALAR",
-                                "name": "String",
-                                "ofType": null
-                            }
-                        },
-                        "isDeprecated": false,
-                        "deprecationReason": null
-                    },
-                    {
-                        "name": "tokenInfo",
-                        "description": null,
-                        "args": [],
-                        "type": {
-                            "kind": "NON_NULL",
-                            "name": null,
-                            "ofType": {
-                                "kind": "OBJECT",
-                                "name": "EthTokenInfo",
-                                "ofType": null
-                            }
-                        },
-                        "isDeprecated": false,
-                        "deprecationReason": null
-                    },
-                    {
-                        "name": "type",
-                        "description": null,
-                        "args": [],
-                        "type": {
-                            "kind": "NON_NULL",
-                            "name": null,
-                            "ofType": {
-                                "kind": "ENUM",
-                                "name": "NFTType",
-                                "ofType": null
-                            }
-                        },
-                        "isDeprecated": false,
-                        "deprecationReason": null
-                    }
-                ],
-                "inputFields": null,
-                "interfaces": [],
-                "enumValues": null,
-                "possibleTypes": null
-            },
-            {
-                "kind": "OBJECT",
-                "name": "NFTTokenBalances",
-                "description": null,
-                "fields": [
-                    {
-                        "name": "nextKey",
-                        "description": null,
-                        "args": [],
-                        "type": {
-                            "kind": "SCALAR",
-                            "name": "String",
-                            "ofType": null
-                        },
-                        "isDeprecated": false,
-                        "deprecationReason": null
-                    },
-                    {
-                        "name": "tokens",
-                        "description": null,
-                        "args": [],
-                        "type": {
-                            "kind": "NON_NULL",
-                            "name": null,
-                            "ofType": {
-                                "kind": "LIST",
-                                "name": null,
-                                "ofType": {
-                                    "kind": "NON_NULL",
-                                    "name": null,
-                                    "ofType": {
-                                        "kind": "OBJECT",
-                                        "name": "NFTTokenBalance",
-                                        "ofType": null
-                                    }
-                                }
-                            }
-                        },
-                        "isDeprecated": false,
-                        "deprecationReason": null
-                    }
-                ],
-                "inputFields": null,
-                "interfaces": [],
-                "enumValues": null,
-                "possibleTypes": null
-            },
-            {
-                "kind": "OBJECT",
                 "name": "NFTTransfer",
                 "description": null,
                 "fields": [
@@ -2972,18 +2720,6 @@
                                 "name": "String",
                                 "ofType": null
                             }
-                        },
-                        "isDeprecated": false,
-                        "deprecationReason": null
-                    },
-                    {
-                        "name": "stateDiff",
-                        "description": null,
-                        "args": [],
-                        "type": {
-                            "kind": "OBJECT",
-                            "name": "StateDiffChange",
-                            "ofType": null
                         },
                         "isDeprecated": false,
                         "deprecationReason": null
@@ -3095,29 +2831,6 @@
                 "inputFields": null,
                 "interfaces": [],
                 "enumValues": null,
-                "possibleTypes": null
-            },
-            {
-                "kind": "ENUM",
-                "name": "NFTType",
-                "description": null,
-                "fields": null,
-                "inputFields": null,
-                "interfaces": null,
-                "enumValues": [
-                    {
-                        "name": "ERC721",
-                        "description": null,
-                        "isDeprecated": false,
-                        "deprecationReason": null
-                    },
-                    {
-                        "name": "ERC1155",
-                        "description": null,
-                        "isDeprecated": false,
-                        "deprecationReason": null
-                    }
-                ],
                 "possibleTypes": null
             },
             {
@@ -3657,7 +3370,7 @@
                     },
                     {
                         "name": "getERC20TokenBalance",
-                        "description": "Get the number of ERC20 tokens of a contract owned by an address",
+                        "description": null,
                         "args": [
                             {
                                 "name": "contract",
@@ -3706,7 +3419,7 @@
                     },
                     {
                         "name": "getERC20TokenOwners",
-                        "description": "Get the owners of an ERC20 token",
+                        "description": "Returns a list of all addresses that own an ERC20Token",
                         "args": [
                             {
                                 "name": "contract",
@@ -3934,7 +3647,7 @@
                     },
                     {
                         "name": "getERC721TokenBalance",
-                        "description": "Get the count of ERC721 tokens of a contract that are owned by the address",
+                        "description": null,
                         "args": [
                             {
                                 "name": "contract",
@@ -3983,7 +3696,7 @@
                     },
                     {
                         "name": "getERC721TokenOwners",
-                        "description": "Get addresses owning a contract's ERC721 tokens",
+                        "description": "Returns a list of all addresses that own an ERC721Token",
                         "args": [
                             {
                                 "name": "contract",
@@ -4210,6 +3923,63 @@
                         "deprecationReason": null
                     },
                     {
+                        "name": "getERC721TransfersV2Tmp",
+                        "description": null,
+                        "args": [
+                            {
+                                "name": "limit",
+                                "description": null,
+                                "type": {
+                                    "kind": "SCALAR",
+                                    "name": "Int",
+                                    "ofType": null
+                                },
+                                "defaultValue": null,
+                                "isDeprecated": false,
+                                "deprecationReason": null
+                            },
+                            {
+                                "name": "nextKey",
+                                "description": null,
+                                "type": {
+                                    "kind": "SCALAR",
+                                    "name": "String",
+                                    "ofType": null
+                                },
+                                "defaultValue": null,
+                                "isDeprecated": false,
+                                "deprecationReason": null
+                            },
+                            {
+                                "name": "owner",
+                                "description": null,
+                                "type": {
+                                    "kind": "NON_NULL",
+                                    "name": null,
+                                    "ofType": {
+                                        "kind": "SCALAR",
+                                        "name": "String",
+                                        "ofType": null
+                                    }
+                                },
+                                "defaultValue": null,
+                                "isDeprecated": false,
+                                "deprecationReason": null
+                            }
+                        ],
+                        "type": {
+                            "kind": "NON_NULL",
+                            "name": null,
+                            "ofType": {
+                                "kind": "OBJECT",
+                                "name": "ERC721Transfers",
+                                "ofType": null
+                            }
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
                         "name": "getERC1155TokenTransfers",
                         "description": null,
                         "args": [
@@ -4267,8 +4037,8 @@
                         "deprecationReason": null
                     },
                     {
-                        "name": "getERC1155TokensByOwner",
-                        "description": "Get ERC1155 tokens owned by an address",
+                        "name": "getERC1155Transfers",
+                        "description": null,
                         "args": [
                             {
                                 "name": "limit",
@@ -4316,7 +4086,7 @@
                             "name": null,
                             "ofType": {
                                 "kind": "OBJECT",
-                                "name": "ERC1155TokenBalances",
+                                "name": "ERC1155Transfers",
                                 "ofType": null
                             }
                         },
@@ -4324,7 +4094,7 @@
                         "deprecationReason": null
                     },
                     {
-                        "name": "getERC1155Transfers",
+                        "name": "getERC1155TransfersV2Tmp",
                         "description": null,
                         "args": [
                             {
@@ -4471,7 +4241,64 @@
                         "deprecationReason": null
                     },
                     {
-                        "name": "getEthInternalTransactionTransfers",
+                        "name": "getEthItxTransfers",
+                        "description": null,
+                        "args": [
+                            {
+                                "name": "limit",
+                                "description": null,
+                                "type": {
+                                    "kind": "SCALAR",
+                                    "name": "Int",
+                                    "ofType": null
+                                },
+                                "defaultValue": null,
+                                "isDeprecated": false,
+                                "deprecationReason": null
+                            },
+                            {
+                                "name": "nextKey",
+                                "description": null,
+                                "type": {
+                                    "kind": "SCALAR",
+                                    "name": "String",
+                                    "ofType": null
+                                },
+                                "defaultValue": null,
+                                "isDeprecated": false,
+                                "deprecationReason": null
+                            },
+                            {
+                                "name": "owner",
+                                "description": null,
+                                "type": {
+                                    "kind": "NON_NULL",
+                                    "name": null,
+                                    "ofType": {
+                                        "kind": "SCALAR",
+                                        "name": "String",
+                                        "ofType": null
+                                    }
+                                },
+                                "defaultValue": null,
+                                "isDeprecated": false,
+                                "deprecationReason": null
+                            }
+                        ],
+                        "type": {
+                            "kind": "NON_NULL",
+                            "name": null,
+                            "ofType": {
+                                "kind": "OBJECT",
+                                "name": "ETHTransfers",
+                                "ofType": null
+                            }
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "getEthItxTransfers",
                         "description": null,
                         "args": [
                             {
@@ -4610,63 +4437,6 @@
                         "deprecationReason": null
                     },
                     {
-                        "name": "getEthTransactionTransfers",
-                        "description": null,
-                        "args": [
-                            {
-                                "name": "limit",
-                                "description": null,
-                                "type": {
-                                    "kind": "SCALAR",
-                                    "name": "Int",
-                                    "ofType": null
-                                },
-                                "defaultValue": null,
-                                "isDeprecated": false,
-                                "deprecationReason": null
-                            },
-                            {
-                                "name": "nextKey",
-                                "description": null,
-                                "type": {
-                                    "kind": "SCALAR",
-                                    "name": "String",
-                                    "ofType": null
-                                },
-                                "defaultValue": null,
-                                "isDeprecated": false,
-                                "deprecationReason": null
-                            },
-                            {
-                                "name": "owner",
-                                "description": null,
-                                "type": {
-                                    "kind": "NON_NULL",
-                                    "name": null,
-                                    "ofType": {
-                                        "kind": "SCALAR",
-                                        "name": "String",
-                                        "ofType": null
-                                    }
-                                },
-                                "defaultValue": null,
-                                "isDeprecated": false,
-                                "deprecationReason": null
-                            }
-                        ],
-                        "type": {
-                            "kind": "NON_NULL",
-                            "name": null,
-                            "ofType": {
-                                "kind": "OBJECT",
-                                "name": "ETHTransactionTransfers",
-                                "ofType": null
-                            }
-                        },
-                        "isDeprecated": false,
-                        "deprecationReason": null
-                    },
-                    {
                         "name": "getEthTransfers",
                         "description": null,
                         "args": [
@@ -4797,6 +4567,79 @@
                         "deprecationReason": null
                     },
                     {
+                        "name": "getEthTransfersBySubtype",
+                        "description": null,
+                        "args": [
+                            {
+                                "name": "limit",
+                                "description": null,
+                                "type": {
+                                    "kind": "SCALAR",
+                                    "name": "Int",
+                                    "ofType": null
+                                },
+                                "defaultValue": null,
+                                "isDeprecated": false,
+                                "deprecationReason": null
+                            },
+                            {
+                                "name": "nextKey",
+                                "description": null,
+                                "type": {
+                                    "kind": "SCALAR",
+                                    "name": "String",
+                                    "ofType": null
+                                },
+                                "defaultValue": null,
+                                "isDeprecated": false,
+                                "deprecationReason": null
+                            },
+                            {
+                                "name": "owner",
+                                "description": null,
+                                "type": {
+                                    "kind": "NON_NULL",
+                                    "name": null,
+                                    "ofType": {
+                                        "kind": "SCALAR",
+                                        "name": "String",
+                                        "ofType": null
+                                    }
+                                },
+                                "defaultValue": null,
+                                "isDeprecated": false,
+                                "deprecationReason": null
+                            },
+                            {
+                                "name": "subtype",
+                                "description": null,
+                                "type": {
+                                    "kind": "NON_NULL",
+                                    "name": null,
+                                    "ofType": {
+                                        "kind": "ENUM",
+                                        "name": "TransferSubtype",
+                                        "ofType": null
+                                    }
+                                },
+                                "defaultValue": null,
+                                "isDeprecated": false,
+                                "deprecationReason": null
+                            }
+                        ],
+                        "type": {
+                            "kind": "NON_NULL",
+                            "name": null,
+                            "ofType": {
+                                "kind": "OBJECT",
+                                "name": "ETHTransfers",
+                                "ofType": null
+                            }
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
                         "name": "getEthTransfersV2",
                         "description": null,
                         "args": [
@@ -4843,6 +4686,120 @@
                                     "kind": "SCALAR",
                                     "name": "String",
                                     "ofType": null
+                                },
+                                "defaultValue": null,
+                                "isDeprecated": false,
+                                "deprecationReason": null
+                            }
+                        ],
+                        "type": {
+                            "kind": "NON_NULL",
+                            "name": null,
+                            "ofType": {
+                                "kind": "OBJECT",
+                                "name": "ETHTransfers",
+                                "ofType": null
+                            }
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "getEthTxTransfers",
+                        "description": null,
+                        "args": [
+                            {
+                                "name": "limit",
+                                "description": null,
+                                "type": {
+                                    "kind": "SCALAR",
+                                    "name": "Int",
+                                    "ofType": null
+                                },
+                                "defaultValue": null,
+                                "isDeprecated": false,
+                                "deprecationReason": null
+                            },
+                            {
+                                "name": "nextKey",
+                                "description": null,
+                                "type": {
+                                    "kind": "SCALAR",
+                                    "name": "String",
+                                    "ofType": null
+                                },
+                                "defaultValue": null,
+                                "isDeprecated": false,
+                                "deprecationReason": null
+                            },
+                            {
+                                "name": "owner",
+                                "description": null,
+                                "type": {
+                                    "kind": "NON_NULL",
+                                    "name": null,
+                                    "ofType": {
+                                        "kind": "SCALAR",
+                                        "name": "String",
+                                        "ofType": null
+                                    }
+                                },
+                                "defaultValue": null,
+                                "isDeprecated": false,
+                                "deprecationReason": null
+                            }
+                        ],
+                        "type": {
+                            "kind": "NON_NULL",
+                            "name": null,
+                            "ofType": {
+                                "kind": "OBJECT",
+                                "name": "ETHTransfers",
+                                "ofType": null
+                            }
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "getEthTxTransfers",
+                        "description": null,
+                        "args": [
+                            {
+                                "name": "limit",
+                                "description": null,
+                                "type": {
+                                    "kind": "SCALAR",
+                                    "name": "Int",
+                                    "ofType": null
+                                },
+                                "defaultValue": null,
+                                "isDeprecated": false,
+                                "deprecationReason": null
+                            },
+                            {
+                                "name": "nextKey",
+                                "description": null,
+                                "type": {
+                                    "kind": "SCALAR",
+                                    "name": "String",
+                                    "ofType": null
+                                },
+                                "defaultValue": null,
+                                "isDeprecated": false,
+                                "deprecationReason": null
+                            },
+                            {
+                                "name": "owner",
+                                "description": null,
+                                "type": {
+                                    "kind": "NON_NULL",
+                                    "name": null,
+                                    "ofType": {
+                                        "kind": "SCALAR",
+                                        "name": "String",
+                                        "ofType": null
+                                    }
                                 },
                                 "defaultValue": null,
                                 "isDeprecated": false,
@@ -5280,6 +5237,298 @@
                         "deprecationReason": null
                     },
                     {
+                        "name": "getNFTTransfers",
+                        "description": null,
+                        "args": [
+                            {
+                                "name": "address",
+                                "description": null,
+                                "type": {
+                                    "kind": "NON_NULL",
+                                    "name": null,
+                                    "ofType": {
+                                        "kind": "SCALAR",
+                                        "name": "String",
+                                        "ofType": null
+                                    }
+                                },
+                                "defaultValue": null,
+                                "isDeprecated": false,
+                                "deprecationReason": null
+                            },
+                            {
+                                "name": "limit",
+                                "description": null,
+                                "type": {
+                                    "kind": "SCALAR",
+                                    "name": "Int",
+                                    "ofType": null
+                                },
+                                "defaultValue": null,
+                                "isDeprecated": false,
+                                "deprecationReason": null
+                            },
+                            {
+                                "name": "nextKey",
+                                "description": null,
+                                "type": {
+                                    "kind": "SCALAR",
+                                    "name": "String",
+                                    "ofType": null
+                                },
+                                "defaultValue": null,
+                                "isDeprecated": false,
+                                "deprecationReason": null
+                            }
+                        ],
+                        "type": {
+                            "kind": "NON_NULL",
+                            "name": null,
+                            "ofType": {
+                                "kind": "OBJECT",
+                                "name": "NFTTransfers",
+                                "ofType": null
+                            }
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "getNFTTransfersByCounterparty",
+                        "description": null,
+                        "args": [
+                            {
+                                "name": "address",
+                                "description": null,
+                                "type": {
+                                    "kind": "NON_NULL",
+                                    "name": null,
+                                    "ofType": {
+                                        "kind": "SCALAR",
+                                        "name": "String",
+                                        "ofType": null
+                                    }
+                                },
+                                "defaultValue": null,
+                                "isDeprecated": false,
+                                "deprecationReason": null
+                            },
+                            {
+                                "name": "counterparty",
+                                "description": null,
+                                "type": {
+                                    "kind": "NON_NULL",
+                                    "name": null,
+                                    "ofType": {
+                                        "kind": "SCALAR",
+                                        "name": "String",
+                                        "ofType": null
+                                    }
+                                },
+                                "defaultValue": null,
+                                "isDeprecated": false,
+                                "deprecationReason": null
+                            },
+                            {
+                                "name": "limit",
+                                "description": null,
+                                "type": {
+                                    "kind": "SCALAR",
+                                    "name": "Int",
+                                    "ofType": null
+                                },
+                                "defaultValue": null,
+                                "isDeprecated": false,
+                                "deprecationReason": null
+                            },
+                            {
+                                "name": "nextKey",
+                                "description": null,
+                                "type": {
+                                    "kind": "SCALAR",
+                                    "name": "String",
+                                    "ofType": null
+                                },
+                                "defaultValue": null,
+                                "isDeprecated": false,
+                                "deprecationReason": null
+                            }
+                        ],
+                        "type": {
+                            "kind": "NON_NULL",
+                            "name": null,
+                            "ofType": {
+                                "kind": "OBJECT",
+                                "name": "NFTTransfers",
+                                "ofType": null
+                            }
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "getNFTTransfersByCounterpartyAndDirection",
+                        "description": null,
+                        "args": [
+                            {
+                                "name": "address",
+                                "description": null,
+                                "type": {
+                                    "kind": "NON_NULL",
+                                    "name": null,
+                                    "ofType": {
+                                        "kind": "SCALAR",
+                                        "name": "String",
+                                        "ofType": null
+                                    }
+                                },
+                                "defaultValue": null,
+                                "isDeprecated": false,
+                                "deprecationReason": null
+                            },
+                            {
+                                "name": "counterparty",
+                                "description": null,
+                                "type": {
+                                    "kind": "NON_NULL",
+                                    "name": null,
+                                    "ofType": {
+                                        "kind": "SCALAR",
+                                        "name": "String",
+                                        "ofType": null
+                                    }
+                                },
+                                "defaultValue": null,
+                                "isDeprecated": false,
+                                "deprecationReason": null
+                            },
+                            {
+                                "name": "direction",
+                                "description": null,
+                                "type": {
+                                    "kind": "NON_NULL",
+                                    "name": null,
+                                    "ofType": {
+                                        "kind": "ENUM",
+                                        "name": "TransferDirection",
+                                        "ofType": null
+                                    }
+                                },
+                                "defaultValue": null,
+                                "isDeprecated": false,
+                                "deprecationReason": null
+                            },
+                            {
+                                "name": "limit",
+                                "description": null,
+                                "type": {
+                                    "kind": "SCALAR",
+                                    "name": "Int",
+                                    "ofType": null
+                                },
+                                "defaultValue": null,
+                                "isDeprecated": false,
+                                "deprecationReason": null
+                            },
+                            {
+                                "name": "nextKey",
+                                "description": null,
+                                "type": {
+                                    "kind": "SCALAR",
+                                    "name": "String",
+                                    "ofType": null
+                                },
+                                "defaultValue": null,
+                                "isDeprecated": false,
+                                "deprecationReason": null
+                            }
+                        ],
+                        "type": {
+                            "kind": "NON_NULL",
+                            "name": null,
+                            "ofType": {
+                                "kind": "OBJECT",
+                                "name": "NFTTransfers",
+                                "ofType": null
+                            }
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "getNFTTransfersByDirection",
+                        "description": null,
+                        "args": [
+                            {
+                                "name": "address",
+                                "description": null,
+                                "type": {
+                                    "kind": "NON_NULL",
+                                    "name": null,
+                                    "ofType": {
+                                        "kind": "SCALAR",
+                                        "name": "String",
+                                        "ofType": null
+                                    }
+                                },
+                                "defaultValue": null,
+                                "isDeprecated": false,
+                                "deprecationReason": null
+                            },
+                            {
+                                "name": "direction",
+                                "description": null,
+                                "type": {
+                                    "kind": "NON_NULL",
+                                    "name": null,
+                                    "ofType": {
+                                        "kind": "ENUM",
+                                        "name": "TransferDirection",
+                                        "ofType": null
+                                    }
+                                },
+                                "defaultValue": null,
+                                "isDeprecated": false,
+                                "deprecationReason": null
+                            },
+                            {
+                                "name": "limit",
+                                "description": null,
+                                "type": {
+                                    "kind": "SCALAR",
+                                    "name": "Int",
+                                    "ofType": null
+                                },
+                                "defaultValue": null,
+                                "isDeprecated": false,
+                                "deprecationReason": null
+                            },
+                            {
+                                "name": "nextKey",
+                                "description": null,
+                                "type": {
+                                    "kind": "SCALAR",
+                                    "name": "String",
+                                    "ofType": null
+                                },
+                                "defaultValue": null,
+                                "isDeprecated": false,
+                                "deprecationReason": null
+                            }
+                        ],
+                        "type": {
+                            "kind": "NON_NULL",
+                            "name": null,
+                            "ofType": {
+                                "kind": "OBJECT",
+                                "name": "NFTTransfers",
+                                "ofType": null
+                            }
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
                         "name": "getNFTcontractsMeta",
                         "description": null,
                         "args": [
@@ -5314,7 +5563,7 @@
                     },
                     {
                         "name": "getOwnersERC20Tokens",
-                        "description": "Get ERC20 tokens owned by an address",
+                        "description": "Returns a list of all ERC20Tokens owned by an address",
                         "args": [
                             {
                                 "name": "nextKey",
@@ -5359,7 +5608,7 @@
                     },
                     {
                         "name": "getOwnersERC721Balances",
-                        "description": "Get ERC721 tokens owned by an address",
+                        "description": "Returns a list of ERC721 balances",
                         "args": [
                             {
                                 "name": "owner",
@@ -5396,7 +5645,7 @@
                     },
                     {
                         "name": "getOwnersERC721Tokens",
-                        "description": "Get ERC721 tokens of a contract owned by an address",
+                        "description": "Returns a list of all ERC721 Tokens owned by an address",
                         "args": [
                             {
                                 "name": "contract",
@@ -5453,7 +5702,7 @@
                     },
                     {
                         "name": "getOwnersERC721TokensV2",
-                        "description": "Get ERC721 tokens of a contract owned by an address (v2)",
+                        "description": null,
                         "args": [
                             {
                                 "name": "contract",
@@ -5514,63 +5763,6 @@
                             "ofType": {
                                 "kind": "OBJECT",
                                 "name": "ERC721TokenContract",
-                                "ofType": null
-                            }
-                        },
-                        "isDeprecated": false,
-                        "deprecationReason": null
-                    },
-                    {
-                        "name": "getOwnersNFTTokens",
-                        "description": null,
-                        "args": [
-                            {
-                                "name": "address",
-                                "description": null,
-                                "type": {
-                                    "kind": "NON_NULL",
-                                    "name": null,
-                                    "ofType": {
-                                        "kind": "SCALAR",
-                                        "name": "String",
-                                        "ofType": null
-                                    }
-                                },
-                                "defaultValue": null,
-                                "isDeprecated": false,
-                                "deprecationReason": null
-                            },
-                            {
-                                "name": "limit",
-                                "description": null,
-                                "type": {
-                                    "kind": "SCALAR",
-                                    "name": "Int",
-                                    "ofType": null
-                                },
-                                "defaultValue": null,
-                                "isDeprecated": false,
-                                "deprecationReason": null
-                            },
-                            {
-                                "name": "nextKey",
-                                "description": null,
-                                "type": {
-                                    "kind": "SCALAR",
-                                    "name": "String",
-                                    "ofType": null
-                                },
-                                "defaultValue": null,
-                                "isDeprecated": false,
-                                "deprecationReason": null
-                            }
-                        ],
-                        "type": {
-                            "kind": "NON_NULL",
-                            "name": null,
-                            "ofType": {
-                                "kind": "OBJECT",
-                                "name": "NFTTokenBalances",
                                 "ofType": null
                             }
                         },
@@ -5717,7 +5909,7 @@
                     },
                     {
                         "name": "getTimestamp",
-                        "description": "Returns the current server time in UTC milliseconds",
+                        "description": null,
                         "args": [],
                         "type": {
                             "kind": "NON_NULL",
@@ -6228,7 +6420,7 @@
                     },
                     {
                         "name": "newTransfersCompleteFeed",
-                        "description": "A blocks transfers of a given type have finished being processed",
+                        "description": null,
                         "args": [],
                         "type": {
                             "kind": "NON_NULL",
@@ -7542,45 +7734,6 @@
             },
             {
                 "kind": "OBJECT",
-                "name": "TransactionStateDiffChange",
-                "description": null,
-                "fields": [
-                    {
-                        "name": "from",
-                        "description": null,
-                        "args": [],
-                        "type": {
-                            "kind": "OBJECT",
-                            "name": "BalanceDiff",
-                            "ofType": null
-                        },
-                        "isDeprecated": false,
-                        "deprecationReason": null
-                    },
-                    {
-                        "name": "to",
-                        "description": null,
-                        "args": [],
-                        "type": {
-                            "kind": "NON_NULL",
-                            "name": null,
-                            "ofType": {
-                                "kind": "OBJECT",
-                                "name": "BalanceDiff",
-                                "ofType": null
-                            }
-                        },
-                        "isDeprecated": false,
-                        "deprecationReason": null
-                    }
-                ],
-                "inputFields": null,
-                "interfaces": [],
-                "enumValues": null,
-                "possibleTypes": null
-            },
-            {
-                "kind": "OBJECT",
                 "name": "Transfer",
                 "description": null,
                 "fields": [
@@ -7624,22 +7777,6 @@
                             "kind": "SCALAR",
                             "name": "Boolean",
                             "ofType": null
-                        },
-                        "isDeprecated": false,
-                        "deprecationReason": null
-                    },
-                    {
-                        "name": "subtype",
-                        "description": null,
-                        "args": [],
-                        "type": {
-                            "kind": "NON_NULL",
-                            "name": null,
-                            "ofType": {
-                                "kind": "ENUM",
-                                "name": "TransferSubtype",
-                                "ofType": null
-                            }
                         },
                         "isDeprecated": false,
                         "deprecationReason": null
@@ -7702,22 +7839,6 @@
                             "ofType": {
                                 "kind": "SCALAR",
                                 "name": "String",
-                                "ofType": null
-                            }
-                        },
-                        "isDeprecated": false,
-                        "deprecationReason": null
-                    },
-                    {
-                        "name": "type",
-                        "description": null,
-                        "args": [],
-                        "type": {
-                            "kind": "NON_NULL",
-                            "name": null,
-                            "ofType": {
-                                "kind": "ENUM",
-                                "name": "TransferType",
                                 "ofType": null
                             }
                         },
@@ -7805,13 +7926,13 @@
                 "interfaces": null,
                 "enumValues": [
                     {
-                        "name": "BlockReward",
+                        "name": "BLOCK_REWARD",
                         "description": null,
                         "isDeprecated": false,
                         "deprecationReason": null
                     },
                     {
-                        "name": "DaoHardFork",
+                        "name": "DAO_HARD_FORK",
                         "description": null,
                         "isDeprecated": false,
                         "deprecationReason": null
@@ -7835,31 +7956,25 @@
                         "deprecationReason": null
                     },
                     {
-                        "name": "Genesis",
+                        "name": "ETH_ITX",
                         "description": null,
                         "isDeprecated": false,
                         "deprecationReason": null
                     },
                     {
-                        "name": "InternalTransaction",
+                        "name": "ETH_TX",
                         "description": null,
                         "isDeprecated": false,
                         "deprecationReason": null
                     },
                     {
-                        "name": "Transaction",
+                        "name": "GENESIS",
                         "description": null,
                         "isDeprecated": false,
                         "deprecationReason": null
                     },
                     {
-                        "name": "UncleReward",
-                        "description": null,
-                        "isDeprecated": false,
-                        "deprecationReason": null
-                    },
-                    {
-                        "name": "Unknown",
+                        "name": "UNCLE_REWARD",
                         "description": null,
                         "isDeprecated": false,
                         "deprecationReason": null
