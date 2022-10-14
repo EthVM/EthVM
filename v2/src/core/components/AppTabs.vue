@@ -1,7 +1,30 @@
 <template>
-    <v-tabs v-model="state.activeTab" :density="xs ? 'compact' : 'default'" color="tabActive" end @update:model-value="changeTab" class="mr-2 mr-sm-10">
-        <v-tab v-for="(i, index) in props.tabs" :key="index" :value="i.value" class="text-h6 rounded-t-xl text-uppercase">{{ i.title }}</v-tab>
-    </v-tabs>
+    <div>
+        <v-tabs
+            v-if="!props.btnVariant"
+            v-model="state.activeTab"
+            :density="xs ? 'compact' : 'default'"
+            color="tabActive"
+            end
+            @update:model-value="changeTab"
+            class="mr-2 mr-sm-10"
+        >
+            <v-tab v-for="(i, index) in props.tabs" :key="index" :value="i.value" class="text-h6 rounded-t-xl text-uppercase">{{ i.title }}</v-tab>
+        </v-tabs>
+        <v-row v-else>
+            <v-btn
+                v-for="(i, index) in props.tabs"
+                :key="index"
+                class="mx-1"
+                color="textPrimary"
+                :variant="i.value === state.activeTab ? 'flat' : 'outlined'"
+                rounded="pill"
+                height="24"
+                @click="btnClick(i.value)"
+                >{{ i.title }}</v-btn
+            >
+        </v-row>
+    </div>
 </template>
 
 <script setup lang="ts">
@@ -15,8 +38,11 @@ interface PropType {
     modelValue: string
     tabs: Tab[]
     routes: string[]
+    btnVariant?: boolean
 }
-const props = defineProps<PropType>()
+const props = withDefaults(defineProps<PropType>(), {
+    btnVariant: false
+})
 
 const emit = defineEmits<{
     (e: 'update:modelValue', tabId: string): void
@@ -30,6 +56,18 @@ const state = reactive({
 
 const router = useRouter()
 const route = useRoute()
+
+/**
+ * Sets active tab id to param
+ * and update active tab and
+ * emit tab id to parent
+ *
+ * @param {string} activeTab
+ */
+const btnClick = (value: string): void => {
+    state.activeTab = value
+    emit('update:modelValue', state.activeTab)
+}
 /**
  * Sets active tab id to param
  * and update active tab and
@@ -76,6 +114,3 @@ onBeforeRouteUpdate(async to => {
     }
 })
 </script>
-
-<style lang="css">
-</style>

@@ -1,9 +1,10 @@
 <template>
     <div class="position-relative">
         <v-row align="center" justify="start" class="mt-5" :class="!state.showMoreDetails ? 'mb-5' : 'mb-1'" @click="toggleMoreDetails">
-            <v-col cols="6" sm="4" md="2" lg="3">
+            <v-col cols="6" sm="6" md="4" lg="4">
                 <v-row align="center" class="ma-0 flex-nowrap">
-                    <div class="mr-4">
+                    <app-btn-icon :icon="isFav ? 'star' : 'star_outline'" @click="setFavoriteToken" />
+                    <div class="mr-4 ml-5">
                         <v-img :src="tokenImage" width="25px" height="25px" />
                     </div>
                     <div style="display: grid">
@@ -24,28 +25,21 @@
             </v-col>
             <v-col cols="3" md="2">
                 <p class="mb-0">
-                    {{ tokenPrice.value }}
+                    {{ props.token.getPriceFormatted() }}
                 </p>
             </v-col>
             <v-col cols="2" sm="3" md="2">
-                <p :class="priceChangeClass">{{ percentageChange.value }}%</p>
+                <p :class="priceChangeClass">{{ props.token.getPriceChangeFormatted() }}</p>
             </v-col>
             <v-col md="2" class="d-none d-md-block">
                 <p class="mb-0">
-                    {{ tokenVolume.value }}
+                    {{ props.token.getVolumeFormatted() }}
                 </p>
             </v-col>
             <v-col md="2" class="d-none d-md-block">
                 <p class="mb-0">
-                    {{ tokenMarketCap.value }}
+                    {{ props.token.getMarketCapFormatted() }}
                 </p>
-            </v-col>
-            <v-col cols="1" sm="2" lg="1">
-                <app-btn-icon
-                    :icon="favoriteTokens.has(props.token.contract) ? 'star' : 'star_outline'"
-                    @click="$emit('setFavorite', token.contract)"
-                    size="24"
-                />
             </v-col>
         </v-row>
         <div v-if="state.showMoreDetails" class="pb-5 text-subtitle-2 font-weight-regular">
@@ -54,7 +48,7 @@
                     <div>
                         <p class="text-info">Volume</p>
                         <p class="mb-0">
-                            {{ tokenVolume.value }}
+                            {{ props.token.getVolumeFormatted() }}
                         </p>
                     </div>
                 </v-col>
@@ -62,7 +56,7 @@
                     <div>
                         <p class="text-info">Market Cap</p>
                         <p class="mb-0">
-                            {{ tokenMarketCap.value }}
+                            {{ props.token.getMarketCapFormatted() }}
                         </p>
                     </div>
                 </v-col>
@@ -75,25 +69,19 @@
 <script setup lang="ts">
 import AppTransformHash from '@core/components/AppTransformHash.vue'
 import AppBtnIcon from '@core/components/AppBtnIcon.vue'
-import { MarketDataFragment as TokenMarketData } from '@core/composables/CoinData/getLatestPrices.generated'
+import { TokenMarket } from '@module/address/models/TokenSort'
 import { computed, reactive, ref } from 'vue'
-import { formatUsdValue, FormattedNumber, formatIntegerValue, formatPercentageValue } from '@core/helper/number-format-helper'
-import BN from 'bignumber.js'
 import { eth } from '@core/helper'
 import { useDisplay } from 'vuetify'
+import { useStore } from '@/store'
 
 const { smAndDown } = useDisplay()
 
 interface ComponentProps {
-    token: TokenMarketData
-    favoriteTokens: Set<string>
+    token: TokenMarket
 }
 
 const props = defineProps<ComponentProps>()
-
-const emit = defineEmits<{
-    (e: 'setFavorite', contract: string): void
-}>()
 
 interface ComponentState {
     showMoreDetails: boolean
@@ -104,27 +92,7 @@ const state: ComponentState = reactive({
 })
 
 const tokenImage = computed<string>(() => {
-    return props.token.image || require('@/assets/icon-token.png')
-})
-
-const tokenPrice = computed<FormattedNumber>(() => {
-    const price = props.token.current_price || 0
-    return formatUsdValue(new BN(price))
-})
-
-const tokenVolume = computed<FormattedNumber>(() => {
-    const volume = props.token.total_volume || 0
-    return formatIntegerValue(new BN(volume))
-})
-
-const tokenMarketCap = computed<FormattedNumber>(() => {
-    const marketCap = props.token.market_cap || 0
-    return formatIntegerValue(new BN(marketCap))
-})
-
-const percentageChange = computed<FormattedNumber>(() => {
-    const change = props.token.price_change_percentage_24h || 0
-    return formatPercentageValue(new BN(change))
+    return props.token.image === '' ? require('@/assets/icon-token.png') : props.token.image
 })
 
 const priceChangeClass = computed<string>(() => {
@@ -145,6 +113,12 @@ const toggleMoreDetails = (): void => {
         state.showMoreDetails = !state.showMoreDetails
     }
 }
-</script>
+const store = useStore()
 
-<style scoped></style>
+const isFav = computed<boolean>(() => {
+    return store.tokenIsFav(props.token.contract || '')
+})
+const setFavoriteToken = (): void => {
+    isFav.value ? store.removeFavToken(props.token.contract || '') : store.addFavToken(props.token.contract || '')
+}
+</script>
