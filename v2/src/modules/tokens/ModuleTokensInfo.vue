@@ -151,7 +151,8 @@ const tokens = computed<TokenSortMarket | null>(() => {
     if (!store.loadingCoinData && tokensWithMarketCap) {
         const filtered = tokensWithMarketCap.value.filter((x): x is TokenMarketData => x !== null)
         const all = filtered.map(i => new TokenMarket(i))
-        return new TokenSortMarket(all)
+        const topTokens = new TokenSortMarket(all).getSortedTokens(TOKEN_FILTER_VALUES[13]).splice(0, 1000)
+        return new TokenSortMarket(topTokens)
     }
     return null
 })
@@ -198,23 +199,6 @@ const sortTable = (key: KEY): void => {
     state.sortDirection = state.sortDirection === DIRECTION.HIGH ? DIRECTION.LOW : DIRECTION.HIGH
     state.sortKey = `${key}_${state.sortDirection}`
 }
-
-// const loadMoreData = (e: boolean): void => {
-//     setPage(state.index + 1)
-// }
-
-// watch(
-//     () => store.loadingCoinData,
-//     () => {
-//         setTokensData()
-//     }
-// )
-
-// onMounted(() => {
-//     if (!store.loadingCoinData && tokensWithMarketCap) {
-//         setTokensData()
-//     }
-// })
 </script>
 
 <style scoped lang="scss">
