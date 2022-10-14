@@ -1,0 +1,38 @@
+fragment ItxTransfer on Transfer {
+    transactionHash
+    block
+    timestamp
+    from
+    to
+    txFee
+    status
+}
+
+fragment BalanceFragment on BalanceDiff {
+    before
+    after
+}
+
+fragment EthItxTransfers on EthTransfer {
+    transfer {
+        ...ItxTransfer
+    }
+    stateDiff {
+        to {
+            ...BalanceFragment
+        }
+        from {
+            ...BalanceFragment
+        }
+    }
+    value
+}
+
+query getEthItxTransfers($hash: String!, $_limit: Int, $_nextKey: String) {
+    getEthItxTransfers(owner: $hash, limit: $_limit, nextKey: $_nextKey) {
+        transfers {
+            ...EthItxTransfers
+        }
+        nextKey
+    }
+}
