@@ -42,19 +42,19 @@
                             <v-col cols="6" sm="4">
                                 <div class="block-info mb-5">
                                     <p class="text-button mb-1">Gas Limit</p>
-                                    <p class="text-body-1 text-uppercase">{{ formatNumber(uncle.block.gasLimit) }}</p>
+                                    <p>{{ formatNumber(uncle.block.gasLimit) }}</p>
                                 </div>
                             </v-col>
                             <v-col cols="6" sm="4">
                                 <div class="block-info mb-5">
                                     <p class="text-button mb-1">Gas Used</p>
-                                    <p class="text-body-1">{{ formatNumber(uncle.block.gasUsed) }}</p>
+                                    <p>{{ formatNumber(uncle.block.gasUsed) }}</p>
                                 </div>
                             </v-col>
                             <v-col cols="6" sm="4">
                                 <div class="block-info mb-5">
                                     <p class="text-button mb-1">Position</p>
-                                    <p class="text-body-1">{{ uncle.unclePosition }}</p>
+                                    <p>{{ uncle.unclePosition }}</p>
                                 </div>
                             </v-col>
                         </v-row>
@@ -120,56 +120,6 @@ onError(error => {
 
 const uncle = computed<UncleDetailsType | undefined>(() => {
     return uncleData.value?.getUncleByHash
-})
-
-const uncleDetails = computed<Detail[]>(() => {
-    const details: Detail[] = [
-        {
-            title: 'Uncle Height',
-            detail: uncle.value && formatNumber(uncle.value?.block.summary.number)
-        },
-        {
-            title: 'Uncle Position',
-            detail: uncle.value?.unclePosition
-        },
-        {
-            title: 'Hash',
-            detail: uncle.value?.block.hash,
-            copy: true,
-            mono: true
-        },
-        {
-            title: 'Included in Block #',
-            detail: uncle.value?.parentBlockNumber,
-            link: `/block/number/${uncle.value?.parentBlockNumber}`
-        },
-        {
-            title: 'Miner',
-            detail: uncle.value?.block.summary.miner,
-            link: `/address/${uncle.value?.block.summary.miner}`,
-            copy: true,
-            mono: true,
-            toChecksum: true
-        },
-        {
-            title: 'Timestamp',
-            detail: uncle.value && new Date(uncle.value?.block.summary.timestamp * 1e3).toString()
-        },
-        {
-            title: 'SHA3',
-            detail: uncle.value?.block.sha3Uncles,
-            mono: true
-        },
-        {
-            title: 'Gas Limit',
-            detail: uncle.value && formatNumber(uncle.value?.block.gasLimit)
-        },
-        {
-            title: 'Gas Used',
-            detail: uncle.value && formatNumber(uncle.value?.block.gasUsed)
-        }
-    ]
-    return details
 })
 
 const timestamp = computed<string>(() => {
