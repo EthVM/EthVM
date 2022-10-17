@@ -5,14 +5,7 @@
             Mobile (XS-SM)
           =====================================================================================
         -->
-        <v-row
-            v-if="xs"
-            align="center"
-            justify="start"
-            class="my-5 px-0 text-body-1 font-weight-regular"
-            :class="state.showMoreDetails ? 'mb-0' : null"
-            @click="toggleMoreDetails"
-        >
+        <v-row v-if="xs" align="center" justify="start" class="my-5 px-0" :class="state.showMoreDetails ? 'mb-0' : null" @click="toggleMoreDetails">
             <v-col cols="6">
                 <div class="d-flex align-start">
                     <div class="mr-3">
@@ -43,14 +36,7 @@
             Tablet/ Desktop (SM - XL)
           =====================================================================================
         -->
-        <v-row
-            v-else
-            align="center"
-            justify="start"
-            class="my-5 px-0 text-subtitle-2 font-weight-regular"
-            :class="state.showMoreDetails ? 'mb-0' : null"
-            @click="toggleMoreDetails"
-        >
+        <v-row v-else align="center" justify="start" class="my-5 px-0" :class="state.showMoreDetails ? 'mb-0' : null" @click="toggleMoreDetails">
             <v-col v-if="!props.isPending && !props.isBlock" sm="3" lg="2">
                 <router-link :to="`/block/number/${transferObj.block}`" class="text-secondary pb-1">{{ transaction.block }}</router-link>
                 <p class="text-info mb-0">

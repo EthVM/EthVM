@@ -8,8 +8,15 @@ export enum ErrorMessagePendingTx {
 }
 
 export enum TitleStatus {
-    success = 'Success',
+    success = 'Successful',
     failed = 'Failed',
     pending = 'Pending',
     replaced = 'Replaced'
+}
+
+export enum TxStatus {
+    success = 'Successful Tx',
+    failed = 'Failed Tx',
+    pending = 'Pending Tx',
+    replaced = 'Replaced Tx'
 }

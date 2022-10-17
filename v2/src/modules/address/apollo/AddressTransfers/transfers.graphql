@@ -86,10 +86,14 @@ query getAddressERC721Transfers($hash: String!, $_limit: Int, $_nextKey: String)
     }
 }
 
+fragment StateDiffFragment on TxStateDiff {
+    owner
+    from
+    to
+}
+
 query getTransactionStateDiff($hash: String!){
     getTransactionStateDiff(hash: $hash) {
-        owner
-        from
-        to
+        ...StateDiffFragment
     }
 }
