@@ -5,7 +5,7 @@
                 Mobile (XS-SM)
               =====================================================================================
         -->
-        <v-row v-if="xs" align="start" justify="start" class="my-5 px-0 text-subtitle-2 font-weight-regular" @click="toggleMoreDetails">
+        <v-row v-if="xs" align="start" justify="start" class="my-5 px-0" @click="toggleMoreDetails">
             <v-col cols="6">
                 <router-link :to="`/block/number/${props.block.number}`" class="text-secondary">{{ _block.number }}</router-link>
                 <p class="text-info mb-0">{{ _block.timestamp }}</p>
@@ -33,7 +33,7 @@
                 Tablet/ Desktop (SM - XL)
               =====================================================================================
         -->
-        <v-row v-else align="center" justify="start" class="my-5 px-0 text-subtitle-2 font-weight-regular">
+        <v-row v-else align="center" justify="start" class="my-5 px-0">
             <v-col sm="2">
                 <router-link :to="`/block/number/${props.block.number}`" class="text-secondary">{{ _block.number }}</router-link>
             </v-col>

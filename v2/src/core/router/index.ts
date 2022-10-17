@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory, createWebHashHistory, RouteRecordRaw } from 'vue-router'
-import { ADDRESS_ROUTE_QUERY, ROUTE_NAME, Q_TOKEN_DETAILS, Q_BLOCKS_AND_TXS } from './routesNames'
+import { ADDRESS_ROUTE_QUERY, ROUTE_NAME, Q_TOKEN_DETAILS, Q_BLOCKS_AND_TXS, Q_BLOCK_DETAILS, Q_TXS_DETAILS } from './routesNames'
 import HomeView from '@view/ViewHome.vue'
 import BlocksView from '@view/ViewBlocks.vue'
 import BlocksAndTxsView from '@view/ViewBlocksAndTransactions.vue'
@@ -40,13 +40,15 @@ const routes: Array<RouteRecordRaw> = [
         path: ROUTE_NAME.BLOCK_NUMBER.PATH,
         name: ROUTE_NAME.BLOCK_NUMBER.NAME,
         component: BlockDetailsView,
-        props: true
+        props: route => ({ tab: route.query.t, blockRef: route.params.blockRef }),
+        beforeEnter: tabViewRouteGuard(Q_BLOCK_DETAILS[0])
     },
     {
         path: ROUTE_NAME.BLOCK_HASH.PATH,
         name: ROUTE_NAME.BLOCK_HASH.NAME,
         component: BlockDetailsView,
-        props: true
+        props: route => ({ tab: route.query.t, blockRef: route.params.blockRef }),
+        beforeEnter: tabViewRouteGuard(Q_BLOCK_DETAILS[0])
     },
     {
         path: ROUTE_NAME.UNCLE_HASH.PATH,
@@ -63,7 +65,8 @@ const routes: Array<RouteRecordRaw> = [
         path: ROUTE_NAME.TX_HASH.PATH,
         name: ROUTE_NAME.TX_HASH.NAME,
         component: TxDetailsView,
-        props: true
+        props: route => ({ tab: route.query.t, txRef: route.params.txRef }),
+        beforeEnter: tabViewRouteGuard(Q_TXS_DETAILS[0])
     },
     {
         path: ROUTE_NAME.TXS_PENDING.PATH,

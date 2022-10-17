@@ -5,14 +5,7 @@
             Mobile (XS-SM)
           =====================================================================================
         -->
-        <v-row
-            v-if="xs"
-            align="center"
-            justify="start"
-            class="my-5 px-0 text-body-1 font-weight-regular"
-            :class="state.showMoreDetails ? 'mb-0' : null"
-            @click="toggleMoreDetails"
-        >
+        <v-row v-if="xs" align="center" justify="start" class="my-5 px-0" :class="state.showMoreDetails ? 'mb-0' : null" @click="toggleMoreDetails">
             <v-col cols="6">
                 <div class="d-flex align-start">
                     <div class="mr-3">
@@ -43,14 +36,7 @@
             Tablet/ Desktop (SM - XL)
           =====================================================================================
         -->
-        <v-row
-            v-else
-            align="center"
-            justify="start"
-            class="my-5 px-0 text-subtitle-2 font-weight-regular"
-            :class="state.showMoreDetails ? 'mb-0' : null"
-            @click="toggleMoreDetails"
-        >
+        <v-row v-else align="center" justify="start" class="my-5 px-0" :class="state.showMoreDetails ? 'mb-0' : null" @click="toggleMoreDetails">
             <v-col v-if="!props.isPending && !props.isBlock" sm="3" lg="2">
                 <router-link :to="`/block/number/${transferObj.block}`" class="text-secondary pb-1">{{ transaction.block }}</router-link>
                 <p class="text-info mb-0">
@@ -67,9 +53,10 @@
                     <v-icon v-if="!props.isBlock" color="success" class="ml-5">east</v-icon>
                 </div>
             </v-col>
-            <v-col v-if="props.isBlock">
+            <v-col v-if="!mdAndDown && props.isBlock">
                 <v-icon color="success" class="ml-5">east</v-icon>
             </v-col>
+            <v-spacer v-else />
             <v-col v-if="!mdAndDown" lg="2">
                 <div class="d-flex align-center">
                     <app-address-blockie :address="transaction.to || ''" :size="8" class="mr-1 mr-sm-2" />
