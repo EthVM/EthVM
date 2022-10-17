@@ -5,7 +5,7 @@
               TABLE HEADER
             =====================================================================================
         -->
-        <v-row v-if="!xs" align="center" justify="start" class="text-body-1 text-info d-none d-sm-flex">
+        <v-row v-if="!xs" align="center" justify="start" class="text-info d-none d-sm-flex">
             <v-col v-if="!props.pending && !props.isBlock" sm="3" lg="2"> Block / Timestamp </v-col>
             <v-col sm="3" lg="2"> Hash </v-col>
             <v-col v-if="!mdAndDown" lg="2"> From </v-col>

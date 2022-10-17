@@ -19,7 +19,7 @@
                     <app-btn-icon icon="chevron_right" color="secondary" :disabled="!props.nextBlock" :link="props.nextBlock" />
                 </template>
             </div>
-            <span class="text-info text-subtitle-2 font-weight-regular">
+            <span class="text-info text-body-1">
                 {{ props.timestamp }}
             </span>
             <v-row class="my-7">
@@ -93,9 +93,9 @@ import { Detail } from '@core/components/props'
 interface ComponentProps {
     nextBlock: string
     previousBlock: string
-    currBlockNumber: string
+    currBlockNumber: string | null
     timestamp: string
-    blockDetails: { [key: string]: Detail }
+    blockDetails: { [key: string]: Detail } | null
     isLoading: boolean
     isMined: boolean
 }
