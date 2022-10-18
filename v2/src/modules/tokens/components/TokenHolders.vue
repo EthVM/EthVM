@@ -114,7 +114,7 @@ const erc721TokenHolders = computed<Erc721TokenOwnersType | undefined>(() => {
 })
 
 onErc721TokenHolderLoaded(({ data }) => {
-    if (data.getERC721TokenOwners) {
+    if (data?.getERC721TokenOwners) {
         if (!data.getERC721TokenOwners.owners || data.getERC721TokenOwners.owners.length < 1) {
             emit('isNft', false)
         }

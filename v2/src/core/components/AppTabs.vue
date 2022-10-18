@@ -76,5 +76,3 @@ onBeforeRouteUpdate(async to => {
     }
 })
 </script>
-
-<style lang="css"></style>
