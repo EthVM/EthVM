@@ -1,5 +1,5 @@
 <template>
-    <v-dialog v-model="state.open" @update:model-value="changeValue" :max-width="props.width" scrollable :open-on-hover="false">
+    <v-dialog v-model="state.open" @update:model-value="changeValue" :max-width="props.width" :height="props.height" scrollable :open-on-hover="false">
         <v-card rounded="xl">
             <v-card-actions class="px-6 pt-6 pb-5">
                 <p class="text-h5 font-weight-bold">{{ props.title }}</p>
@@ -21,32 +21,34 @@ import AppBtnIcon from '@core/components/AppBtnIcon.vue'
 interface PropType {
     modelValue: boolean
     width?: string
+    height?: string
     title: string
 }
 const props = withDefaults(defineProps<PropType>(), {
-    width: '530'
+    width: '530',
+    height: '480'
 })
 
 const emit = defineEmits<{
     (e: 'update:modelValue', dialog: boolean): void
 }>()
 
-// const activeTab = ref(props.modelValue)
-
 const state = reactive({
     open: props.modelValue
 })
 
 /**
- * Sets active tab id to param
- * and update active tab and
- * emit tab id to parent
- *
+ * emits dialog state change to parent
  * @param {string} open
  */
 const changeValue = (): void => {
     emit('update:modelValue', state.open)
 }
+
+/**
+ * closes dialog and emits state change to parent
+ * @param {string} open
+ */
 const closeOnClick = (): void => {
     state.open = false
     changeValue()
@@ -54,7 +56,6 @@ const closeOnClick = (): void => {
 
 /**
  * Watching changes from the parent
- * Used for manual router history manupulation
  */
 watch(
     () => props.modelValue,

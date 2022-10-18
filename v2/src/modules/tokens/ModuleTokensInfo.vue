@@ -16,7 +16,7 @@
                     density="comfortable"
                     hide-details
                 />
-                <app-btn v-if="state.activeList === list[1].value" text="Add token"></app-btn>
+                <module-add-fav-token v-if="state.activeList === list[1].value" />
             </v-row>
             <v-row align="center" justify="start" class="text-body-1 text-info my-0 d-none d-sm-flex">
                 <v-col sm="6" md="4" lg="4">
@@ -74,10 +74,6 @@
                     <div v-for="token in tokensInPage" :key="token.contract">
                         <token-market-info-table-row v-if="token" :token="token" />
                     </div>
-                    <!-- <app-intersect v-if="totalPages > 1 && state.index < totalPages" @intersect="loadMoreData">
-                        <div class="skeleton-box rounded-xl mt-1 my-4" style="height: 24px"></div>
-                        <v-divider />
-                    </app-intersect> -->
                 </div>
                 <div v-else>
                     <v-row justify="center" class="my-0">
@@ -98,10 +94,10 @@
 </template>
 
 <script setup lang="ts">
-import AppBtn from '@core/components/AppBtn.vue'
 import AppTabs from '@core/components/AppTabs.vue'
 import { Tab } from '@/core/components/props'
 import TokenMarketInfoTableRow from '@module/tokens/components/TokenMarketInfo/TableRowTokenMarketInfo.vue'
+import ModuleAddFavToken from './ModuleAddFavToken.vue'
 import { useDisplay } from 'vuetify'
 import { computed, reactive } from 'vue'
 import { useStore } from '@/store'
@@ -151,7 +147,7 @@ const tokens = computed<TokenSortMarket | null>(() => {
     if (!store.loadingCoinData && tokensWithMarketCap) {
         const filtered = tokensWithMarketCap.value.filter((x): x is TokenMarketData => x !== null)
         const all = filtered.map(i => new TokenMarket(i))
-        const topTokens = new TokenSortMarket(all).getSortedTokens(TOKEN_FILTER_VALUES[13]).splice(0, 1000)
+        const topTokens = new TokenSortMarket(all).getSortedTokens(TOKEN_FILTER_VALUES[13]).splice(0, 500)
         return new TokenSortMarket(topTokens)
     }
     return null
