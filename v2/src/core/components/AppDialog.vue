@@ -47,7 +47,6 @@ const changeValue = (): void => {
 
 /**
  * closes dialog and emits state change to parent
- * @param {string} open
  */
 const closeOnClick = (): void => {
     state.open = false

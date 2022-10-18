@@ -1,5 +1,5 @@
 <template>
-    <app-search :is-loading="isLoading" :has-error="hasError" @onUserInput="executeSearch" @tokenSelected="routeToToken" @onSearchEnter="routeToFirst">
+    <search-core-input :is-loading="isLoading" :has-error="hasError" @onUserInput="executeSearch" @tokenSelected="routeToToken" @onSearchEnter="routeToFirst">
         <template #search-results>
             <!-- 
                 Search has Token result
@@ -78,11 +78,11 @@
                 </v-list-item>
             </v-list>
         </template>
-    </app-search>
+    </search-core-input>
 </template>
 
 <script setup lang="ts">
-import AppSearch from '@core/components/AppSearch.vue'
+import SearchCoreInput from '@/modules/search/components/SearchCoreInput.vue'
 import AppAddressBlockie from '@/core/components/AppAddressBlockie.vue'
 import { SearchTokenOption } from '@core/components/props/index'
 import AppTokenIcon from '@/core/components/AppTokenIcon.vue'

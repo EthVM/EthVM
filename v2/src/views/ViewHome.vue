@@ -34,7 +34,7 @@
 import BlockStatsModule from '@module/block/ModuleBlockStats.vue'
 import RecentBlocks from '@module/block/ModuleRecentBlocks.vue'
 import ModuleTxs from '@module/txs/ModuleTxs.vue'
-import ModuleSearch from '@module/search/ModuleSearch.vue'
+import ModuleSearch from '@/modules/search/ModuleAppSearch.vue'
 
 import { useAppViewGrid } from '@core/composables/AppViewGrid/AppViewGrid.composable'
 import { useDisplay } from 'vuetify/lib/framework.mjs'

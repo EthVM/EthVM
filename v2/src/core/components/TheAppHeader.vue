@@ -49,7 +49,7 @@ import { useDisplay } from 'vuetify/lib/framework.mjs'
 import { computed, ref, onMounted, nextTick, watch } from 'vue'
 import { useAppNavigation } from '../composables/AppNavigation/useAppNavigation.composable'
 import { useStore } from '@/store'
-import ModuleSearch from '@module/search/ModuleSearch.vue'
+import ModuleSearch from '@/modules/search/ModuleAppSearch.vue'
 import AppMenu from './AppMenu.vue'
 /* Vuetify BreakPoints */
 const { name, xs } = useDisplay()
