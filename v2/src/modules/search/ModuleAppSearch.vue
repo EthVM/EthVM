@@ -26,7 +26,7 @@
             <!--
                 Search has Address result
             -->
-            <v-list v-if="search.hashType === HASH_TYPE.AddressHash">
+            <v-list v-if="search.hashType === HASH_TYPE.AddressHash || search.hashType === HASH_TYPE.TokenHash">
                 <v-list-subheader>Address</v-list-subheader>
                 <v-list-item :title="removeSpaces(search.param)" class="overflow-hidden" @click="routeTo(search.param)" :active="tokensResult.length === 0">
                     <template v-slot:prepend>
@@ -308,6 +308,28 @@ const tokensResult = computed(() => {
                     flag: marketData !== false
                 }
             })
+        // Check if hash is of type TOKEN_HASH and get token from tokenMarketInfo
+        if (search.hashType === HashType.TokenHash) {
+            const token = getEthereumTokenByContract(search.param)
+            if (token) {
+                return [
+                    {
+                        text: token.name,
+                        subtext: token.symbol ? token.symbol : token.contract,
+                        price: token.current_price ? formatUsdValue(new BN(token.current_price)).value : undefined,
+                        icon: token.image,
+                        contract: token.contract
+                    }
+                ]
+            }
+            return [
+                {
+                    text: 'No Name',
+                    subtext: search.params,
+                    contract: search.params
+                }
+            ]
+        }
         const flagged = [...tokensInMarket.filter(i => i.flag), ...tokenFromPartialResult.filter(i => i.flag)]
         const notFlagged = [...tokensInMarket.filter(i => !i.flag), ...tokenFromPartialResult.filter(i => !i.flag)]
         return [...flagged, ...notFlagged]
@@ -388,7 +410,7 @@ const routeTo = (_param: string, isBlock = false): void => {
             })
         }
     } else {
-        if (search.hashType === HASH_TYPE.AddressHash) {
+        if (search.hashType === HASH_TYPE.AddressHash || search.hashType === HASH_TYPE.TokenHash) {
             router.push({
                 name: ROUTE_NAME.ADDRESS.NAME,
                 params: { [ROUTE_PROP.ADDRESS]: param }
