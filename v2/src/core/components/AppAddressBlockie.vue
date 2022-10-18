@@ -3,6 +3,7 @@
 </template>
 
 <script setup lang="ts">
+import { watch, ref } from 'vue'
 import createIcon from '@core/helper/blockies'
 const props = defineProps({
     address: {
@@ -14,11 +15,19 @@ const props = defineProps({
         default: 8
     }
 })
-
 /**
  * Creates and sets a blockie
  */
-const identicon = createIcon(props.address, { size: props.size })
+const identicon = ref(createIcon(props.address, { size: props.size }))
+
+watch(
+    () => props.address,
+    (newVal, oldVal) => {
+        if (newVal !== oldVal) {
+            identicon.value = createIcon(props.address, { size: props.size })
+        }
+    }
+)
 </script>
 
 <style scoped lang="scss"></style>

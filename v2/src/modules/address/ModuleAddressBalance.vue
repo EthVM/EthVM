@@ -118,7 +118,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, toRefs } from 'vue'
 import { useCoinData } from '@core/composables/CoinData/coinData.composable'
 import { useAddressEthBalance } from '@core/composables/AddressEthBalance/addressEthBalance.composable'
 import BN from 'bignumber.js'
@@ -142,8 +142,9 @@ const props = defineProps({
 /**------------------------
  * Balance (ETH & FIAT) Handling
  -------------------------*/
+const { addressRef } = toRefs(props)
 
-const { initialLoad: loadingBalanceData, balanceFiatFormatted, balanceFormatted } = useAddressEthBalance(props.addressRef)
+const { initialLoad: loadingBalanceData, balanceFiatFormatted, balanceFormatted } = useAddressEthBalance(addressRef)
 
 /**------------------------
  * Price and Change Handling
