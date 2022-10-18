@@ -3,16 +3,13 @@
         <app-btn text="Add token" @click="setDialog(true)"></app-btn>
         <app-dialog v-model="state.openDialog" title="Add Token" @update:modelValue="setDialog">
             <template #no-scroll-content>
-                <v-card rounded="pill" variant="outlined" min-width="100%">
-                    <v-text-field
-                        v-model="state.tokenSearch"
-                        placeholder="Search token name "
-                        prepend-inner-icon="search"
-                        variant="solo"
-                        density="comfortable"
-                        hide-details
-                        clearable /></v-card
-            ></template>
+                <app-input
+                    v-model="state.tokenSearch"
+                    :has-error="hasUserError"
+                    place-holder="Search token name"
+                    @on-user-input="setNewTokenSearch"
+                ></app-input>
+            </template>
             <template #scroll-content>
                 <template v-if="!loadingCoinData">
                     <template v-if="searchTokens.length === 0 && state.tokenSearch === ''">
@@ -39,6 +36,7 @@
 import AppBtn from '@core/components/AppBtn.vue'
 import AppDialog from '@core/components/AppDialog.vue'
 import AppNoResult from '@core/components/AppNoResult.vue'
+import AppInput from '@core/components/AppInput.vue'
 import TokenMarketInfoTableRow from '@module/tokens/components/TokenMarketInfo/TableRowTokenMarketInfo.vue'
 import { computed, reactive } from 'vue'
 import { useStore } from '@/store'
@@ -102,6 +100,22 @@ const searchTokens = computed<TokenMarket[]>(() => {
         return [...flagged, ...notFlagged.slice(0, 20)]
     }
     return []
+})
+
+/** -------------------
+ * Search Input Handler
+ * --------------------/
+
+/**
+ * Sets user input with timeout from child
+ * @param _value user input
+ */
+const setNewTokenSearch = (_value: string) => {
+    state.tokenSearch = _value
+}
+
+const hasUserError = computed<boolean>(() => {
+    return state.tokenSearch !== '' && searchTokens.value.length === 0
 })
 </script>
 
