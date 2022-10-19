@@ -135,7 +135,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, reactive, onMounted, onBeforeUnmount } from 'vue'
+import { computed, reactive, onMounted, onBeforeUnmount, toRefs, watch } from 'vue'
 import AppBtn from '@/core/components/AppBtn.vue'
 import AppNewUpdate from '@core/components/AppNewUpdate.vue'
 import TableRowTokenBalance from './components/TableRowTokenBalance.vue'
@@ -197,7 +197,9 @@ const state: ComponentState = reactive({
 /**------------------------
  * Tokens Data
  -------------------------*/
-const { erc20Tokens, loadingTokens, refetchTokens, tokenSort, tokenBalance } = useAddressToken(props.addressHash)
+const { addressHash } = toRefs(props)
+
+const { erc20Tokens, loadingTokens, refetchTokens, tokenSort, tokenBalance } = useAddressToken(addressHash)
 
 const hasTokens = computed<boolean>(() => {
     return !!erc20Tokens.value
@@ -291,9 +293,9 @@ onBeforeUnmount(() => {
 })
 
 const tableHeight = computed(() => {
-    if (props.isOverview && state.rowRefs) {
-        const refIds = Object.getOwnPropertyNames(state.rowRefs)
-        const rowHeight = state.rowRefs[refIds[0]]?.offsetHeight
+    if (props.isOverview && tokens.value.length > 0) {
+        const refId = tokens.value[0].contract
+        const rowHeight = state.rowRefs[refId]?.offsetHeight
         const offset = xs.value ? 4 : 16
         if (rowHeight) {
             const maxHeight = rowHeight * 6 + offset

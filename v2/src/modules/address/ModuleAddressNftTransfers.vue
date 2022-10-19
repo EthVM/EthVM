@@ -65,7 +65,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, reactive } from 'vue'
+import { computed, reactive, toRefs } from 'vue'
 import AppNewUpdate from '@core/components/AppNewUpdate.vue'
 import AppBtn from '@core/components/AppBtn.vue'
 import AppBtnIcon from '@core/components/AppBtnIcon.vue'
@@ -121,7 +121,9 @@ const state: ComponentState = reactive({
     index: 0
 })
 
-const { tokenBalanceValue, tokenCount, initialLoad: loadingAddressTokens } = useAddressToken(props.addressHash)
+const { addressHash } = toRefs(props)
+
+const { tokenBalanceValue, tokenCount, initialLoad: loadingAddressTokens } = useAddressToken(addressHash)
 const { loading: loadingMarketInfo } = useCoinData()
 
 const { result, fetchMore, refetch } = useGetAddressErc721TransfersQuery(

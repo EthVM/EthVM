@@ -1,10 +1,7 @@
 <template>
     <v-card elevation="1" rounded="xl">
         <v-row justify="start" align="center" class="py-4 pl-3 pl-sm-6">
-            <!-- <v-btn icon color="info" height="34px" width="34px" @click.stop="btnClick()">
-                <v-icon icon="bar_chart"></v-icon>
-            </v-btn> -->
-            <v-img :src="props.img" :max-width="[xs ? '40' : '56']" contain class="ml-sm-8 ml-md-0 ml-lg-8"></v-img>
+            <v-img :src="props.img" :max-width="maxWidth" contain class="ml-sm-8 ml-md-0 ml-lg-8"></v-img>
             <div class="ml-2 ml-sm-4">
                 <p class="text-info">{{ props.title }}</p>
                 <div v-if="!props.isLoading">
@@ -23,7 +20,7 @@
     </v-card>
 </template>
 <script setup lang="ts">
-import { onMounted, ref, watch } from 'vue'
+import { onMounted, ref, watch, computed } from 'vue'
 import { useDisplay } from 'vuetify/lib/framework.mjs'
 
 const { xs } = useDisplay()
@@ -50,6 +47,10 @@ const props = defineProps({
         type: String,
         required: true
     }
+})
+
+const maxWidth = computed<string>(() => {
+    return xs.value ? '40' : '56'
 })
 
 const startTimer = () => {

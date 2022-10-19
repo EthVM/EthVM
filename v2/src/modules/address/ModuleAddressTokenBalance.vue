@@ -16,7 +16,7 @@
 import { useAddressToken } from '@core/composables/AddressTokens/addressTokens.composable'
 import { useCoinData } from '@core/composables/CoinData/coinData.composable'
 import AddressBalanceTotals from './components/AddressBalanceTotals.vue'
-
+import { toRefs } from 'vue'
 const props = defineProps({
     addressRef: {
         type: String,
@@ -24,7 +24,9 @@ const props = defineProps({
     }
 })
 
-const { initialLoad, tokenBalanceValue, tokenCount } = useAddressToken(props.addressRef)
+const { addressRef } = toRefs(props)
+
+const { initialLoad, tokenBalanceValue, tokenCount } = useAddressToken(addressRef)
 const { loading: loadingMarketInfo } = useCoinData()
 </script>
 

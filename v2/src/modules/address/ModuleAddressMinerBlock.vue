@@ -8,7 +8,7 @@
             </div>
             <template v-if="props.isOverview">
                 <app-btn v-if="!smAndDown" text="More" isSmall icon="east" @click="goToAddressMiningPage"></app-btn>
-                <app-btn-icon v-else icon="more_horiz" @click="goToTokenTransfersPage"></app-btn-icon>
+                <app-btn-icon v-else icon="more_horiz" @click="goToAddressMiningPage"></app-btn-icon>
             </template>
         </v-card-title>
         <div>

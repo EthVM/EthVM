@@ -1,24 +1,26 @@
 import { TokenOwnersFragment, useGetOwnersErc20TokensQuery } from '@module/address/apollo/AddressTokens/tokens.generated'
-import { computed } from 'vue'
+import { computed, Ref } from 'vue'
 import { MarketDataFragment as TokenMarketData } from '@core/composables/CoinData/getLatestPrices.generated'
 import { useCoinData } from '@core/composables/CoinData/coinData.composable'
 import { TokenSort } from '@module/address/models/TokenSort'
 import { formatUsdValue } from '@core/helper/number-format-helper'
 import BN from 'bignumber.js'
 
-export function useAddressToken(addressHash: string) {
+export function useAddressToken(addressHash: Ref<string>) {
     const { getEthereumTokensMap, loading: loadingEthTokens } = useCoinData()
     const {
         result: erc20TokensResult,
-        loading: loadingTokens,
+        loading,
         refetch: refetchTokens
     } = useGetOwnersErc20TokensQuery(
-        {
-            hash: addressHash
-        },
+        () => ({
+            hash: addressHash.value
+        }),
         { notifyOnNetworkStatusChange: true }
     )
-
+    const loadingTokens = computed<boolean>(() => {
+        return loading.value
+    })
     const erc20Tokens = computed<Array<TokenOwnersFragment | null> | undefined>(() => {
         return erc20TokensResult.value?.getOwnersERC20Tokens.owners
     })

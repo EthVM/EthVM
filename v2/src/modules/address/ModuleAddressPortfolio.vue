@@ -28,7 +28,7 @@
 import { useAddressToken } from '@core/composables/AddressTokens/addressTokens.composable'
 import { useAddressEthBalance } from '@core/composables/AddressEthBalance/addressEthBalance.composable'
 import { useCoinData } from '@core/composables/CoinData/coinData.composable'
-import { computed } from 'vue'
+import { computed, toRefs } from 'vue'
 import { formatUsdValue, formatPercentageValue } from '@/core/helper/number-format-helper'
 import { useTheme } from 'vuetify/lib/framework.mjs'
 import BN from 'bignumber.js'
@@ -47,8 +47,10 @@ const props = defineProps({
     }
 })
 
-const { initialLoad: loadingTokensBalances, tokenTotalBalanceBN, tokenSort } = useAddressToken(props.addressRef)
-const { initialLoad: loadingEthBalance, balanceFiatBN: ethBalance } = useAddressEthBalance(props.addressRef)
+const { addressRef } = toRefs(props)
+
+const { initialLoad: loadingTokensBalances, tokenTotalBalanceBN, tokenSort } = useAddressToken(addressRef)
+const { initialLoad: loadingEthBalance, balanceFiatBN: ethBalance } = useAddressEthBalance(addressRef)
 const { loading: loadingMarketInfo, ethMarketInfo } = useCoinData()
 
 /**------------------------

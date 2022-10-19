@@ -140,13 +140,13 @@ const {
     onError: onTokenDetailsError,
     result
 } = props.isHolder
-    ? useGetErc20TokenBalanceQuery({
+    ? useGetErc20TokenBalanceQuery(() => ({
           contract: props.addressRef,
           owner: props.holderAddress
-      })
-    : useGetTokenInfoByContractQuery({
+      }))
+    : useGetTokenInfoByContractQuery(() => ({
           contract: props.addressRef
-      })
+      }))
 
 onTokenDetailsError(error => {
     const newError = JSON.stringify(error.message)
