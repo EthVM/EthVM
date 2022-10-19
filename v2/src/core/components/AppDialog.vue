@@ -60,7 +60,6 @@ watch(
     () => props.modelValue,
     newVal => {
         if (newVal !== state.open) {
-            console.log(props.modelValue)
             state.open = newVal
         }
     }
