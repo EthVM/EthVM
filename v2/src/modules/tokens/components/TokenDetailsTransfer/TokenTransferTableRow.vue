@@ -5,7 +5,7 @@
       Tablet/ Desktop (SM - XL)
     =====================================================================================
     -->
-        <v-row class="my-5 px-0 text-subtitle-2 font-weight-regular d-none d-sm-flex" align="center">
+        <v-row class="my-5 px-0 d-none d-sm-flex" align="center">
             <!-- Column 1: Tx Hash -->
             <v-col sm="3" :md="2">
                 <app-transform-hash is-blue is-short :hash="props.transfer.transfer.transactionHash" :link="`/tx/${props.transfer.transfer.transactionHash}`" />

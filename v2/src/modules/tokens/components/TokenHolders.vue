@@ -117,6 +117,8 @@ onErc721TokenHolderLoaded(({ data }) => {
     if (data?.getERC721TokenOwners) {
         if (!data.getERC721TokenOwners.owners || data.getERC721TokenOwners.owners.length < 1) {
             emit('isNft', false)
+        } else {
+            emit('isNft', true)
         }
     }
 })
