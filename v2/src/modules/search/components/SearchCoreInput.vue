@@ -18,7 +18,7 @@
                 @keyup.enter="onSearchEnter"
             >
                 <template v-slot:prepend-inner v-if="!xs">
-                    <v-icon :color="search.value ? (props.hasError ? 'error' : 'secondary') : 'info'" icon="search" />
+                    <v-icon :color="search.value ? (props.hasError ? 'error' : 'secondary') : 'greyInputText'" icon="search" />
                 </template>
             </v-text-field>
         </v-card>
@@ -45,7 +45,7 @@
 </template>
 
 <script setup lang="ts">
-import AppNoResult from './AppNoResult.vue'
+import AppNoResult from '../../../core/components/AppNoResult.vue'
 import { defineProps, defineEmits, reactive, onBeforeUnmount } from 'vue'
 import { useDisplay } from 'vuetify/lib/framework.mjs'
 

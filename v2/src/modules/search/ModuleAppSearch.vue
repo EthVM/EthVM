@@ -1,5 +1,5 @@
 <template>
-    <app-search :is-loading="isLoading" :has-error="hasError" @onUserInput="executeSearch" @tokenSelected="routeToToken" @onSearchEnter="routeToFirst">
+    <search-core-input :is-loading="isLoading" :has-error="hasError" @onUserInput="executeSearch" @tokenSelected="routeToToken" @onSearchEnter="routeToFirst">
         <template #search-results>
             <!--
                 Search has Token result
@@ -78,11 +78,11 @@
                 </v-list-item>
             </v-list>
         </template>
-    </app-search>
+    </search-core-input>
 </template>
 
 <script setup lang="ts">
-import AppSearch from '@core/components/AppSearch.vue'
+import SearchCoreInput from '@/modules/search/components/SearchCoreInput.vue'
 import AppAddressBlockie from '@/core/components/AppAddressBlockie.vue'
 import { SearchTokenOption } from '@core/components/props/index'
 import AppTokenIcon from '@/core/components/AppTokenIcon.vue'
@@ -222,7 +222,7 @@ onHashTypeError(() => {
     Fetches Possible token names from the user input from the backend
 ===================================================================================
 */
-const { loading: loadingCoinData, getEthereumTokenByContract, ethereumTokens } = useCoinData()
+const { loading: loadingCoinData, getEthereumTokenByContract, tokensWithMarketCap } = useCoinData()
 
 const {
     onResult: onTokenSearchResult,
@@ -268,19 +268,6 @@ onTokenSearchError(() => {
 
 ===================================================================================
 */
-
-/**
- * Computed property that returns tokens only with market cap and non empty elements
- * Used to reduce number of items to filter through the market data
- */
-const tokensWithMarketCap = computed(() => {
-    if (ethereumTokens.value.length > 0) {
-        const nonEmpty = ethereumTokens.value.filter((x): x is MarketDataFragment => x !== null)
-        const filteredRes = nonEmpty.filter(token => token && token.market_cap && token.market_cap > 0)
-        return filteredRes
-    }
-    return []
-})
 
 /**
  * Computed property that returns results into the search component list.

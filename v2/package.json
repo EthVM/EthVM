@@ -20,6 +20,7 @@
         "@graphql-codegen/typescript-vue-apollo": "^3.2.9",
         "@types/webpack-env": "^1.17.0",
         "@vue/apollo-composable": "^4.0.0-alpha.12",
+        "@vueuse/core": "^9.3.0",
         "apollo-link-rest": "0.9.0-rc.1",
         "assert": "^2.0.0",
         "bignumber.js": "^9.0.2",
