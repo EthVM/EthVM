@@ -1,7 +1,7 @@
 <template>
-    <app-search :is-loading="isLoading" :has-error="hasError" @onUserInput="executeSearch" @tokenSelected="routeToToken" @onSearchEnter="routeToFirst">
+    <search-core-input :is-loading="isLoading" :has-error="hasError" @onUserInput="executeSearch" @tokenSelected="routeToToken" @onSearchEnter="routeToFirst">
         <template #search-results>
-            <!-- 
+            <!--
                 Search has Token result
             -->
             <v-list v-if="tokensResult.length > 0">
@@ -23,7 +23,7 @@
                     >
                 </v-list-item>
             </v-list>
-            <!-- 
+            <!--
                 Search has Address result
             -->
             <v-list v-if="search.hashType === HASH_TYPE.AddressHash">
@@ -34,7 +34,7 @@
                     </template>
                 </v-list-item>
             </v-list>
-            <!-- 
+            <!--
                 Search has Tx result
             -->
             <v-list v-if="search.hashType === HASH_TYPE.TxHash" lines="one">
@@ -49,7 +49,7 @@
                 >
                 </v-list-item>
             </v-list>
-            <!-- 
+            <!--
                 Search has Block result
             -->
             <v-list v-if="search.isBlockNumber || search.hashType === HASH_TYPE.BlockHash">
@@ -63,7 +63,7 @@
                 >
                 </v-list-item>
             </v-list>
-            <!-- 
+            <!--
                 Search has Uncle result
             -->
             <v-list v-if="search.hashType === HASH_TYPE.UncleHash">
@@ -78,11 +78,11 @@
                 </v-list-item>
             </v-list>
         </template>
-    </app-search>
+    </search-core-input>
 </template>
 
 <script setup lang="ts">
-import AppSearch from '@core/components/AppSearch.vue'
+import SearchCoreInput from '@/modules/search/components/SearchCoreInput.vue'
 import AppAddressBlockie from '@/core/components/AppAddressBlockie.vue'
 import { SearchTokenOption } from '@core/components/props/index'
 import AppTokenIcon from '@/core/components/AppTokenIcon.vue'
@@ -90,7 +90,7 @@ import { eth } from '@core/helper/eth'
 import { reactive, watch, computed } from 'vue'
 import { useGetHashTypeQuery, useGetTokensBeginsWithQuery } from './apollo/searchDetails.generated'
 import { HashType } from '@/apollo/types'
-import { ROUTE_NAME, ROUTE_PROP } from '@core/router/routesNames'
+import { Q_TOKEN_DETAILS, ROUTE_NAME, ROUTE_PROP } from '@core/router/routesNames'
 import { useRouter } from 'vue-router'
 import { Buffer } from 'buffer'
 import { useCoinData } from '@core/composables/CoinData/coinData.composable'
@@ -222,7 +222,7 @@ onHashTypeError(() => {
     Fetches Possible token names from the user input from the backend
 ===================================================================================
 */
-const { loading: loadingCoinData, getEthereumTokenByContract, ethereumTokens } = useCoinData()
+const { loading: loadingCoinData, getEthereumTokenByContract, tokensWithMarketCap } = useCoinData()
 
 const {
     onResult: onTokenSearchResult,
@@ -268,19 +268,6 @@ onTokenSearchError(() => {
 
 ===================================================================================
 */
-
-/**
- * Computed property that returns tokens only with market cap and non empty elements
- * Used to reduce number of items to filter through the market data
- */
-const tokensWithMarketCap = computed(() => {
-    if (ethereumTokens.value.length > 0) {
-        const nonEmpty = ethereumTokens.value.filter((x): x is MarketDataFragment => x !== null)
-        const filteredRes = nonEmpty.filter(token => token && token.market_cap && token.market_cap > 0)
-        return filteredRes
-    }
-    return []
-})
 
 /**
  * Computed property that returns results into the search component list.
@@ -374,7 +361,13 @@ const router = useRouter()
  * @param {string} contract - token contract address
  */
 const routeToToken = (contract: string): void => {
-    router.push({ name: ROUTE_NAME.TOKEN.NAME, params: { [ROUTE_PROP.TOKEN]: contract } })
+    router.push({
+        name: ROUTE_NAME.TOKEN.NAME,
+        params: {
+            [ROUTE_PROP.TOKEN]: contract
+        },
+        query: { t: Q_TOKEN_DETAILS[0] }
+    })
 }
 
 /**

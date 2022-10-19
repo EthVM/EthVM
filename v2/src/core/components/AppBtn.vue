@@ -8,7 +8,7 @@
             :rounded="button.rounded"
             :min-width="button.minWidth"
             :disabled="componentProps.disabled"
-            min-height="24px"
+            :height="isSmall ? '24px' : '40px'"
             @click.stop="btnClick()"
             :class="[isSmall ? 'small-button px-3' : 'large-button px-6', 'text-button']"
         >
