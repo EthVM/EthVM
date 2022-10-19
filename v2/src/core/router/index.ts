@@ -133,8 +133,8 @@ const routes: Array<RouteRecordRaw> = [
     },
 
     {
-        path: ROUTE_NAME.FAV_ADDRESS.PATH,
-        name: ROUTE_NAME.FAV_ADDRESS.NAME,
+        path: ROUTE_NAME.PORTFOLIO.PATH,
+        name: ROUTE_NAME.PORTFOLIO.NAME,
         component: ViewTemp
     },
     {

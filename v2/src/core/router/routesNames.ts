@@ -102,9 +102,9 @@ const ROUTE_NAME: Route = {
         PATH: `/search/not_found/:${ROUTE_PROP.SEARCH_NOT_FOUND}`,
         NAME: 'search-not-found'
     },
-    FAV_ADDRESS: {
-        PATH: '/fav_addresses',
-        NAME: 'fav_addresses'
+    PORTFOLIO: {
+        PATH: '/portfolio',
+        NAME: 'portfolio'
     },
     FAV_TOKENS: {
         PATH: '/tokens/favorites',
@@ -115,7 +115,8 @@ const ROUTE_NAME: Route = {
 const ADDRESS_ROUTE_QUERY = {
     Q_NFTS: ['collection', 'transfers'],
     Q_TOKENS: ['balance', 'transfers'],
-    Q_MINER: ['blocks', 'uncles']
+    Q_MINER: ['blocks', 'uncles'],
+    Q_PORTFOLIO: ['adr-list', 'balances']
 }
 
 const Q_TOKEN_DETAILS = ['transfers', 'holders']
