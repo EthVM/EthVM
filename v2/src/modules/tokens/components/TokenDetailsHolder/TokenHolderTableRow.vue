@@ -5,7 +5,7 @@
       Tablet/ Desktop (SM - XL)
     =====================================================================================
     -->
-        <v-row class="my-5 px-0 text-subtitle-2 font-weight-regular d-none d-sm-flex" align="center">
+        <v-row class="my-5 px-0 d-none d-sm-flex" align="center">
             <!-- Column 1: Holders Address -->
             <v-col :sm="!isERC721 ? 3 : 4">
                 <div class="d-flex align-center">

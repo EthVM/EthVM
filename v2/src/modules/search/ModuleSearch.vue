@@ -1,7 +1,7 @@
 <template>
     <app-search :is-loading="isLoading" :has-error="hasError" @onUserInput="executeSearch" @tokenSelected="routeToToken" @onSearchEnter="routeToFirst">
         <template #search-results>
-            <!-- 
+            <!--
                 Search has Token result
             -->
             <v-list v-if="tokensResult.length > 0">
@@ -23,7 +23,7 @@
                     >
                 </v-list-item>
             </v-list>
-            <!-- 
+            <!--
                 Search has Address result
             -->
             <v-list v-if="search.hashType === HASH_TYPE.AddressHash">
@@ -34,7 +34,7 @@
                     </template>
                 </v-list-item>
             </v-list>
-            <!-- 
+            <!--
                 Search has Tx result
             -->
             <v-list v-if="search.hashType === HASH_TYPE.TxHash" lines="one">
@@ -49,7 +49,7 @@
                 >
                 </v-list-item>
             </v-list>
-            <!-- 
+            <!--
                 Search has Block result
             -->
             <v-list v-if="search.isBlockNumber || search.hashType === HASH_TYPE.BlockHash">
@@ -63,7 +63,7 @@
                 >
                 </v-list-item>
             </v-list>
-            <!-- 
+            <!--
                 Search has Uncle result
             -->
             <v-list v-if="search.hashType === HASH_TYPE.UncleHash">
@@ -90,7 +90,7 @@ import { eth } from '@core/helper/eth'
 import { reactive, watch, computed } from 'vue'
 import { useGetHashTypeQuery, useGetTokensBeginsWithQuery } from './apollo/searchDetails.generated'
 import { HashType } from '@/apollo/types'
-import { ROUTE_NAME, ROUTE_PROP } from '@core/router/routesNames'
+import { Q_TOKEN_DETAILS, ROUTE_NAME, ROUTE_PROP } from '@core/router/routesNames'
 import { useRouter } from 'vue-router'
 import { Buffer } from 'buffer'
 import { useCoinData } from '@core/composables/CoinData/coinData.composable'
@@ -374,7 +374,13 @@ const router = useRouter()
  * @param {string} contract - token contract address
  */
 const routeToToken = (contract: string): void => {
-    router.push({ name: ROUTE_NAME.TOKEN.NAME, params: { [ROUTE_PROP.TOKEN]: contract } })
+    router.push({
+        name: ROUTE_NAME.TOKEN.NAME,
+        params: {
+            [ROUTE_PROP.TOKEN]: contract
+        },
+        query: { t: Q_TOKEN_DETAILS[0] }
+    })
 }
 
 /**
