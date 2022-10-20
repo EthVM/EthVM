@@ -97,6 +97,9 @@ import { useCoinData } from '@core/composables/CoinData/coinData.composable'
 import { MarketDataFragment } from '@/core/composables/CoinData/getLatestPrices.generated'
 import { formatUsdValue } from '@/core/helper/number-format-helper'
 import BN from 'bignumber.js'
+import { useGetTokenInfoByContractQuery } from '@module/tokens/apollo/TokenDetails/tokenDetails.generated'
+import BigNumber from 'bignumber.js'
+import configs from '@/configs'
 /*
   ===================================================================================
     Initial Data
@@ -278,6 +281,42 @@ onTokenSearchError(() => {
  */
 const tokensResult = computed(() => {
     if (!loadingCoinData.value) {
+        // Check if hash is of type TOKEN_HASH and get token from tokenMarketInfo
+        if (search.hashType === HashType.TokenHash) {
+            const token = getEthereumTokenByContract(search.param)
+            if (token) {
+                return [
+                    {
+                        text: token.name,
+                        subtext: token.symbol ? token.symbol : token.contract,
+                        price: token.current_price ? formatUsdValue(new BN(token.current_price)).value : undefined,
+                        icon: token.image,
+                        contract: token.contract
+                    }
+                ]
+            }
+            if (!token) {
+                const { result: tokenInfo } = useGetTokenInfoByContractQuery(() => ({
+                    contract: search.param
+                }))
+
+                const tokenInfoDetails = tokenInfo.value?.getTokenInfoByContract
+                return [
+                    {
+                        text: tokenInfoDetails.name,
+                        subtext: tokenInfoDetails.symbol ? tokenInfoDetails.symbol : tokenInfoDetails.contract,
+                        contract: tokenInfoDetails.contract
+                    }
+                ]
+            }
+            return [
+                {
+                    text: 'No Name',
+                    subtext: search.param,
+                    contract: search.param
+                }
+            ]
+        }
         const tokensInMarket = tokensWithMarketCap.value
             .filter(i => i.symbol.toLowerCase().includes(search.param.toLowerCase()) || i.name.toLowerCase().includes(search.param.toLowerCase()))
             .map(i => {
@@ -308,28 +347,6 @@ const tokensResult = computed(() => {
                     flag: marketData !== false
                 }
             })
-        // Check if hash is of type TOKEN_HASH and get token from tokenMarketInfo
-        if (search.hashType === HashType.TokenHash) {
-            const token = getEthereumTokenByContract(search.param)
-            if (token) {
-                return [
-                    {
-                        text: token.name,
-                        subtext: token.symbol ? token.symbol : token.contract,
-                        price: token.current_price ? formatUsdValue(new BN(token.current_price)).value : undefined,
-                        icon: token.image,
-                        contract: token.contract
-                    }
-                ]
-            }
-            return [
-                {
-                    text: 'No Name',
-                    subtext: search.params,
-                    contract: search.params
-                }
-            ]
-        }
         const flagged = [...tokensInMarket.filter(i => i.flag), ...tokenFromPartialResult.filter(i => i.flag)]
         const notFlagged = [...tokensInMarket.filter(i => !i.flag), ...tokenFromPartialResult.filter(i => !i.flag)]
         return [...flagged, ...notFlagged]
