@@ -15,14 +15,21 @@
                 <app-btn text="More" is-small icon="east" @click="goToTokensBalancePage"></app-btn>
             </template>
         </v-card-title>
-        <address-balance-totals
-            title="Token Balance"
-            :is-loading="loadingTokens || loadingCoinData"
-            :balance="tokenBalance"
-            :subtext="`${tokensLength} total tokens`"
-            :class="{ 'd-sm-none': props.isOverview }"
-        >
-        </address-balance-totals>
+        <div class="d-flex align-center">
+            <v-col lg="3">
+                <address-balance-totals
+                    title="Token Balance"
+                    :is-loading="loadingTokens || loadingCoinData"
+                    :balance="tokenBalance"
+                    :subtext="`${tokensLength} total tokens`"
+                    :class="{ 'd-sm-none': props.isOverview }"
+                >
+                </address-balance-totals>
+            </v-col>
+            <div class="flex-grow-1">
+                <app-input place-holder="Search token name" v-model="state.searchParams" />
+            </div>
+        </div>
 
         <!--Table Header-->
         <v-row :dense="xs" :class="[isOverview ? 'mt-sm-5' : 'mt-sm-4', 'd-flex text-body-1 text-info mb-sm-3']" :justify="xs ? 'end' : 'start'">
@@ -34,7 +41,7 @@
                 Token:
                 XS: NONE
                 SM : 4
-                LG: 2 
+                LG: 2
              -->
             <v-col sm="4" :lg="props.isOverview ? 4 : 2" class="py-0 d-none d-sm-block">
                 <v-btn variant="text" color="info" class="font-weight-regular ml-n3" rounded="pill" size="small" @click="sortTable(SORT_KEY.NAME)">
@@ -59,7 +66,7 @@
                 XS: NONE
                 SM: 8
                 ------------
-                OTHER 
+                OTHER
                 XS: NONE
                 SM: 8
                 LG: 9
@@ -136,11 +143,12 @@
 
 <script setup lang="ts">
 import { computed, reactive, onMounted, onBeforeUnmount, toRefs, watch } from 'vue'
+import AppInput from '@core/components/AppInput.vue'
 import AppBtn from '@/core/components/AppBtn.vue'
 import AppNewUpdate from '@core/components/AppNewUpdate.vue'
 import TableRowTokenBalance from './components/TableRowTokenBalance.vue'
 import { useCoinData } from '@core/composables/CoinData/coinData.composable'
-import { TOKEN_FILTER_VALUES, KEY, DIRECTION } from '@module/address/models/TokenSort'
+import { TOKEN_FILTER_VALUES, KEY, DIRECTION, Token, TokenSortMarket, TokenMarket } from '@module/address/models/TokenSort'
 import { useAddressToken } from '@core/composables/AddressTokens/addressTokens.composable'
 import { AddressEventType } from '@/apollo/types'
 import { useRouter } from 'vue-router'
@@ -149,6 +157,7 @@ import AddressBalanceTotals from './components/AddressBalanceTotals.vue'
 import AppNoResult from '@/core/components/AppNoResult.vue'
 import { useDisplay } from 'vuetify/lib/framework.mjs'
 import { useAppTableRowRender } from '@core/composables/AppTableRowRender/useAppTableRowRender.composable'
+import { searchHelper } from '@core/helper/search'
 
 const { xs } = useDisplay()
 const { loading: loadingCoinData } = useCoinData()
@@ -184,6 +193,7 @@ interface ComponentState {
     sortDirection: string
     index: number
     rowRefs: RowRef
+    searchParams: string
 }
 
 const state: ComponentState = reactive({
@@ -192,7 +202,8 @@ const state: ComponentState = reactive({
     sortKey: TOKEN_FILTER_VALUES[5],
     sortDirection: 'high',
     index: 0,
-    rowRefs: {}
+    rowRefs: {},
+    searchParams: ''
 })
 /**------------------------
  * Tokens Data
@@ -216,9 +227,10 @@ const { renderState } = useAppTableRowRender(tokensLength.value)
 
 const tokens = computed(() => {
     if (!loadingTokens.value && hasTokens.value && tokenSort.value) {
-        return renderState.isActive
-            ? tokenSort.value?.getSortedTokens(state.sortKey).slice(0, renderState.maxItems)
-            : tokenSort.value?.getSortedTokens(state.sortKey)
+        const tokenSorted = tokenSort.value?.getSortedTokens(state.sortKey)
+        const [startsWith, notStartsWith] = searchHelper(tokenSorted, ['name', 'symbol', 'contract'], state.searchParams)
+        const tokens = [...startsWith, ...notStartsWith]
+        return renderState.isActive ? tokens.slice(0, renderState.maxItems) : tokens
     }
     return []
 })
