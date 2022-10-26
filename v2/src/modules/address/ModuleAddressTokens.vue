@@ -26,7 +26,7 @@
                 >
                 </address-balance-totals>
             </v-col>
-            <div class="flex-grow-1">
+            <div v-if="!props.isOverview" class="flex-grow-1">
                 <app-input place-holder="Search token name" v-model="state.searchParams" />
             </div>
         </div>
@@ -228,8 +228,12 @@ const { renderState } = useAppTableRowRender(tokensLength.value)
 const tokens = computed(() => {
     if (!loadingTokens.value && hasTokens.value && tokenSort.value) {
         const tokenSorted = tokenSort.value?.getSortedTokens(state.sortKey)
-        const [startsWith, notStartsWith] = searchHelper(tokenSorted, ['name', 'symbol', 'contract'], state.searchParams)
-        const tokens = [...startsWith, ...notStartsWith]
+        let tokens
+        if (state.searchParams) {
+            tokens = searchHelper(tokenSorted, ['name', 'symbol', 'contract'], state.searchParams)
+        } else {
+            tokens = tokenSorted
+        }
         return renderState.isActive ? tokens.slice(0, renderState.maxItems) : tokens
     }
     return []

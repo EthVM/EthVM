@@ -30,5 +30,5 @@ export const searchHelper = (items: any[], keysToSearch: string[], searchParams:
         }
     })
 
-    return [startsWith, notStartsWith]
+    return [...startsWith, ...notStartsWith]
 }
