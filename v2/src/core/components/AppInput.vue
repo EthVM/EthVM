@@ -1,28 +1,38 @@
 <template>
-    <v-card rounded="pill" :width="props.width" elevation="0">
-        <v-text-field
-            v-model="state.value"
-            :placeholder="props.placeHolder"
-            variant="solo"
-            density="comfortable"
-            hide-details
-            clearable
-            @update:modelValue="onUserInput"
-            @click:clear="resetValues"
-            bg-color="greyCard"
-            color="primary"
-        >
-            <template v-if="hasPreppendInner" #prepend-inner>
-                <slot name="prepend-inner">
-                    <v-icon :color="state.value ? (props.hasError ? 'error' : 'secondary') : 'greyInputText'" icon="search" />
-                </slot>
-            </template>
-        </v-text-field>
+    <v-card elevation="0" color="transparent" :width="props.width">
+        <v-card rounded="pill" :width="props.width" elevation="0">
+            <v-text-field
+                v-model="state.value"
+                :placeholder="props.placeHolder"
+                variant="solo"
+                density="comfortable"
+                hide-details
+                clearable
+                @update:modelValue="onUserInput"
+                @click:clear="resetValues"
+                bg-color="greyCard"
+                color="primary"
+            >
+                <template v-if="hasPreppendInner" #prepend-inner>
+                    <slot name="prepend">
+                        <v-icon :color="state.value ? (props.hasError ? 'error' : 'secondary') : 'greyInputText'" icon="search" />
+                    </slot>
+                </template>
+                <template v-else #prepend-inner>
+                    <div class="ml-6"></div>
+                </template>
+            </v-text-field>
+        </v-card>
+        <div v-if="props.showErrorMessage" class="input-error-messages">
+            <v-scroll-x-transition>
+                <p v-if="hasError && props.errorMessage" class="ml-11 text-error">{{ props.errorMessage }}</p>
+            </v-scroll-x-transition>
+        </div>
     </v-card>
 </template>
 
 <script setup lang="ts">
-import { defineProps, defineEmits, reactive, onBeforeUnmount } from 'vue'
+import { defineProps, defineEmits, reactive, onBeforeUnmount, watch } from 'vue'
 
 interface ComponentProps {
     isLoading?: boolean
@@ -31,6 +41,8 @@ interface ComponentProps {
     modelValue?: string
     width?: string
     hasPreppendInner?: boolean
+    errorMessage?: string
+    showErrorMessage?: boolean
 }
 const props = withDefaults(defineProps<ComponentProps>(), {
     isLoading: false,
@@ -38,7 +50,8 @@ const props = withDefaults(defineProps<ComponentProps>(), {
     placeHolder: 'I am a placeholder',
     modelValue: '',
     width: '540px',
-    hasPreppendInner: true
+    hasPreppendInner: true,
+    showErrorMessage: false
 })
 
 const emit = defineEmits<{
@@ -81,4 +94,23 @@ const resetValues = (): void => {
 onBeforeUnmount(() => {
     resetValues()
 })
+
+/**
+ * Watching changes from the parent
+ */
+watch(
+    () => props.modelValue,
+    newVal => {
+        if (newVal !== state.value) {
+            state.value = newVal
+        }
+    }
+)
 </script>
+<style scoped lang="scss">
+.input-error-messages {
+    min-height: 16px;
+    font-size: 10px !important;
+    line-height: 16px;
+}
+</style>
