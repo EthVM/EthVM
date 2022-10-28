@@ -18,19 +18,23 @@ import TheAppHeader from './core/components/TheAppHeader.vue'
 import TheAppNavigationDrawerVue from './core/components/TheAppNavigationDrawer.vue'
 import { useStore } from '@/store'
 import { useGetLatestPricesQuery } from '@core/composables/CoinData/getLatestPrices.generated'
+import { useGetEthBalanceQuery } from './core/composables/AddressEthBalance/addressBalance.generated'
+import { useAddressEthBalance } from './core/composables/AddressEthBalance/addressEthBalance.composable'
 import { useTheme } from 'vuetify'
-import { computed, ref } from 'vue'
+import { computed, ref, onMounted, unref } from 'vue'
 import { useRoute } from 'vue-router'
 import { ROUTE_NAME } from '@core/router/routesNames'
-
 const store = useStore()
 
-const { result: coinData, loading: loadingCoinData, onResult } = useGetLatestPricesQuery({ pollInterval: 30000 })
+const enablePortfolioFetch = ref(false)
+
+const { result: coinData, loading: loadingCoinData, onResult } = useGetLatestPricesQuery({ pollInterval: 300000 })
 store.loadingCoinData = loadingCoinData.value
 
 onResult(() => {
     store.coinData = coinData.value
     store.loadingCoinData = false
+    enablePortfolioFetch.value = true
 })
 
 const theme = useTheme()
@@ -59,6 +63,41 @@ const isAddressView = computed<boolean>(() => {
 
 const isHomeView = computed<boolean>(() => {
     return route.name === ROUTE_NAME.HOME.NAME
+})
+
+/**
+ * Fetches eth balances for for the addresses in the portfolio
+ * Must be executed after the coin data has been loaded
+ */
+const getPortfolioETHBalances = () => {
+    store.portfolio.forEach(item => {
+        console.log(item.hash)
+        const {
+            // onError,
+            onResult
+        } = useGetEthBalanceQuery(
+            () => ({
+                hash: item.hash
+            }),
+            () => ({
+                fetchPolicy: 'network-only',
+                enabled: enablePortfolioFetch.value
+            })
+        )
+        onResult(({ data }) => {
+            if (data && data.getEthBalance) {
+                const { balanceWei, balanceFormatted, balanceFiatBN, balanceFiatFormatted } = useAddressEthBalance(item.hash, data)
+                store.addEthBalance(item.hash, unref(balanceWei), unref(balanceFormatted), unref(balanceFiatBN), unref(balanceFiatFormatted))
+            }
+        })
+    })
+}
+
+onMounted(() => {
+    if (!store.loadingCoinData) {
+        enablePortfolioFetch.value = true
+    }
+    getPortfolioETHBalances()
 })
 </script>
 <style lang="scss">

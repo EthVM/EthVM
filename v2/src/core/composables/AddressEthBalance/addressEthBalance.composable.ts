@@ -1,28 +1,41 @@
 import { useCoinData } from '@core/composables/CoinData/coinData.composable'
 import { eth } from '@/core/helper'
-
+import { GetEthBalanceQuery } from './addressBalance.generated'
 import { useGetEthBalanceQuery } from './addressBalance.generated'
-import { computed, ref, Ref, watch } from 'vue'
+import { computed, ref, Ref, watch, unref, isRef } from 'vue'
 
 import { formatUsdValue, formatVariableUnitEthValue } from '@core/helper/number-format-helper'
 import BN from 'bignumber.js'
 
-export function useAddressEthBalance(addressHash: Ref<string>) {
+export function useAddressEthBalance(addressHash: Ref<string> | string, prefetched: GetEthBalanceQuery | undefined = undefined) {
     const { loading: loadingMarketInfo, ethMarketInfo } = useCoinData()
 
     const initialLoad = ref(true)
+    const enabled = ref(false)
+    const balanceData = ref<GetEthBalanceQuery | undefined>(undefined)
+
+    /**
+     * If passed prefetch is defined --> skips query execution.
+     * Otherwhise, asigns passed query results
+     */
+    if (!prefetched) {
+        enabled.value = true
+    } else {
+        balanceData.value = prefetched
+        initialLoad.value = false
+    }
 
     const {
-        result: balanceData,
         // onError,
         refetch: refetchBalance,
         onResult
     } = useGetEthBalanceQuery(
         () => ({
-            hash: addressHash.value
+            hash: unref(addressHash)
         }),
         () => ({
-            fetchPolicy: 'cache-and-network'
+            fetchPolicy: 'cache-and-network',
+            enabled: enabled.value
         })
     )
 
@@ -32,6 +45,7 @@ export function useAddressEthBalance(addressHash: Ref<string>) {
     onResult(({ data }) => {
         if (data && data.getEthBalance) {
             initialLoad.value = false
+            balanceData.value = data
         }
     })
     /**
@@ -41,6 +55,7 @@ export function useAddressEthBalance(addressHash: Ref<string>) {
         const balance = balanceData.value?.getEthBalance.balance
         return balance ? balance : '0'
     })
+
     /**
      * Returns formatted balance in ETH
      */
@@ -69,14 +84,17 @@ export function useAddressEthBalance(addressHash: Ref<string>) {
     })
 
     /**
+     * If passed param is Ref -->
      * Watches for changes in the addressHash string
-     * Resets initial load to true if new hash
+     * Resets initial load to true on new hash
      */
-    watch(addressHash, (newHash, oldHash) => {
-        if (newHash !== oldHash) {
-            initialLoad.value = true
-        }
-    })
+    if (isRef(addressHash)) {
+        watch(addressHash, (newHash, oldHash) => {
+            if (newHash !== oldHash) {
+                initialLoad.value = true
+            }
+        })
+    }
 
     return { balanceData, initialLoad, refetchBalance, balanceFiatFormatted, balanceWei, balanceFormatted, balanceFiatBN }
 }

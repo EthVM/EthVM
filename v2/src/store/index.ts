@@ -1,3 +1,4 @@
+import BN from 'bignumber.js'
 import { defineStore } from 'pinia'
 import { GetLatestPricesQuery } from '@core/composables/CoinData/getLatestPrices.generated'
 import { useStorage, RemovableRef } from '@vueuse/core'
@@ -7,12 +8,22 @@ interface PortfolioItem {
     name: string
 }
 
+interface PortfolioEthBalanceMap {
+    [key: string]: {
+        weiBalance: string
+        balanceFormatted: string
+        balanceFiatBN: BN
+        balanceFiatFormatted: string
+    }
+}
+
 interface StoreState {
     coinData: GetLatestPricesQuery | undefined
     loadingCoinData: boolean
     appDrawer: boolean
     favTokens: RemovableRef<string[]>
     portfolio: RemovableRef<PortfolioItem[]>
+    portfolioEthBalanceMap: PortfolioEthBalanceMap
 }
 
 export const useStore = defineStore('main', {
@@ -21,7 +32,8 @@ export const useStore = defineStore('main', {
         loadingCoinData: false,
         appDrawer: false,
         favTokens: useStorage('favTokens', [] as string[]),
-        portfolio: useStorage('portfolio', [] as PortfolioItem[])
+        portfolio: useStorage('portfolio', [] as PortfolioItem[]),
+        portfolioEthBalanceMap: {}
     }),
     getters: {
         /**
@@ -79,6 +91,16 @@ export const useStore = defineStore('main', {
         removeAddress(_hash: string) {
             const newList = this.portfolio.filter(i => i.hash !== _hash)
             this.portfolio = [...newList]
+        },
+        addEthBalance(_hash: string, _weiBalance: string, _balanceFormatted: string, _balanceFiatBN: BN, _balanceFiatFormatted: string) {
+            this.portfolioEthBalanceMap = Object.assign(this.portfolioEthBalanceMap, {
+                [_hash]: {
+                    weiBalance: _weiBalance,
+                    balanceFormatted: _balanceFormatted,
+                    balanceFiatBN: _balanceFiatBN,
+                    balanceFiatFormatted: _balanceFiatFormatted
+                }
+            })
         }
     }
 })
