@@ -1,11 +1,12 @@
 <template>
     <div>
-        <app-btn-icon v-if="addressPropIsValid" :icon="addressPropIsAdded ? 'star' : 'star_outline'" @click="starClick"></app-btn-icon>
+        <app-btn-icon v-if="addressPropIsValid" :icon="icon" @click="starClick"></app-btn-icon>
         <app-btn v-else text="Add Address" @click="state.openDialog = true"></app-btn>
-        <app-dialog v-model="state.openDialog" title="Add Address" height="256" width="480">
+        <app-dialog v-model="state.openDialog" :title="title" height="256" width="480">
             <template #scroll-content>
                 <div class="d-flex justify-center align-center flex-column">
                     <app-input
+                        v-if="!props.isEditMode"
                         v-model="state.adrInput"
                         :has-error="hasAddressError"
                         place-holder="Enter Address Hash"
@@ -34,7 +35,11 @@
                         class="mb-1"
                         @on-user-input="setName"
                     ></app-input>
-                    <app-btn text="Add" @click="addAddressToPortfolio" :disabled="!isValidInput"></app-btn>
+                    <div v-if="props.isEditMode" class="d-flex align-center justify-start mt-2 mb-5">
+                        <app-address-blockie v-if="isValidAddress" :address="state.adrInput" :size="6" key="identicon" class="mr-3" />
+                        <app-transform-hash :hash="eth.toCheckSum(state.adrInput)" />
+                    </div>
+                    <app-btn :text="buttonText" @click="addAddressToPortfolio" :disabled="!isValidInput"></app-btn>
                 </div>
             </template>
         </app-dialog>
@@ -47,6 +52,7 @@ import AppBtnIcon from '@/core/components/AppBtnIcon.vue'
 import AppDialog from '@core/components/AppDialog.vue'
 import AppAddressBlockie from '@core/components/AppAddressBlockie.vue'
 import AppInput from '@core/components/AppInput.vue'
+import AppTransformHash from '@/core/components/AppTransformHash.vue'
 import { computed, reactive } from 'vue'
 import { useStore } from '@/store'
 import { eth } from '@core/helper/eth'
@@ -55,8 +61,14 @@ const store = useStore()
 
 interface PropType {
     address?: string
+    isEditMode?: boolean
+    name?: string
 }
-const props = defineProps<PropType>()
+
+const props = withDefaults(defineProps<PropType>(), {
+    isEditMode: false,
+    name: ''
+})
 
 interface ComponentState {
     openDialog: boolean
@@ -67,11 +79,11 @@ interface ComponentState {
 const state: ComponentState = reactive({
     openDialog: false,
     adrInput: '',
-    nameInput: ''
+    nameInput: props.name
 })
 
 /** -------------------
- * Star Button Handler
+ * Core Button Handler
  ---------------------*/
 
 /**
@@ -96,7 +108,7 @@ const addressPropIsAdded = computed<boolean>(() => {
  */
 const starClick = (): void => {
     if (props.address !== undefined && addressPropIsValid.value) {
-        if (addressPropIsAdded.value) {
+        if (addressPropIsAdded.value && !props.isEditMode) {
             store.removeAddress(props.address)
         } else {
             state.adrInput = props.address
@@ -123,7 +135,7 @@ const setAddress = (_value: string) => {
  * @param _value user input
  */
 const hasAddressError = computed<boolean>(() => {
-    return state.adrInput !== '' && (!isValidAddress.value || !addressIsNew.value)
+    return !props.isEditMode && state.adrInput !== '' && (!isValidAddress.value || !addressIsNew.value)
 })
 
 /**
@@ -176,23 +188,46 @@ const hasNameError = computed<boolean>(() => {
  * @param _value user input
  */
 const isValidName = computed<boolean>(() => {
-    console.log('isValid Name', !store.addressNameIsSaved(state.nameInput))
+    if (state.nameInput === props.name) {
+        return true
+    }
     return !store.addressNameIsSaved(state.nameInput)
 })
 
 /** -------------------
- * Add New Address
+ * Add/Edit New Address
  ---------------------*/
 const isValidInput = computed<boolean>(() => {
     return state.nameInput !== '' && state.adrInput !== '' && !hasAddressError.value && !hasNameError.value
 })
 
 const addAddressToPortfolio = (): void => {
-    store.addAddress(state.adrInput, state.nameInput)
+    if (props.isEditMode) {
+        store.changeAddressName(state.adrInput, state.nameInput)
+    } else {
+        store.addAddress(state.adrInput, state.nameInput)
+        state.adrInput = ''
+        state.nameInput = ''
+    }
     state.openDialog = false
-    state.adrInput = ''
-    state.nameInput = ''
 }
+
+/** -------------------
+ * Mode Handler (Add/Edit)
+ ---------------------*/
+const icon = computed<string>(() => {
+    if (props.isEditMode) {
+        return 'edit'
+    }
+    return store.addressHashIsSaved(props.address || '') === true ? 'star' : 'star_outline'
+})
+const title = computed<string>(() => {
+    return props.isEditMode ? 'Edit name' : 'Add Address'
+})
+
+const buttonText = computed<string>(() => {
+    return props.isEditMode ? 'Save' : 'Add'
+})
 </script>
 
 <style scoped lang="scss">

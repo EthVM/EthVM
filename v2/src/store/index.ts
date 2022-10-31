@@ -70,6 +70,18 @@ export const useStore = defineStore('main', {
                 const exhists = state.portfolio.find(i => i.name.toLowerCase() === _name.toLowerCase())
                 return exhists !== undefined
             }
+        },
+        addressEthBalanceLoaded: state => {
+            return (_hash: string): boolean => {
+                return `${_hash}` in state.portfolioEthBalanceMap
+            }
+        },
+        /**
+         * Returns whether or not a token is saved to local storage
+         * @returns boolean
+         */
+        portfolioLength: state => {
+            return state.portfolio.length
         }
     },
     actions: {
@@ -91,6 +103,12 @@ export const useStore = defineStore('main', {
         removeAddress(_hash: string) {
             const newList = this.portfolio.filter(i => i.hash !== _hash)
             this.portfolio = [...newList]
+        },
+        changeAddressName(_hash: string, _name: string) {
+            const item = this.portfolio.find(i => i.hash === _hash)
+            if (item) {
+                item.name = _name
+            }
         },
         addEthBalance(_hash: string, _weiBalance: string, _balanceFormatted: string, _balanceFiatBN: BN, _balanceFiatFormatted: string) {
             this.portfolioEthBalanceMap = Object.assign(this.portfolioEthBalanceMap, {

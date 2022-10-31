@@ -1,7 +1,7 @@
 <template>
     <div class="pa-4 pa-sm-6">
         <module-add-adress-to-porfolio address="0xC5cA2Dd997E7Aa97f2DE490e329578Be27e9E644" />
-
+        {{ store.portfolioLength }}
         <!--Table Header-->
         <v-row :dense="xs" :class="'mt-sm-4 d-flex text-body-1 text-info mb-sm-3'" :justify="xs ? 'end' : 'start'">
             <v-col sm="5" md="4" class="py-0 d-none d-sm-block">
@@ -51,51 +51,63 @@
             </v-col>
         </v-row>
 
-        <v-divider class="mx-n4 mx-sm-n6 mb-1 mb-sm-5" />
-        <template v-if="!loadingCoinData">
-            <template v-if="addressList.length > 0">
-                <div v-for="adr in addressList" :key="adr.hash">
-                    <v-row :dense="xs" :class="'mt-sm-4 d-flex text-body-1 text-info mb-sm-3'" :justify="xs ? 'end' : 'start'">
-                        <v-col xs="6" sm="5" md="4" class="py-0 d-flex align-center">
-                            <module-add-adress-to-porfolio :address="adr.hash" />
-                            <app-address-blockie :address="adr.hash" class="ml-5 mr-4" />
-                            <div><app-transform-hash :hash="eth.toCheckSum(adr.hash)" :link="adr.hash" is-blue is-short /> {{ adr.name }}</div>
-                        </v-col>
-                        <v-col sm="7" md="8" class="d-none d-sm-flex">
-                            <v-row>
-                                <!--
+        <v-divider class="mx-n4 mx-sm-n6 mb-5" />
+        <template v-if="addressList.length > 0">
+            <div v-for="adr in addressList" :key="adr.hash">
+                <v-row :dense="xs" class="d-flex align-start align-lg-center text-body-1 mt-0 mb-5" :justify="xs ? 'end' : 'start'">
+                    <v-col xs="6" sm="5" md="4" class="py-0 d-flex align-center">
+                        <module-add-adress-to-porfolio :address="adr.hash" />
+                        <app-address-blockie :address="adr.hash" class="ml-5 mr-4" />
+                        <div v-if="mdAndDown">
+                            <p>{{ adr.name }}</p>
+                            <app-transform-hash :hash="eth.toCheckSum(adr.hash)" :link="adr.hash" is-blue is-short />
+                        </div>
+                        <app-transform-hash v-else :hash="eth.toCheckSum(adr.hash)" :link="adr.hash" is-blue class="mr-16" />
+                    </v-col>
+                    <v-col xs="6" sm="7" md="8">
+                        <v-row>
+                            <!--
                         NAME:
                         hidden on xs-md
                     -->
-                                <v-col lg="3" class="py-0 d-none d-lg-block">
-                                    {{ adr.name }}
-                                </v-col>
-                                <!--
+                            <v-col lg="3" class="py-0 d-none d-lg-flex align-center">
+                                <p>{{ adr.name }}</p>
+                                <module-add-adress-to-porfolio :address="adr.hash" :name="adr.name" is-edit-mode />
+                            </v-col>
+                            <!--
                         ETH Balance:
                         hidden on xs
                     -->
-                                <v-col sm="6" md="4" lg="3" class="py-0 d-none d-sm-block"> </v-col>
-                                <!--
+                            <v-col sm="6" md="4" lg="3" class="py-0 d-none d-sm-block d-lg-flex align-lg-center">
+                                <div v-if="adr.eth">
+                                    <p>{{ adr.eth }}</p>
+                                    <p v-if="smAndDown" class="text-info">{{ adr.ethUSD }}</p>
+                                </div>
+                                <div v-else class="skeleton-box rounded-xl" style="height: 20px; width: 60%"></div>
+                            </v-col>
+                            <!--
                         ETH Value:
                         hidden on xs-sm
                     -->
-                                <v-col md="4" lg="3" class="py-0 d-none d-md-block"> </v-col>
-                                <!--
+                            <v-col md="4" lg="3" class="py-0 d-none d-md-block d-lg-flex align-lg-center">
+                                <p v-if="adr.ethUSD">{{ adr.ethUSD }}</p>
+                                <div v-else class="skeleton-box rounded-xl" style="height: 20px; width: 60%"></div>
+                            </v-col>
+                            <!--
                         total:
                         hidden on xs
                     -->
-                                <v-col sm="6" md="4" lg="3" class="py-0 d-none d-sm-block"> </v-col>
-                            </v-row>
-                        </v-col>
-                    </v-row>
-                </div>
-            </template>
-
-            <template v-else>
-                <app-no-result :text="`Your portfolio is empty`"></app-no-result>
-            </template>
+                            <v-col xs="12" sm="6" md="4" lg="3" class="py-0 d-lg-flex align-lg-center"> <p class="text-right text-sm-left">$100,000</p> </v-col>
+                        </v-row>
+                    </v-col>
+                </v-row>
+            </div>
         </template>
-        <div v-else class="skeleton-box rounded-xl mt-1 my-4" style="height: 90%"></div>
+
+        <template v-else>
+            <app-no-result :text="`Your portfolio is empty`"></app-no-result>
+        </template>
+        <!--  -->
     </div>
 </template>
 
@@ -111,7 +123,7 @@ import { useCoinData } from '@core/composables/CoinData/coinData.composable'
 import { eth } from '@core/helper/eth'
 import { useDisplay } from 'vuetify/lib/framework.mjs'
 
-const { xs } = useDisplay()
+const { xs, smAndDown, mdAndDown } = useDisplay()
 const store = useStore()
 
 enum KEY {
@@ -150,9 +162,23 @@ const { loading: loadingCoinData } = useCoinData()
  * Checks if name is new
  * @param _value user input
  */
-const addressList = computed(() => {
-    console.log(store.portfolio.length)
-    return store.portfolio
+
+interface DisplayItem {
+    name: string
+    hash: string
+    eth?: string
+    ethUSD?: string
+}
+const addressList = computed<DisplayItem[]>(() => {
+    return store.portfolio.map(i => {
+        const isLoaded = store.addressEthBalanceLoaded(i.hash)
+        return {
+            name: i.name,
+            hash: i.hash,
+            eth: isLoaded ? store.portfolioEthBalanceMap[i.hash].balanceFormatted : undefined,
+            ethUSD: isLoaded ? store.portfolioEthBalanceMap[i.hash].balanceFiatFormatted : undefined
+        }
+    })
 })
 
 /** -------------------
