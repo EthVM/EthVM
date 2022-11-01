@@ -106,6 +106,12 @@ export const useStore = defineStore('main', {
                 }
                 return undefined
             }
+        },
+        portfolioIsLoaded: state => {
+            const total = state.portfolio.length
+            const eth = Object.keys(state.portfolioEthBalanceMap)
+            const tokens = Object.keys(state.portfolioEthBalanceMap)
+            return total === eth.length && total === tokens.length
         }
     },
     actions: {

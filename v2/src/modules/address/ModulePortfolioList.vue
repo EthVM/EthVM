@@ -53,7 +53,7 @@
 
         <v-divider class="mx-n4 mx-sm-n6 mb-5" />
         <template v-if="addressList.length > 0">
-            <div v-for="adr in addressList" :key="adr.hash">
+            <div v-for="adr in sortList" :key="adr.hash">
                 <v-row :dense="xs" class="d-flex align-start align-lg-center text-body-1 mt-0 mb-5" :justify="xs ? 'end' : 'start'">
                     <v-col xs="6" sm="5" md="4" class="py-0 d-flex align-center">
                         <module-add-adress-to-porfolio :address="adr.hash" />
@@ -126,41 +126,27 @@ import { useCoinData } from '@core/composables/CoinData/coinData.composable'
 import { eth } from '@core/helper/eth'
 import { useDisplay } from 'vuetify/lib/framework.mjs'
 import { formatUsdValue } from '@core/helper/number-format-helper'
+import BN from 'bignumber.js'
+
 const { xs, smAndDown, mdAndDown } = useDisplay()
 const store = useStore()
 
 enum KEY {
-    NAME = 'NAME',
-    HASH = 'HASH',
-    ETH = 'ETH',
-    ETH_USD = 'ETH',
-    TOTAL = 'TOTAL'
+    NAME = 'name',
+    HASH = 'hash',
+    ETH = 'weiBN',
+    ETH_USD = 'ethUSDBN',
+    TOTAL = 'totalBN',
+    EMPTY = ''
 }
 const DIRECTION = {
     HIGH: 'HIGH',
     LOW: 'LOW'
 }
 
-interface ComponentState {
-    sortKey: string
-}
-
-const state: ComponentState = reactive({
-    sortKey: `{${KEY.TOTAL}_${DIRECTION.HIGH}`
-})
-
-const sortIcon = computed<string>(() => {
-    return state.sortKey.includes(DIRECTION.HIGH) ? 'south' : 'north'
-})
-
-const isActiveSort = (key: KEY): boolean => {
-    return state.sortKey.includes(key)
-}
-
 /** -------------------
- * Address Input Handler
+ * Display List  Handler
  ---------------------*/
-const { loading: loadingCoinData } = useCoinData()
 /**
  * Checks if name is new
  * @param _value user input
@@ -172,7 +158,11 @@ interface DisplayItem {
     eth?: string
     ethUSD?: string
     total?: string
+    weiBN?: BN
+    ethUSDBN?: BN
+    totalBN?: BN
 }
+
 const addressList = computed<DisplayItem[]>(() => {
     return store.portfolio.map(i => {
         const isLoaded = store.addressEthBalanceLoaded(i.hash)
@@ -183,15 +173,120 @@ const addressList = computed<DisplayItem[]>(() => {
             hash: i.hash,
             eth: isLoaded ? store.portfolioEthBalanceMap[cleanHash].balanceFormatted : undefined,
             ethUSD: isLoaded ? store.portfolioEthBalanceMap[cleanHash].balanceFiatFormatted : undefined,
-            total: total ? formatUsdValue(total).value : undefined
+            total: total ? formatUsdValue(total).value : undefined,
+            weiBN: isLoaded ? store.portfolioEthBalanceMap[cleanHash].weiBalance : undefined,
+            ethUSDBN: isLoaded ? store.portfolioEthBalanceMap[cleanHash].balanceFiatBN : undefined,
+            totalBN: total
         }
     })
 })
 
 /** -------------------
- * Address Input Handler
+ * Sort
  ---------------------*/
+interface ComponentState {
+    sortKey: KEY
+    direction: string
+}
 
+const state: ComponentState = reactive({
+    sortKey: KEY.EMPTY,
+    direction: DIRECTION.HIGH
+})
+
+const sortIcon = computed<string>(() => {
+    return state.direction.includes(DIRECTION.HIGH) ? 'south' : 'north'
+})
+
+const isActiveSort = (key: KEY): boolean => {
+    return state.sortKey.includes(key)
+}
+
+const sortList = computed<DisplayItem[]>(() => {
+    if (store.portfolioIsLoaded && state.sortKey !== KEY.EMPTY) {
+        const sorted = new Sorted(addressList.value, state.sortKey)
+        return state.direction.includes(DIRECTION.HIGH) ? sorted.getDesend() : sorted.getAscend()
+    }
+    return addressList.value
+})
+
+const sortTable = (key: KEY) => {
+    if (state.sortKey === key) {
+        state.direction = state.direction.includes(DIRECTION.HIGH) ? DIRECTION.LOW : DIRECTION.HIGH
+    } else {
+        state.sortKey = key
+    }
+}
+
+interface SortedInterface {
+    key: KEY
+    ascend: any[]
+    desend: any[]
+}
+
+class Sorted<DisplayItem> implements SortedInterface {
+    /* Properties: */
+    key: KEY
+    ascend: DisplayItem[] = []
+    desend: DisplayItem[] = []
+    /* Constructor: */
+    constructor(data: DisplayItem[], sortKey: KEY) {
+        this.key = sortKey
+        if (data.length > 0) {
+            this.desend = [...this.sortByDescend(data, sortKey)]
+            this.ascend = [...this.desend].reverse()
+        }
+    }
+
+    /**
+     * Return  array sorted from low to high
+     * @returns { DisplayItem[] } - sorted array
+     */
+    public getAscend(): DisplayItem[] {
+        return this.ascend
+    }
+
+    /**
+     * Return  array sorted from high to low
+     * @returns { DisplayItem[] } - sorted array
+     */
+    public getDesend(): DisplayItem[] {
+        return this.desend
+    }
+
+    /**
+     * Return  array sorted from  high to low
+     * When sorting by balance or USD, since values are BN, it needs to be converted to Number
+     * @returns { DisplayItem[] } - sorted array
+     */
+    private sortByDescend(data: DisplayItem[], key: KEY): DisplayItem[] {
+        if (data?.length && key) {
+            if (key === KEY.ETH || key === KEY.ETH_USD || key === KEY.TOTAL) {
+                return data.sort((x, y) => {
+                    const i = x[key as keyof DisplayItem] as unknown as BN
+                    const _y = y[key as keyof DisplayItem] as unknown as BN
+                    if (BN.isBigNumber(i) && BN.isBigNumber(_y)) {
+                        const a = _y.toNumber()
+                        const b = i.toNumber()
+                        return a < b ? -1 : a > b ? 1 : 0
+                    }
+
+                    return 0
+                })
+            }
+
+            return data.sort((x, y) => {
+                const a = y[key as keyof DisplayItem]?.toString().toLowerCase()
+                const b = x[key as keyof DisplayItem]?.toString().toLowerCase()
+                if (a && b) {
+                    return a < b ? -1 : a > b ? 1 : 0
+                }
+                return 0
+            })
+        }
+        return []
+    }
+}
 // /**
 //  * Sets address input with timeout from child
 //  * @param _value user input
@@ -217,20 +312,6 @@ const addressList = computed<DisplayItem[]>(() => {
 //     console.log('isValid Name', !store.addressNameIsSaved(state.nameInput))
 //     return !store.addressNameIsSaved(state.nameInput)
 // })
-
-// /** -------------------
-//  * Add New Address
-//  ---------------------*/
-// const isValidInput = computed<boolean>(() => {
-//     return state.nameInput !== '' && state.adrInput !== '' && !hasAddressError.value && !hasNameError.value
-// })
-
-// const addAddressToPortfolio = (): void => {
-//     store.addAddress(state.adrInput, state.nameInput)
-//     state.openDialog = false
-//     state.adrInput = ''
-//     state.nameInput = ''
-// }
 </script>
 
 <style scoped lang="scss">
