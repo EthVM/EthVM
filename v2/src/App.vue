@@ -18,23 +18,20 @@ import TheAppHeader from './core/components/TheAppHeader.vue'
 import TheAppNavigationDrawerVue from './core/components/TheAppNavigationDrawer.vue'
 import { useStore } from '@/store'
 import { useGetLatestPricesQuery } from '@core/composables/CoinData/getLatestPrices.generated'
-import { useGetEthBalanceQuery } from './core/composables/AddressEthBalance/addressBalance.generated'
-import { useAddressEthBalance } from './core/composables/AddressEthBalance/addressEthBalance.composable'
+import { useSetPortfolio } from './core/composables/Portfolio/useSetPortfolioBalance'
 import { useTheme } from 'vuetify'
-import { computed, ref, onMounted, unref, watch } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { ROUTE_NAME } from '@core/router/routesNames'
+
 const store = useStore()
 
-const enablePortfolioFetch = ref(false)
-
-const { result: coinData, loading: loadingCoinData, onResult } = useGetLatestPricesQuery({ pollInterval: 300000 })
+const { result: coinData, loading: loadingCoinData, onResult: onCoinDataResult } = useGetLatestPricesQuery({ pollInterval: 300000 })
 store.loadingCoinData = loadingCoinData.value
 
-onResult(() => {
+onCoinDataResult(() => {
     store.coinData = coinData.value
     store.loadingCoinData = false
-    enablePortfolioFetch.value = true
 })
 
 const theme = useTheme()
@@ -65,46 +62,27 @@ const isHomeView = computed<boolean>(() => {
     return route.name === ROUTE_NAME.HOME.NAME
 })
 
-const refetchBalances = ref()
-
 /**
  * Fetches eth balances for for the addresses in the portfolio
  * Must be executed after the coin data has been loaded
  */
+const fetchAddress = ref('')
+const { refetchEthBalance } = useSetPortfolio(fetchAddress)
+
 store.portfolio.forEach(item => {
-    const {
-        // onError,
-        onResult
-    } = useGetEthBalanceQuery(
-        () => ({
-            hash: item.hash
-        }),
-        () => ({
-            fetchPolicy: 'network-only',
-            enabled: enablePortfolioFetch.value
-        })
-    )
-    onResult(({ data }) => {
-        if (data && data.getEthBalance) {
-            const { balanceWei, balanceFormatted, balanceFiatBN, balanceFiatFormatted } = useAddressEthBalance(item.hash, data)
-            store.addEthBalance(item.hash, unref(balanceWei), unref(balanceFormatted), unref(balanceFiatBN), unref(balanceFiatFormatted))
-        }
-    })
+    useSetPortfolio(item.hash)
 })
 
 watch(
     () => store.portfolioLength,
     () => {
-        console.log('Fetch Balances')
-        // refetchBalances()
+        store.portfolio.forEach(item => {
+            if (!store.addressEthBalanceLoaded(item.hash.toLocaleLowerCase())) {
+                fetchAddress.value = item.hash
+            }
+        })
     }
 )
-
-onMounted(() => {
-    if (!store.loadingCoinData) {
-        enablePortfolioFetch.value = true
-    }
-})
 </script>
 <style lang="scss">
 .app-view {

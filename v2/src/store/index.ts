@@ -73,7 +73,7 @@ export const useStore = defineStore('main', {
         },
         addressEthBalanceLoaded: state => {
             return (_hash: string): boolean => {
-                return `${_hash}` in state.portfolioEthBalanceMap
+                return `${_hash.toLowerCase()}` in state.portfolioEthBalanceMap
             }
         },
         /**
@@ -112,7 +112,7 @@ export const useStore = defineStore('main', {
         },
         addEthBalance(_hash: string, _weiBalance: string, _balanceFormatted: string, _balanceFiatBN: BN, _balanceFiatFormatted: string) {
             this.portfolioEthBalanceMap = Object.assign(this.portfolioEthBalanceMap, {
-                [_hash]: {
+                [_hash.toLowerCase()]: {
                     weiBalance: _weiBalance,
                     balanceFormatted: _balanceFormatted,
                     balanceFiatBN: _balanceFiatBN,

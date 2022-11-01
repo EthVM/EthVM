@@ -172,11 +172,12 @@ interface DisplayItem {
 const addressList = computed<DisplayItem[]>(() => {
     return store.portfolio.map(i => {
         const isLoaded = store.addressEthBalanceLoaded(i.hash)
+        const cleanHash = i.hash.toLocaleLowerCase()
         return {
             name: i.name,
             hash: i.hash,
-            eth: isLoaded ? store.portfolioEthBalanceMap[i.hash].balanceFormatted : undefined,
-            ethUSD: isLoaded ? store.portfolioEthBalanceMap[i.hash].balanceFiatFormatted : undefined
+            eth: isLoaded ? store.portfolioEthBalanceMap[cleanHash].balanceFormatted : undefined,
+            ethUSD: isLoaded ? store.portfolioEthBalanceMap[cleanHash].balanceFiatFormatted : undefined
         }
     })
 })
