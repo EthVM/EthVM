@@ -1,5 +1,6 @@
 <template>
     <div class="pa-4 pa-sm-6">
+        <module-add-adress-to-porfolio />
         <module-add-adress-to-porfolio address="0xC5cA2Dd997E7Aa97f2DE490e329578Be27e9E644" />
         {{ store.portfolioLength }}
         <!--Table Header-->

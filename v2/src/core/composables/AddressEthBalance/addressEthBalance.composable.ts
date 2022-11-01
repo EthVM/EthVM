@@ -1,31 +1,23 @@
 import { useCoinData } from '@core/composables/CoinData/coinData.composable'
 import { eth } from '@/core/helper'
-import { GetEthBalanceQuery } from './addressBalance.generated'
 import { useGetEthBalanceQuery } from './addressBalance.generated'
 import { computed, ref, Ref, watch, unref, isRef } from 'vue'
 
 import { formatUsdValue, formatVariableUnitEthValue } from '@core/helper/number-format-helper'
 import BN from 'bignumber.js'
 
-export function useAddressEthBalance(addressHash: Ref<string> | string, prefetched: GetEthBalanceQuery | undefined = undefined) {
+export function useAddressEthBalance(addressHash: Ref<string> | string) {
     const { loading: loadingMarketInfo, ethMarketInfo } = useCoinData()
 
     const initialLoad = ref(true)
-    const enabled = ref(false)
-    const balanceData = ref<GetEthBalanceQuery | undefined>(undefined)
 
     /**
      * If passed prefetch is defined --> skips query execution.
      * Otherwhise, asigns passed query results
      */
-    if (!prefetched) {
-        enabled.value = true
-    } else {
-        balanceData.value = prefetched
-        initialLoad.value = false
-    }
 
     const {
+        result: balanceData,
         // onError,
         refetch: refetchBalance,
         onResult
@@ -34,8 +26,7 @@ export function useAddressEthBalance(addressHash: Ref<string> | string, prefetch
             hash: unref(addressHash)
         }),
         () => ({
-            fetchPolicy: 'cache-and-network',
-            enabled: enabled.value
+            fetchPolicy: 'cache-and-network'
         })
     )
 
@@ -48,6 +39,14 @@ export function useAddressEthBalance(addressHash: Ref<string> | string, prefetch
             balanceData.value = data
         }
     })
+
+    /**
+     * loadingBalance
+     */
+    const loadingBalance = computed<boolean>(() => {
+        return initialLoad.value || loadingMarketInfo.value
+    })
+
     /**
      * ETH balance in WEI
      */
@@ -96,5 +95,5 @@ export function useAddressEthBalance(addressHash: Ref<string> | string, prefetch
         })
     }
 
-    return { balanceData, initialLoad, refetchBalance, balanceFiatFormatted, balanceWei, balanceFormatted, balanceFiatBN }
+    return { balanceData, initialLoad, loadingBalance, refetchBalance, balanceFiatFormatted, balanceWei, balanceFormatted, balanceFiatBN }
 }

@@ -67,7 +67,7 @@ const isHomeView = computed<boolean>(() => {
  * Must be executed after the coin data has been loaded
  */
 const fetchAddress = ref('')
-const { refetchEthBalance } = useSetPortfolio(fetchAddress)
+const { refetchBalance } = useSetPortfolio(fetchAddress)
 
 store.portfolio.forEach(item => {
     useSetPortfolio(item.hash)

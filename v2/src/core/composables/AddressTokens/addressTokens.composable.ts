@@ -1,28 +1,17 @@
 import { TokenOwnersFragment, useGetOwnersErc20TokensQuery, GetOwnersErc20TokensQuery } from '@module/address/apollo/AddressTokens/tokens.generated'
-import { computed, Ref, ref, unref } from 'vue'
+import { computed, Ref, ref, unref, watch, isRef } from 'vue'
 import { MarketDataFragment as TokenMarketData } from '@core/composables/CoinData/getLatestPrices.generated'
 import { useCoinData } from '@core/composables/CoinData/coinData.composable'
 import { TokenSort } from '@module/address/models/TokenSort'
 import { formatUsdValue } from '@core/helper/number-format-helper'
 import BN from 'bignumber.js'
 
-export function useAddressToken(addressHash: Ref<string> | string, prefetched: GetOwnersErc20TokensQuery | undefined = undefined) {
+export function useAddressToken(addressHash: Ref<string> | string) {
     const { getEthereumTokensMap, loading: loadingEthTokens } = useCoinData()
-
-    const enabled = ref(false)
-    const erc20TokensResult = ref<GetOwnersErc20TokensQuery | undefined>(undefined)
     const nextKey = ref<string | undefined | null>(undefined)
-    /**
-     * If passed prefetch is defined --> skips query execution.
-     * Otherwhise, asigns passed query results
-     */
-    if (!prefetched) {
-        enabled.value = true
-    } else {
-        erc20TokensResult.value = prefetched
-    }
+    const initialLoad = ref(true)
     const {
-        loading,
+        result: erc20TokensResult,
         refetch: refetchTokens,
         onResult,
         fetchMore: fetchMoreTokens
@@ -31,16 +20,16 @@ export function useAddressToken(addressHash: Ref<string> | string, prefetched: G
             hash: unref(addressHash)
         }),
         {
-            enabled: enabled.value,
             fetchPolicy: 'cache-first'
         }
     )
     onResult(({ data }) => {
         if (data) {
-            erc20TokensResult.value = data
             nextKey.value = data.getOwnersERC20Tokens.nextKey
             if (nextKey.value) {
                 loadMoreTokens()
+            } else {
+                initialLoad.value = false
             }
         }
     })
@@ -67,7 +56,7 @@ export function useAddressToken(addressHash: Ref<string> | string, prefetched: G
         })
     }
     const loadingTokens = computed<boolean>(() => {
-        return prefetched ? false : loading.value
+        return initialLoad.value || loadingEthTokens.value
     })
     const erc20Tokens = computed<Array<TokenOwnersFragment | null> | undefined>(() => {
         return erc20TokensResult.value?.getOwnersERC20Tokens.owners
@@ -81,10 +70,6 @@ export function useAddressToken(addressHash: Ref<string> | string, prefetched: G
         return tokenBalance.value || '0'
     })
 
-    const initialLoad = computed<boolean>(() => {
-        return erc20TokensResult.value ? false : true
-    })
-
     /**
      * Gets an object with all sorted arrays
      *
@@ -92,7 +77,7 @@ export function useAddressToken(addressHash: Ref<string> | string, prefetched: G
      * @returns  null  otherwise
      */
     const tokenPrices = computed<Map<string, TokenMarketData> | false | null>(() => {
-        if (!loadingTokens.value && erc20Tokens.value && !loadingEthTokens.value) {
+        if (!initialLoad.value && erc20Tokens.value && !loadingEthTokens.value) {
             const contracts: string[] = []
             erc20Tokens.value.forEach(token => {
                 if (token) {
@@ -115,7 +100,8 @@ export function useAddressToken(addressHash: Ref<string> | string, prefetched: G
      */
 
     const tokenSort = computed<TokenSort | false>(() => {
-        if (!loadingTokens.value && erc20Tokens.value && tokenPrices.value !== null) {
+        if (!initialLoad.value && erc20Tokens.value && tokenPrices.value !== null) {
+            console.log(new TokenSort(erc20Tokens.value, tokenPrices.value, true))
             return new TokenSort(erc20Tokens.value, tokenPrices.value, true)
         }
         return false
@@ -125,11 +111,12 @@ export function useAddressToken(addressHash: Ref<string> | string, prefetched: G
      * @returns {BN} - total token balance
      */
     const tokenTotalBalanceBN = computed<BN>(() => {
-        if (tokenSort.value) {
+        if (!initialLoad.value && tokenSort.value) {
             const tokenAmounts = tokenSort.value.usdValue?.ascend.reduce((acc, el) => {
                 return new BN(el.usdValue).plus(acc).toNumber()
             }, 0)
             if (tokenAmounts) {
+                console.log(new BN(tokenAmounts).toFixed())
                 return new BN(tokenAmounts)
             }
         }
@@ -142,6 +129,19 @@ export function useAddressToken(addressHash: Ref<string> | string, prefetched: G
     const tokenBalance = computed<string>(() => {
         return formatUsdValue(tokenTotalBalanceBN.value).value
     })
+
+    /**
+     * If passed param is Ref -->
+     * Watches for changes in the addressHash string
+     * Resets initial load to true on new hash
+     */
+    if (isRef(addressHash)) {
+        watch(addressHash, (newHash, oldHash) => {
+            if (newHash !== oldHash) {
+                initialLoad.value = true
+            }
+        })
+    }
 
     return { erc20Tokens, tokenPrices, loadingTokens, refetchTokens, tokenSort, tokenBalance, tokenTotalBalanceBN, initialLoad, tokenCount, tokenBalanceValue }
 }
