@@ -2,6 +2,7 @@ import BN from 'bignumber.js'
 import { defineStore } from 'pinia'
 import { GetLatestPricesQuery } from '@core/composables/CoinData/getLatestPrices.generated'
 import { useStorage, RemovableRef } from '@vueuse/core'
+import { TokenOwnersFragment } from '@module/address/apollo/AddressTokens/tokens.generated'
 
 interface PortfolioItem {
     hash: string
@@ -16,6 +17,12 @@ interface PortfolioEthBalanceMap {
         balanceFiatFormatted: string
     }
 }
+interface PortfolioTokenBalanceMap {
+    [key: string]: {
+        balanceFiatBN: BN
+        tokens: Array<TokenOwnersFragment | null>
+    }
+}
 
 interface StoreState {
     coinData: GetLatestPricesQuery | undefined
@@ -24,6 +31,7 @@ interface StoreState {
     favTokens: RemovableRef<string[]>
     portfolio: RemovableRef<PortfolioItem[]>
     portfolioEthBalanceMap: PortfolioEthBalanceMap
+    portfolioTokenBalanceMap: PortfolioTokenBalanceMap
 }
 
 export const useStore = defineStore('main', {
@@ -33,7 +41,8 @@ export const useStore = defineStore('main', {
         appDrawer: false,
         favTokens: useStorage('favTokens', [] as string[]),
         portfolio: useStorage('portfolio', [] as PortfolioItem[]),
-        portfolioEthBalanceMap: {}
+        portfolioEthBalanceMap: {},
+        portfolioTokenBalanceMap: {}
     }),
     getters: {
         /**
@@ -76,12 +85,27 @@ export const useStore = defineStore('main', {
                 return `${_hash.toLowerCase()}` in state.portfolioEthBalanceMap
             }
         },
+        addressERC20BalanceLoaded: state => {
+            return (_hash: string): boolean => {
+                return `${_hash.toLowerCase()}` in state.portfolioTokenBalanceMap
+            }
+        },
         /**
          * Returns whether or not a token is saved to local storage
          * @returns boolean
          */
         portfolioLength: state => {
             return state.portfolio.length
+        },
+        addressTotalBalance(state) {
+            return (_hash: string): BN | undefined => {
+                if (this.addressEthBalanceLoaded(_hash) && this.addressERC20BalanceLoaded(_hash)) {
+                    const eth = state.portfolioEthBalanceMap[_hash].balanceFiatBN
+                    const tokens = state.portfolioTokenBalanceMap[_hash].balanceFiatBN
+                    return eth.plus(tokens)
+                }
+                return undefined
+            }
         }
     },
     actions: {
@@ -117,6 +141,14 @@ export const useStore = defineStore('main', {
                     balanceFormatted: _balanceFormatted,
                     balanceFiatBN: _balanceFiatBN,
                     balanceFiatFormatted: _balanceFiatFormatted
+                }
+            })
+        },
+        addErc20Balance(_hash: string, _balanceFiatBN: BN, _tokens: Array<TokenOwnersFragment | null>) {
+            this.portfolioTokenBalanceMap = Object.assign(this.portfolioTokenBalanceMap, {
+                [_hash.toLowerCase()]: {
+                    balanceFiatBN: _balanceFiatBN,
+                    tokens: _tokens
                 }
             })
         }

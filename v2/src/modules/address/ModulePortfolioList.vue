@@ -60,9 +60,9 @@
                         <app-address-blockie :address="adr.hash" class="ml-5 mr-4" />
                         <div v-if="mdAndDown">
                             <p>{{ adr.name }}</p>
-                            <app-transform-hash :hash="eth.toCheckSum(adr.hash)" :link="adr.hash" is-blue is-short />
+                            <app-transform-hash :hash="eth.toCheckSum(adr.hash)" :link="`address/${adr.hash}`" is-blue is-short />
                         </div>
-                        <app-transform-hash v-else :hash="eth.toCheckSum(adr.hash)" :link="adr.hash" is-blue class="mr-16" />
+                        <app-transform-hash v-else :hash="eth.toCheckSum(adr.hash)" :link="`address/${adr.hash}`" is-blue class="mr-16" />
                     </v-col>
                     <v-col xs="6" sm="7" md="8">
                         <v-row>
@@ -97,7 +97,10 @@
                         total:
                         hidden on xs
                     -->
-                            <v-col xs="12" sm="6" md="4" lg="3" class="py-0 d-lg-flex align-lg-center"> <p class="text-right text-sm-left">$100,000</p> </v-col>
+                            <v-col xs="12" sm="6" md="4" lg="3" class="py-0 d-lg-flex align-lg-center">
+                                <p v-if="adr.total" class="text-right text-sm-left">{{ adr.total }}</p>
+                                <div v-else class="skeleton-box rounded-xl" style="height: 20px; width: 60%"></div>
+                            </v-col>
                         </v-row>
                     </v-col>
                 </v-row>
@@ -122,7 +125,7 @@ import { useStore } from '@/store'
 import { useCoinData } from '@core/composables/CoinData/coinData.composable'
 import { eth } from '@core/helper/eth'
 import { useDisplay } from 'vuetify/lib/framework.mjs'
-
+import { formatUsdValue } from '@core/helper/number-format-helper'
 const { xs, smAndDown, mdAndDown } = useDisplay()
 const store = useStore()
 
@@ -168,16 +171,19 @@ interface DisplayItem {
     hash: string
     eth?: string
     ethUSD?: string
+    total?: string
 }
 const addressList = computed<DisplayItem[]>(() => {
     return store.portfolio.map(i => {
         const isLoaded = store.addressEthBalanceLoaded(i.hash)
         const cleanHash = i.hash.toLocaleLowerCase()
+        const total = store.addressTotalBalance(cleanHash)
         return {
             name: i.name,
             hash: i.hash,
             eth: isLoaded ? store.portfolioEthBalanceMap[cleanHash].balanceFormatted : undefined,
-            ethUSD: isLoaded ? store.portfolioEthBalanceMap[cleanHash].balanceFiatFormatted : undefined
+            ethUSD: isLoaded ? store.portfolioEthBalanceMap[cleanHash].balanceFiatFormatted : undefined,
+            total: total ? formatUsdValue(total).value : undefined
         }
     })
 })

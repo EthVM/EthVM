@@ -1,25 +1,48 @@
-import { TokenOwnersFragment, useGetOwnersErc20TokensQuery } from '@module/address/apollo/AddressTokens/tokens.generated'
-import { computed, Ref } from 'vue'
+import { TokenOwnersFragment, useGetOwnersErc20TokensQuery, GetOwnersErc20TokensQuery } from '@module/address/apollo/AddressTokens/tokens.generated'
+import { computed, Ref, ref, unref } from 'vue'
 import { MarketDataFragment as TokenMarketData } from '@core/composables/CoinData/getLatestPrices.generated'
 import { useCoinData } from '@core/composables/CoinData/coinData.composable'
 import { TokenSort } from '@module/address/models/TokenSort'
 import { formatUsdValue } from '@core/helper/number-format-helper'
 import BN from 'bignumber.js'
 
-export function useAddressToken(addressHash: Ref<string>) {
+export function useAddressToken(addressHash: Ref<string> | string, prefetched: GetOwnersErc20TokensQuery | undefined = undefined) {
     const { getEthereumTokensMap, loading: loadingEthTokens } = useCoinData()
+
+    const enabled = ref(false)
+    const erc20TokensResult = ref<GetOwnersErc20TokensQuery | undefined>(undefined)
+
+    /**
+     * If passed prefetch is defined --> skips query execution.
+     * Otherwhise, asigns passed query results
+     */
+    if (!prefetched) {
+        enabled.value = true
+    } else {
+        erc20TokensResult.value = prefetched
+    }
+
     const {
-        result: erc20TokensResult,
         loading,
-        refetch: refetchTokens
+        refetch: refetchTokens,
+        onResult
     } = useGetOwnersErc20TokensQuery(
         () => ({
-            hash: addressHash.value
+            hash: unref(addressHash)
         }),
-        { notifyOnNetworkStatusChange: true }
+        {
+            notifyOnNetworkStatusChange: true,
+            enabled: enabled.value,
+            fetchPolicy: 'cache-and-network'
+        }
     )
+    onResult(({ data }) => {
+        if (data) {
+            erc20TokensResult.value = data
+        }
+    })
     const loadingTokens = computed<boolean>(() => {
-        return loading.value
+        return prefetched ? false : loading.value
     })
     const erc20Tokens = computed<Array<TokenOwnersFragment | null> | undefined>(() => {
         return erc20TokensResult.value?.getOwnersERC20Tokens.owners
