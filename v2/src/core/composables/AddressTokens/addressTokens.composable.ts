@@ -11,7 +11,7 @@ export function useAddressToken(addressHash: Ref<string> | string, prefetched: G
 
     const enabled = ref(false)
     const erc20TokensResult = ref<GetOwnersErc20TokensQuery | undefined>(undefined)
-
+    const nextKey = ref<string | undefined | null>(undefined)
     /**
      * If passed prefetch is defined --> skips query execution.
      * Otherwhise, asigns passed query results
@@ -21,26 +21,51 @@ export function useAddressToken(addressHash: Ref<string> | string, prefetched: G
     } else {
         erc20TokensResult.value = prefetched
     }
-
     const {
         loading,
         refetch: refetchTokens,
-        onResult
+        onResult,
+        fetchMore: fetchMoreTokens
     } = useGetOwnersErc20TokensQuery(
         () => ({
             hash: unref(addressHash)
         }),
         {
-            notifyOnNetworkStatusChange: true,
             enabled: enabled.value,
-            fetchPolicy: 'cache-and-network'
+            fetchPolicy: 'cache-first'
         }
     )
     onResult(({ data }) => {
         if (data) {
             erc20TokensResult.value = data
+            nextKey.value = data.getOwnersERC20Tokens.nextKey
+            if (nextKey.value) {
+                loadMoreTokens()
+            }
         }
     })
+    const loadMoreTokens = () => {
+        fetchMoreTokens({
+            variables: {
+                hash: unref(addressHash),
+                _nextKey: nextKey.value
+            },
+            updateQuery: (previousResult, { fetchMoreResult }) => {
+                if (!fetchMoreResult) {
+                    return previousResult
+                }
+                const newT = fetchMoreResult.getOwnersERC20Tokens.owners
+                const prevT = previousResult.getOwnersERC20Tokens.owners
+                return {
+                    getOwnersERC20Tokens: {
+                        __typename: previousResult.getOwnersERC20Tokens.__typename,
+                        owners: [...prevT, ...newT],
+                        nextKey: fetchMoreResult.getOwnersERC20Tokens.nextKey
+                    }
+                }
+            }
+        })
+    }
     const loadingTokens = computed<boolean>(() => {
         return prefetched ? false : loading.value
     })
