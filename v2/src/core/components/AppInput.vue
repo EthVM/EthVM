@@ -56,6 +56,7 @@ const props = withDefaults(defineProps<ComponentProps>(), {
 
 const emit = defineEmits<{
     (e: 'onUserInput', searchValue: string): void
+    (e: 'update:modelValue', searchValue: string): void
 }>()
 
 /*
@@ -74,6 +75,8 @@ const state: InputSate = reactive({ timeout: 0, value: props.modelValue })
  * Emits user input to parent with the timeout of 600
  */
 const onUserInput = (): void => {
+    // allows to use v-model on the app-input component
+    emit('update:modelValue', state.value)
     clearTimeout(state.timeout)
     state.timeout = window.setTimeout(() => {
         emit('onUserInput', state.value)
