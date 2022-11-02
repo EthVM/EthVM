@@ -117,13 +117,11 @@
 
 <script setup lang="ts">
 import ModuleAddAdressToPorfolio from './ModuleAddAdressToPorfolio.vue'
-import AppInput from '@core/components/AppInput.vue'
 import AppAddressBlockie from '@core/components/AppAddressBlockie.vue'
 import AppTransformHash from '@/core/components/AppTransformHash.vue'
 import AppNoResult from '@core/components/AppNoResult.vue'
 import { computed, reactive } from 'vue'
 import { useStore } from '@/store'
-import { useCoinData } from '@core/composables/CoinData/coinData.composable'
 import { eth } from '@core/helper/eth'
 import { useDisplay } from 'vuetify/lib/framework.mjs'
 import { formatUsdValue } from '@core/helper/number-format-helper'
@@ -288,31 +286,6 @@ class Sorted<DisplayItem> implements SortedInterface {
         return []
     }
 }
-// /**
-//  * Sets address input with timeout from child
-//  * @param _value user input
-//  */
-// const setName = (_value: string) => {
-//     state.nameInput = _value
-// }
-
-// /**
-//  * Checks if name input was valid
-//  * Returns true if input is not emty and string is invalid
-//  * @param _value user input
-//  */
-// const hasNameError = computed<boolean>(() => {
-//     return state.nameInput !== '' && !isValidName.value
-// })
-
-// /**
-//  * Checks if name is new
-//  * @param _value user input
-//  */
-// const isValidName = computed<boolean>(() => {
-//     console.log('isValid Name', !store.addressNameIsSaved(state.nameInput))
-//     return !store.addressNameIsSaved(state.nameInput)
-// })
 </script>
 
 <style scoped lang="scss">

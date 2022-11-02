@@ -12,7 +12,8 @@
         <v-col cols="12">
             <v-card elevation="1" rounded="xl" class="pt-4 pt-sm-6">
                 <app-tabs v-model="state.tab" :routes="routes" :tabs="tabs" class="mb-4 mb-sm-0"></app-tabs>
-                <module-portfolio-list />
+                <module-portfolio-list v-if="state.tab === routes[0]" />
+                <module-portfolio-token-balance v-if="state.tab === routes[1]" />
                 <!--
                     <module-address-tokens
                     v-if="state.tab === routes[0]"
@@ -37,9 +38,10 @@
 </template>
 
 <script setup lang="ts">
-import ModuleAddressBalance from '@module/address/ModuleAddressBalance.vue'
-import ModuleAddressTokenBalance from '@module/address/ModuleAddressTokenBalance.vue'
-import ModuleAddressPortfolio from '@/modules/address/ModuleAddressPortfolio.vue'
+// import ModuleAddressBalance from '@module/address/ModuleAddressBalance.vue'
+// import ModuleAddressTokenBalance from '@module/address/ModuleAddressTokenBalance.vue'
+// import ModuleAddressPortfolio from '@/modules/address/ModuleAddressPortfolio.vue'
+import ModulePortfolioTokenBalance from '@/modules/address/ModulePortfolioTokenBalance.vue'
 import ModulePortfolioList from '@module/address/ModulePortfolioList.vue'
 import AppTabs from '@/core/components/AppTabs.vue'
 import { Tab } from '@core/components/props'

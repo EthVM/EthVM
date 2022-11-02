@@ -110,7 +110,7 @@ export const useStore = defineStore('main', {
         portfolioIsLoaded: state => {
             const total = state.portfolio.length
             const eth = Object.keys(state.portfolioEthBalanceMap)
-            const tokens = Object.keys(state.portfolioEthBalanceMap)
+            const tokens = Object.keys(state.portfolioTokenBalanceMap)
             return total === eth.length && total === tokens.length
         }
     },

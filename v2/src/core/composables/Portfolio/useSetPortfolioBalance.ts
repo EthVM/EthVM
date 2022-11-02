@@ -16,7 +16,7 @@ export function useSetPortfolio(addressHash: Ref<string> | string) {
         refetchBalance: refetchEthBalance
     } = useAddressEthBalance(addressHash)
     const { refetchTokens, loadingTokens, tokenTotalBalanceBN, erc20Tokens } = useAddressToken(addressHash)
-    const { newErc20Transfer, newETHTransfer, resetCount } = useAddressUpdate(addressHash)
+    // const { newErc20Transfer, newETHTransfer, resetCount } = useAddressUpdate(addressHash)
 
     watch(loadingTokens, newVal => {
         if (newVal === false && erc20Tokens.value) {
@@ -29,23 +29,23 @@ export function useSetPortfolio(addressHash: Ref<string> | string) {
             store.addEthBalance(unref(addressHash), unref(balanceWei), unref(balanceFormatted), unref(balanceFiatBN), unref(balanceFiatFormatted))
         }
     })
-    watch(newErc20Transfer, newVal => {
-        if (newVal > 0) {
-            resetCount(AddressEventType.NewErc20Transfer, true)
-            refetchTokens()
-        }
-    })
-    watch(newETHTransfer, newVal => {
-        if (newVal > 0) {
-            resetCount(AddressEventType.NewEthTransfer, true)
-            refetchEthBalance()
-        }
-    })
+    // watch(newErc20Transfer, newVal => {
+    //     if (newVal > 0) {
+    //         resetCount(AddressEventType.NewErc20Transfer, true)
+    //         refetchTokens()
+    //     }
+    // })
+    // watch(newETHTransfer, newVal => {
+    //     if (newVal > 0) {
+    //         resetCount(AddressEventType.NewEthTransfer, true)
+    //         refetchEthBalance()
+    //     }
+    // })
 
     const refetchBalance = () => {
-        resetCount(AddressEventType.NewEthTransfer, true)
+        // resetCount(AddressEventType.NewEthTransfer, true)
         refetchEthBalance()
-        resetCount(AddressEventType.NewErc20Transfer, true)
+        // resetCount(AddressEventType.NewErc20Transfer, true)
         refetchTokens()
     }
     return { refetchBalance }
