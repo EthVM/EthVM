@@ -9,12 +9,13 @@ import BN from 'bignumber.js'
 export function useAddressToken(addressHash: Ref<string> | string) {
     const { getEthereumTokensMap, loading: loadingEthTokens } = useCoinData()
     const nextKey = ref<string | undefined | null>(undefined)
-    const initialLoad = ref(true)
+    const initialLoad = ref(false)
     const {
         result: erc20TokensResult,
         refetch: refetchTokens,
         onResult,
-        fetchMore: fetchMoreTokens
+        fetchMore: fetchMoreTokens,
+        loading: queryLoading
     } = useGetOwnersErc20TokensQuery(
         () => ({
             hash: unref(addressHash)
@@ -33,6 +34,7 @@ export function useAddressToken(addressHash: Ref<string> | string) {
             }
         }
     })
+
     const loadMoreTokens = () => {
         fetchMoreTokens({
             variables: {
@@ -101,7 +103,6 @@ export function useAddressToken(addressHash: Ref<string> | string) {
 
     const tokenSort = computed<TokenSort | false>(() => {
         if (!initialLoad.value && erc20Tokens.value && tokenPrices.value !== null) {
-            console.log(new TokenSort(erc20Tokens.value, tokenPrices.value, true))
             return new TokenSort(erc20Tokens.value, tokenPrices.value, true)
         }
         return false
@@ -116,7 +117,6 @@ export function useAddressToken(addressHash: Ref<string> | string) {
                 return new BN(el.usdValue).plus(acc).toNumber()
             }, 0)
             if (tokenAmounts) {
-                console.log(new BN(tokenAmounts).toFixed())
                 return new BN(tokenAmounts)
             }
         }
@@ -142,6 +142,11 @@ export function useAddressToken(addressHash: Ref<string> | string) {
             }
         })
     }
+    watch(queryLoading, newVal => {
+        if (newVal) {
+            initialLoad.value = true
+        }
+    })
 
     return { erc20Tokens, tokenPrices, loadingTokens, refetchTokens, tokenSort, tokenBalance, tokenTotalBalanceBN, initialLoad, tokenCount, tokenBalanceValue }
 }

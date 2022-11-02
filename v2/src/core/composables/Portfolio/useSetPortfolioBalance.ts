@@ -10,7 +10,6 @@ export function useSetPortfolio(addressHash: Ref<string> | string) {
 
     watch(loadingTokens, newVal => {
         if (newVal === false && erc20Tokens.value) {
-            console.log(tokenTotalBalanceBN.value.toFixed())
             store.addErc20Balance(unref(addressHash), unref(tokenTotalBalanceBN), unref(erc20Tokens.value))
         }
     })
