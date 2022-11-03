@@ -125,17 +125,20 @@ export const useStore = defineStore('main', {
         addAddress(_hash: string, _name: string) {
             if (this.portfolio.length <= 10) {
                 this.portfolio.push({
-                    hash: _hash,
+                    hash: _hash.toLowerCase(),
                     name: _name
                 })
             }
         },
-        removeAddress(_hash: string) {
-            const newList = this.portfolio.filter(i => i.hash !== _hash)
+        removeAddress(hash: string) {
+            const _hash = hash.toLowerCase()
+            const newList = this.portfolio.filter(i => i.hash.toLowerCase() !== _hash)
             this.portfolio = [...newList]
+            delete this.portfolioEthBalanceMap[_hash]
+            delete this.portfolioTokenBalanceMap[_hash]
         },
         changeAddressName(_hash: string, _name: string) {
-            const item = this.portfolio.find(i => i.hash === _hash)
+            const item = this.portfolio.find(i => i.hash.toLowerCase() === _hash.toLowerCase())
             if (item) {
                 item.name = _name
             }
