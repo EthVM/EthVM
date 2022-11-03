@@ -1,12 +1,13 @@
-import { Ref, unref, watch } from 'vue'
+import { unref, watch, ref } from 'vue'
 import { useStore } from '@/store'
 import { useAddressEthBalance } from '../AddressEthBalance/addressEthBalance.composable'
 import { useAddressToken } from '../AddressTokens/addressTokens.composable'
 import { useAddressUpdate } from '../AddressUpdate/addressUpdate.composable'
 import { AddressEventType } from '@/apollo/types'
 
-export function useSetPortfolio(addressHash: Ref<string> | string) {
+export function useSetPortfolio(hash: string) {
     const store = useStore()
+    const addressHash = ref(hash)
     const {
         balanceWei,
         balanceFormatted,
@@ -48,5 +49,8 @@ export function useSetPortfolio(addressHash: Ref<string> | string) {
         // resetCount(AddressEventType.NewErc20Transfer, true)
         refetchTokens()
     }
-    return { refetchBalance }
+    const setHash = (hash: string) => {
+        addressHash.value = hash
+    }
+    return { refetchBalance, setHash }
 }

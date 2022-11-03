@@ -2,7 +2,6 @@
     <v-app class="app-view">
         <the-app-navigation-drawer-vue />
         <the-app-header :hide-search-bar="isHomeView" />
-
         <v-main class="w-100">
             <v-container :class="[isAddressView || isHomeView ? 'pa-0' : 'px-2 px-sm-6 pt-4 pt-sm-6']" :fluid="isAddressView || isHomeView">
                 <router-view />
@@ -20,7 +19,7 @@ import { useStore } from '@/store'
 import { useGetLatestPricesQuery } from '@core/composables/CoinData/getLatestPrices.generated'
 import { useSetPortfolio } from './core/composables/Portfolio/useSetPortfolioBalance'
 import { useTheme } from 'vuetify'
-import { computed, ref, watch } from 'vue'
+import { computed, watch, reactive } from 'vue'
 import { useRoute } from 'vue-router'
 import { ROUTE_NAME } from '@core/router/routesNames'
 
@@ -62,25 +61,56 @@ const isHomeView = computed<boolean>(() => {
     return route.name === ROUTE_NAME.HOME.NAME
 })
 
-/**
- * Fetches eth balances for for the addresses in the portfolio
- * Must be executed after the coin data has been loaded
- */
-const fetchAddress = ref('')
-const { refetchBalance } = useSetPortfolio(fetchAddress)
+/*
+===================================================================================
+ Handle   PORTFOLIO
+ Fetches eth balances for for the addresses in the portfolio 
+===================================================================================
+*/
+interface SetPortfolio {
+    refetchBalance: () => void
+    setHash: (hash: string) => void
+}
 
 store.portfolio.forEach(item => {
     useSetPortfolio(item.hash)
 })
+interface PortfolioState {
+    adrs: string[]
+    functions: SetPortfolio[]
+}
+const portfolioState = reactive<PortfolioState>({
+    adrs: [],
+    functions: []
+})
+
+store.portfolio.forEach(i => {
+    portfolioState.adrs.push(i.hash.toLocaleLowerCase())
+})
+
+let index = 10
+while (portfolioState.adrs.length < index) {
+    portfolioState.adrs.push('')
+    portfolioState.functions.push(useSetPortfolio(portfolioState.adrs[index]))
+    index = index++
+}
 
 watch(
     () => store.portfolioLength,
-    () => {
-        store.portfolio.forEach(item => {
-            if (!store.addressEthBalanceLoaded(item.hash.toLocaleLowerCase())) {
-                fetchAddress.value = item.hash
-            }
-        })
+    (newLength, oldLength) => {
+        if (newLength > oldLength) {
+            //Added New Address
+            const newAdr = store.portfolio.filter(i => !portfolioState.adrs.includes(i.hash.toLowerCase()))
+            const index = portfolioState.adrs.indexOf('')
+            portfolioState.adrs[index] = newAdr[0].hash
+            portfolioState.functions[index].setHash(newAdr[0].hash)
+        } else {
+            //Deleted an Address
+            const deleted = portfolioState.adrs.filter(i => i !== '' && !store.addressHashIsSaved(i))
+            const index = portfolioState.adrs.indexOf(deleted[0])
+            portfolioState.adrs[index] = ''
+            portfolioState.functions[index].setHash('')
+        }
     }
 )
 </script>
