@@ -169,7 +169,7 @@ const tokenPrices = computed<Map<string, TokenMarketData> | false | null>(() => 
 const tokensRaw = computed(() => {
     const allTokens: TokenOwnersFragment[] = []
     if (store.portfolioIsLoaded) {
-        const adrs = store.portfolio.map(i => i.hash.toLocaleLowerCase())
+        const adrs = store.portfolio.map(i => i.hash.toLowerCase())
         adrs.forEach(i => {
             const filtered = store.portfolioTokenBalanceMap[i].tokens.filter((x): x is TokenOwnersFragment => x !== null)
             filtered.forEach(_token => {

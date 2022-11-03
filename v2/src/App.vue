@@ -85,14 +85,17 @@ const portfolioState = reactive<PortfolioState>({
 })
 
 store.portfolio.forEach(i => {
-    portfolioState.adrs.push(i.hash.toLocaleLowerCase())
+    portfolioState.adrs.push(i.hash.toLowerCase())
 })
 
-let index = 10
-while (portfolioState.adrs.length < index) {
+while (portfolioState.adrs.length < 10) {
     portfolioState.adrs.push('')
+}
+
+let index = 0
+while (index < 10) {
     portfolioState.functions.push(useSetPortfolio(portfolioState.adrs[index]))
-    index = index++
+    index = ++index
 }
 
 watch(
