@@ -1,15 +1,21 @@
-import { TokenOwnersFragment, useGetOwnersErc20TokensQuery, GetOwnersErc20TokensQuery } from '@module/address/apollo/AddressTokens/tokens.generated'
+import { TokenOwnersFragment, useGetOwnersErc20TokensQuery } from '@module/address/apollo/AddressTokens/tokens.generated'
 import { computed, Ref, ref, unref, watch, isRef } from 'vue'
 import { MarketDataFragment as TokenMarketData } from '@core/composables/CoinData/getLatestPrices.generated'
 import { useCoinData } from '@core/composables/CoinData/coinData.composable'
 import { TokenSort } from '@module/address/models/TokenSort'
 import { formatUsdValue } from '@core/helper/number-format-helper'
+import { eth } from '@/core/helper'
 import BN from 'bignumber.js'
 
 export function useAddressToken(addressHash: Ref<string> | string) {
     const { getEthereumTokensMap, loading: loadingEthTokens } = useCoinData()
     const nextKey = ref<string | undefined | null>(undefined)
     const initialLoad = ref(false)
+
+    const enableQuery = computed<boolean>(() => {
+        return eth.isValidAddress(unref(addressHash))
+    })
+
     const {
         result: erc20TokensResult,
         refetch: refetchTokens,
@@ -21,7 +27,8 @@ export function useAddressToken(addressHash: Ref<string> | string) {
             hash: unref(addressHash)
         }),
         {
-            fetchPolicy: 'cache-first'
+            fetchPolicy: 'cache-first',
+            enabled: enableQuery.value
         }
     )
     onResult(({ data }) => {

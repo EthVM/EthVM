@@ -2,7 +2,6 @@ import { useCoinData } from '@core/composables/CoinData/coinData.composable'
 import { eth } from '@/core/helper'
 import { useGetEthBalanceQuery } from './addressBalance.generated'
 import { computed, ref, Ref, watch, unref, isRef } from 'vue'
-
 import { formatUsdValue, formatVariableUnitEthValue } from '@core/helper/number-format-helper'
 import BN from 'bignumber.js'
 
@@ -10,6 +9,10 @@ export function useAddressEthBalance(addressHash: Ref<string> | string) {
     const { loading: loadingMarketInfo, ethMarketInfo } = useCoinData()
 
     const initialLoad = ref(true)
+
+    const enableQuery = computed<boolean>(() => {
+        return eth.isValidAddress(unref(addressHash))
+    })
 
     /**
      * If passed prefetch is defined --> skips query execution.
@@ -26,9 +29,13 @@ export function useAddressEthBalance(addressHash: Ref<string> | string) {
             hash: unref(addressHash)
         }),
         () => ({
-            fetchPolicy: 'cache-and-network'
+            fetchPolicy: 'cache-and-network',
+            enabled: enableQuery.value
         })
     )
+    if (balanceData.value) {
+        initialLoad.value = false
+    }
 
     /**
      * Once data is recieved sets loading to false
