@@ -1,17 +1,27 @@
-import { ref, Ref, unref } from 'vue'
+import { ref, Ref, unref, computed } from 'vue'
 import { useAddressEventSubscription } from '@module/address/apollo/AddressEvent/addressEvent.generated'
 import { AddressEventType } from '@/apollo/types'
+import { eth } from '@/core/helper'
 
-export function useAddressUpdate(addressRef: string | Ref<string>) {
+export function useAddressUpdate(addressRef: string | Ref<string>, pause: Ref<boolean> | boolean = false) {
     const newErc20Transfer = ref(0)
     const newErc721Transfer = ref(0)
     const newMinedBlocks = ref(0)
     const newMinedUncles = ref(0)
     const newETHTransfer = ref(0)
 
-    const { onResult } = useAddressEventSubscription({
-        owner: unref(addressRef)
+    const enableSubscribe = computed<boolean>(() => {
+        return eth.isValidAddress(unref(addressRef)) && !unref(pause)
     })
+
+    const { onResult } = useAddressEventSubscription(
+        () => ({
+            owner: unref(addressRef).toLowerCase()
+        }),
+        () => ({
+            enabled: enableSubscribe.value
+        })
+    )
 
     onResult(data => {
         if (data?.data?.addressEvent.event === AddressEventType.NewErc20Transfer) {

@@ -70,6 +70,7 @@ const isHomeView = computed<boolean>(() => {
 interface SetPortfolio {
     refetchBalance: () => void
     setHash: (hash: string) => void
+    pauseUpdates: (_pause: boolean) => void
 }
 
 interface PortfolioState {
@@ -111,6 +112,21 @@ watch(
             portfolioState.adrs[index] = ''
         }
         portfolioState.functions[index].setHash(portfolioState.adrs[index])
+    }
+)
+watch(
+    () => isAddressView,
+    newVal => {
+        if (newVal) {
+            portfolioState.functions.forEach(composable => {
+                composable.pauseUpdates(true)
+            })
+        } else {
+            portfolioState.functions.forEach(composable => {
+                composable.refetchBalance()
+                composable.pauseUpdates(false)
+            })
+        }
     }
 )
 </script>
