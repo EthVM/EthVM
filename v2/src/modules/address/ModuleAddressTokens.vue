@@ -158,7 +158,8 @@ import AppNoResult from '@/core/components/AppNoResult.vue'
 import { useDisplay } from 'vuetify/lib/framework.mjs'
 import { useAppTableRowRender } from '@core/composables/AppTableRowRender/useAppTableRowRender.composable'
 import { searchHelper } from '@core/helper/search'
-
+import { useStore } from '@/store'
+import { WatchQueryFetchPolicy } from '@apollo/client/core'
 const { xs } = useDisplay()
 const { loading: loadingCoinData } = useCoinData()
 
@@ -209,8 +210,12 @@ const state: ComponentState = reactive({
  * Tokens Data
  -------------------------*/
 const { addressHash } = toRefs(props)
+const store = useStore()
+const queryPolicy = computed<WatchQueryFetchPolicy>(() => {
+    return store.addressHashIsSaved(props.addressHash.toLowerCase()) ? 'cache-only' : 'cache-first'
+})
 
-const { erc20Tokens, loadingTokens, refetchTokens, tokenSort, tokenBalance } = useAddressToken(addressHash)
+const { erc20Tokens, loadingTokens, refetchTokens, tokenSort, tokenBalance } = useAddressToken(addressHash, queryPolicy.value)
 
 const hasTokens = computed<boolean>(() => {
     return !!erc20Tokens.value

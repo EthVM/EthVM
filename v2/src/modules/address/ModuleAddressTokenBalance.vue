@@ -26,7 +26,7 @@ const props = defineProps({
 
 const { addressRef } = toRefs(props)
 
-const { initialLoad, tokenBalanceValue, tokenCount } = useAddressToken(addressRef)
+const { initialLoad, tokenBalanceValue, tokenCount } = useAddressToken(addressRef, 'cache-only')
 const { loading: loadingMarketInfo } = useCoinData()
 </script>
 

@@ -26,7 +26,7 @@ export function useAddressEthBalance(addressHash: Ref<string> | string) {
         onResult
     } = useGetEthBalanceQuery(
         () => ({
-            hash: unref(addressHash)
+            hash: unref(addressHash).toLowerCase()
         }),
         () => ({
             fetchPolicy: 'cache-and-network',

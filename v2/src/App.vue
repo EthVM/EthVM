@@ -72,9 +72,6 @@ interface SetPortfolio {
     setHash: (hash: string) => void
 }
 
-store.portfolio.forEach(item => {
-    useSetPortfolio(item.hash)
-})
 interface PortfolioState {
     adrs: string[]
     functions: SetPortfolio[]
@@ -101,19 +98,19 @@ while (index < 10) {
 watch(
     () => store.portfolioLength,
     (newLength, oldLength) => {
+        let index: number
         if (newLength > oldLength) {
             //Added New Address
             const newAdr = store.portfolio.filter(i => !portfolioState.adrs.includes(i.hash.toLowerCase()))
-            const index = portfolioState.adrs.indexOf('')
+            index = portfolioState.adrs.indexOf('')
             portfolioState.adrs[index] = newAdr[0].hash
-            portfolioState.functions[index].setHash(newAdr[0].hash)
         } else {
             //Deleted an Address
             const deleted = portfolioState.adrs.filter(i => i !== '' && !store.addressHashIsSaved(i))
-            const index = portfolioState.adrs.indexOf(deleted[0])
+            index = portfolioState.adrs.indexOf(deleted[0])
             portfolioState.adrs[index] = ''
-            portfolioState.functions[index].setHash('')
         }
+        portfolioState.functions[index].setHash(portfolioState.adrs[index])
     }
 )
 </script>

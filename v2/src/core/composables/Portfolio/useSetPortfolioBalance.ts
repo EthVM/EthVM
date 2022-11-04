@@ -4,6 +4,7 @@ import { useAddressEthBalance } from '../AddressEthBalance/addressEthBalance.com
 import { useAddressToken } from '../AddressTokens/addressTokens.composable'
 import { useAddressUpdate } from '../AddressUpdate/addressUpdate.composable'
 import { AddressEventType } from '@/apollo/types'
+import { eth } from '@/core/helper'
 
 export function useSetPortfolio(hash: string) {
     const store = useStore()
@@ -51,6 +52,9 @@ export function useSetPortfolio(hash: string) {
     }
     const setHash = (hash: string) => {
         addressHash.value = hash
+        if (eth.isValidAddress(hash) && erc20Tokens.value && !loadingTokens.value) {
+            store.addErc20Balance(unref(addressHash), unref(tokenTotalBalanceBN), unref(erc20Tokens.value))
+        }
     }
     return { refetchBalance, setHash }
 }

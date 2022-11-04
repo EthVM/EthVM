@@ -10,12 +10,12 @@
             <div>
                 <v-row align="center" class="my-0 mx-0">
                     <div v-if="!props.isOverview && !mdAndDown" class="mr-10">
-                        <address-balance-totals
+                        <!-- <address-balance-totals
                             title="NFT Balance"
                             :is-loading="loadingAddressTokens || loadingMarketInfo"
                             :balance="tokenBalanceValue"
                             :subtext="`${tokenCount} total NFT's`"
-                        />
+                        /> -->
                     </div>
                     <span v-if="props.isOverview || mdAndDown" class="text-h6 font-weight-bold">NFT History</span>
                     <app-new-update
@@ -78,7 +78,6 @@ import { TOKEN_FILTER_VALUES } from '@module/address/models/TokenSort'
 import { useDisplay } from 'vuetify'
 import { Erc721TransferFragmentFragment as Transfer, useGetAddressErc721TransfersQuery } from './apollo/AddressTransfers/transfers.generated'
 import { AddressEventType } from '@/apollo/types'
-import { useAddressToken } from '@core/composables/AddressTokens/addressTokens.composable'
 import { useRouter } from 'vue-router'
 import { ADDRESS_ROUTE_QUERY, ROUTE_NAME } from '@core/router/routesNames'
 import { useAppTableRowRender } from '@core/composables/AppTableRowRender/useAppTableRowRender.composable'
@@ -123,7 +122,6 @@ const state: ComponentState = reactive({
 
 const { addressHash } = toRefs(props)
 
-const { tokenBalanceValue, tokenCount, initialLoad: loadingAddressTokens } = useAddressToken(addressHash)
 const { loading: loadingMarketInfo } = useCoinData()
 
 const { result, fetchMore, refetch } = useGetAddressErc721TransfersQuery(

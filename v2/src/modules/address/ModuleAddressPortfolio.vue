@@ -49,7 +49,7 @@ const props = defineProps({
 
 const { addressRef } = toRefs(props)
 
-const { initialLoad: loadingTokensBalances, tokenTotalBalanceBN, tokenSort } = useAddressToken(addressRef)
+const { initialLoad: loadingTokensBalances, tokenTotalBalanceBN, tokenSort } = useAddressToken(addressRef, 'cache-only')
 const { initialLoad: loadingEthBalance, balanceFiatBN: ethBalance } = useAddressEthBalance(addressRef)
 const { loading: loadingMarketInfo, ethMarketInfo } = useCoinData()
 

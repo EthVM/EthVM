@@ -6,12 +6,11 @@ import { TokenSort } from '@module/address/models/TokenSort'
 import { formatUsdValue } from '@core/helper/number-format-helper'
 import { eth } from '@/core/helper'
 import BN from 'bignumber.js'
+import { WatchQueryFetchPolicy } from '@apollo/client/core'
 
-export function useAddressToken(addressHash: Ref<string> | string) {
+export function useAddressToken(addressHash: Ref<string> | string, policy: WatchQueryFetchPolicy = 'cache-first') {
     const { getEthereumTokensMap, loading: loadingEthTokens } = useCoinData()
     const nextKey = ref<string | undefined | null>(undefined)
-    const initialLoad = ref(false)
-
     const enableQuery = computed<boolean>(() => {
         return eth.isValidAddress(unref(addressHash))
     })
@@ -20,32 +19,39 @@ export function useAddressToken(addressHash: Ref<string> | string) {
         result: erc20TokensResult,
         refetch: refetchTokens,
         onResult,
-        fetchMore: fetchMoreTokens,
-        loading: queryLoading
+        fetchMore: fetchMoreTokens
     } = useGetOwnersErc20TokensQuery(
         () => ({
-            hash: unref(addressHash)
+            hash: unref(addressHash).toLowerCase()
         }),
-        {
-            fetchPolicy: 'cache-first',
+        () => ({
+            fetchPolicy: policy,
             enabled: enableQuery.value
-        }
+        })
     )
     onResult(({ data }) => {
-        if (data) {
+        if (data && data.getOwnersERC20Tokens) {
             nextKey.value = data.getOwnersERC20Tokens.nextKey
-            if (nextKey.value) {
+            if (nextKey.value && policy !== 'cache-only') {
                 loadMoreTokens()
-            } else {
-                initialLoad.value = false
             }
         }
+    })
+
+    const initialLoad = computed<boolean>(() => {
+        if (erc20TokensResult.value) {
+            if (erc20TokensResult.value.getOwnersERC20Tokens.nextKey) {
+                return !(erc20TokensResult.value.getOwnersERC20Tokens.nextKey === null || erc20TokensResult.value.getOwnersERC20Tokens.nextKey === undefined)
+            }
+            return false
+        }
+        return true
     })
 
     const loadMoreTokens = () => {
         fetchMoreTokens({
             variables: {
-                hash: unref(addressHash),
+                hash: unref(addressHash).toLowerCase(),
                 _nextKey: nextKey.value
             },
             updateQuery: (previousResult, { fetchMoreResult }) => {
@@ -137,23 +143,16 @@ export function useAddressToken(addressHash: Ref<string> | string) {
         return formatUsdValue(tokenTotalBalanceBN.value).value
     })
 
-    /**
-     * If passed param is Ref -->
-     * Watches for changes in the addressHash string
-     * Resets initial load to true on new hash
-     */
-    if (isRef(addressHash)) {
-        watch(addressHash, (newHash, oldHash) => {
-            if (newHash !== oldHash) {
-                initialLoad.value = true
-            }
-        })
+    return {
+        erc20Tokens,
+        tokenPrices,
+        loadingTokens,
+        refetchTokens,
+        tokenSort,
+        tokenBalance,
+        tokenTotalBalanceBN,
+        initialLoad,
+        tokenCount,
+        tokenBalanceValue
     }
-    watch(queryLoading, newVal => {
-        if (newVal) {
-            initialLoad.value = true
-        }
-    })
-
-    return { erc20Tokens, tokenPrices, loadingTokens, refetchTokens, tokenSort, tokenBalance, tokenTotalBalanceBN, initialLoad, tokenCount, tokenBalanceValue }
 }
