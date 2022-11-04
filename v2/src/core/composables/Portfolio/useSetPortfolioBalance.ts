@@ -5,6 +5,7 @@ import { useAddressToken } from '../AddressTokens/addressTokens.composable'
 import { useAddressUpdate } from '../AddressUpdate/addressUpdate.composable'
 import { AddressEventType } from '@/apollo/types'
 import { eth } from '@/core/helper'
+import { watchDebounced } from '@vueuse/core'
 
 export function useSetPortfolio(hash: string) {
     const store = useStore()
@@ -18,7 +19,7 @@ export function useSetPortfolio(hash: string) {
         refetchBalance: refetchEthBalance
     } = useAddressEthBalance(addressHash)
     const { refetchTokens, loadingTokens, tokenTotalBalanceBN, erc20Tokens } = useAddressToken(addressHash)
-    // const { newErc20Transfer, newETHTransfer, resetCount } = useAddressUpdate(addressHash)
+    const { newErc20Transfer, newETHTransfer, resetCount } = useAddressUpdate(addressHash)
 
     watch(loadingTokens, newVal => {
         if (newVal === false && erc20Tokens.value) {
@@ -31,23 +32,31 @@ export function useSetPortfolio(hash: string) {
             store.addEthBalance(unref(addressHash), unref(balanceWei), unref(balanceFormatted), unref(balanceFiatBN), unref(balanceFiatFormatted))
         }
     })
-    // watch(newErc20Transfer, newVal => {
-    //     if (newVal > 0) {
-    //         resetCount(AddressEventType.NewErc20Transfer, true)
-    //         refetchTokens()
-    //     }
-    // })
-    // watch(newETHTransfer, newVal => {
-    //     if (newVal > 0) {
-    //         resetCount(AddressEventType.NewEthTransfer, true)
-    //         refetchEthBalance()
-    //     }
-    // })
+    watchDebounced(
+        newErc20Transfer,
+        newVal => {
+            if (newVal > 0) {
+                resetCount(AddressEventType.NewErc20Transfer, true)
+                refetchTokens()
+            }
+        },
+        { debounce: 1000, maxWait: 1500 }
+    )
+    watchDebounced(
+        newETHTransfer,
+        newVal => {
+            if (newVal > 0) {
+                resetCount(AddressEventType.NewEthTransfer, true)
+                refetchEthBalance()
+            }
+        },
+        { debounce: 500, maxWait: 1000 }
+    )
 
     const refetchBalance = () => {
-        // resetCount(AddressEventType.NewEthTransfer, true)
+        resetCount(AddressEventType.NewEthTransfer, true)
         refetchEthBalance()
-        // resetCount(AddressEventType.NewErc20Transfer, true)
+        resetCount(AddressEventType.NewErc20Transfer, true)
         refetchTokens()
     }
     const setHash = (hash: string) => {
