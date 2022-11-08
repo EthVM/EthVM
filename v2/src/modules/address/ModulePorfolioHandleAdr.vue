@@ -1,10 +1,16 @@
 <template>
     <div>
-        <app-btn-icon v-if="addressPropIsValid" :icon="icon" @click="starClick"></app-btn-icon>
-        <app-btn v-else text="Add Address" @click="state.openDialog = true"></app-btn>
-        <app-dialog v-model="state.openDialog" :title="title" height="256" width="480">
+        <div v-if="!props.isEditMode">
+            <app-btn-icon v-if="addressPropIsValid" :icon="icon" @click="starClick"></app-btn-icon>
+            <app-btn v-else text="Add Address" @click="state.openDialog = true"></app-btn>
+        </div>
+        <app-dialog v-model="state.openDialog" :title="title" height="256" width="480" @update:model-value="closeModule">
             <template #scroll-content>
                 <div class="d-flex justify-center align-center flex-column">
+                    <div v-if="props.isEditMode" class="d-flex align-center justify-start mb-5">
+                        <app-address-blockie v-if="isValidAddress" :address="hashNoSpaces" :size="6" key="identicon" class="mr-3" />
+                        <app-transform-hash :hash="eth.toCheckSum(hashNoSpaces)" />
+                    </div>
                     <app-input
                         v-if="!props.isEditMode"
                         v-model="state.adrInput"
@@ -19,7 +25,7 @@
                         <template #prepend>
                             <div class="empty-identicon">
                                 <transition name="fade" mode="out-in">
-                                    <app-address-blockie v-if="isValidAddress" :address="state.adrInput" :size="6" key="identicon" />
+                                    <app-address-blockie v-if="isValidAddress" :address="hashNoSpaces" :size="6" key="identicon" />
                                 </transition>
                             </div>
                         </template>
@@ -35,10 +41,6 @@
                         class="mb-1"
                         @on-user-input="setName"
                     ></app-input>
-                    <div v-if="props.isEditMode" class="d-flex align-center justify-start mt-2 mb-5">
-                        <app-address-blockie v-if="isValidAddress" :address="state.adrInput" :size="6" key="identicon" class="mr-3" />
-                        <app-transform-hash :hash="eth.toCheckSum(state.adrInput)" />
-                    </div>
                     <app-btn :text="buttonText" @click="addAddressToPortfolio" :disabled="!isValidInput"></app-btn>
                 </div>
             </template>
@@ -77,8 +79,8 @@ interface ComponentState {
 }
 
 const state: ComponentState = reactive({
-    openDialog: false,
-    adrInput: '',
+    openDialog: props.isEditMode,
+    adrInput: props.address ? props.address : '',
     nameInput: props.name
 })
 
@@ -120,6 +122,15 @@ const starClick = (): void => {
 /** -------------------
  * Hash Input Handler
  ---------------------*/
+const removeSpaces = (val: string): string => {
+    if (val) {
+        return val.replace(/ /g, '')
+    }
+    return ''
+}
+const hashNoSpaces = computed(() => {
+    return removeSpaces(state.adrInput)
+})
 
 /**
  * Sets address input with timeout from child
@@ -143,7 +154,7 @@ const hasAddressError = computed<boolean>(() => {
  * @param _value user input
  */
 const isValidAddress = computed<boolean>(() => {
-    return eth.isValidAddress(eth.toCheckSum(state.adrInput))
+    return eth.isValidAddress(eth.toCheckSum(hashNoSpaces.value))
 })
 
 /**
@@ -198,6 +209,9 @@ const isValidName = computed<boolean>(() => {
  * Add/Edit New Address
  ---------------------*/
 const isValidInput = computed<boolean>(() => {
+    if (props.isEditMode) {
+        return !hasNameError.value
+    }
     return state.nameInput !== '' && state.adrInput !== '' && !hasAddressError.value && !hasNameError.value
 })
 
@@ -205,7 +219,7 @@ const addAddressToPortfolio = (): void => {
     if (props.isEditMode) {
         store.changeAddressName(state.adrInput, state.nameInput)
     } else {
-        store.addAddress(state.adrInput, state.nameInput)
+        store.addAddress(hashNoSpaces.value, state.nameInput)
         state.adrInput = ''
         state.nameInput = ''
     }
@@ -217,7 +231,7 @@ const addAddressToPortfolio = (): void => {
  ---------------------*/
 const icon = computed<string>(() => {
     if (props.isEditMode) {
-        return 'edit'
+        return ''
     }
     return store.addressHashIsSaved(props.address || '') === true ? 'star' : 'star_outline'
 })
@@ -228,6 +242,11 @@ const title = computed<string>(() => {
 const buttonText = computed<string>(() => {
     return props.isEditMode ? 'Save' : 'Add'
 })
+
+const emit = defineEmits(['close-module'])
+const closeModule = () => {
+    emit('close-module')
+}
 </script>
 
 <style scoped lang="scss">

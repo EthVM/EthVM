@@ -61,7 +61,7 @@
 </template>
 
 <script setup lang="ts">
-import ModuleAddAdressToPorfolio from './ModuleAddAdressToPorfolio.vue'
+import ModuleAddAdressToPorfolio from './ModulePorfolioHandleAdr.vue'
 import AppNoResult from '@core/components/AppNoResult.vue'
 import TableRowPortfolioItem from './components/TableRowPortfolioItem.vue'
 import { computed, reactive } from 'vue'

@@ -13,7 +13,7 @@
                 </div>
                 <v-spacer v-if="xs" />
                 <app-copy-to-clip :value-to-copy="eth.toCheckSum(props.adr.hash)" class="ml-2" />
-                <app-btn-icon icon="more_vert" />
+                <app-btn-icon icon="more_vert" :id="`list-item-menu-${props.adr.hash}`"> </app-btn-icon>
             </v-col>
             <!--
                 NAME:
@@ -60,6 +60,14 @@
                 <app-transform-hash :hash="eth.toCheckSum(props.adr.hash)" :link="`address/${props.adr.hash}`" is-blue is-short />
             </v-col>
         </v-row>
+        <app-menu min-width="180" :activator="`#list-item-menu-${props.adr.hash}`">
+            <v-list-item title="Edit Name" class="py-2" @click="openEditDialog(true)"> </v-list-item>
+            <v-list-item title="View Tokens" class="py-2"> </v-list-item>
+            <v-divider class="my-1 mx-4" />
+            <!-- <v-list-item title="Delete Address" class="py-2" @click="console.log('delete')"> </v-list-item> -->
+        </app-menu>
+        <module-porfolio-handle-adr v-if="state.showEdit" is-edit-mode :address="props.adr.hash" :name="props.adr.name" @close-module="openEditDialog(false)">
+        </module-porfolio-handle-adr>
     </v-card>
 </template>
 
@@ -68,6 +76,9 @@ import AppAddressBlockie from '@core/components/AppAddressBlockie.vue'
 import AppTransformHash from '@/core/components/AppTransformHash.vue'
 import AppCopyToClip from '@/core/components/AppCopyToClip.vue'
 import AppBtnIcon from '@core/components/AppBtnIcon.vue'
+import ModulePorfolioHandleAdr from '../ModulePorfolioHandleAdr.vue'
+
+import AppMenu from '@core/components/AppMenu.vue'
 import { reactive } from 'vue'
 import { useDisplay } from 'vuetify/lib/framework.mjs'
 import BN from 'bignumber.js'
@@ -92,12 +103,17 @@ interface PropsType {
 const props = defineProps<PropsType>()
 
 const state = reactive({
-    showMore: false
+    showMore: false,
+    showEdit: false
 })
 
 const openMoreInfo = () => {
     if (xs.value) {
         state.showMore = !state.showMore
     }
+}
+
+const openEditDialog = (_value: boolean) => {
+    state.showEdit = _value
 }
 </script>
