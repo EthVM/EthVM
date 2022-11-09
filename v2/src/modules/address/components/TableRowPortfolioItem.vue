@@ -64,7 +64,7 @@
             <v-list-item title="Edit Name" class="py-2" @click="openEditDialog(true)"> </v-list-item>
             <v-list-item title="View Tokens" class="py-2"> </v-list-item>
             <v-divider class="my-1 mx-4" />
-            <!-- <v-list-item title="Delete Address" class="py-2" @click="console.log('delete')"> </v-list-item> -->
+            <v-list-item title="Delete Address" class="py-2" @click="deleteAddress"> </v-list-item>
         </app-menu>
         <module-porfolio-handle-adr v-if="state.showEdit" is-edit-mode :address="props.adr.hash" :name="props.adr.name" @close-module="openEditDialog(false)">
         </module-porfolio-handle-adr>
@@ -82,8 +82,10 @@ import AppMenu from '@core/components/AppMenu.vue'
 import { reactive } from 'vue'
 import { useDisplay } from 'vuetify/lib/framework.mjs'
 import BN from 'bignumber.js'
+import { useStore } from '@/store'
 import { eth } from '@core/helper/eth'
 
+const store = useStore()
 const { xs, mdAndDown, smAndUp, lgAndUp } = useDisplay()
 
 interface DisplayItem {
@@ -115,5 +117,9 @@ const openMoreInfo = () => {
 
 const openEditDialog = (_value: boolean) => {
     state.showEdit = _value
+}
+
+const deleteAddress = () => {
+    store.removeAddress(props.adr.hash)
 }
 </script>

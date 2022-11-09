@@ -7,6 +7,7 @@
                 <router-view />
                 <app-btn @click="toggleTheme" text="toggle theme"></app-btn>
             </v-container>
+            <the-notifications />
         </v-main>
     </v-app>
 </template>
@@ -15,6 +16,7 @@
 import AppBtn from './core/components/AppBtn.vue'
 import TheAppHeader from './core/components/TheAppHeader.vue'
 import TheAppNavigationDrawerVue from './core/components/TheAppNavigationDrawer.vue'
+import TheNotifications from './core/components/TheNotifications.vue'
 import { useStore } from '@/store'
 import { useGetLatestPricesQuery } from '@core/composables/CoinData/getLatestPrices.generated'
 import { useSetPortfolio } from './core/composables/Portfolio/useSetPortfolioBalance'

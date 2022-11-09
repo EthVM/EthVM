@@ -3,6 +3,7 @@ import { defineStore } from 'pinia'
 import { GetLatestPricesQuery } from '@core/composables/CoinData/getLatestPrices.generated'
 import { useStorage, RemovableRef } from '@vueuse/core'
 import { TokenOwnersFragment } from '@module/address/apollo/AddressTokens/tokens.generated'
+import { NotificationType, NotificationDeleteAddress, Notification } from './helpers'
 
 interface PortfolioItem {
     hash: string
@@ -32,6 +33,7 @@ interface StoreState {
     portfolio: RemovableRef<PortfolioItem[]>
     portfolioEthBalanceMap: PortfolioEthBalanceMap
     portfolioTokenBalanceMap: PortfolioTokenBalanceMap
+    notification: NotificationDeleteAddress | Notification | undefined
 }
 
 export const useStore = defineStore('main', {
@@ -42,7 +44,8 @@ export const useStore = defineStore('main', {
         favTokens: useStorage('favTokens', [] as string[]),
         portfolio: useStorage('portfolio', [] as PortfolioItem[]),
         portfolioEthBalanceMap: {},
-        portfolioTokenBalanceMap: {}
+        portfolioTokenBalanceMap: {},
+        notification: undefined
     }),
     getters: {
         /**
@@ -132,10 +135,18 @@ export const useStore = defineStore('main', {
         },
         removeAddress(hash: string) {
             const _hash = hash.toLowerCase()
-            const newList = this.portfolio.filter(i => i.hash.toLowerCase() !== _hash)
-            this.portfolio = [...newList]
-            delete this.portfolioEthBalanceMap[_hash]
-            delete this.portfolioTokenBalanceMap[_hash]
+            const item = this.portfolio.filter(i => i.hash.toLowerCase() === _hash)
+            if (item.length > 0) {
+                this.addNotification({
+                    _type: NotificationType.DELETE_ADR,
+                    hash: item[0].hash,
+                    name: item[0].name
+                })
+                const newList = this.portfolio.filter(i => i.hash.toLowerCase() !== _hash)
+                this.portfolio = [...newList]
+                delete this.portfolioEthBalanceMap[_hash]
+                delete this.portfolioTokenBalanceMap[_hash]
+            }
         },
         changeAddressName(_hash: string, _name: string) {
             const item = this.portfolio.find(i => i.hash.toLowerCase() === _hash.toLowerCase())
@@ -159,6 +170,18 @@ export const useStore = defineStore('main', {
                     balanceFiatBN: _balanceFiatBN,
                     tokens: _tokens
                 }
+            })
+        },
+        addNotification(_notification: NotificationDeleteAddress | Notification) {
+            this.notification = Object.assign(_notification)
+        },
+        clearNotification() {
+            this.notification = undefined
+        },
+        notify(_text: string) {
+            this.addNotification({
+                _type: NotificationType.PLAIN,
+                text: _text
             })
         }
     }
