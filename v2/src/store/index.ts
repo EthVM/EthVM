@@ -3,7 +3,7 @@ import { defineStore } from 'pinia'
 import { GetLatestPricesQuery } from '@core/composables/CoinData/getLatestPrices.generated'
 import { useStorage, RemovableRef } from '@vueuse/core'
 import { TokenOwnersFragment } from '@module/address/apollo/AddressTokens/tokens.generated'
-import { NotificationType, NotificationDeleteAddress, Notification } from './helpers'
+import { NotificationType, NotificationDeleteAddress, Notification, MAX_PORTFOLIO_ITEMS } from './helpers'
 
 interface PortfolioItem {
     hash: string
@@ -61,8 +61,7 @@ export const useStore = defineStore('main', {
         /**
          * Returns whether or not an address can be saved
          * @returns true - if address is saved
-         * @returns false - if address is not saved and list <= 10
-         * @returns undefined - if potrolio list === 10
+         * @returns false - if address is not saved and list <= MAX_PORTFOLIO_ITEMS
          */
         addressHashIsSaved: state => {
             return (_hash: string): boolean | undefined => {
@@ -70,7 +69,7 @@ export const useStore = defineStore('main', {
                 if (exhists) {
                     return true
                 }
-                return state.portfolio.length === 10 ? undefined : false
+                return false
             }
         },
         /**
@@ -126,7 +125,7 @@ export const useStore = defineStore('main', {
             this.favTokens = [...newList]
         },
         addAddress(_hash: string, _name: string) {
-            if (this.portfolio.length <= 10) {
+            if (this.portfolio.length <= MAX_PORTFOLIO_ITEMS) {
                 this.portfolio.push({
                     hash: _hash.toLowerCase(),
                     name: _name

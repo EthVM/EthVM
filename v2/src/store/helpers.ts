@@ -11,5 +11,6 @@ export interface NotificationDeleteAddress {
     hash: string
     name: string
 }
+export const MAX_PORTFOLIO_ITEMS = 10
 
 export const TIMEOUT = 5000

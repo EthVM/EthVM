@@ -1,8 +1,14 @@
 <template>
     <div>
         <div v-if="!props.isEditMode">
-            <app-btn-icon v-if="addressPropIsValid" :icon="icon" @click="starClick"></app-btn-icon>
-            <app-btn v-else text="Add Address" @click="state.openDialog = true"></app-btn>
+            <v-tooltip text="You can only store 10 addresses in your portfolio" :disabled="!isDisabled">
+                <template v-slot:activator="{ props }">
+                    <div v-bind="props" class="d-inline-block">
+                        <app-btn-icon v-if="addressPropIsValid" :icon="icon" @click="starClick" :disabled="isDisabled"></app-btn-icon>
+                        <app-btn v-else text="Add Address" @click="state.openDialog = true" :disabled="isDisabled"></app-btn>
+                    </div>
+                </template>
+            </v-tooltip>
         </div>
         <app-dialog v-model="state.openDialog" :title="title" height="256" width="480" @update:model-value="closeModule">
             <template #scroll-content>
@@ -58,7 +64,7 @@ import AppTransformHash from '@/core/components/AppTransformHash.vue'
 import { computed, reactive } from 'vue'
 import { useStore } from '@/store'
 import { eth } from '@core/helper/eth'
-
+import { MAX_PORTFOLIO_ITEMS } from '@/store/helpers'
 const store = useStore()
 
 interface PropType {
@@ -241,6 +247,13 @@ const title = computed<string>(() => {
 
 const buttonText = computed<string>(() => {
     return props.isEditMode ? 'Save' : 'Add'
+})
+
+const isDisabled = computed<boolean>(() => {
+    if (addressPropIsValid.value && store.addressHashIsSaved(props.address || '')) {
+        return false
+    }
+    return store.portfolioLength === MAX_PORTFOLIO_ITEMS
 })
 
 const emit = defineEmits(['close-module'])
