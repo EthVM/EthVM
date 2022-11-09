@@ -1,9 +1,9 @@
 <template>
     <v-row :class="rowMargin">
-        <!-- <v-col cols="12" md="6" lg="4" :class="columnPadding">
-            <module-address-portfolio :address-ref="props.addressRef" />
-        </v-col>
         <v-col cols="12" md="6" lg="4" :class="columnPadding">
+            <module-portfolio-total />
+        </v-col>
+        <!-- <v-col cols="12" md="6" lg="4" :class="columnPadding">
             <module-address-balance :address-ref="props.addressRef" is-overview />
         </v-col>
         <v-col cols="12" md="6" lg="4" :class="[columnPadding, 'd-none d-sm-block']">
@@ -40,12 +40,11 @@
 <script setup lang="ts">
 // import ModuleAddressBalance from '@module/address/ModuleAddressBalance.vue'
 // import ModuleAddressTokenBalance from '@module/address/ModuleAddressTokenBalance.vue'
-// import ModuleAddressPortfolio from '@/modules/address/ModuleAddressPortfolio.vue'
+import ModulePortfolioTotal from '@/modules/address/ModulePortfolioTotal.vue'
 import ModulePortfolioTokenBalance from '@/modules/address/ModulePortfolioTokenBalance.vue'
 import ModulePortfolioList from '@module/address/ModulePortfolioList.vue'
 import AppTabs from '@/core/components/AppTabs.vue'
 import { Tab } from '@core/components/props'
-// import { useAddressUpdate } from '@core/composables/AddressUpdate/addressUpdate.composable'
 import { Q_PORTFOLIO } from '@core/router/routesNames'
 import { useAppViewGrid } from '@core/composables/AppViewGrid/AppViewGrid.composable'
 import { reactive } from 'vue'
