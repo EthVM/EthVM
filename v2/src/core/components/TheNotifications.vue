@@ -79,8 +79,7 @@ watch(
 
 onMounted(() => {
     if (store.notification) {
-        state.notification = store.notification
-        state.showNotifications = true
+        start()
         resume()
     }
 })
