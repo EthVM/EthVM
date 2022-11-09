@@ -13,13 +13,12 @@ export type GetEthBalanceQueryVariables = Types.Exact<{
     hash: Types.Scalars['String']
 }>
 
-export type GetEthBalanceQuery = { __typename?: 'Query'; getEthBalance: { __typename?: 'EthOwner'; balance: string; owner: string } }
+export type GetEthBalanceQuery = { __typename?: 'Query'; getEthBalance: { __typename?: 'EthOwner'; balance: string } }
 
 export const GetEthBalanceDocument = gql`
     query getEthBalance($hash: String!) {
         getEthBalance(owner: $hash) {
             balance
-            owner
         }
     }
 `
