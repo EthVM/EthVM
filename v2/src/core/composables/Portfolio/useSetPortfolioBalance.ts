@@ -36,13 +36,13 @@ export function useSetPortfolio(hash: string) {
     })
 
     watch(balanceWei, () => {
-        if (eth.isValidAddress(addressHash.value)) {
+        if (eth.isValidAddress(addressHash.value) && !loadingBalance) {
             store.addEthBalance(unref(addressHash), unref(balanceWei), unref(balanceFormatted), unref(balanceFiatBN), unref(balanceFiatFormatted))
         }
     })
 
     watch(tokenTotalBalanceBN, () => {
-        if (eth.isValidAddress(addressHash.value) && erc20Tokens.value) {
+        if (eth.isValidAddress(addressHash.value) && erc20Tokens.value && !loadingTokens) {
             store.addErc20Balance(unref(addressHash), unref(tokenTotalBalanceBN), unref(erc20Tokens.value))
         }
     })
