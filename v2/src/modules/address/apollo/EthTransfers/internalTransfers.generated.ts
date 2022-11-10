@@ -10,7 +10,7 @@ import { BalanceFragmentFragmentDoc } from '../AddressRewards/rewards.generated'
 import * as VueApolloComposable from '@vue/apollo-composable'
 import * as VueCompositionApi from 'vue'
 export type ReactiveFunction<TParam> = () => TParam
-export type ItxTransferFragment = {
+export type InternalTransactionTransferFragment = {
     __typename?: 'Transfer'
     transactionHash: string
     block: number
@@ -21,7 +21,7 @@ export type ItxTransferFragment = {
     status?: boolean | null
 }
 
-export type EthItxTransfersFragment = {
+export type EthInternalTransactionTransfersFragment = {
     __typename?: 'EthTransfer'
     value: string
     transfer: {
@@ -41,15 +41,15 @@ export type EthItxTransfersFragment = {
     } | null
 }
 
-export type GetEthItxTransfersQueryVariables = Types.Exact<{
+export type GetEthInternalTransactionTransfersQueryVariables = Types.Exact<{
     hash: Types.Scalars['String']
     _limit?: Types.InputMaybe<Types.Scalars['Int']>
     _nextKey?: Types.InputMaybe<Types.Scalars['String']>
 }>
 
-export type GetEthItxTransfersQuery = {
+export type GetEthInternalTransactionTransfersQuery = {
     __typename?: 'Query'
-    getEthItxTransfers: {
+    getEthInternalTransactionTransfers: {
         __typename?: 'ETHTransfers'
         nextKey?: string | null
         transfers: Array<{
@@ -74,8 +74,8 @@ export type GetEthItxTransfersQuery = {
     }
 }
 
-export const ItxTransferFragmentDoc = gql`
-    fragment ItxTransfer on Transfer {
+export const InternalTransactionTransferFragmentDoc = gql`
+    fragment InternalTransactionTransfer on Transfer {
         transactionHash
         block
         timestamp
@@ -85,10 +85,10 @@ export const ItxTransferFragmentDoc = gql`
         status
     }
 `
-export const EthItxTransfersFragmentDoc = gql`
-    fragment EthItxTransfers on EthTransfer {
+export const EthInternalTransactionTransfersFragmentDoc = gql`
+    fragment EthInternalTransactionTransfers on EthTransfer {
         transfer {
-            ...ItxTransfer
+            ...InternalTransactionTransfer
         }
         stateDiff {
             to {
@@ -100,54 +100,71 @@ export const EthItxTransfersFragmentDoc = gql`
         }
         value
     }
-    ${ItxTransferFragmentDoc}
+    ${InternalTransactionTransferFragmentDoc}
     ${BalanceFragmentFragmentDoc}
 `
-export const GetEthItxTransfersDocument = gql`
-    query getEthItxTransfers($hash: String!, $_limit: Int, $_nextKey: String) {
-        getEthItxTransfers(owner: $hash, limit: $_limit, nextKey: $_nextKey) {
+export const GetEthInternalTransactionTransfersDocument = gql`
+    query getEthInternalTransactionTransfers($hash: String!, $_limit: Int, $_nextKey: String) {
+        getEthInternalTransactionTransfers(owner: $hash, limit: $_limit, nextKey: $_nextKey) {
             transfers {
-                ...EthItxTransfers
+                ...EthInternalTransactionTransfers
             }
             nextKey
         }
     }
-    ${EthItxTransfersFragmentDoc}
+    ${EthInternalTransactionTransfersFragmentDoc}
 `
 
 /**
- * __useGetEthItxTransfersQuery__
+ * __useGetEthInternalTransactionTransfersQuery__
  *
- * To run a query within a Vue component, call `useGetEthItxTransfersQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetEthItxTransfersQuery` returns an object from Apollo Client that contains result, loading and error properties
+ * To run a query within a Vue component, call `useGetEthInternalTransactionTransfersQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetEthInternalTransactionTransfersQuery` returns an object from Apollo Client that contains result, loading and error properties
  * you can use to render your UI.
  *
  * @param variables that will be passed into the query
  * @param options that will be passed into the query, supported options are listed on: https://v4.apollo.vuejs.org/guide-composable/query.html#options;
  *
  * @example
- * const { result, loading, error } = useGetEthItxTransfersQuery({
+ * const { result, loading, error } = useGetEthInternalTransactionTransfersQuery({
  *   hash: // value for 'hash'
  *   _limit: // value for '_limit'
  *   _nextKey: // value for '_nextKey'
  * });
  */
-export function useGetEthItxTransfersQuery(
-    variables: GetEthItxTransfersQueryVariables | VueCompositionApi.Ref<GetEthItxTransfersQueryVariables> | ReactiveFunction<GetEthItxTransfersQueryVariables>,
+export function useGetEthInternalTransactionTransfersQuery(
+    variables:
+        | GetEthInternalTransactionTransfersQueryVariables
+        | VueCompositionApi.Ref<GetEthInternalTransactionTransfersQueryVariables>
+        | ReactiveFunction<GetEthInternalTransactionTransfersQueryVariables>,
     options:
-        | VueApolloComposable.UseQueryOptions<GetEthItxTransfersQuery, GetEthItxTransfersQueryVariables>
-        | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<GetEthItxTransfersQuery, GetEthItxTransfersQueryVariables>>
-        | ReactiveFunction<VueApolloComposable.UseQueryOptions<GetEthItxTransfersQuery, GetEthItxTransfersQueryVariables>> = {}
+        | VueApolloComposable.UseQueryOptions<GetEthInternalTransactionTransfersQuery, GetEthInternalTransactionTransfersQueryVariables>
+        | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<GetEthInternalTransactionTransfersQuery, GetEthInternalTransactionTransfersQueryVariables>>
+        | ReactiveFunction<VueApolloComposable.UseQueryOptions<GetEthInternalTransactionTransfersQuery, GetEthInternalTransactionTransfersQueryVariables>> = {}
 ) {
-    return VueApolloComposable.useQuery<GetEthItxTransfersQuery, GetEthItxTransfersQueryVariables>(GetEthItxTransfersDocument, variables, options)
+    return VueApolloComposable.useQuery<GetEthInternalTransactionTransfersQuery, GetEthInternalTransactionTransfersQueryVariables>(
+        GetEthInternalTransactionTransfersDocument,
+        variables,
+        options
+    )
 }
-export function useGetEthItxTransfersLazyQuery(
-    variables: GetEthItxTransfersQueryVariables | VueCompositionApi.Ref<GetEthItxTransfersQueryVariables> | ReactiveFunction<GetEthItxTransfersQueryVariables>,
+export function useGetEthInternalTransactionTransfersLazyQuery(
+    variables:
+        | GetEthInternalTransactionTransfersQueryVariables
+        | VueCompositionApi.Ref<GetEthInternalTransactionTransfersQueryVariables>
+        | ReactiveFunction<GetEthInternalTransactionTransfersQueryVariables>,
     options:
-        | VueApolloComposable.UseQueryOptions<GetEthItxTransfersQuery, GetEthItxTransfersQueryVariables>
-        | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<GetEthItxTransfersQuery, GetEthItxTransfersQueryVariables>>
-        | ReactiveFunction<VueApolloComposable.UseQueryOptions<GetEthItxTransfersQuery, GetEthItxTransfersQueryVariables>> = {}
+        | VueApolloComposable.UseQueryOptions<GetEthInternalTransactionTransfersQuery, GetEthInternalTransactionTransfersQueryVariables>
+        | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<GetEthInternalTransactionTransfersQuery, GetEthInternalTransactionTransfersQueryVariables>>
+        | ReactiveFunction<VueApolloComposable.UseQueryOptions<GetEthInternalTransactionTransfersQuery, GetEthInternalTransactionTransfersQueryVariables>> = {}
 ) {
-    return VueApolloComposable.useLazyQuery<GetEthItxTransfersQuery, GetEthItxTransfersQueryVariables>(GetEthItxTransfersDocument, variables, options)
+    return VueApolloComposable.useLazyQuery<GetEthInternalTransactionTransfersQuery, GetEthInternalTransactionTransfersQueryVariables>(
+        GetEthInternalTransactionTransfersDocument,
+        variables,
+        options
+    )
 }
-export type GetEthItxTransfersQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<GetEthItxTransfersQuery, GetEthItxTransfersQueryVariables>
+export type GetEthInternalTransactionTransfersQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<
+    GetEthInternalTransactionTransfersQuery,
+    GetEthInternalTransactionTransfersQueryVariables
+>

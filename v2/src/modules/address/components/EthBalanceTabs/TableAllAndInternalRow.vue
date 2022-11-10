@@ -22,7 +22,7 @@
                     is-short
                     is-blue
                     :hash="eth.toCheckSum(transfer.transfer.transactionHash)"
-                    :link="`/address/${transfer.transfer.transactionHash}`"
+                    :link="`/tx/${transfer.transfer.transactionHash}`"
                 />
             </v-col>
         </template>
@@ -120,7 +120,7 @@ const balanceAfter = computed<FormattedNumber>(() => {
 
 const txAddress = computed<string>(() => {
     if (props.transfer.transfer.to === props.addressRef) {
-        // Use the stateDiff of the destination address
+        // Use the address of the destination address
         return props.transfer.transfer.from
     }
     // use from address
