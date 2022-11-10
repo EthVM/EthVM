@@ -5,7 +5,17 @@
                 <template v-slot:activator="{ props }">
                     <div v-bind="props" class="d-inline-block">
                         <app-btn-icon v-if="addressPropIsValid" :icon="icon" @click="starClick" :disabled="isDisabled"></app-btn-icon>
-                        <app-btn v-else text="Add Address" @click="state.openDialog = true" :disabled="isDisabled"></app-btn>
+                        <app-btn
+                            v-else-if="!addressPropIsValid && !xs"
+                            text="Add Address"
+                            @click="state.openDialog = true"
+                            :disabled="isDisabled"
+                            icon="add"
+                        ></app-btn>
+                        <v-btn v-else icon flat color="secondary" height="34px" width="34px" @click="state.openDialog = true" :disabled="isDisabled">
+                            <v-icon>add</v-icon>
+                        </v-btn>
+                        <!-- <app-btn-icon v-else icon="add"  btn-color="secondary"></app-btn-icon> -->
                     </div>
                 </template>
             </v-tooltip>
@@ -63,9 +73,11 @@ import AppInput from '@core/components/AppInput.vue'
 import AppTransformHash from '@/core/components/AppTransformHash.vue'
 import { computed, reactive } from 'vue'
 import { useStore } from '@/store'
+import { useDisplay } from 'vuetify/lib/framework.mjs'
 import { eth } from '@core/helper/eth'
 import { MAX_PORTFOLIO_ITEMS } from '@/store/helpers'
 const store = useStore()
+const { xs } = useDisplay()
 
 interface PropType {
     address?: string

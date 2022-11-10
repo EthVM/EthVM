@@ -53,7 +53,7 @@ const loaderStyle = computed<string>(() => {
 }
 .token-icon {
     border-radius: 50%;
-    box-shadow: 0px 3px 5px rgba(24, 43, 75, 0.1);
-    border: 1px solid rgba(0, 0, 0, 0.02);
+    box-shadow: 0px 3px 5px rgba(24, 43, 75, 0.2);
+    border: 1px solid rgba(255, 255, 255, 1);
 }
 </style>

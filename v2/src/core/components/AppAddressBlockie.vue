@@ -28,6 +28,15 @@ watch(
         }
     }
 )
+
+watch(
+    () => props.size,
+    (newVal, oldVal) => {
+        if (newVal !== oldVal) {
+            identicon.value = createIcon(props.address, { size: props.size })
+        }
+    }
+)
 </script>
 
 <style scoped lang="scss"></style>
