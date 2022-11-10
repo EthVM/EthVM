@@ -153,7 +153,7 @@ const state: ComponentState = reactive({
 const tokenPrices = computed<Map<string, TokenMarketData> | false | null>(() => {
     if (store.portfolioIsLoaded && !loadingCoinData.value) {
         const contracts: string[] = []
-        tokensRaw.value.forEach(token => {
+        store.portfolioTokensRaw().forEach(token => {
             if (token) {
                 contracts.push(token.tokenInfo.contract)
             }
@@ -164,43 +164,18 @@ const tokenPrices = computed<Map<string, TokenMarketData> | false | null>(() => 
     }
     return null
 })
-const tokensRaw = computed(() => {
-    const allTokens: TokenOwnersFragment[] = []
-    if (store.portfolioIsLoaded) {
-        const adrs = store.portfolio.map(i => i.hash.toLowerCase())
-        adrs.forEach(i => {
-            const filtered = store.portfolioTokenBalanceMap[i].tokens.filter((x): x is TokenOwnersFragment => x !== null)
-            filtered.forEach(_token => {
-                const index = allTokens.findIndex(item => _token.tokenInfo.contract === item.tokenInfo.contract)
-                if (index < 0) {
-                    allTokens.push(_token)
-                    return
-                }
-                const balanceInToken = Web3Utils.toBN(_token.balance)
-                const balanceInAll = Web3Utils.toBN(allTokens[index].balance)
-                const newBalance = balanceInAll.add(balanceInToken)
-                const newItem = {
-                    ..._token,
-                    balance: Web3Utils.toHex(newBalance)
-                }
-                allTokens.splice(index, 1, newItem)
-            })
-        })
-    }
-    return allTokens
+const tokensLength = computed<number>(() => {
+    return store.portfolioTokensRaw().length
 })
 const hasTokens = computed<boolean>(() => {
-    return tokensRaw.value.length > 0
+    return tokensLength.value > 0
 })
 
-const tokensLength = computed<number>(() => {
-    return tokensRaw.value.length
-})
 const { renderState } = useAppTableRowRender(tokensLength.value)
 
 const tokenSort = computed(() => {
     if (store.portfolioIsLoaded && tokenPrices.value !== null) {
-        return new TokenSort(tokensRaw.value, tokenPrices.value, true)
+        return new TokenSort(store.portfolioTokensRaw(), tokenPrices.value, true)
     }
     return false
 })
@@ -235,19 +210,6 @@ const isActiveSort = (key: KEY): boolean => {
 }
 
 const SORT_KEY = KEY
-
-/**------------------------
- * Refetch Tokens
- -------------------------*/
-const resetCount = (): void => {
-    // refetchTokens()
-    // emit('resetCount', AddressEventType.NewErc20Transfer, true)
-}
-
-/**------------------------
- * Route Changes
- -------------------------*/
-const router = useRouter()
 </script>
 
 <style scoped>

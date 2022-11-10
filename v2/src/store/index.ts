@@ -1,4 +1,5 @@
 import BN from 'bignumber.js'
+import Web3Utils from 'web3-utils'
 import { defineStore } from 'pinia'
 import { GetLatestPricesQuery } from '@core/composables/CoinData/getLatestPrices.generated'
 import { useStorage, RemovableRef } from '@vueuse/core'
@@ -34,6 +35,25 @@ interface StoreState {
     portfolioEthBalanceMap: PortfolioEthBalanceMap
     portfolioTokenBalanceMap: PortfolioTokenBalanceMap
     notification: NotificationDeleteAddress | Notification | undefined
+}
+
+const getKeySumBN = <T>(map: Record<string, T>, _key: keyof T): BN => {
+    const adrs = Object.keys(map)
+    let total = new BN(0)
+    adrs.forEach(i => {
+        const adr = map[i]
+        if (adr) {
+            const h = adr[_key]
+            if (typeof h === 'string' || BN.isBigNumber(h)) {
+                total = total.plus(new BN(h))
+            } else {
+                throw new Error(
+                    'ERROR IN: getKeySumBN() in pinia store. Incorrect type supplied. Please check T[_key] type. Type should be either String or BigNumber.'
+                )
+            }
+        }
+    })
+    return total
 }
 
 export const useStore = defineStore('main', {
@@ -114,6 +134,66 @@ export const useStore = defineStore('main', {
             const eth = Object.keys(state.portfolioEthBalanceMap)
             const tokens = Object.keys(state.portfolioTokenBalanceMap)
             return total === eth.length && total === tokens.length
+        },
+        portfolioWeiBalanceBN: state => {
+            try {
+                return getKeySumBN(state.portfolioEthBalanceMap, 'weiBalance')
+            } catch {
+                //NOTE: sentry send e
+                return new BN(0)
+            }
+        },
+        portfolioEthFiatBN: state => {
+            try {
+                return getKeySumBN(state.portfolioEthBalanceMap, 'balanceFiatBN')
+            } catch {
+                //NOTE: sentry send e
+                return new BN(0)
+            }
+        },
+        portfolioTokensFiatBN: state => {
+            try {
+                return getKeySumBN(state.portfolioTokenBalanceMap, 'balanceFiatBN')
+            } catch {
+                //sentry send e
+                return new BN(0)
+            }
+        },
+        addressTokensRaw(state) {
+            return (_hash: string): TokenOwnersFragment[] => {
+                if (this.addressERC20BalanceLoaded(_hash)) {
+                    return state.portfolioTokenBalanceMap[_hash].tokens.filter((x): x is TokenOwnersFragment => x !== null)
+                }
+                return []
+            }
+        },
+        portfolioTokensRaw(state) {
+            return (_adrs: string[] | undefined = undefined) => {
+                const allTokens: TokenOwnersFragment[] = []
+                if (this.portfolioIsLoaded) {
+                    const adrs = _adrs ? _adrs : Object.keys(state.portfolioTokenBalanceMap)
+                    adrs.forEach(i => {
+                        const _tokens = this.addressTokensRaw(i)
+                        _tokens.forEach(_token => {
+                            //Check if token balance was loaded
+                            const index = allTokens.findIndex(item => _token.tokenInfo.contract === item.tokenInfo.contract)
+                            if (index < 0) {
+                                allTokens.push(_token)
+                                return
+                            }
+                            const balanceInToken = Web3Utils.toBN(_token.balance)
+                            const balanceInAll = Web3Utils.toBN(allTokens[index].balance)
+                            const newBalance = balanceInAll.add(balanceInToken)
+                            const newItem = {
+                                ..._token,
+                                balance: Web3Utils.toHex(newBalance)
+                            }
+                            allTokens.splice(index, 1, newItem)
+                        })
+                    })
+                }
+                return allTokens
+            }
         }
     },
     actions: {
