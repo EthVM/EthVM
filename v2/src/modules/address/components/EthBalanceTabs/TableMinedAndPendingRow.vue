@@ -65,11 +65,12 @@
                 </template>
             </template>
         </v-row>
+        <!-- For desktop screens -->
         <v-row v-else class="my-5">
             <v-col sm="3">
                 <div class="d-flex">
                     <span class="mr-6">
-                        <v-icon v-if="props.tab === routes[2]" color="success">check_circle</v-icon>
+                        <v-icon v-if="props.tab === routes[2]" color="success">sync</v-icon>
                         <v-icon v-else>update</v-icon>
                     </span>
                     <div>
