@@ -88,7 +88,7 @@
                 </div>
             </v-col>
         </v-row>
-        <v-row v-if="state.showMoreDetails && mdAndDown" justify="space-between" align="center" class="text-subtitle-2 font-weight-regular mt-2 pb-5">
+        <v-row v-if="state.showMoreDetails && mdAndDown" justify="space-between" align="center" class="font-weight-regular mt-2 pb-5">
             <v-col cols="5">
                 <div class="d-flex align-center">
                     <app-address-blockie :address="transaction.from || ''" :size="6" class="mr-1 mr-sm-2" />

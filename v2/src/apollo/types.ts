@@ -188,15 +188,16 @@ export type Erc1155TokenBalance = {
     tokenInfo: EthTokenInfo
 }
 
-export type Erc1155TokenOwners = {
-    __typename?: 'ERC1155TokenOwners'
+export type Erc1155TokenBalances = {
+    __typename?: 'ERC1155TokenBalances'
+    balances: Array<Erc1155TokenBalance>
     nextKey?: Maybe<Scalars['String']>
-    owners: Array<Maybe<Erc1155TokenBalance>>
 }
 
 export type Erc1155Transfer = {
     __typename?: 'ERC1155Transfer'
     contract: Scalars['String']
+    stateDiff?: Maybe<StateDiffChange>
     tokenId: Scalars['String']
     tokenInfo: EthTokenInfo
     transfer: Transfer
@@ -207,6 +208,20 @@ export type Erc1155Transfers = {
     __typename?: 'ERC1155Transfers'
     nextKey?: Maybe<Scalars['String']>
     transfers: Array<Maybe<Erc1155Transfer>>
+}
+
+export type EthTransactionTransfer = {
+    __typename?: 'ETHTransactionTransfer'
+    stateDiff?: Maybe<StateDiffChange>
+    transactionStateDiff: TransactionStateDiffChange
+    transfer: Transfer
+    value: Scalars['String']
+}
+
+export type EthTransactionTransfers = {
+    __typename?: 'ETHTransactionTransfers'
+    nextKey?: Maybe<Scalars['String']>
+    transfers: Array<EthTransactionTransfer>
 }
 
 export type EthTransfers = {
@@ -276,7 +291,7 @@ export type Log = {
 
 export type Mutation = {
     __typename?: 'Mutation'
-    submitUnsignedPendingTransaction: Scalars['String']
+    submitUnsignedPendingTransaction: Scalars['Int']
     verifyContract: ContractVerify
 }
 
@@ -285,7 +300,7 @@ export type MutationSubmitUnsignedPendingTransactionArgs = {
     chainId: Scalars['String']
     from: Scalars['String']
     gas: Scalars['String']
-    gasPrice: Scalars['String']
+    gasPrice?: InputMaybe<Scalars['String']>
     hash: Scalars['String']
     input: Scalars['String']
     maxFeePerGas?: InputMaybe<Scalars['String']>
@@ -310,9 +325,24 @@ export type NftContract = {
     primary_asset_contracts?: Maybe<Array<PrimaryAssetContract>>
 }
 
+export type NftTokenBalance = {
+    __typename?: 'NFTTokenBalance'
+    balance: Scalars['String']
+    owner: Scalars['String']
+    tokenInfo: EthTokenInfo
+    type: NftType
+}
+
+export type NftTokenBalances = {
+    __typename?: 'NFTTokenBalances'
+    nextKey?: Maybe<Scalars['String']>
+    tokens: Array<NftTokenBalance>
+}
+
 export type NftTransfer = {
     __typename?: 'NFTTransfer'
     contract: Scalars['String']
+    stateDiff?: Maybe<StateDiffChange>
     tokenId: Scalars['String']
     tokenInfo: EthTokenInfo
     transfer: Transfer
@@ -323,6 +353,11 @@ export type NftTransfers = {
     __typename?: 'NFTTransfers'
     nextKey?: Maybe<Scalars['String']>
     transfers: Array<Maybe<NftTransfer>>
+}
+
+export enum NftType {
+    Erc721 = 'ERC721',
+    Erc1155 = 'ERC1155'
 }
 
 export type PendingTransfer = {
@@ -356,30 +391,33 @@ export type Query = {
     getBlockTransfers: EthTransfers
     getBlocksArrayByNumber: Array<Maybe<BlockSummary>>
     getContractMeta: ContractMeta
+    /** Get the number of ERC20 tokens of a contract owned by an address */
     getERC20TokenBalance: Erc20TokenBalance
-    /** Returns a list of all addresses that own an ERC20Token */
+    /** Get the owners of an ERC20 token */
     getERC20TokenOwners: Erc20TokenOwners
     getERC20TokenTransfers: Erc20Transfers
     getERC20Transfers: Erc20Transfers
     getERC20TransfersV2Tmp: Erc20Transfers
+    /** Get the count of ERC721 tokens of a contract that are owned by the address */
     getERC721TokenBalance: Erc721TokenBalance
-    /** Returns a list of all addresses that own an ERC721Token */
+    /** Get addresses owning a contract's ERC721 tokens */
     getERC721TokenOwners: Erc721TokenOwners
     getERC721TokenTransfers: Erc721Transfers
     getERC721Transfers: Erc721Transfers
     getERC721TransfersV2Tmp: Erc721Transfers
     getERC1155TokenTransfers: Erc1155Transfers
+    /** Get ERC1155 tokens owned by an address */
+    getERC1155TokensByOwner: Erc1155TokenBalances
     getERC1155Transfers: Erc1155Transfers
     getERC1155TransfersV2Tmp: Erc1155Transfers
     getEthBalance: EthOwner
-    getEthItxTransfers: EthTransfers
+    getEthInternalTransactionTransfers: EthTransfers
     getEthOwners: EthOwners
     getEthSigs: Array<Maybe<Scalars['String']>>
+    getEthTransactionTransfers: EthTransactionTransfers
     getEthTransfers: EthTransfers
     getEthTransfersByHash: EthTransfers
-    getEthTransfersBySubtype: EthTransfers
     getEthTransfersV2: EthTransfers
-    getEthTxTransfers: EthTransfers
     getGenesisRewards: EthTransfers
     getHashType: HashType
     getLatestBlockInfo: LatestBlockData
@@ -389,15 +427,18 @@ export type Query = {
     getNFTTransfersByCounterpartyAndDirection: NftTransfers
     getNFTTransfersByDirection: NftTransfers
     getNFTcontractsMeta: AddressNfTcontracts
-    /** Returns a list of all ERC20Tokens owned by an address */
+    /** Get ERC20 tokens owned by an address */
     getOwnersERC20Tokens: Erc20TokenOwners
-    /** Returns a list of ERC721 balances */
+    /** Get ERC721 tokens owned by an address */
     getOwnersERC721Balances: Array<Maybe<Erc721TokenBalance>>
-    /** Returns a list of all ERC721 Tokens owned by an address */
+    /** Get ERC721 tokens of a contract owned by an address */
     getOwnersERC721Tokens: Erc721TokenContract
+    /** Get ERC721 tokens of a contract owned by an address (v2) */
     getOwnersERC721TokensV2: Erc721TokenContract
+    getOwnersNFTTokens: NftTokenBalances
     getPendingTransactions: Array<Maybe<Tx>>
     getTimeseriesData: TimeseriesResponse
+    /** Returns the current server time in UTC milliseconds */
     getTimestamp: Scalars['String']
     getTokenInfoByContract: EthTokenInfo
     getTokenInfoByContracts: Array<Maybe<EthTokenInfo>>
@@ -512,6 +553,12 @@ export type QueryGetErc1155TokenTransfersArgs = {
     nextKey?: InputMaybe<Scalars['String']>
 }
 
+export type QueryGetErc1155TokensByOwnerArgs = {
+    limit?: InputMaybe<Scalars['Int']>
+    nextKey?: InputMaybe<Scalars['String']>
+    owner: Scalars['String']
+}
+
 export type QueryGetErc1155TransfersArgs = {
     limit?: InputMaybe<Scalars['Int']>
     nextKey?: InputMaybe<Scalars['String']>
@@ -528,7 +575,7 @@ export type QueryGetEthBalanceArgs = {
     owner: Scalars['String']
 }
 
-export type QueryGetEthItxTransfersArgs = {
+export type QueryGetEthInternalTransactionTransfersArgs = {
     limit?: InputMaybe<Scalars['Int']>
     nextKey?: InputMaybe<Scalars['String']>
     owner: Scalars['String']
@@ -541,6 +588,12 @@ export type QueryGetEthOwnersArgs = {
 
 export type QueryGetEthSigsArgs = {
     sigs: Array<InputMaybe<Scalars['String']>>
+}
+
+export type QueryGetEthTransactionTransfersArgs = {
+    limit?: InputMaybe<Scalars['Int']>
+    nextKey?: InputMaybe<Scalars['String']>
+    owner: Scalars['String']
 }
 
 export type QueryGetEthTransfersArgs = {
@@ -556,24 +609,11 @@ export type QueryGetEthTransfersByHashArgs = {
     owner: Scalars['String']
 }
 
-export type QueryGetEthTransfersBySubtypeArgs = {
-    limit?: InputMaybe<Scalars['Int']>
-    nextKey?: InputMaybe<Scalars['String']>
-    owner: Scalars['String']
-    subtype: TransferSubtype
-}
-
 export type QueryGetEthTransfersV2Args = {
     direction?: InputMaybe<TransferDirection>
     limit?: InputMaybe<Scalars['Int']>
     nextKey?: InputMaybe<Scalars['String']>
     owner?: InputMaybe<Scalars['String']>
-}
-
-export type QueryGetEthTxTransfersArgs = {
-    limit?: InputMaybe<Scalars['Int']>
-    nextKey?: InputMaybe<Scalars['String']>
-    owner: Scalars['String']
 }
 
 export type QueryGetGenesisRewardsArgs = {
@@ -640,6 +680,12 @@ export type QueryGetOwnersErc721TokensV2Args = {
     owner: Scalars['String']
 }
 
+export type QueryGetOwnersNftTokensArgs = {
+    address: Scalars['String']
+    limit?: InputMaybe<Scalars['Int']>
+    nextKey?: InputMaybe<Scalars['String']>
+}
+
 export type QueryGetPendingTransactionsArgs = {
     owner: Scalars['String']
 }
@@ -702,6 +748,7 @@ export type Subscription = {
     addressEvent: AddressEvent
     minedTransaction: MinedTransfer
     newBlockFeed: BlockSummary
+    /** A blocks transfers of a given type have finished being processed */
     newTransfersCompleteFeed: TransferComplete
     pendingTransaction: PendingTransfer
     timeseriesEvent: TimeseriesEvent
@@ -886,15 +933,23 @@ export type TransactionAccessListItem = {
     storageKeys: Array<Scalars['String']>
 }
 
+export type TransactionStateDiffChange = {
+    __typename?: 'TransactionStateDiffChange'
+    from?: Maybe<BalanceDiff>
+    to: BalanceDiff
+}
+
 export type Transfer = {
     __typename?: 'Transfer'
     block: Scalars['Int']
     from: Scalars['String']
     status?: Maybe<Scalars['Boolean']>
+    subtype: TransferSubtype
     timestamp: Scalars['Int']
     to: Scalars['String']
     transactionHash: Scalars['String']
     txFee: Scalars['String']
+    type: TransferType
 }
 
 export type TransferComplete = {
@@ -909,15 +964,16 @@ export enum TransferDirection {
 }
 
 export enum TransferSubtype {
-    BlockReward = 'BLOCK_REWARD',
-    DaoHardFork = 'DAO_HARD_FORK',
+    BlockReward = 'BlockReward',
+    DaoHardFork = 'DaoHardFork',
     Erc20 = 'ERC20',
     Erc721 = 'ERC721',
     Erc1155 = 'ERC1155',
-    EthItx = 'ETH_ITX',
-    EthTx = 'ETH_TX',
-    Genesis = 'GENESIS',
-    UncleReward = 'UNCLE_REWARD'
+    Genesis = 'Genesis',
+    InternalTransaction = 'InternalTransaction',
+    Transaction = 'Transaction',
+    UncleReward = 'UncleReward',
+    Unknown = 'Unknown'
 }
 
 export enum TransferType {

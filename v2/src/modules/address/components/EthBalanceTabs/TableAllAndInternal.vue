@@ -1,22 +1,24 @@
 <template>
-    <v-row align="center" justify="start" class="text-info mt-2 mt-sm-6">
-        <v-col sm="2">
-            <span style="width: 30px; height: 1px" class="d-inline-block"></span>
-            <span class="ml-6">Tx Value</span>
-        </v-col>
-        <v-col :sm="props.tab === routes[0] ? 2 : 1"> Timestamp </v-col>
-        <v-spacer />
-        <template v-if="props.tab === routes[1]">
-            <v-col sm="2"> Address </v-col>
-            <v-col sm="2"> Hash </v-col>
-        </template>
-        <v-col sm="2"> Balance Before </v-col>
-        <v-col sm="2"> Balance After </v-col>
-        <template v-if="props.tab === routes[0]">
-            <v-col sm="4">Type</v-col>
-        </template>
-    </v-row>
-    <v-divider class="my-0 mt-md-4 mx-n4 mx-sm-n6" />
+    <template v-if="!smAndDown">
+        <v-row align="center" justify="start" class="text-info mt-2 mt-sm-6">
+            <v-col :sm="mdAndDown ? 3 : 2">
+                <span style="width: 30px; height: 1px" class="d-inline-block"></span>
+                <span class="ml-6">Tx Value</span>
+            </v-col>
+            <v-col v-if="!mdAndDown" :sm="props.tab === routes[0] ? 2 : 1"> Timestamp </v-col>
+            <v-spacer />
+            <template v-if="props.tab === routes[1]">
+                <v-col md="3" lg="2"> Address </v-col>
+                <v-col sm="2"> Hash </v-col>
+            </template>
+            <v-col sm="2"> Balance Before </v-col>
+            <v-col sm="2"> Balance After </v-col>
+            <template v-if="props.tab === routes[0]">
+                <v-col sm="4">Type</v-col>
+            </template>
+        </v-row>
+        <v-divider class="my-0 mt-md-4 mx-n4 mx-sm-n6" />
+    </template>
     <template v-if="!initialLoad">
         <template v-if="transfers && transfers.length > 0">
             <div v-for="transfer in transfers" :key="transfer.transfer.transactionHash">
@@ -46,9 +48,11 @@ import {
     EthInternalTransactionTransfersFragment,
     useGetEthInternalTransactionTransfersQuery
 } from '@module/address/apollo/EthTransfers/internalTransfers.generated'
+import { useDisplay } from 'vuetify'
 
 const routes = Q_ADDRESS_TRANSFERS
 const MAX_ITEMS = 50
+const { smAndDown, mdAndDown } = useDisplay()
 
 const props = defineProps({
     tab: {
