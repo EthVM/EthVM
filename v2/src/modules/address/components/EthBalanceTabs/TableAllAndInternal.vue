@@ -42,10 +42,13 @@ import AppNoResult from '@/core/components/AppNoResult.vue'
 import TableAllAndInternalRow from '@module/address/components/EthBalanceTabs/TableAllAndInternalRow.vue'
 import { computed } from 'vue'
 import { Q_ADDRESS_TRANSFERS } from '@/core/router/routesNames'
-import { EthItxTransfersFragment, useGetEthItxTransfersQuery } from '@module/address/apollo/EthTransfers/internalTransfers.generated'
+import {
+    EthInternalTransactionTransfersFragment,
+    useGetEthInternalTransactionTransfersQuery
+} from '@module/address/apollo/EthTransfers/internalTransfers.generated'
 
 const routes = Q_ADDRESS_TRANSFERS
-const MAX_ITEMS = 10
+const MAX_ITEMS = 50
 
 const props = defineProps({
     tab: {
@@ -66,19 +69,20 @@ const {
     result: internalTransfersData,
     loading: loadingInternalTransfersData,
     fetchMore: fetchMoreInternalTransfersData
-} = useGetEthItxTransfersQuery(
+} = useGetEthInternalTransactionTransfersQuery(
     () => ({
-        hash: props.addressRef
+        hash: props.addressRef,
+        _limit: MAX_ITEMS
     }),
     () => ({
         fetchPolicy: 'network-only',
-        enabled: isItxEnabled
+        enabled: isItxEnabled.value
     })
 )
 
-const transfers = computed<EthItxTransfersFragment | undefined | null>(() => {
+const transfers = computed<Array<EthInternalTransactionTransfersFragment | null> | undefined | null>(() => {
     if (props.tab === routes[1]) {
-        return internalTransfersData.value?.getEthItxTransfers.transfers
+        return internalTransfersData.value?.getEthInternalTransactionTransfers.transfers
     }
     return null
 })
@@ -92,7 +96,7 @@ const initialLoad = computed<boolean>(() => {
 
 const hasMore = computed<boolean>(() => {
     if (props.tab === routes[1]) {
-        return !!internalTransfersData.value?.getEthItxTransfers.nextKey
+        return !!internalTransfersData.value?.getEthInternalTransactionTransfers.nextKey
     }
     return false
 })
@@ -102,14 +106,14 @@ const loadMoreItxData = (): void => {
         variables: {
             hash: props.addressRef,
             _limit: MAX_ITEMS,
-            _nextKey: internalTransfersData.value?.getEthItxTransfers.nextKey
+            _nextKey: internalTransfersData.value?.getEthInternalTransactionTransfers.nextKey
         },
         updateQuery: (prev, { fetchMoreResult }) => {
             return {
-                getEthItxTransfers: {
-                    nextKey: fetchMoreResult?.getEthItxTransfers.nextKey,
-                    transfers: [...prev.getEthItxTransfers.transfers, ...(fetchMoreResult?.getEthItxTransfers.transfers || [])],
-                    __typename: fetchMoreResult?.getEthItxTransfers.__typename
+                getEthInternalTransactionTransfers: {
+                    nextKey: fetchMoreResult?.getEthInternalTransactionTransfers.nextKey,
+                    transfers: [...prev.getEthInternalTransactionTransfers.transfers, ...(fetchMoreResult?.getEthInternalTransactionTransfers.transfers || [])],
+                    __typename: fetchMoreResult?.getEthInternalTransactionTransfers.__typename
                 }
             }
         }

@@ -1,4 +1,4 @@
-fragment ItxTransfer on Transfer {
+fragment InternalTransactionTransfer on Transfer {
     transactionHash
     block
     timestamp
@@ -13,9 +13,9 @@ fragment BalanceFragment on BalanceDiff {
     after
 }
 
-fragment EthItxTransfers on EthTransfer {
+fragment EthInternalTransactionTransfers on EthTransfer {
     transfer {
-        ...ItxTransfer
+        ...InternalTransactionTransfer
     }
     stateDiff {
         to {
@@ -28,10 +28,10 @@ fragment EthItxTransfers on EthTransfer {
     value
 }
 
-query getEthItxTransfers($hash: String!, $_limit: Int, $_nextKey: String) {
-    getEthItxTransfers(owner: $hash, limit: $_limit, nextKey: $_nextKey) {
+query getEthInternalTransactionTransfers($hash: String!, $_limit: Int, $_nextKey: String) {
+    getEthInternalTransactionTransfers(owner: $hash, limit: $_limit, nextKey: $_nextKey) {
         transfers {
-            ...EthItxTransfers
+            ...EthInternalTransactionTransfers
         }
         nextKey
     }
