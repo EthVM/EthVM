@@ -107,7 +107,7 @@ const showMoreDetails = ref(false)
 const statusIcon = computed<{ [key: string]: string }>(() => {
     if (props.transfer.transfer.status) {
         return {
-            icon: 'check_circle',
+            icon: 'task_alt',
             color: 'success'
         }
     }
