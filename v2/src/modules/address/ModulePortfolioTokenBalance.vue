@@ -107,25 +107,18 @@
 </template>
 
 <script setup lang="ts">
-import { computed, reactive, onMounted, onBeforeUnmount, toRefs, watch } from 'vue'
+import { computed, reactive } from 'vue'
 import AppInput from '@core/components/AppInput.vue'
-import AppBtn from '@/core/components/AppBtn.vue'
-import AppNewUpdate from '@core/components/AppNewUpdate.vue'
 import TableRowTokenBalance from './components/TableRowTokenBalance.vue'
 import { useCoinData } from '@core/composables/CoinData/coinData.composable'
-import { TOKEN_FILTER_VALUES, KEY, DIRECTION, Token, TokenSortMarket, TokenMarket } from '@module/address/models/TokenSort'
-import { useRouter } from 'vue-router'
-import { ROUTE_NAME, ADDRESS_ROUTE_QUERY } from '@core/router/routesNames'
-import AddressBalanceTotals from './components/AddressBalanceTotals.vue'
+import { TOKEN_FILTER_VALUES, KEY, DIRECTION, Token } from '@module/address/models/TokenSort'
 import AppNoResult from '@/core/components/AppNoResult.vue'
 import { useDisplay } from 'vuetify/lib/framework.mjs'
 import { useAppTableRowRender } from '@core/composables/AppTableRowRender/useAppTableRowRender.composable'
 import { searchHelper } from '@core/helper/search'
 import { useStore } from '@/store'
-import { TokenOwnersFragment } from '@module/address/apollo/AddressTokens/tokens.generated'
 import { TokenSort } from '@module/address/models/TokenSort'
 import { MarketDataFragment as TokenMarketData } from '@core/composables/CoinData/getLatestPrices.generated'
-import Web3Utils from 'web3-utils'
 
 const { xs } = useDisplay()
 const { loading: loadingCoinData, getEthereumTokensMap } = useCoinData()
