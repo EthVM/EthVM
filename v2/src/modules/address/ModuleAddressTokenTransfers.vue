@@ -130,7 +130,7 @@ const queryPolicy = computed<WatchQueryFetchPolicy>(() => {
     return store.addressHashIsSaved(props.addressHash.toLowerCase()) || props.isOverview ? 'cache-only' : 'cache-first'
 })
 const { addressHash } = toRefs(props)
-const { tokenBalanceValue, tokenCount, initialLoad: loadingAddressTokens } = useAddressToken(addressHash, queryPolicy.value)
+const { tokenBalanceValue, tokenCount, initialLoad: loadingAddressTokens } = useAddressToken(addressHash, queryPolicy)
 const { loading: loadingMarketInfo } = useCoinData()
 
 const {
