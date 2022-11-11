@@ -212,9 +212,6 @@ const state: ComponentState = reactive({
 const { addressHash } = toRefs(props)
 const store = useStore()
 const queryPolicy = computed<WatchQueryFetchPolicy>(() => {
-    if (addressHash.value.toLowerCase() === '0xdef171fe48cf0115b1d80b88dc8eab59176fee57') {
-        console.log('policy', store.addressHashIsSaved(props.addressHash.toLowerCase()) ? 'cache-only' : 'cache-first')
-    }
     return store.addressHashIsSaved(props.addressHash.toLowerCase()) ? 'cache-only' : 'cache-first'
 })
 

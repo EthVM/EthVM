@@ -70,6 +70,7 @@ export function useAddressToken(addressHash: Ref<string> | string, policy: Ref<W
             }
         })
     }
+
     const loadingTokens = computed<boolean>(() => {
         return initialLoad.value || loadingEthTokens.value
     })
