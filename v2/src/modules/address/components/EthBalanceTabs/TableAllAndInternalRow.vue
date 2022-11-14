@@ -2,24 +2,41 @@
     <div class="position-relative">
         <v-row v-if="smAndDown" class="my-5" justify="space-between" @click="showMoreDetails = !showMoreDetails">
             <v-col cols="6">
-                {{ transferDirection.text }}
+                <v-avatar :color="transferDirection.color" size="22">
+                    <v-icon size="13" color="white"> {{ transferDirection.icon }} </v-icon>
+                </v-avatar>
+                <span class="ml-2">
+                    {{ transferDirection.text }}
+                </span>
             </v-col>
-            <v-col cols="6">{{ txFee.value }} ETH</v-col>
+            <v-col cols="6" class="text-right">{{ txFee.value }} ETH</v-col>
             <v-col cols="6" class="text-info text-lowercase"> {{ timestamp }} {{ transferDirection.direction }} </v-col>
             <v-col cols="6">
-                <div class="d-flex align-center">
+                <div class="d-flex align-center justify-end">
                     <app-address-blockie :address="txAddress || ''" :size="6" class="mr-2 mr-sm-2" />
                     <app-transform-hash is-short is-blue :hash="eth.toCheckSum(txAddress)" :link="`/address/${txAddress}`" />
                 </div>
             </v-col>
             <v-col cols="12" v-if="showMoreDetails">
-                <div class="mb-3">
-                    <span class="text-info font-weight-medium mr-2">Balance Before:</span>
+                <v-divider class="mx-n6 mb-3" />
+                <div class="mb-4 d-flex justify-space-between">
+                    <span class="text-info mr-2">Balance Before:</span>
                     <span>{{ balanceBefore.value }} ETH</span>
                 </div>
-                <div>
-                    <span class="text-info font-weight-medium mr-2">Balance After:</span>
+                <div class="mb-4 d-flex justify-space-between">
+                    <span class="text-info mr-2">Balance After:</span>
                     <span>{{ balanceAfter.value }} ETH</span>
+                </div>
+                <div class="d-flex justify-space-between">
+                    <span class="text-info mr-2">Hash:</span>
+                    <span>
+                        <app-transform-hash
+                            is-short
+                            is-blue
+                            :hash="eth.toCheckSum(transfer.transfer.transactionHash)"
+                            :link="`/tx/${transfer.transfer.transactionHash}`"
+                        />
+                    </span>
                 </div>
             </v-col>
         </v-row>
@@ -29,13 +46,14 @@
                     <span style="width: 30px" class="d-inline-block">
                         <v-icon :color="statusIcon.color">{{ statusIcon.icon }}</v-icon>
                     </span>
-                    <div class="ml-6">
+                    <div class="ml-4">
                         {{ txFee.value }} ETH
-                        <div v-if="mdAndDown" class="text-lowercase">{{ timestamp }} {{ transferDirection.direction }}</div>
+                        <div class="text-lowercase">
+                            {{ timestamp }} <span v-if="mdAndDown">{{ transferDirection.direction }}</span>
+                        </div>
                     </div>
                 </div>
             </v-col>
-            <v-col v-if="!mdAndDown" :sm="props.tab === routes[0] ? 2 : 1"> {{ timestamp }} </v-col>
             <template v-if="props.tab === routes[1]">
                 <v-col v-if="!mdAndDown" cols="1" class="text-center">
                     <app-chip :bg="transferDirection.color" :text="transferDirection.direction" />
@@ -56,7 +74,7 @@
                 </v-col>
             </template>
             <v-col sm="2"> {{ balanceBefore.value }} ETH </v-col>
-            <v-col sm="2"> {{ balanceAfter.value }} ETH </v-col>
+            <v-col sm="2" lg="3"> {{ balanceAfter.value }} ETH </v-col>
             <template v-if="props.tab === routes[0]">
                 <v-col sm="2">
                     <app-chip bg="purple" text="transaction" />
@@ -122,13 +140,15 @@ const transferDirection = computed<{ [key: string]: string }>(() => {
         return {
             direction: 'From',
             text: 'Received',
-            color: 'success'
+            color: 'success',
+            icon: 'south_east'
         }
     } else if (props.transfer.transfer.from === props.addressRef) {
         return {
             direction: 'To',
             text: 'Sent',
-            color: 'orange'
+            color: 'orange',
+            icon: 'north_west'
         }
     }
     return {
@@ -166,7 +186,7 @@ const txAddress = computed<string>(() => {
 
 const timestamp = computed<string>(() => {
     const date = new Date(props.transfer.transfer.timestamp * 1e3)
-    return timeAgo(date, false)
+    return timeAgo(date, smAndDown.value)
 })
 
 const txFee = computed<FormattedNumber>(() => {

@@ -3,16 +3,15 @@
         <v-row align="center" justify="start" class="text-info mt-2 mt-sm-6">
             <v-col :sm="mdAndDown ? 3 : 2">
                 <span style="width: 30px; height: 1px" class="d-inline-block"></span>
-                <span class="ml-6">Tx Value</span>
+                <span class="ml-4">Tx Value</span>
             </v-col>
-            <v-col v-if="!mdAndDown" :sm="props.tab === routes[0] ? 2 : 1"> Timestamp </v-col>
             <v-spacer />
             <template v-if="props.tab === routes[1]">
                 <v-col md="3" lg="2"> Address </v-col>
                 <v-col sm="2"> Hash </v-col>
             </template>
             <v-col sm="2"> Balance Before </v-col>
-            <v-col sm="2"> Balance After </v-col>
+            <v-col sm="2" lg="3"> Balance After </v-col>
             <template v-if="props.tab === routes[0]">
                 <v-col sm="4">Type</v-col>
             </template>

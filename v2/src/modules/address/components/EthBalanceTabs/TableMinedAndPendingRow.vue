@@ -6,7 +6,10 @@
             <template v-if="xs">
                 <v-col cols="6">
                     <v-icon v-if="props.tab === routes[2]" color="success">check_circle</v-icon>
-                    Pending
+                    <v-avatar v-else color="info" size="22">
+                        <v-icon size="13" color="white">refresh</v-icon>
+                    </v-avatar>
+                    <span class="ml-2"> Pending </span>
                 </v-col>
                 <v-col cols="6">
                     <p>{{ txValue.value }} {{ txValue.unit.toUpperCase() }}</p>
@@ -16,13 +19,13 @@
                 </v-col>
                 <v-col cols="6">
                     <div class="d-flex align-center">
-                        <app-address-blockie :address="txAddress || ''" :size="8" class="mr-2 mr-sm-2" />
+                        <app-address-blockie :address="txAddress || ''" :size="6" class="mr-2 mr-sm-2" />
                         <app-transform-hash is-short is-blue :hash="eth.toCheckSum(props.tx.hash)" :link="`/address/${props.tx.hash}`" />
                     </div>
                 </v-col>
                 <v-col cols="12" v-if="showMoreDetails">
                     <v-row>
-                        <v-col cols="6"> Estimated fee </v-col>
+                        <v-col cols="6" class="text-info"> Estimated fee </v-col>
                         <v-col cols="6"> {{ estimatedFee.value }} {{ estimatedFee.unit.toUpperCase() }} </v-col>
                     </v-row>
                 </v-col>
@@ -31,9 +34,9 @@
             <template v-else>
                 <v-col sm="4">
                     <div class="d-flex">
-                        <span class="mr-3">
+                        <span class="mr-4">
                             <v-icon v-if="props.tab === routes[2]" color="success">check_circle</v-icon>
-                            <v-icon v-else>update</v-icon>
+                            <v-icon v-else>refresh</v-icon>
                         </span>
                         <div>
                             <p>{{ txValue.value }} {{ txValue.unit.toUpperCase() }}</p>
@@ -43,7 +46,7 @@
                 </v-col>
                 <v-col sm="3">
                     <div class="d-flex align-center">
-                        <app-address-blockie :address="txAddress || ''" :size="8" class="mr-2 mr-sm-2" />
+                        <app-address-blockie :address="txAddress || ''" :size="6" class="mr-2 mr-sm-2" />
                         <app-transform-hash is-short is-blue :hash="eth.toCheckSum(props.tx.hash)" :link="`/address/${props.tx.hash}`" />
                     </div>
                 </v-col>
@@ -69,9 +72,9 @@
         <v-row v-else class="my-5">
             <v-col sm="3">
                 <div class="d-flex">
-                    <span class="mr-6">
+                    <span class="mr-4">
                         <v-icon v-if="props.tab === routes[2]" color="success">sync</v-icon>
-                        <v-icon v-else>update</v-icon>
+                        <v-icon v-else>refresh</v-icon>
                     </span>
                     <div>
                         <p>{{ txValue.value }} {{ txValue.unit.toUpperCase() }}</p>
@@ -105,7 +108,7 @@
                 <v-col sm="2">{{ estimatedFee.value }} {{ estimatedFee.unit.toUpperCase() }}</v-col>
             </template>
         </v-row>
-        <div v-if="showMoreDetails && smAndDown" class="row-bg bg-tableGrey"></div>
+        <div v-if="showMoreDetails && xs" class="row-bg bg-tableGrey"></div>
     </div>
 </template>
 
@@ -156,7 +159,7 @@ const transferDirection = computed<{ [key: string]: string }>(() => {
     }
     return {
         text: 'Self',
-        color: 'orange'
+        color: 'warning'
     }
 })
 
