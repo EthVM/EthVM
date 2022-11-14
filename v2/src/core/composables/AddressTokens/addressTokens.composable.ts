@@ -1,5 +1,5 @@
 import { TokenOwnersFragment, useGetOwnersErc20TokensQuery } from '@module/address/apollo/AddressTokens/tokens.generated'
-import { computed, Ref, ref, unref, watch, isRef } from 'vue'
+import { computed, Ref, ref, unref } from 'vue'
 import { MarketDataFragment as TokenMarketData } from '@core/composables/CoinData/getLatestPrices.generated'
 import { useCoinData } from '@core/composables/CoinData/coinData.composable'
 import { TokenSort } from '@module/address/models/TokenSort'
@@ -8,7 +8,7 @@ import { eth } from '@/core/helper'
 import BN from 'bignumber.js'
 import { WatchQueryFetchPolicy } from '@apollo/client/core'
 
-export function useAddressToken(addressHash: Ref<string> | string, policy: WatchQueryFetchPolicy = 'cache-first') {
+export function useAddressToken(addressHash: Ref<string> | string, policy: Ref<WatchQueryFetchPolicy> | WatchQueryFetchPolicy = 'cache-first') {
     const { getEthereumTokensMap, loading: loadingEthTokens } = useCoinData()
     const nextKey = ref<string | undefined | null>(undefined)
     const enableQuery = computed<boolean>(() => {
@@ -25,14 +25,14 @@ export function useAddressToken(addressHash: Ref<string> | string, policy: Watch
             hash: unref(addressHash).toLowerCase()
         }),
         () => ({
-            fetchPolicy: policy,
+            fetchPolicy: unref(policy),
             enabled: enableQuery.value
         })
     )
     onResult(({ data }) => {
         if (data && data.getOwnersERC20Tokens) {
             nextKey.value = data.getOwnersERC20Tokens.nextKey
-            if (nextKey.value && policy !== 'cache-only') {
+            if (nextKey.value && unref(policy) !== 'cache-only') {
                 loadMoreTokens()
             }
         }
@@ -70,6 +70,7 @@ export function useAddressToken(addressHash: Ref<string> | string, policy: Watch
             }
         })
     }
+
     const loadingTokens = computed<boolean>(() => {
         return initialLoad.value || loadingEthTokens.value
     })

@@ -9,7 +9,7 @@
                     <app-transform-hash v-if="smAndDown" :hash="props.addressRef" class="text-h4 font-weight-regular px-2 px-sm-4"></app-transform-hash>
                     <p v-else class="mx-sm-4 text-h4">{{ props.addressRef }}</p>
                     <app-copy-to-clip :value-to-copy="props.addressRef || ''" class="ml-3" />
-                    <app-btn-icon icon="favorite"></app-btn-icon>
+                    <module-add-adress-to-porfolio :address="props.addressRef" />
                     <app-btn-icon icon="qr_code"></app-btn-icon>
                     <!-- <v-divider :vertical="!smAndDown" class="my-1 my-sm-3 mx-n1 mx-sm-n3 mx-md-none"></v-divider>
                     <v-col cols="12" md="4" lg="3" class="d-flex align-center"> </v-col> -->
@@ -81,7 +81,7 @@ import AppBtnIcon from '@/core/components/AppBtnIcon.vue'
 import AppCopyToClip from '@/core/components/AppCopyToClip.vue'
 import AppAddressBlockie from '@/core/components/AppAddressBlockie.vue'
 import AppTransformHash from '@/core/components/AppTransformHash.vue'
-import AppMenu from '@/core/components/AppMenu.vue'
+import ModuleAddAdressToPorfolio from '@module/address/ModulePorfolioHandleAdr.vue'
 import { useDisplay } from 'vuetify/lib/framework.mjs'
 
 const { smAndDown, xs } = useDisplay()

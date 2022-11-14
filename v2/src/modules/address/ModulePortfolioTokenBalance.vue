@@ -107,25 +107,18 @@
 </template>
 
 <script setup lang="ts">
-import { computed, reactive, onMounted, onBeforeUnmount, toRefs, watch } from 'vue'
+import { computed, reactive } from 'vue'
 import AppInput from '@core/components/AppInput.vue'
-import AppBtn from '@/core/components/AppBtn.vue'
-import AppNewUpdate from '@core/components/AppNewUpdate.vue'
 import TableRowTokenBalance from './components/TableRowTokenBalance.vue'
 import { useCoinData } from '@core/composables/CoinData/coinData.composable'
-import { TOKEN_FILTER_VALUES, KEY, DIRECTION, Token, TokenSortMarket, TokenMarket } from '@module/address/models/TokenSort'
-import { useRouter } from 'vue-router'
-import { ROUTE_NAME, ADDRESS_ROUTE_QUERY } from '@core/router/routesNames'
-import AddressBalanceTotals from './components/AddressBalanceTotals.vue'
+import { TOKEN_FILTER_VALUES, KEY, DIRECTION, Token } from '@module/address/models/TokenSort'
 import AppNoResult from '@/core/components/AppNoResult.vue'
 import { useDisplay } from 'vuetify/lib/framework.mjs'
 import { useAppTableRowRender } from '@core/composables/AppTableRowRender/useAppTableRowRender.composable'
 import { searchHelper } from '@core/helper/search'
 import { useStore } from '@/store'
-import { TokenOwnersFragment } from '@module/address/apollo/AddressTokens/tokens.generated'
 import { TokenSort } from '@module/address/models/TokenSort'
 import { MarketDataFragment as TokenMarketData } from '@core/composables/CoinData/getLatestPrices.generated'
-import Web3Utils from 'web3-utils'
 
 const { xs } = useDisplay()
 const { loading: loadingCoinData, getEthereumTokensMap } = useCoinData()
@@ -153,7 +146,7 @@ const state: ComponentState = reactive({
 const tokenPrices = computed<Map<string, TokenMarketData> | false | null>(() => {
     if (store.portfolioIsLoaded && !loadingCoinData.value) {
         const contracts: string[] = []
-        tokensRaw.value.forEach(token => {
+        store.portfolioTokensRaw().forEach(token => {
             if (token) {
                 contracts.push(token.tokenInfo.contract)
             }
@@ -164,43 +157,18 @@ const tokenPrices = computed<Map<string, TokenMarketData> | false | null>(() => 
     }
     return null
 })
-const tokensRaw = computed(() => {
-    const allTokens: TokenOwnersFragment[] = []
-    if (store.portfolioIsLoaded) {
-        const adrs = store.portfolio.map(i => i.hash.toLowerCase())
-        adrs.forEach(i => {
-            const filtered = store.portfolioTokenBalanceMap[i].tokens.filter((x): x is TokenOwnersFragment => x !== null)
-            filtered.forEach(_token => {
-                const index = allTokens.findIndex(item => _token.tokenInfo.contract === item.tokenInfo.contract)
-                if (index < 0) {
-                    allTokens.push(_token)
-                    return
-                }
-                const balanceInToken = Web3Utils.toBN(_token.balance)
-                const balanceInAll = Web3Utils.toBN(allTokens[index].balance)
-                const newBalance = balanceInAll.add(balanceInToken)
-                const newItem = {
-                    ..._token,
-                    balance: Web3Utils.toHex(newBalance)
-                }
-                allTokens.splice(index, 1, newItem)
-            })
-        })
-    }
-    return allTokens
+const tokensLength = computed<number>(() => {
+    return store.portfolioTokensRaw().length
 })
 const hasTokens = computed<boolean>(() => {
-    return tokensRaw.value.length > 0
+    return tokensLength.value > 0
 })
 
-const tokensLength = computed<number>(() => {
-    return tokensRaw.value.length
-})
 const { renderState } = useAppTableRowRender(tokensLength.value)
 
 const tokenSort = computed(() => {
     if (store.portfolioIsLoaded && tokenPrices.value !== null) {
-        return new TokenSort(tokensRaw.value, tokenPrices.value, true)
+        return new TokenSort(store.portfolioTokensRaw(), tokenPrices.value, true)
     }
     return false
 })
@@ -235,19 +203,6 @@ const isActiveSort = (key: KEY): boolean => {
 }
 
 const SORT_KEY = KEY
-
-/**------------------------
- * Refetch Tokens
- -------------------------*/
-const resetCount = (): void => {
-    // refetchTokens()
-    // emit('resetCount', AddressEventType.NewErc20Transfer, true)
-}
-
-/**------------------------
- * Route Changes
- -------------------------*/
-const router = useRouter()
 </script>
 
 <style scoped>

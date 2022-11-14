@@ -215,7 +215,7 @@ const queryPolicy = computed<WatchQueryFetchPolicy>(() => {
     return store.addressHashIsSaved(props.addressHash.toLowerCase()) ? 'cache-only' : 'cache-first'
 })
 
-const { erc20Tokens, loadingTokens, refetchTokens, tokenSort, tokenBalance } = useAddressToken(addressHash, queryPolicy.value)
+const { erc20Tokens, loadingTokens, refetchTokens, tokenSort, tokenBalance } = useAddressToken(addressHash, queryPolicy)
 
 const hasTokens = computed<boolean>(() => {
     return !!erc20Tokens.value

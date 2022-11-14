@@ -35,34 +35,45 @@ import BN from 'bignumber.js'
 import { ChartData } from 'chart.js'
 import { useDisplay } from 'vuetify/lib/framework.mjs'
 import AddressBalanceTotals from './components/AddressBalanceTotals.vue'
+import { MarketDataFragment } from '@core/composables/CoinData/getLatestPrices.generated'
 import ChartPie from '@module/chart/components/ChartPie.vue'
 import AppTokenIcon from '@/core/components/AppTokenIcon.vue'
+import { useStore } from '@/store'
+import { TokenSort } from '@module/address/models/TokenSort'
 
 const { xs } = useDisplay()
+const store = useStore()
 
-const props = defineProps({
-    addressRef: {
-        type: String,
-        required: true
-    }
+interface PropType {
+    addressRef?: string
+}
+const props = withDefaults(defineProps<PropType>(), {
+    addressRef: ''
 })
 
 const { addressRef } = toRefs(props)
 
 const { initialLoad: loadingTokensBalances, tokenTotalBalanceBN, tokenSort } = useAddressToken(addressRef, 'cache-only')
 const { initialLoad: loadingEthBalance, balanceFiatBN: ethBalance } = useAddressEthBalance(addressRef)
-const { loading: loadingMarketInfo, ethMarketInfo } = useCoinData()
+
+const { loading: loadingMarketInfo, ethMarketInfo, getEthereumTokensMap } = useCoinData()
 
 /**------------------------
  * Prtfolio Value
  -------------------------*/
+const isAddressView = computed<boolean>(() => {
+    return addressRef.value !== ''
+})
 
 /**
  * Returns true when Token Balances, Eth Balance and Market data has been loaded,
  * false otherwise.
  */
 const isLoading = computed<boolean>(() => {
-    return loadingTokensBalances.value || loadingEthBalance.value || loadingMarketInfo.value
+    if (isAddressView.value) {
+        return loadingTokensBalances.value || loadingEthBalance.value || loadingMarketInfo.value
+    }
+    return !store.portfolioIsLoaded
 })
 
 /**
@@ -70,7 +81,10 @@ const isLoading = computed<boolean>(() => {
  */
 const portfolioValueBN = computed<BN>(() => {
     if (!isLoading.value) {
-        return tokenTotalBalanceBN.value.plus(ethBalance.value)
+        if (isAddressView.value) {
+            return tokenTotalBalanceBN.value.plus(ethBalance.value)
+        }
+        return store.portfolioTokensFiatBN.plus(store.portfolioEthFiatBN)
     }
     return new BN(0)
 })
@@ -92,15 +106,39 @@ interface Token {
 }
 /**
  * Returns top 4 tokens and percentage of the other tokens in the portfolio
- */
+//  */
 const topTokens = computed<Token[]>(() => {
     if (!isLoading.value) {
         //Add Eth Balance
-        const ethPercent = ethBalance.value.multipliedBy(100).dividedBy(portfolioValueBN.value)
-        let topFive: Token[] = [{ symbol: 'ETH', percent: ethPercent, icon: ethMarketInfo.value?.image, usd: ethBalance.value }]
+        let eth = new BN(0)
+        let sortedTokens: TokenSort | false = false
+        let tokenTotalBalance = new BN(0)
+        if (isAddressView.value) {
+            eth = ethBalance.value
+            sortedTokens = tokenSort.value
+            tokenTotalBalance = tokenTotalBalanceBN.value
+        } else {
+            eth = store.portfolioEthFiatBN
+            tokenTotalBalance = store.portfolioTokensFiatBN
+            //Token Sort:
+            const contracts: string[] = []
+            let tokenPrices: Map<string, MarketDataFragment> | false = false
+            store.portfolioTokensRaw().forEach(token => {
+                if (token) {
+                    contracts.push(token.tokenInfo.contract)
+                }
+            })
+            if (contracts.length > 0) {
+                tokenPrices = getEthereumTokensMap(contracts)
+            }
+            sortedTokens = new TokenSort(store.portfolioTokensRaw(), tokenPrices, true)
+        }
+        const ethPercent = eth.multipliedBy(100).dividedBy(portfolioValueBN.value)
+
+        let topFive: Token[] = [{ symbol: 'ETH', percent: ethPercent, icon: ethMarketInfo.value?.image, usd: eth }]
         //Add Token Balance
-        if (tokenSort.value && tokenTotalBalanceBN.value.gt(0)) {
-            const topFiveTokens: Token[] | undefined = tokenSort.value.usdValue?.desend.slice(0, 5).map(i => {
+        if (sortedTokens && tokenTotalBalance.gt(0)) {
+            const topFiveTokens: Token[] | undefined = sortedTokens.usdValue?.desend.slice(0, 5).map(i => {
                 const _percent = new BN(i.usdValue).multipliedBy(100).dividedBy(portfolioValueBN.value)
                 return {
                     symbol: i.symbol?.toUpperCase() || 'NA',
