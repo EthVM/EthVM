@@ -41,5 +41,11 @@ const chipClass = computed<string>(() => {
     &.text-surface {
         color: rgb(var(--v-theme-surface)) !important;
     }
+    &.v-chip.v-chip--size-x-small {
+        --v-chip-height: 22px;
+    }
+    &.rounded-sm {
+        border-radius: 4px !important;
+    }
 }
 </style>

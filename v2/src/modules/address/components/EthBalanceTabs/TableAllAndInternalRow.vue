@@ -19,7 +19,7 @@
                     </div>
                 </v-col>
                 <v-col cols="12" v-if="showMoreDetails">
-                    <div class="mb-4 d-flex justify-space-between">
+                    <div v-if="!isIncoming" class="mb-4 d-flex justify-space-between">
                         <span class="text-info mr-2">tx fee paid:</span>
                         <span>{{ txFee.value }} ETH</span>
                     </div>
@@ -95,14 +95,14 @@
                                 v-if="mdAndDown"
                                 :bg="transferType.color"
                                 :text="transferType.text.toUpperCase()"
-                                class="text-caption"
+                                class="tiny-text"
                                 style="min-width: 120px"
                             />
                         </div>
                     </div>
                 </v-col>
                 <v-col v-if="!mdAndDown" sm="2">
-                    <app-chip :bg="transferType.color" :text="transferType.text.toUpperCase()" class="text-caption" style="min-width: 120px" />
+                    <app-chip :bg="transferType.color" :text="transferType.text.toUpperCase()" size="x-small" class="tiny-text" style="min-width: 120px" />
                 </v-col>
                 <v-col sm="2">
                     <p v-if="isBlockReward" class="text-secondary">
@@ -112,21 +112,21 @@
                         v-else
                         is-short
                         is-blue
-                        :hash="eth.toCheckSum('0x09d9591442b213fe4ac9d0634023b37cc818e51c')"
-                        :link="`/address/${'0x09d9591442b213fe4ac9d0634023b37cc818e51c'}`"
+                        :hash="eth.toCheckSum(props.transfer.transfer.transactionHash)"
+                        :link="`/address/${props.transfer.transfer.transactionHash}`"
                     />
                 </v-col>
                 <v-col sm="2">
-                    <app-chip :bg="transferDirection.color" :text="transferDirection.direction" />
+                    <app-chip v-if="!isBlockReward" :bg="transferDirection.color" :text="transferDirection.direction" size="x-small" class="tiny-text" />
                 </v-col>
                 <v-col sm="3" lg="2">
-                    <div class="d-flex align-center">
+                    <div v-if="!isBlockReward" class="d-flex align-center">
                         <app-address-blockie :address="txAddress || ''" :size="8" class="mr-2 mr-sm-2" />
                         <app-transform-hash is-short is-blue :hash="eth.toCheckSum(txAddress)" :link="`/address/${txAddress}`" />
                     </div>
                 </v-col>
                 <v-col sm="2">
-                    <span> {{ txFee.value }} ETH </span>
+                    <span v-if="!isIncoming"> {{ txFee.value }} ETH </span>
                 </v-col>
             </template>
             <template v-if="props.tab === routes[1]">
@@ -208,24 +208,30 @@ const statusIcon = computed<{ [key: string]: string }>(() => {
     }
 })
 
+enum TRANSFER_DIRECTION {
+    FROM = 'From',
+    TO = 'To',
+    SELF = 'Self'
+}
+
 const transferDirection = computed<{ [key: string]: string }>(() => {
-    if (props.transfer.transfer.to === props.addressRef) {
+    if (props.transfer.transfer.to === props.addressRef.toLowerCase()) {
         return {
-            direction: 'From',
+            direction: TRANSFER_DIRECTION.FROM,
             text: 'Received',
             color: 'success',
             icon: 'south_east'
         }
-    } else if (props.transfer.transfer.from === props.addressRef) {
+    } else if (props.transfer.transfer.from === props.addressRef.toLowerCase()) {
         return {
-            direction: 'To',
+            direction: TRANSFER_DIRECTION.TO,
             text: 'Sent',
             color: 'warning',
             icon: 'north_west'
         }
     }
     return {
-        direction: 'Self',
+        direction: TRANSFER_DIRECTION.SELF,
         text: 'Self',
         color: 'orange',
         icon: 'refresh'
@@ -234,6 +240,10 @@ const transferDirection = computed<{ [key: string]: string }>(() => {
 
 const isBlockReward = computed<boolean>(() => {
     return props.transfer.transfer.from === BLOCK_REWARD_HASH
+})
+
+const isIncoming = computed<boolean>(() => {
+    return transferDirection.value.direction === TRANSFER_DIRECTION.FROM
 })
 
 const transferType = computed<{ [key: string]: string }>(() => {
@@ -294,5 +304,9 @@ const txFee = computed<FormattedNumber>(() => {
 .row-bg {
     top: 0;
     bottom: 0;
+}
+
+.tiny-text {
+    font-size: 10px !important;
 }
 </style>
