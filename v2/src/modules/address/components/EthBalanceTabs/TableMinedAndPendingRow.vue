@@ -160,12 +160,12 @@ const transferDirection = computed<{ [key: string]: string }>(() => {
             text: TRANSFER_DIRECTION.SELF
         }
     }
-    if (props.tx.to === props.addressRef) {
+    if (props.tx.to === props.addressRef.toLowerCase()) {
         return {
             text: TRANSFER_DIRECTION.FROM,
             color: 'success'
         }
-    } else if (props.tx.from === props.addressRef) {
+    } else if (props.tx.from === props.addressRef.toLowerCase()) {
         return {
             text: TRANSFER_DIRECTION.TO,
             color: 'warning'
