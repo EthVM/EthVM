@@ -21,43 +21,47 @@
         </div>
         <app-dialog v-model="state.openDialog" :title="title" height="256" width="480" @update:model-value="closeModule">
             <template #scroll-content>
-                <div class="d-flex justify-center align-center flex-column">
-                    <div v-if="props.isEditMode" class="d-flex align-center justify-start mb-5">
-                        <app-address-blockie v-if="isValidAddress" :address="hashNoSpaces" :size="6" key="identicon" class="mr-3" />
-                        <app-transform-hash :hash="eth.toCheckSum(hashNoSpaces)" />
-                    </div>
-                    <app-input
-                        v-if="!props.isEditMode"
-                        v-model="state.adrInput"
-                        :has-error="hasAddressError"
-                        place-holder="Enter Address Hash"
-                        show-error-message
-                        width="100%"
-                        class="mb-1"
-                        :error-message="addressErrorMes"
-                        @on-user-input="setAddress"
-                    >
-                        <template #prepend>
-                            <div class="empty-identicon">
-                                <transition name="fade" mode="out-in">
-                                    <app-address-blockie v-if="isValidAddress" :address="hashNoSpaces" :size="6" key="identicon" />
-                                </transition>
-                            </div>
-                        </template>
-                    </app-input>
-                    <app-input
-                        v-model="state.nameInput"
-                        :has-error="hasNameError"
-                        show-error-message
-                        error-message="This name is already saved"
-                        place-holder="Enter Name"
-                        :has-preppend-inner="false"
-                        width="100%"
-                        class="mb-1"
-                        @on-user-input="setName"
-                    ></app-input>
+                <v-row no-gutters align-center justify="center">
+                    <v-col cols="12" v-if="props.isEditMode">
+                        <div class="d-flex align-center justify-start mb-5">
+                            <app-address-blockie v-if="isValidAddress" :address="hashNoSpaces" :size="6" key="identicon" class="mr-3" />
+                            <app-transform-hash :hash="eth.toCheckSum(hashNoSpaces)" is-short />
+                        </div>
+                    </v-col>
+                    <v-col cols="12" v-else>
+                        <app-input
+                            v-model="state.adrInput"
+                            :has-error="hasAddressError"
+                            place-holder="Enter Address Hash"
+                            show-error-message
+                            class="mb-1"
+                            :error-message="addressErrorMes"
+                            @on-user-input="setAddress"
+                        >
+                            <template #prepend>
+                                <div class="empty-identicon">
+                                    <transition name="fade" mode="out-in">
+                                        <app-address-blockie v-if="isValidAddress" :address="hashNoSpaces" :size="6" key="identicon" />
+                                    </transition>
+                                </div>
+                            </template>
+                        </app-input>
+                    </v-col>
+
+                    <v-col cols="12">
+                        <app-input
+                            v-model="state.nameInput"
+                            :has-error="hasNameError"
+                            show-error-message
+                            error-message="This name is already saved"
+                            place-holder="Enter Name"
+                            :has-preppend-inner="false"
+                            class="mb-1"
+                            @on-user-input="setName"
+                        ></app-input>
+                    </v-col>
                     <app-btn :text="buttonText" @click="addAddressToPortfolio" :disabled="!isValidInput"></app-btn>
-                </div>
+                </v-row>
             </template>
         </app-dialog>
     </div>
@@ -227,7 +231,7 @@ const isValidName = computed<boolean>(() => {
  ---------------------*/
 const isValidInput = computed<boolean>(() => {
     if (props.isEditMode) {
-        return !hasNameError.value
+        return !hasNameError.value && state.nameInput !== ''
     }
     return state.nameInput !== '' && state.adrInput !== '' && !hasAddressError.value && !hasNameError.value
 })
