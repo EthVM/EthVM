@@ -222,9 +222,26 @@ export const useStore = defineStore('main', {
                     name: item[0].name
                 })
                 const newList = this.portfolio.filter(i => i.hash.toLowerCase() !== _hash)
-                this.portfolio = [...newList]
                 delete this.portfolioEthBalanceMap[_hash]
                 delete this.portfolioTokenBalanceMap[_hash]
+                this.portfolio = [...newList]
+            }
+        },
+        checkBalanceMap() {
+            const portfolioKeys = this.portfolio.map(i => i.hash.toLowerCase())
+            const ethKeys = Object.keys(this.portfolioEthBalanceMap)
+            const tokensKeys = Object.keys(this.portfolioTokenBalanceMap)
+            if (ethKeys.length !== portfolioKeys.length) {
+                const deleted = ethKeys.filter(hash => !portfolioKeys.includes(hash))
+                deleted.forEach(_hash => {
+                    delete this.portfolioEthBalanceMap[_hash]
+                })
+            }
+            if (tokensKeys.length !== portfolioKeys.length) {
+                const deleted = tokensKeys.filter(hash => !portfolioKeys.includes(hash))
+                deleted.forEach(_hash => {
+                    delete this.portfolioTokenBalanceMap[_hash]
+                })
             }
         },
         changeAddressName(_hash: string, _name: string) {
