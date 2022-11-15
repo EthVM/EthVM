@@ -1,0 +1,38 @@
+fragment AllTransfers on Transfer {
+    transactionHash
+    block
+    timestamp
+    from
+    to
+    txFee
+    status
+}
+
+fragment BalanceFragment on BalanceDiff {
+    before
+    after
+}
+
+fragment AllEthTransfers on EthTransfer {
+    transfer {
+        ...AllTransfers
+    }
+    stateDiff {
+        to {
+            ...BalanceFragment
+        }
+        from {
+            ...BalanceFragment
+        }
+    }
+    value
+}
+
+query getAllEthTransfers($hash: String!, $_limit: Int, $_nextKey: String) {
+    getAllEthTransfers(owner: $hash, limit: $_limit, nextKey: $_nextKey) {
+        transfers {
+            ...AllEthTransfers
+        }
+        nextKey
+    }
+}

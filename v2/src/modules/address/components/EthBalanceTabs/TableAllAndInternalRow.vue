@@ -1,60 +1,148 @@
 <template>
     <div class="position-relative">
         <v-row v-if="smAndDown" class="my-5" justify="space-between" @click="showMoreDetails = !showMoreDetails">
-            <v-col cols="6">
-                <v-avatar :color="transferDirection.color" size="22">
-                    <v-icon size="13" color="white"> {{ transferDirection.icon }} </v-icon>
-                </v-avatar>
-                <span class="ml-2">
-                    {{ transferDirection.text }}
-                </span>
-            </v-col>
-            <v-col cols="6" class="text-right">{{ txFee.value }} ETH</v-col>
-            <v-col cols="6" class="text-info text-lowercase"> {{ timestamp }} {{ transferDirection.direction }} </v-col>
-            <v-col cols="6">
-                <div class="d-flex align-center justify-end">
-                    <app-address-blockie :address="txAddress || ''" :size="6" class="mr-2 mr-sm-2" />
-                    <app-transform-hash is-short is-blue :hash="eth.toCheckSum(txAddress)" :link="`/address/${txAddress}`" />
-                </div>
-            </v-col>
-            <v-col cols="12" v-if="showMoreDetails">
-                <v-divider class="mx-n6 mb-3" />
-                <div class="mb-4 d-flex justify-space-between">
-                    <span class="text-info mr-2">Balance Before:</span>
-                    <span>{{ balanceBefore.value }} ETH</span>
-                </div>
-                <div class="mb-4 d-flex justify-space-between">
-                    <span class="text-info mr-2">Balance After:</span>
-                    <span>{{ balanceAfter.value }} ETH</span>
-                </div>
-                <div class="d-flex justify-space-between">
-                    <span class="text-info mr-2">Hash:</span>
-                    <span>
-                        <app-transform-hash
-                            is-short
-                            is-blue
-                            :hash="eth.toCheckSum(transfer.transfer.transactionHash)"
-                            :link="`/tx/${transfer.transfer.transactionHash}`"
-                        />
+            <template v-if="props.tab === routes[0]">
+                <v-col cols="6">
+                    <v-avatar :color="transferDirection.color" size="22">
+                        <v-icon size="13" color="white"> {{ transferDirection.icon }} </v-icon>
+                    </v-avatar>
+                    <span class="ml-2">
+                        {{ transferDirection.text }}
                     </span>
-                </div>
-            </v-col>
+                </v-col>
+                <v-col cols="6" class="text-right">{{ txValue.value }} ETH</v-col>
+                <v-col cols="6" class="text-info text-lowercase"> {{ timestamp }} {{ transferDirection.direction }} </v-col>
+                <v-col cols="6">
+                    <div class="d-flex align-center justify-end">
+                        <app-address-blockie :address="txAddress || ''" :size="6" class="mr-2 mr-sm-2" />
+                        <app-transform-hash is-short is-blue :hash="eth.toCheckSum(txAddress)" :link="`/address/${txAddress}`" />
+                    </div>
+                </v-col>
+                <v-col cols="12" v-if="showMoreDetails">
+                    <div class="mb-4 d-flex justify-space-between">
+                        <span class="text-info mr-2">tx fee paid:</span>
+                        <span>{{ txFee.value }} ETH</span>
+                    </div>
+                    <div class="d-flex justify-space-between">
+                        <span class="text-info mr-2">
+                            <app-chip :bg="transferType.color" :text="transferType.text.toUpperCase()" class="text-caption" style="min-width: 120px" />
+                        </span>
+                        <span>
+                            <app-transform-hash
+                                is-short
+                                is-blue
+                                :hash="eth.toCheckSum(transfer.transfer.transactionHash)"
+                                :link="`/tx/${transfer.transfer.transactionHash}`"
+                            />
+                        </span>
+                    </div>
+                </v-col>
+            </template>
+            <template v-if="props.tab === routes[1]">
+                <v-col cols="6">
+                    <v-avatar :color="transferDirection.color" size="22">
+                        <v-icon size="13" color="white"> {{ transferDirection.icon }} </v-icon>
+                    </v-avatar>
+                    <span class="ml-2">
+                        {{ transferDirection.text }}
+                    </span>
+                </v-col>
+                <v-col cols="6" class="text-right">{{ txFee.value }} ETH</v-col>
+                <v-col cols="6" class="text-info text-lowercase"> {{ timestamp }} {{ transferDirection.direction }} </v-col>
+                <v-col cols="6">
+                    <div class="d-flex align-center justify-end">
+                        <app-address-blockie :address="txAddress || ''" :size="6" class="mr-2 mr-sm-2" />
+                        <app-transform-hash is-short is-blue :hash="eth.toCheckSum(txAddress)" :link="`/address/${txAddress}`" />
+                    </div>
+                </v-col>
+                <v-col cols="12" v-if="showMoreDetails">
+                    <v-divider class="mx-n6 mb-3" />
+                    <div class="mb-4 d-flex justify-space-between">
+                        <span class="text-info mr-2">Balance Before:</span>
+                        <span>{{ balanceBefore.value }} ETH</span>
+                    </div>
+                    <div class="mb-4 d-flex justify-space-between">
+                        <span class="text-info mr-2">Balance After:</span>
+                        <span>{{ balanceAfter.value }} ETH</span>
+                    </div>
+                    <div class="d-flex justify-space-between">
+                        <span class="text-info mr-2">Hash:</span>
+                        <span>
+                            <app-transform-hash
+                                is-short
+                                is-blue
+                                :hash="eth.toCheckSum(transfer.transfer.transactionHash)"
+                                :link="`/tx/${transfer.transfer.transactionHash}`"
+                            />
+                        </span>
+                    </div>
+                </v-col>
+            </template>
         </v-row>
         <v-row v-else class="my-5" align="center">
-            <v-col :sm="mdAndDown ? 3 : 2">
-                <div class="d-flex">
-                    <span style="width: 30px" class="d-inline-block">
-                        <v-icon :color="statusIcon.color">{{ statusIcon.icon }}</v-icon>
-                    </span>
-                    <div class="ml-4">
-                        {{ txFee.value }} ETH
-                        <div class="text-lowercase">
-                            {{ timestamp }} <span v-if="mdAndDown">{{ transferDirection.direction }}</span>
+            <template v-if="props.tab === routes[0]">
+                <v-col sm="3" lg="2">
+                    <div class="d-flex">
+                        <span style="width: 30px" class="d-inline-block">
+                            <v-icon :color="statusIcon.color">{{ statusIcon.icon }}</v-icon>
+                        </span>
+                        <div class="ml-4">
+                            {{ txValue.value }} ETH
+                            <div class="text-lowercase">
+                                {{ timestamp }} <span v-if="mdAndDown">{{ transferDirection.direction }}</span>
+                            </div>
+                            <app-chip
+                                v-if="mdAndDown"
+                                :bg="transferType.color"
+                                :text="transferType.text.toUpperCase()"
+                                class="text-caption"
+                                style="min-width: 120px"
+                            />
                         </div>
                     </div>
-                </div>
-            </v-col>
+                </v-col>
+                <v-col v-if="!mdAndDown" sm="2">
+                    <app-chip :bg="transferType.color" :text="transferType.text.toUpperCase()" class="text-caption" style="min-width: 120px" />
+                </v-col>
+                <v-col sm="2">
+                    <p v-if="isBlockReward" class="text-secondary">
+                        {{ formatNumber(props.transfer.transfer.block) }}
+                    </p>
+                    <app-transform-hash
+                        v-else
+                        is-short
+                        is-blue
+                        :hash="eth.toCheckSum('0x09d9591442b213fe4ac9d0634023b37cc818e51c')"
+                        :link="`/address/${'0x09d9591442b213fe4ac9d0634023b37cc818e51c'}`"
+                    />
+                </v-col>
+                <v-col sm="2">
+                    <app-chip :bg="transferDirection.color" :text="transferDirection.direction" />
+                </v-col>
+                <v-col sm="3" lg="2">
+                    <div class="d-flex align-center">
+                        <app-address-blockie :address="txAddress || ''" :size="8" class="mr-2 mr-sm-2" />
+                        <app-transform-hash is-short is-blue :hash="eth.toCheckSum(txAddress)" :link="`/address/${txAddress}`" />
+                    </div>
+                </v-col>
+                <v-col sm="2">
+                    <span> {{ txFee.value }} ETH </span>
+                </v-col>
+            </template>
             <template v-if="props.tab === routes[1]">
+                <v-col :sm="mdAndDown ? 3 : 2">
+                    <div class="d-flex">
+                        <span style="width: 30px" class="d-inline-block">
+                            <v-icon :color="statusIcon.color">{{ statusIcon.icon }}</v-icon>
+                        </span>
+                        <div class="ml-4">
+                            {{ txFee.value }} ETH
+                            <div class="text-lowercase">
+                                {{ timestamp }} <span v-if="mdAndDown">{{ transferDirection.direction }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </v-col>
                 <v-col v-if="!mdAndDown" cols="1" class="text-center">
                     <app-chip :bg="transferDirection.color" :text="transferDirection.direction" />
                 </v-col>
@@ -72,24 +160,8 @@
                         :link="`/tx/${transfer.transfer.transactionHash}`"
                     />
                 </v-col>
-            </template>
-            <v-col sm="2"> {{ balanceBefore.value }} ETH </v-col>
-            <v-col sm="2" lg="3"> {{ balanceAfter.value }} ETH </v-col>
-            <template v-if="props.tab === routes[0]">
-                <v-col sm="2">
-                    <app-chip bg="purple" text="transaction" />
-                </v-col>
-                <v-col sm="2">
-                    <div class="d-flex align-center">
-                        <span class="text-info mr-2">Hash:</span>
-                        <app-transform-hash
-                            is-short
-                            is-blue
-                            :hash="eth.toCheckSum('0x09d9591442b213fe4ac9d0634023b37cc818e51c')"
-                            :link="`/address/${'0x09d9591442b213fe4ac9d0634023b37cc818e51c'}`"
-                        />
-                    </div>
-                </v-col>
+                <v-col sm="2"> {{ balanceBefore.value }} ETH </v-col>
+                <v-col sm="2" lg="3"> {{ balanceAfter.value }} ETH </v-col>
             </template>
         </v-row>
         <div v-if="showMoreDetails && smAndDown" class="row-bg bg-tableGrey"></div>
@@ -105,11 +177,12 @@ import { Q_ADDRESS_TRANSFERS } from '@core/router/routesNames'
 import { eth, timeAgo } from '@core/helper'
 import { EthItxTransfersFragment } from '@module/address/apollo/EthTransfers/internalTransfers.generated'
 import { computed, ref } from 'vue'
-import { formatNonVariableEthValue, FormattedNumber } from '@core/helper/number-format-helper'
+import { formatNonVariableEthValue, FormattedNumber, formatNumber } from '@core/helper/number-format-helper'
 import BN from 'bignumber.js'
 import { useDisplay } from 'vuetify'
 
 const routes = Q_ADDRESS_TRANSFERS
+const BLOCK_REWARD_HASH = '0xBLOCK_REWARD'
 const { smAndDown, mdAndDown } = useDisplay()
 
 interface ComponentProps {
@@ -147,13 +220,32 @@ const transferDirection = computed<{ [key: string]: string }>(() => {
         return {
             direction: 'To',
             text: 'Sent',
-            color: 'orange',
+            color: 'warning',
             icon: 'north_west'
         }
     }
     return {
+        direction: 'Self',
         text: 'Self',
-        color: 'orange'
+        color: 'orange',
+        icon: 'refresh'
+    }
+})
+
+const isBlockReward = computed<boolean>(() => {
+    return props.transfer.transfer.from === BLOCK_REWARD_HASH
+})
+
+const transferType = computed<{ [key: string]: string }>(() => {
+    if (isBlockReward.value) {
+        return {
+            text: 'block reward',
+            color: 'success'
+        }
+    }
+    return {
+        text: 'transaction',
+        color: 'purple'
     }
 })
 
@@ -187,6 +279,10 @@ const txAddress = computed<string>(() => {
 const timestamp = computed<string>(() => {
     const date = new Date(props.transfer.transfer.timestamp * 1e3)
     return timeAgo(date, smAndDown.value)
+})
+
+const txValue = computed<FormattedNumber>(() => {
+    return formatNonVariableEthValue(new BN(props.transfer.value))
 })
 
 const txFee = computed<FormattedNumber>(() => {
