@@ -3,28 +3,16 @@
         <v-row justify="start" aligned="center" dense>
             <v-col v-for="(i, index) in state.filterList" :key="index" class="flex-shrink-1 flex-grow-0">
                 <v-btn
-                    v-if="index === 0"
-                    color="textPrimary"
-                    :variant="i.isSelected ? 'flat' : 'outlined'"
-                    rounded="pill"
-                    height="24"
-                    class="px-1"
-                    @click="setFilter(index)"
-                    density="compact"
-                    >{{ i.name }}</v-btn
-                >
-                <v-btn
-                    v-else
                     color="textPrimary"
                     :variant="i.isSelected ? 'flat' : 'outlined'"
                     density="compact"
                     rounded="pill"
-                    class="px-2"
+                    :class="index === 0 ? 'px-1' : 'px-2'"
                     height="24"
                     @click="setFilter(index)"
                 >
                     <div class="d-flex align-center">
-                        <app-address-blockie :address="i.hash" :size="4" class="mr-2" />
+                        <app-address-blockie v-if="index !== 0" :address="i.hash" :size="4" class="mr-2" />
                         <p>{{ i.name }}</p>
                     </div></v-btn
                 >
