@@ -135,7 +135,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, reactive } from 'vue'
+import { computed, reactive, watch } from 'vue'
 import AppInput from '@core/components/AppInput.vue'
 import AppAddressBlockie from '@/core/components/AppAddressBlockie.vue'
 import TableRowTokenBalance from './components/TableRowTokenBalance.vue'
@@ -210,6 +210,33 @@ const activeFilter = computed<string[] | undefined>(() => {
     }
     return state.filterList.filter(i => i.isSelected === true).map(i => i.hash)
 })
+
+watch(
+    () => store.portfolioLength,
+    (newLength, oldLength) => {
+        if (newLength > oldLength) {
+            //Added New Address
+            const newItem = store.portfolio[oldLength]
+            state.filterList.push({
+                hash: newItem.hash,
+                isSelected: false,
+                name: newItem.name
+            })
+        } else {
+            //Deleted an Address
+            const deleted = state.filterList.findIndex((i, index) => {
+                if (index === 0) {
+                    return false
+                }
+                const exists = store.portfolio.findIndex(el => el.hash === i.hash)
+                return exists < 0
+            })
+            if (deleted > -1) {
+                state.filterList.splice(deleted, 1)
+            }
+        }
+    }
+)
 
 /**------------------------
  * Tokens Data
