@@ -153,6 +153,12 @@ const { xs } = useDisplay()
 const { loading: loadingCoinData, getEthereumTokensMap } = useCoinData()
 const store = useStore()
 
+interface PropType {
+    addressRef?: string
+}
+
+const props = defineProps<PropType>()
+
 interface Filter {
     hash: string
     isSelected: boolean
@@ -190,9 +196,13 @@ const state: ComponentState = reactive({
  -------------------------*/
 
 store.portfolio.forEach(i => {
+    const isSelected = props.addressRef?.toLowerCase() === i.hash.toLowerCase()
+    if (isSelected) {
+        state.filterList[0].isSelected = false
+    }
     state.filterList.push({
         hash: i.hash,
-        isSelected: false,
+        isSelected: isSelected,
         name: i.name
     })
 })
