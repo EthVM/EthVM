@@ -202,7 +202,14 @@ const setFilter = (index: number) => {
     } else {
         state.filterList[0].isSelected = false
     }
-    state.filterList[index].isSelected = !state.filterList[index].isSelected
+    if (state.filterList[index].isSelected) {
+        const selected = state.filterList.filter(i => i.isSelected && i.hash != state.filterList[index].hash)
+        if (selected.length > 0) {
+            state.filterList[index].isSelected = false
+        }
+    } else {
+        state.filterList[index].isSelected = true
+    }
 }
 const activeFilter = computed<string[] | undefined>(() => {
     if (state.filterList[0].isSelected) {
