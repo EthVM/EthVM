@@ -36,8 +36,8 @@ fragment TxsTransfers on ETHTransactionTransfer {
     value
 }
 
-query getEthTransactionTransfers($hash: String!, $_limit: Int, $_nextKey: String) {
-    getEthTransactionTransfers(owner: $hash, limit: $_limit, nextKey: $_nextKey) {
+query getEthTransactionTransfers($direction: TransferDirection, $hash: String!, $_limit: Int, $_nextKey: String) {
+    getEthTransactionTransfers(owner: $hash, direction: $direction, limit: $_limit, nextKey: $_nextKey) {
         transfers {
             ...TxsTransfers
         }
