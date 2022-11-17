@@ -89,7 +89,7 @@
                         <div class="ml-4">
                             {{ txValue.value }} ETH
                             <div class="text-lowercase">
-                                {{ timestamp }} <span v-if="mdAndDown">{{ transferDirection.direction }}</span>
+                                {{ timestamp }}
                             </div>
                             <app-chip
                                 v-if="mdAndDown"
