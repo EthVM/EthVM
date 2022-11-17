@@ -47,6 +47,7 @@ export type TxsTransfersFragment = {
 }
 
 export type GetEthTransactionTransfersQueryVariables = Types.Exact<{
+    direction?: Types.InputMaybe<Types.TransferDirection>
     hash: Types.Scalars['String']
     _limit?: Types.InputMaybe<Types.Scalars['Int']>
     _nextKey?: Types.InputMaybe<Types.Scalars['String']>
@@ -122,8 +123,8 @@ export const TxsTransfersFragmentDoc = gql`
     ${BalanceFragmentFragmentDoc}
 `
 export const GetEthTransactionTransfersDocument = gql`
-    query getEthTransactionTransfers($hash: String!, $_limit: Int, $_nextKey: String) {
-        getEthTransactionTransfers(owner: $hash, limit: $_limit, nextKey: $_nextKey) {
+    query getEthTransactionTransfers($direction: TransferDirection, $hash: String!, $_limit: Int, $_nextKey: String) {
+        getEthTransactionTransfers(owner: $hash, direction: $direction, limit: $_limit, nextKey: $_nextKey) {
             transfers {
                 ...TxsTransfers
             }
@@ -145,6 +146,7 @@ export const GetEthTransactionTransfersDocument = gql`
  *
  * @example
  * const { result, loading, error } = useGetEthTransactionTransfersQuery({
+ *   direction: // value for 'direction'
  *   hash: // value for 'hash'
  *   _limit: // value for '_limit'
  *   _nextKey: // value for '_nextKey'
