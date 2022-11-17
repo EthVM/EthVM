@@ -1,13 +1,43 @@
 <template>
     <v-row justify="end" class="mx-5 my-3">
         <div class="mx-3">
-            <app-btn text="Incoming" isSmall @click="setTransferDirection(TransferDirection.Incoming)" />
+            <v-btn
+                color="textPrimary"
+                :variant="state.transferDirection === TransferDirection.Incoming ? 'flat' : 'outlined'"
+                density="compact"
+                rounded="pill"
+                class="px-2"
+                height="24"
+                @click="setTransferDirection(TransferDirection.Incoming)"
+            >
+                Incoming
+            </v-btn>
         </div>
         <div class="mx-3">
-            <app-btn text="Outgoing" isSmall @click="setTransferDirection(TransferDirection.Outgoing)" />
+            <v-btn
+                color="textPrimary"
+                :variant="state.transferDirection === TransferDirection.Outgoing ? 'flat' : 'outlined'"
+                density="compact"
+                rounded="pill"
+                class="px-2"
+                height="24"
+                @click="setTransferDirection(TransferDirection.Outgoing)"
+            >
+                Outgoing
+            </v-btn>
         </div>
         <div class="mx-3">
-            <app-btn text="All" isSmall @click="setTransferDirection('')" />
+            <v-btn
+                color="textPrimary"
+                :variant="state.transferDirection === null ? 'flat' : 'outlined'"
+                density="compact"
+                rounded="pill"
+                class="px-2"
+                height="24"
+                @click="setTransferDirection('')"
+            >
+                All
+            </v-btn>
         </div>
     </v-row>
     <template v-if="!smAndDown">
@@ -83,7 +113,8 @@ const {
         _limit: MAX_ITEMS
     }),
     () => ({
-        fetchPolicy: 'network-only'
+        fetchPolicy: 'network-only',
+        notifyOnNetworkStatusChange: true
     })
 )
 
