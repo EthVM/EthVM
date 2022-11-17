@@ -233,7 +233,7 @@ const transferDirection = computed<{ [key: string]: string }>(() => {
     return {
         direction: TRANSFER_DIRECTION.SELF,
         text: 'Self',
-        color: 'orange',
+        color: 'info',
         icon: 'refresh'
     }
 })
