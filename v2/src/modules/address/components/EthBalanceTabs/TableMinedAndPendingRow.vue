@@ -138,22 +138,36 @@ const props = defineProps<PropType>()
 const showMoreDetails = ref(false)
 
 const txValue = computed<FormattedNumber>(() => {
-    return formatVariableUnitEthValue(new BN(props.tx.value | 0))
+    return formatVariableUnitEthValue(new BN(props.tx?.value || 0))
 })
 
 const timestamp = computed<string>(() => {
-    return timeAgo(new Date(props.tx.timestamp * 1e3), smAndDown.value)
+    const date = props.tx?.timestamp ? new Date(props.tx?.timestamp * 1e3) : new Date()
+    return timeAgo(date, smAndDown.value)
 })
 
+enum TRANSFER_DIRECTION {
+    FROM = 'From',
+    TO = 'To',
+    SELF = 'Self'
+}
+
 const transferDirection = computed<{ [key: string]: string }>(() => {
+    // If to and from address is the same, then transfer is self
+    if (props.tx.to === props.addressRef.toLowerCase() && props.tx.from === props.addressRef.toLowerCase()) {
+        return {
+            color: 'info',
+            text: TRANSFER_DIRECTION.SELF
+        }
+    }
     if (props.tx.to === props.addressRef) {
         return {
-            text: 'From',
+            text: TRANSFER_DIRECTION.FROM,
             color: 'success'
         }
     } else if (props.tx.from === props.addressRef) {
         return {
-            text: 'To',
+            text: TRANSFER_DIRECTION.TO,
             color: 'warning'
         }
     }
@@ -164,12 +178,12 @@ const transferDirection = computed<{ [key: string]: string }>(() => {
 })
 
 const txAddress = computed<string>(() => {
-    if (props.tx.to === props.addressRef) {
+    if (props.tx.to === props.addressRef.toLowerCase()) {
         // Use the address of the destination address
         return props.tx.from
     }
     // use from address
-    return props.tx.to
+    return props.tx.to || ''
 })
 
 const estimatedFee = computed<FormattedNumber>(() => {
