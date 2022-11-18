@@ -6,7 +6,7 @@
                     <div v-bind="props" class="d-inline-block">
                         <app-btn-icon v-if="addressPropIsValid" :icon="icon" @click="starClick" :disabled="isDisabled"></app-btn-icon>
                         <app-btn
-                            v-else-if="!addressPropIsValid && !xs"
+                            v-else-if="!addressPropIsValid && !smAndDown"
                             text="Add Address"
                             @click="state.openDialog = true"
                             :disabled="isDisabled"
@@ -80,7 +80,7 @@ import { useDisplay } from 'vuetify/lib/framework.mjs'
 import { eth } from '@core/helper/eth'
 import { MAX_PORTFOLIO_ITEMS } from '@/store/helpers'
 const store = useStore()
-const { xs } = useDisplay()
+const { xs, smAndDown } = useDisplay()
 
 interface PropType {
     address?: string
