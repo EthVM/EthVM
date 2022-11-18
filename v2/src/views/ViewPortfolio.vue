@@ -31,7 +31,7 @@
             <v-card elevation="1" rounded="xl" class="pt-4 pt-sm-6">
                 <app-tabs v-model="state.tab" :routes="routes" :tabs="tabs" class="mb-4 mb-sm-0"></app-tabs>
                 <module-portfolio-list v-if="state.tab === routes[0]" />
-                <module-portfolio-token-balance v-if="state.tab === routes[1]" /> </v-card
+                <module-portfolio-token-balance v-if="state.tab === routes[1]" :address-ref="state.addressRef" /> </v-card
         ></v-col>
     </v-row>
 </template>
@@ -51,6 +51,8 @@ import { useAppViewGrid } from '@core/composables/AppViewGrid/AppViewGrid.compos
 import { reactive } from 'vue'
 import { useStore } from '@/store'
 import { useDisplay } from 'vuetify/lib/framework.mjs'
+import { onBeforeRouteUpdate } from 'vue-router'
+
 const { columnPadding, rowMargin } = useAppViewGrid()
 const { xs } = useDisplay()
 const store = useStore()
@@ -73,9 +75,24 @@ interface PropsInterface {
 
 const props = defineProps<PropsInterface>()
 
-const state = reactive({
+interface StateType {
+    error: string
+    tab: string
+    addressRef?: string
+}
+const state = reactive<StateType>({
     error: '',
     tab: props.tab
+})
+
+onBeforeRouteUpdate(to => {
+    if (to.query.t === Q_PORTFOLIO[0]) {
+        state.addressRef = undefined
+    } else {
+        if (to.params.addressRef) {
+            state.addressRef = to.params.addressRef as string
+        }
+    }
 })
 </script>
 <style lang="scss">

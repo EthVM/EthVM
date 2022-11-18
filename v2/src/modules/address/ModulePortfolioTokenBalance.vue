@@ -1,13 +1,29 @@
 <template>
     <div class="pa-4 pa-sm-6">
-        <div class="d-flex align-center">
-            <div class="flex-grow-1">
-                <app-input place-holder="Search token name" v-model="state.searchParams" />
-            </div>
-        </div>
+        <v-row justify="start" aligned="center" dense>
+            <v-col v-for="(i, index) in state.filterList" :key="index" class="flex-shrink-1 flex-grow-0">
+                <v-btn
+                    color="textPrimary"
+                    :variant="i.isSelected ? 'flat' : 'outlined'"
+                    density="compact"
+                    rounded="pill"
+                    :class="index === 0 ? 'px-1' : 'px-2'"
+                    height="24"
+                    @click="setFilter(index)"
+                >
+                    <div class="d-flex align-center">
+                        <app-address-blockie v-if="index !== 0" :address="i.hash" :size="4" class="mr-2" />
+                        <p>{{ i.name }}</p>
+                    </div></v-btn
+                >
+            </v-col>
+            <v-col cols="12">
+                <app-input place-holder="Search token name" v-model="state.searchParams" class="mt-5" />
+            </v-col>
+        </v-row>
 
         <!--Table Header-->
-        <v-row :dense="xs" class="mt-sm-4 d-flex text-body-1 text-info mb-sm-3" :justify="xs ? 'end' : 'start'">
+        <v-row :dense="xs" class="mt-4 d-flex text-body-1 text-info mb-sm-3" :justify="xs ? 'end' : 'start'">
             <!--
                 Token on Overview:
                 XS: NONE
@@ -96,19 +112,20 @@
         </v-row>
         <!--Token Row -->
         <div v-else-if="renderState.renderTable" class="mx-n4 mx-sm-n6 px-4 px-sm-6 mt-2">
-            <div v-if="tokensLength > 0">
+            <div v-if="tokens.length > 0">
                 <div v-for="token in tokens" :key="token.contract">
                     <table-row-token-balance :token="token" :is-overview="false" :is-active="false"> </table-row-token-balance>
                 </div>
             </div>
-            <app-no-result v-else text="This address does not hold any tokens" class="mt-3 mt-sm-1"></app-no-result>
+            <app-no-result v-else text="This portfolio does not have any tokens" class="mt-3 mt-sm-1"></app-no-result>
         </div>
     </div>
 </template>
 
 <script setup lang="ts">
-import { computed, reactive } from 'vue'
+import { computed, reactive, watch } from 'vue'
 import AppInput from '@core/components/AppInput.vue'
+import AppAddressBlockie from '@/core/components/AppAddressBlockie.vue'
 import TableRowTokenBalance from './components/TableRowTokenBalance.vue'
 import { useCoinData } from '@core/composables/CoinData/coinData.composable'
 import { TOKEN_FILTER_VALUES, KEY, DIRECTION, Token } from '@module/address/models/TokenSort'
@@ -123,6 +140,19 @@ import { MarketDataFragment as TokenMarketData } from '@core/composables/CoinDat
 const { xs } = useDisplay()
 const { loading: loadingCoinData, getEthereumTokensMap } = useCoinData()
 const store = useStore()
+
+interface PropType {
+    addressRef?: string
+}
+
+const props = defineProps<PropType>()
+
+interface Filter {
+    hash: string
+    isSelected: boolean
+    name: string
+}
+
 interface ComponentState {
     showMoreTokenDetails: boolean
     activeToken: string
@@ -130,6 +160,7 @@ interface ComponentState {
     sortDirection: string
     index: number
     searchParams: string
+    filterList: Filter[]
 }
 
 const state: ComponentState = reactive({
@@ -138,8 +169,80 @@ const state: ComponentState = reactive({
     sortKey: TOKEN_FILTER_VALUES[5],
     sortDirection: 'high',
     index: 0,
-    searchParams: ''
+    searchParams: '',
+    filterList: [
+        {
+            hash: 'all',
+            isSelected: true,
+            name: 'All'
+        }
+    ]
 })
+
+/**------------------------
+ * Table Filter
+ -------------------------*/
+
+store.portfolio.forEach(i => {
+    const isSelected = props.addressRef?.toLowerCase() === i.hash.toLowerCase()
+    if (isSelected) {
+        state.filterList[0].isSelected = false
+    }
+    state.filterList.push({
+        hash: i.hash,
+        isSelected: isSelected,
+        name: i.name
+    })
+})
+const setFilter = (index: number) => {
+    if (index === 0) {
+        state.filterList.forEach(i => (i.isSelected = false))
+    } else {
+        state.filterList[0].isSelected = false
+    }
+    if (state.filterList[index].isSelected) {
+        const selected = state.filterList.filter(i => i.isSelected && i.hash != state.filterList[index].hash)
+        if (selected.length > 0) {
+            state.filterList[index].isSelected = false
+        }
+    } else {
+        state.filterList[index].isSelected = true
+    }
+}
+const activeFilter = computed<string[] | undefined>(() => {
+    if (state.filterList[0].isSelected) {
+        return undefined
+    }
+    return state.filterList.filter(i => i.isSelected === true).map(i => i.hash)
+})
+
+watch(
+    () => store.portfolioLength,
+    (newLength, oldLength) => {
+        if (newLength > oldLength) {
+            //Added New Address
+            const newItem = store.portfolio[oldLength]
+            state.filterList.push({
+                hash: newItem.hash,
+                isSelected: false,
+                name: newItem.name
+            })
+        } else {
+            //Deleted an Address
+            const deleted = state.filterList.findIndex((i, index) => {
+                if (index === 0) {
+                    return false
+                }
+                const exists = store.portfolio.findIndex(el => el.hash === i.hash)
+                return exists < 0
+            })
+            if (deleted > -1) {
+                state.filterList.splice(deleted, 1)
+            }
+        }
+    }
+)
+
 /**------------------------
  * Tokens Data
  -------------------------*/
@@ -168,7 +271,7 @@ const { renderState } = useAppTableRowRender(tokensLength.value)
 
 const tokenSort = computed(() => {
     if (store.portfolioIsLoaded && tokenPrices.value !== null) {
-        return new TokenSort(store.portfolioTokensRaw(), tokenPrices.value, true)
+        return new TokenSort(store.portfolioTokensRaw(activeFilter.value), tokenPrices.value, true)
     }
     return false
 })

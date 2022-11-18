@@ -62,7 +62,7 @@
         </v-row>
         <app-menu min-width="180" :activator="`#list-item-menu-${props.adr.hash}`">
             <v-list-item title="Edit Name" class="py-2" @click="openEditDialog(true)"> </v-list-item>
-            <v-list-item title="View Tokens" class="py-2"> </v-list-item>
+            <v-list-item title="View Tokens" class="py-2" @click="viewTokens"></v-list-item>
             <v-divider class="my-1 mx-4" />
             <v-list-item title="Delete Address" class="py-2" @click="deleteAddress"> </v-list-item>
         </app-menu>
@@ -77,13 +77,14 @@ import AppTransformHash from '@/core/components/AppTransformHash.vue'
 import AppCopyToClip from '@/core/components/AppCopyToClip.vue'
 import AppBtnIcon from '@core/components/AppBtnIcon.vue'
 import ModulePorfolioHandleAdr from '../ModulePorfolioHandleAdr.vue'
-
 import AppMenu from '@core/components/AppMenu.vue'
 import { reactive } from 'vue'
 import { useDisplay } from 'vuetify/lib/framework.mjs'
 import BN from 'bignumber.js'
 import { useStore } from '@/store'
 import { eth } from '@core/helper/eth'
+import { Q_PORTFOLIO } from '@core/router/routesNames'
+import { useRouter } from 'vue-router'
 
 const store = useStore()
 const { xs, mdAndDown, smAndUp, lgAndUp } = useDisplay()
@@ -121,5 +122,10 @@ const openEditDialog = (_value: boolean) => {
 
 const deleteAddress = () => {
     store.removeAddress(props.adr.hash)
+}
+const router = useRouter()
+
+const viewTokens = () => {
+    router.push({ params: { addressRef: props.adr.hash }, query: { t: Q_PORTFOLIO[1] } })
 }
 </script>

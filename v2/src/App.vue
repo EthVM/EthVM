@@ -112,6 +112,7 @@ watch(
             const deleted = portfolioState.adrs.filter(i => i !== '' && !store.addressHashIsSaved(i))
             index = portfolioState.adrs.indexOf(deleted[0])
             portfolioState.adrs[index] = ''
+            store.checkBalanceMap()
         }
         portfolioState.functions[index].setHash(portfolioState.adrs[index])
     }

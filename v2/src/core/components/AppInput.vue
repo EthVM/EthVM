@@ -1,6 +1,6 @@
 <template>
-    <v-card elevation="0" color="transparent" :width="props.width">
-        <v-card rounded="pill" :width="props.width" elevation="0">
+    <v-card elevation="0" color="transparent" :max-width="props.width">
+        <v-card rounded="pill" :max-width="props.width" elevation="0">
             <v-text-field
                 v-model="state.value"
                 :placeholder="props.placeHolder"
@@ -49,7 +49,7 @@ const props = withDefaults(defineProps<ComponentProps>(), {
     hasError: false,
     placeHolder: 'I am a placeholder',
     modelValue: '',
-    width: '540px',
+    width: '540',
     hasPreppendInner: true,
     showErrorMessage: false
 })
