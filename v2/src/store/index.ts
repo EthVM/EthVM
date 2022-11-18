@@ -129,11 +129,28 @@ export const useStore = defineStore('main', {
                 return undefined
             }
         },
+        portfolioEthIsLoaded(state) {
+            return (): boolean => {
+                const isLoaded = state.portfolio.map(i => {
+                    return this.addressEthBalanceLoaded(i.hash)
+                })
+                console.log(isLoaded)
+                return !isLoaded.includes(false)
+            }
+        },
+        portfolioTokensIsLoaded(state) {
+            return (): boolean => {
+                const isLoaded = state.portfolio.map(i => {
+                    return this.addressERC20BalanceLoaded(i.hash)
+                })
+                return !isLoaded.includes(false)
+            }
+        },
         portfolioIsLoaded: state => {
-            const total = state.portfolio.length
-            const eth = Object.keys(state.portfolioEthBalanceMap)
-            const tokens = Object.keys(state.portfolioTokenBalanceMap)
-            return total === eth.length && total === tokens.length
+            const isLoaded = state.portfolio.map(i => {
+                return `${i.hash.toLowerCase()}` in state.portfolioEthBalanceMap && `${i.hash.toLowerCase()}` in state.portfolioTokenBalanceMap
+            })
+            return !isLoaded.includes(false)
         },
         portfolioWeiBalanceBN: state => {
             try {

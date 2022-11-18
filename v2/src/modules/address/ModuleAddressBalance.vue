@@ -243,7 +243,7 @@ const isSmallView = computed<boolean>(() => {
 </script>
 <style lang="scss" scoped>
 .temp-chart {
-    height: 130px;
+    height: 120px;
     background-color: #ecf2f7;
 }
 

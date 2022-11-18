@@ -1,5 +1,5 @@
 <template>
-    <doughnut v-if="props.chartData" :chart-data="props.chartData" :chart-options="chartOptions" :height="130" />
+    <doughnut v-if="props.chartData" :chart-data="props.chartData" :chart-options="chartOptions" style="position: relative" />
 </template>
 
 <script setup lang="ts">
@@ -19,6 +19,7 @@ ChartJS.defaults.plugins.legend = Object.assign(ChartJS.defaults.plugins.legend,
 
 interface PropType {
     chartData: ChartData<'doughnut'> | undefined
+    cutout: number
 }
 const props = defineProps<PropType>()
 
@@ -26,7 +27,7 @@ const chartOptions = {
     responsive: true,
     maintainAspectRatio: false,
     borderWidth: 0,
-    cutout: 42,
+    cutout: props.cutout,
     plugins: {
         tooltip: {
             bodyFont: {

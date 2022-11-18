@@ -1,17 +1,46 @@
 <template>
     <v-card fluid class="pa-4 pa-sm-6" elevation="1" rounded="xl" height="100%">
-        <address-balance-totals title="Portfolio Value" :is-loading="isLoading" :balance="portfolioValue"> </address-balance-totals>
-        <v-row class="mt-2" align="start">
-            <v-col v-if="isLoading" cols="12">
-                <div class="skeleton-box rounded-xl" style="min-height: 161px"></div>
+        <v-row align="center" :class="['fill-height', { 'flex-sm-nowrap': !props.addressRef }]" justify="space-between" class="mt-0">
+            <v-col cols="12" :sm="props.addressRef ? '12' : 'auto'" align-self="start" class="py-0">
+                <address-balance-totals title="Portfolio Value" :is-loading="isLoading" :balance="portfolioValue"> </address-balance-totals>
+                <v-divider v-if="!props.addressRef && !xs" class="mt-10 mb-6" length="154"></v-divider>
+                <address-balance-totals
+                    v-if="!props.addressRef"
+                    title="ETH Balance"
+                    :is-loading="!store.portfolioEthIsLoaded()"
+                    :balance="`${ethBalancePortfolio} ETH`"
+                    class="mt-7"
+                >
+                    <template #extra>
+                        <v-col v-if="!store.portfolioEthIsLoaded()" cols="6" sm="4" md="6" class="pa-0">
+                            <div class="skeleton-box rounded-xl mt-1" style="height: 24px"></div>
+                        </v-col>
+                        <p v-else class="text-h5 font-weight-regular">{{ ethBalanceFiat }}</p>
+                    </template>
+                </address-balance-totals>
             </v-col>
-            <v-col v-if="!isLoading && portfolioValueBN.gt(0)" cols="12" sm="4" md="5">
-                <chart-pie :chart-data="chartData" :loading="false"></chart-pie>
+            <v-col v-if="isLoading" cols="12" :sm="props.addressRef ? '12' : '7'" :md="props.addressRef ? '12' : '9'" :lg="props.addressRef ? '12' : '8'">
+                <div class="skeleton-box rounded-xl pl-10" :style="props.addressRef ? 'min-height: 154px' : 'min-height: 180px'"></div>
             </v-col>
-            <v-divider v-if="!xs && !isLoading && portfolioValueBN.gt(0)" vertical class="my-2"></v-divider>
-            <v-col v-if="!isLoading && portfolioValueBN.gt(0)" cols="12" sm="8" md="7">
-                <v-row v-for="i in topTokens.slice(0, 4)" :key="i.symbol" justify="space-between" align="center">
-                    <v-col class="d-flex align-center py-2">
+            <v-col v-if="!isLoading && portfolioValueBN.gt(0)" s cols="auto" class="mx-auto">
+                <chart-pie
+                    :chart-data="chartData"
+                    :loading="false"
+                    :cutout="props.addressRef ? 42 : 56"
+                    :style="props.addressRef ? 'height: 130px; width: 130px' : 'height: 150px; width: 150px'"
+                    class="mx-auto mx-sm-0 my-3 my-sm-0"
+                ></chart-pie>
+            </v-col>
+            <v-col
+                v-if="!isLoading && portfolioValueBN.gt(0)"
+                cols="12"
+                :sm="props.addressRef ? 6 : 5"
+                :md="props.addressRef ? 7 : 4"
+                align-self="center"
+                class="pt-0"
+            >
+                <v-row v-for="i in topTokens.slice(0, 4)" :key="i.symbol" justify="space-between" align="center" class="ma-0">
+                    <v-col class="d-flex align-center py-1">
                         <app-token-icon :token-icon="i.icon"></app-token-icon>
                         <p class="pl-3 text-button">{{ i.symbol }}</p>
                     </v-col>
@@ -29,7 +58,7 @@ import { useAddressToken } from '@core/composables/AddressTokens/addressTokens.c
 import { useAddressEthBalance } from '@core/composables/AddressEthBalance/addressEthBalance.composable'
 import { useCoinData } from '@core/composables/CoinData/coinData.composable'
 import { computed, toRefs } from 'vue'
-import { formatUsdValue, formatPercentageValue } from '@/core/helper/number-format-helper'
+import { formatUsdValue, formatPercentageValue, formatVariableUnitEthValue } from '@/core/helper/number-format-helper'
 import { useTheme } from 'vuetify/lib/framework.mjs'
 import BN from 'bignumber.js'
 import { ChartData } from 'chart.js'
@@ -41,7 +70,7 @@ import AppTokenIcon from '@/core/components/AppTokenIcon.vue'
 import { useStore } from '@/store'
 import { TokenSort } from '@module/address/models/TokenSort'
 
-const { xs } = useDisplay()
+const { xs, lgAndUp } = useDisplay()
 const store = useStore()
 
 interface PropType {
@@ -93,6 +122,16 @@ const portfolioValueBN = computed<BN>(() => {
  */
 const portfolioValue = computed<string>(() => {
     return formatUsdValue(portfolioValueBN.value).value
+})
+
+/**
+ * Returns formatted number for the total usd value of eth balance for the portfolio
+ */
+const ethBalancePortfolio = computed<string>(() => {
+    return formatVariableUnitEthValue(store.portfolioWeiBalanceBN).value
+})
+const ethBalanceFiat = computed<string>(() => {
+    return formatUsdValue(store.portfolioEthFiatBN).value
 })
 
 /**------------------------
