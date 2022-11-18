@@ -3,7 +3,7 @@
         <v-col cols="12" lg="6" :class="columnPadding">
             <module-portfolio-total></module-portfolio-total>
         </v-col>
-        <v-col cols="12" lg="6" :class="columnPadding">
+        <v-col cols="12" lg="6" :class="[columnPadding, 'order-first order-sm-2']">
             <v-card fluid class="pa-4 pa-sm-6" elevation="1" rounded="xl" height="100%">
                 <v-row no-gutter justify="start">
                     <v-col cols="6" sm="4" lg="3">
@@ -44,7 +44,7 @@
                 />
             </v-card>
         </v-col>
-        <v-col cols="12" :class="columnPadding">
+        <v-col cols="12" :class="columnPadding" order="last">
             <v-card elevation="1" rounded="xl" class="pt-4 pt-sm-6">
                 <app-tabs v-model="state.tab" :routes="routes" :tabs="tabs" class="mb-4 mb-sm-0"></app-tabs>
                 <module-portfolio-list v-if="state.tab === routes[0]" />
