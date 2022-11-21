@@ -592,6 +592,7 @@ export type QueryGetEthSigsArgs = {
 }
 
 export type QueryGetEthTransactionTransfersArgs = {
+    direction?: InputMaybe<TransferDirection>
     limit?: InputMaybe<Scalars['Int']>
     nextKey?: InputMaybe<Scalars['String']>
     owner?: InputMaybe<Scalars['String']>

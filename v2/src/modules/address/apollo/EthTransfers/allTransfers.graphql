@@ -1,4 +1,6 @@
 fragment AllTransfers on Transfer {
+    type
+    subtype
     transactionHash
     block
     timestamp

@@ -32,7 +32,7 @@
                 <table-all-and-internal-row :tab="props.tab" :loading="initialLoad" :transfer="transfer" :address-ref="props.addressRef" />
             </div>
         </template>
-        <app-no-result v-else text="This address does not have any internal transfers" class="mt-4 mt-sm-6 mb-5"></app-no-result>
+        <app-no-result v-else :text="emptyTransfersText" class="mt-4 mt-sm-6 mb-5"></app-no-result>
         <app-intersect v-if="hasMore" @intersect="loadMoreData">
             <div class="skeleton-box rounded-xl mt-1 my-4" style="height: 24px"></div>
             <v-divider />
@@ -114,6 +114,13 @@ const transfers = computed<Array<EthInternalTransactionTransfersFragment | null>
         return allTransfersData.value?.getAllEthTransfers.transfers
     }
     return null
+})
+
+const emptyTransfersText = computed<string>(() => {
+    if (props.tab === routes[0]) {
+        return 'This address does not have any transfers'
+    }
+    return 'This address does not have any internal transfers'
 })
 
 const initialLoad = computed<boolean>(() => {
