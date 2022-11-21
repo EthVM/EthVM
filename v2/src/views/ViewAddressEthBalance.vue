@@ -1,8 +1,10 @@
 <template>
     <v-row :class="rowMargin">
         <v-col cols="12" :class="columnPadding">
-            <v-card class="pa-4 pa-sm-6" elevation="1" rounded="xl" height="100%">
+            <v-card class="pa-4 pa-sm-6" elevation="1" rounded="xl">
                 <module-address-balance :address-ref="props.addressRef" />
+            </v-card>
+            <v-card class="pa-4 pa-sm-6 mt-4 mt-sm-6" elevation="1" rounded="xl">
                 <module-address-transfer-history :address-ref="props.addressRef" :tab="props.tab" @tabChange="setLastViewedTab" />
             </v-card>
         </v-col>
