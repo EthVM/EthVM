@@ -102,22 +102,28 @@
                     </div>
                 </v-col>
                 <v-col v-if="!mdAndDown" sm="2">
-                    <app-chip :bg="transferType.color" :text="transferType.text.toUpperCase()" size="x-small" class="tiny-text" style="min-width: 120px" />
+                    <app-chip :bg="transferType.color" :text="transferType.text.toUpperCase()" size="x-small" class="tiny-text" style="min-width: 131px" />
                 </v-col>
                 <v-col sm="2">
-                    <p v-if="isBlockReward" class="text-secondary">
+                    <router-link v-if="isBlockReward" :to="`/block/number/${props.transfer.transfer.block}`" class="text-secondary">
                         {{ formatNumber(props.transfer.transfer.block) }}
-                    </p>
+                    </router-link>
                     <app-transform-hash
                         v-else
                         is-short
                         is-blue
                         :hash="eth.toCheckSum(props.transfer.transfer.transactionHash)"
-                        :link="`/address/${props.transfer.transfer.transactionHash}`"
+                        :link="`/tx/${props.transfer.transfer.transactionHash}`"
                     />
                 </v-col>
                 <v-col sm="2">
-                    <app-chip v-if="!isBlockReward" :bg="transferDirection.color" :text="transferDirection.direction" size="x-small" class="tiny-text" />
+                    <app-chip
+                        v-if="!isBlockReward"
+                        :bg="transferDirection.color"
+                        :text="transferDirection.direction"
+                        size="x-small"
+                        class="tiny-text text-uppercase"
+                    />
                 </v-col>
                 <v-col sm="3" lg="2">
                     <div v-if="!isBlockReward" class="d-flex align-center">
@@ -180,6 +186,7 @@ import { computed, ref } from 'vue'
 import { formatNonVariableEthValue, FormattedNumber, formatNumber } from '@core/helper/number-format-helper'
 import BN from 'bignumber.js'
 import { useDisplay } from 'vuetify'
+import { TransferSubtype } from '@/apollo/types'
 
 const routes = Q_ADDRESS_TRANSFERS
 const BLOCK_REWARD_HASH = '0xBLOCK_REWARD'
@@ -215,6 +222,15 @@ enum TRANSFER_DIRECTION {
 }
 
 const transferDirection = computed<{ [key: string]: string }>(() => {
+    // If to and from address is the same, then transfer is self
+    if (props.transfer.transfer.to === props.addressRef.toLowerCase() && props.transfer.transfer.from === props.addressRef.toLowerCase()) {
+        return {
+            direction: TRANSFER_DIRECTION.SELF,
+            text: 'Self',
+            color: 'info',
+            icon: 'refresh'
+        }
+    }
     if (props.transfer.transfer.to === props.addressRef.toLowerCase()) {
         return {
             direction: TRANSFER_DIRECTION.FROM,
@@ -239,7 +255,7 @@ const transferDirection = computed<{ [key: string]: string }>(() => {
 })
 
 const isBlockReward = computed<boolean>(() => {
-    return props.transfer.transfer.from === BLOCK_REWARD_HASH
+    return props.transfer.transfer.subtype === TransferSubtype.BlockReward
 })
 
 const isIncoming = computed<boolean>(() => {
@@ -247,15 +263,27 @@ const isIncoming = computed<boolean>(() => {
 })
 
 const transferType = computed<{ [key: string]: string }>(() => {
-    if (isBlockReward.value) {
-        return {
-            text: 'block reward',
-            color: 'success'
-        }
-    }
-    return {
-        text: 'transaction',
-        color: 'purple'
+    switch (props.transfer.transfer.subtype) {
+        case TransferSubtype.BlockReward:
+            return {
+                text: 'block reward',
+                color: 'success'
+            }
+        case TransferSubtype.UncleReward:
+            return {
+                text: 'uncle reward',
+                color: 'success'
+            }
+        case TransferSubtype.InternalTransaction:
+            return {
+                text: 'internal transfer',
+                color: 'purple'
+            }
+        default:
+            return {
+                text: 'transaction',
+                color: 'purple'
+            }
     }
 })
 
@@ -278,7 +306,7 @@ const balanceAfter = computed<FormattedNumber>(() => {
 })
 
 const txAddress = computed<string>(() => {
-    if (props.transfer.transfer.to === props.addressRef) {
+    if (props.transfer.transfer.to === props.addressRef.toLowerCase()) {
         // Use the address of the destination address
         return props.transfer.transfer.from
     }
@@ -304,9 +332,5 @@ const txFee = computed<FormattedNumber>(() => {
 .row-bg {
     top: 0;
     bottom: 0;
-}
-
-.tiny-text {
-    font-size: 10px !important;
 }
 </style>

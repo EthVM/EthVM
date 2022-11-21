@@ -1,5 +1,5 @@
 <template>
-    <div class="pt-4 pt-sm-6">
+    <div>
         <app-tabs v-model="state.tab" :routes="routes" :tabs="tabs" @update:modelValue="setLastViewedTab()" class="mb-4 mb-sm-0"></app-tabs>
         <table-mined-and-pending v-if="state.tab === routes[2] || state.tab === routes[3]" :tab="state.tab" :address-ref="props.addressRef" />
         <table-all-and-internal v-if="state.tab === routes[0] || state.tab === routes[1]" :tab="state.tab" :address-ref="props.addressRef" />
