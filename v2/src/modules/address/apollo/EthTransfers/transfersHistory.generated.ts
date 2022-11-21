@@ -12,6 +12,8 @@ import * as VueCompositionApi from 'vue'
 export type ReactiveFunction<TParam> = () => TParam
 export type TransfersFragment = {
     __typename?: 'Transfer'
+    type: Types.TransferType
+    subtype: Types.TransferSubtype
     transactionHash: string
     block: number
     timestamp: number
@@ -26,6 +28,8 @@ export type TxsTransfersFragment = {
     value: string
     transfer: {
         __typename?: 'Transfer'
+        type: Types.TransferType
+        subtype: Types.TransferSubtype
         transactionHash: string
         block: number
         timestamp: number
@@ -63,6 +67,8 @@ export type GetEthTransactionTransfersQuery = {
             value: string
             transfer: {
                 __typename?: 'Transfer'
+                type: Types.TransferType
+                subtype: Types.TransferSubtype
                 transactionHash: string
                 block: number
                 timestamp: number
@@ -87,6 +93,8 @@ export type GetEthTransactionTransfersQuery = {
 
 export const TransfersFragmentDoc = gql`
     fragment Transfers on Transfer {
+        type
+        subtype
         transactionHash
         block
         timestamp
