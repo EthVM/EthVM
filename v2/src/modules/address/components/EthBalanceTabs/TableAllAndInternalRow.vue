@@ -274,9 +274,19 @@ const transferType = computed<{ [key: string]: string }>(() => {
                 text: 'uncle reward',
                 color: 'success'
             }
+        case TransferSubtype.Genesis:
+            return {
+                text: 'genesis reward',
+                color: 'success'
+            }
         case TransferSubtype.InternalTransaction:
             return {
                 text: 'internal transfer',
+                color: 'purple'
+            }
+        case TransferSubtype.DaoHardFork:
+            return {
+                text: 'dao hard fork',
                 color: 'purple'
             }
         default:
