@@ -63,7 +63,7 @@
 import AppNoResult from '@core/components/AppNoResult.vue'
 import TableMinedAndPendingRow from '@module/address/components/EthBalanceTabs/TableMinedAndPendingRow.vue'
 import { computed } from 'vue'
-import { Q_ADDRESS_TRANSFERS } from '@/core/router/routesNames'
+import { Q_ADDRESS_TRANSFERS } from '@core/router/routesNames'
 import { PendingTxsFragmentFragment, useGetPendingTransactionsQuery } from '@module/address/apollo/EthTransfers/pendingTransfers.generated'
 import { useDisplay } from 'vuetify'
 

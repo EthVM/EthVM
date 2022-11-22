@@ -46,11 +46,11 @@
 </template>
 
 <script setup lang="ts">
-import AppIntersect from '@/core/components/AppIntersect.vue'
-import AppNoResult from '@/core/components/AppNoResult.vue'
+import AppIntersect from '@core/components/AppIntersect.vue'
+import AppNoResult from '@core/components/AppNoResult.vue'
 import TableAllAndInternalRow from '@module/address/components/EthBalanceTabs/TableAllAndInternalRow.vue'
 import { computed } from 'vue'
-import { Q_ADDRESS_TRANSFERS } from '@/core/router/routesNames'
+import { Q_ADDRESS_TRANSFERS } from '@core/router/routesNames'
 import {
     EthInternalTransactionTransfersFragment,
     useGetEthInternalTransactionTransfersQuery
