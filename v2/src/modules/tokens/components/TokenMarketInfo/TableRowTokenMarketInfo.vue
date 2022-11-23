@@ -18,7 +18,7 @@
                         </router-link>
                         <div v-else>
                             <p>Contract:</p>
-                            <app-transform-hash :hash="eth.toCheckSum(props.token.contract)" :link="`/token/${props.token.contract}`" />
+                            <app-transform-hash :hash="eth.toCheckSum(props.token.contract)" :link="`/token/${props.token.contract}`" :show-name="false" />
                         </div>
                     </div>
                 </v-row>

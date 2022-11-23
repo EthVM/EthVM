@@ -5,7 +5,15 @@
                 <app-address-blockie :address="props.adr.hash" class="mr-4" />
                 <div>
                     <p v-if="mdAndDown" :style="!xs ? 'width: 120px;' : ''">{{ props.adr.name }}</p>
-                    <app-transform-hash v-if="!xs" :hash="eth.toCheckSum(props.adr.hash)" :link="`address/${props.adr.hash}`" is-blue is-short class="" />
+                    <app-transform-hash
+                        v-if="!xs"
+                        :hash="eth.toCheckSum(props.adr.hash)"
+                        :link="`address/${props.adr.hash}`"
+                        is-blue
+                        is-short
+                        class=""
+                        :show-name="false"
+                    />
                     <div v-else>
                         <p v-if="props.adr.total" class="">{{ props.adr.total }}</p>
                         <div v-else class="skeleton-box rounded-xl" style="height: 20px; width: 60%"></div>
@@ -57,7 +65,7 @@
             -->
             <v-col v-if="xs && state.showMore" cols="12" class="pt-5 d-block">
                 <p class="text-info mb-2">Hash</p>
-                <app-transform-hash :hash="eth.toCheckSum(props.adr.hash)" :link="`address/${props.adr.hash}`" is-blue is-short />
+                <app-transform-hash :hash="eth.toCheckSum(props.adr.hash)" :link="`address/${props.adr.hash}`" is-blue is-short :show-name="false" />
             </v-col>
         </v-row>
         <app-menu min-width="180" :activator="`#list-item-menu-${props.adr.hash}`">

@@ -35,6 +35,7 @@ interface StoreState {
     portfolioEthBalanceMap: PortfolioEthBalanceMap
     portfolioTokenBalanceMap: PortfolioTokenBalanceMap
     notification: NotificationDeleteAddress | Notification | undefined
+    adrBook: RemovableRef<PortfolioItem[]>
 }
 
 const getKeySumBN = <T>(map: Record<string, T>, _key: keyof T): BN => {
@@ -65,7 +66,8 @@ export const useStore = defineStore('main', {
         portfolio: useStorage('portfolio', [] as PortfolioItem[]),
         portfolioEthBalanceMap: {},
         portfolioTokenBalanceMap: {},
-        notification: undefined
+        notification: undefined,
+        adrBook: useStorage('addressBook', [] as PortfolioItem[])
     }),
     getters: {
         /**
@@ -84,8 +86,9 @@ export const useStore = defineStore('main', {
          * @returns false - if address is not saved and list <= MAX_PORTFOLIO_ITEMS
          */
         addressHashIsSaved: state => {
-            return (_hash: string): boolean | undefined => {
-                const exhists = state.portfolio.find(i => i.hash.toLowerCase() === _hash.toLowerCase())
+            return (_hash: string, isAddressBook = false): boolean => {
+                const storeArray = isAddressBook ? state.adrBook : state.portfolio
+                const exhists = storeArray.find(i => i.hash.toLowerCase() === _hash.toLowerCase())
                 if (exhists) {
                     return true
                 }
@@ -98,8 +101,16 @@ export const useStore = defineStore('main', {
          */
         addressNameIsSaved: state => {
             return (_name: string): boolean => {
-                const exhists = state.portfolio.find(i => i.name.toLowerCase() === _name.toLowerCase())
+                const storeArray = [...state.portfolio, ...state.adrBook]
+                const exhists = storeArray.find(i => i.name.toLowerCase() === _name.toLowerCase())
                 return exhists !== undefined
+            }
+        },
+        getAddressName: state => {
+            return (_hash: string): string | undefined => {
+                const storeArray = [...state.portfolio, ...state.adrBook]
+                const item = storeArray.find(i => i.hash.toLowerCase() === _hash.toLowerCase())
+                return item ? item.name : undefined
             }
         },
         addressEthBalanceLoaded: state => {
@@ -134,7 +145,6 @@ export const useStore = defineStore('main', {
                 const isLoaded = state.portfolio.map(i => {
                     return this.addressEthBalanceLoaded(i.hash)
                 })
-                console.log(isLoaded)
                 return !isLoaded.includes(false)
             }
         },
@@ -221,27 +231,54 @@ export const useStore = defineStore('main', {
             const newList = this.favTokens.filter(i => i !== contract)
             this.favTokens = [...newList]
         },
-        addAddress(_hash: string, _name: string) {
-            if (this.portfolio.length <= MAX_PORTFOLIO_ITEMS) {
-                this.portfolio.push({
-                    hash: _hash.toLowerCase(),
-                    name: _name
-                })
+        addAddress(_hash: string, _name: string, isAddressBook = false) {
+            if (!isAddressBook) {
+                if (this.portfolio.length <= MAX_PORTFOLIO_ITEMS) {
+                    this.portfolio.push({
+                        hash: _hash.toLowerCase(),
+                        name: _name
+                    })
+                    //check if addressbook already has this address
+                    if (this.addressHashIsSaved(_hash, true)) {
+                        this.removeAddress(_hash, true)
+                    }
+                    this.addNotification({
+                        _type: NotificationType.PLAIN,
+                        text: `${_name} has been added to your portfolio`
+                    })
+                }
+            } else {
+                if (!this.addressHashIsSaved(_hash)) {
+                    this.adrBook.push({
+                        hash: _hash.toLowerCase(),
+                        name: _name
+                    })
+                }
             }
         },
-        removeAddress(hash: string) {
+        removeAddress(hash: string, isAddressBook = false) {
             const _hash = hash.toLowerCase()
-            const item = this.portfolio.filter(i => i.hash.toLowerCase() === _hash)
-            if (item.length > 0) {
-                this.addNotification({
-                    _type: NotificationType.DELETE_ADR,
-                    hash: item[0].hash,
-                    name: item[0].name
-                })
-                const newList = this.portfolio.filter(i => i.hash.toLowerCase() !== _hash)
-                delete this.portfolioEthBalanceMap[_hash]
-                delete this.portfolioTokenBalanceMap[_hash]
-                this.portfolio = [...newList]
+            if (!isAddressBook) {
+                const item = this.portfolio.filter(i => i.hash.toLowerCase() === _hash)
+                if (item.length > 0) {
+                    //ensure name is saved in address book
+                    this.adrBook.push({
+                        hash: item[0].hash,
+                        name: item[0].name
+                    })
+                    this.addNotification({
+                        _type: NotificationType.DELETE_ADR,
+                        hash: item[0].hash,
+                        name: item[0].name
+                    })
+                    const newList = this.portfolio.filter(i => i.hash.toLowerCase() !== _hash)
+                    delete this.portfolioEthBalanceMap[_hash]
+                    delete this.portfolioTokenBalanceMap[_hash]
+                    this.portfolio = [...newList]
+                }
+            } else {
+                const newList = this.adrBook.filter(i => i.hash.toLowerCase() !== _hash)
+                this.adrBook = [...newList]
             }
         },
         checkBalanceMap() {
@@ -261,8 +298,9 @@ export const useStore = defineStore('main', {
                 })
             }
         },
-        changeAddressName(_hash: string, _name: string) {
-            const item = this.portfolio.find(i => i.hash.toLowerCase() === _hash.toLowerCase())
+        changeAddressName(_hash: string, _name: string, isAddressBook = false) {
+            const storeArray = isAddressBook ? this.adrBook : this.portfolio
+            const item = storeArray.find(i => i.hash.toLowerCase() === _hash.toLowerCase())
             if (item) {
                 item.name = _name
             }

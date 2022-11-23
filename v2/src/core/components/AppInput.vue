@@ -25,8 +25,7 @@
         </v-card>
         <div v-if="props.showErrorMessage || props.isRequired" class="input-error-messages">
             <v-scroll-x-transition>
-                <p v-if="showRequired" class="ml-11 text-error">Required</p>
-                <p v-else-if="hasError && props.errorMessage" class="ml-11 text-error">{{ props.errorMessage }}</p>
+                <p v-if="(hasError && props.errorMessage) || showRequired" class="ml-11 text-error" key="error">{{ message }}</p>
             </v-scroll-x-transition>
         </div>
     </v-card>
@@ -80,9 +79,9 @@ const state: InputSate = reactive({ timeout: 0, value: props.modelValue, checkRe
  */
 const onUserInput = (): void => {
     // allows to use v-model on the app-input component
-    emit('update:modelValue', state.value)
     clearTimeout(state.timeout)
     state.timeout = window.setTimeout(() => {
+        emit('update:modelValue', state.value)
         emit('onUserInput', state.value)
         if (state.value === '') {
             state.checkReq = true
@@ -97,11 +96,16 @@ const showRequired = computed(() => {
     return props.isRequired && state.checkReq && state.value === ''
 })
 
+const message = computed(() => {
+    return showRequired.value ? 'Required' : props.errorMessage
+})
+
 /**
  * Resets search
  */
 const resetValues = (): void => {
     clearTimeout(state.timeout)
+    state.checkReq = true
     emit('onUserInput', state.value)
 }
 

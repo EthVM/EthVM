@@ -25,7 +25,7 @@
                     <v-col cols="12" v-if="props.isEditMode">
                         <div class="d-flex align-center justify-start mb-5">
                             <app-address-blockie v-if="isValidAddress" :address="hashNoSpaces" :size="6" key="identicon" class="mr-3" />
-                            <app-transform-hash :hash="eth.toCheckSum(hashNoSpaces)" is-short />
+                            <app-transform-hash :hash="eth.toCheckSum(hashNoSpaces)" is-short :show-name="false" />
                         </div>
                     </v-col>
                     <v-col cols="12" v-else>
@@ -56,6 +56,7 @@
                             error-message="This name is already saved"
                             place-holder="Enter Name"
                             :has-preppend-inner="false"
+                            :is-required="isRequiredName"
                             class="mb-1"
                             @on-user-input="setName"
                         ></app-input>
@@ -74,7 +75,7 @@ import AppDialog from '@core/components/AppDialog.vue'
 import AppAddressBlockie from '@core/components/AppAddressBlockie.vue'
 import AppInput from '@core/components/AppInput.vue'
 import AppTransformHash from '@/core/components/AppTransformHash.vue'
-import { computed, reactive } from 'vue'
+import { computed, reactive, watch } from 'vue'
 import { useStore } from '@/store'
 import { useDisplay } from 'vuetify/lib/framework.mjs'
 import { eth } from '@core/helper/eth'
@@ -135,7 +136,11 @@ const starClick = (): void => {
             store.removeAddress(props.address)
         } else {
             state.adrInput = props.address
-            state.openDialog = true
+            if (!store.getAddressName(props.address)) {
+                state.openDialog = true
+            } else {
+                addAddressToPortfolio()
+            }
         }
     }
 }
@@ -167,7 +172,7 @@ const setAddress = (_value: string) => {
  * @param _value user input
  */
 const hasAddressError = computed<boolean>(() => {
-    return !props.isEditMode && state.adrInput !== '' && (!isValidAddress.value || !addressIsNew.value)
+    return !props.isEditMode && (state.adrInput === '' || !isValidAddress.value || !addressIsNew.value)
 })
 
 /**
@@ -212,7 +217,7 @@ const setName = (_value: string) => {
  * @param _value user input
  */
 const hasNameError = computed<boolean>(() => {
-    return state.nameInput !== '' && !isValidName.value
+    return !isValidName.value
 })
 
 /**
@@ -226,25 +231,52 @@ const isValidName = computed<boolean>(() => {
     return !store.addressNameIsSaved(state.nameInput)
 })
 
+watch(
+    () => props.name,
+    newVal => {
+        state.nameInput = newVal
+    }
+)
+
+const isRequiredName = computed<boolean>(() => {
+    if (props.isEditMode) {
+        return store.addressHashIsSaved(state.adrInput)
+    }
+    return true
+})
+
 /** -------------------
  * Add/Edit New Address
  ---------------------*/
 const isValidInput = computed<boolean>(() => {
     if (props.isEditMode) {
-        return !hasNameError.value && state.nameInput !== ''
+        return store.addressHashIsSaved(state.adrInput) ? state.nameInput !== '' && !hasNameError.value : !hasNameError.value
     }
     return state.nameInput !== '' && state.adrInput !== '' && !hasAddressError.value && !hasNameError.value
 })
 
 const addAddressToPortfolio = (): void => {
     if (props.isEditMode) {
-        store.changeAddressName(state.adrInput, state.nameInput)
+        const isSaved = store.addressHashIsSaved(state.adrInput) || store.addressHashIsSaved(state.adrInput, true)
+        if (isSaved) {
+            const isAddressBook = store.addressHashIsSaved(state.adrInput, true)
+            if (state.nameInput !== '') {
+                store.changeAddressName(state.adrInput, state.nameInput, isAddressBook)
+            } else if (isAddressBook) {
+                store.removeAddress(state.adrInput, true)
+            }
+        } else {
+            store.addAddress(hashNoSpaces.value, state.nameInput, true)
+        }
     } else {
         store.addAddress(hashNoSpaces.value, state.nameInput)
+    }
+    if (!props.address) {
         state.adrInput = ''
         state.nameInput = ''
     }
     state.openDialog = false
+    closeModule()
 }
 
 /** -------------------
