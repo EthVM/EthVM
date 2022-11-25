@@ -74,11 +74,11 @@
 
 <script setup lang="ts">
 import AppBtn from '@core/components/AppBtn.vue'
-import AppIntersect from '@/core/components/AppIntersect.vue'
-import AppNoResult from '@/core/components/AppNoResult.vue'
+import AppIntersect from '@core/components/AppIntersect.vue'
+import AppNoResult from '@core/components/AppNoResult.vue'
 import TableTxsHistoryRow from '@module/address/components/EthBalanceTabs/TableTxsHistoryRow.vue'
 import { computed, reactive } from 'vue'
-import { Q_ADDRESS_TRANSFERS } from '@/core/router/routesNames'
+import { Q_ADDRESS_TRANSFERS } from '@core/router/routesNames'
 import { useDisplay } from 'vuetify'
 import { TxsTransfersFragment, useGetEthTransactionTransfersQuery } from '@module/address/apollo/EthTransfers/transfersHistory.generated'
 import { TransferDirection } from '@/apollo/types'
