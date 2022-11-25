@@ -7,8 +7,9 @@
             <v-card class="pa-4 pa-sm-6 mt-4 mt-sm-6" elevation="1" rounded="xl">
                 <div>
                     <app-tabs v-model="state.tab" :routes="routes" :tabs="tabs" @update:modelValue="setLastViewedTab()" class="mb-4 mb-sm-0"></app-tabs>
-                    <module-pending-transfers v-if="state.tab === routes[2] || state.tab === routes[3]" :tab="state.tab" :address-ref="props.addressRef" />
                     <module-all-and-internal v-if="state.tab === routes[0] || state.tab === routes[1]" :tab="state.tab" :address-ref="props.addressRef" />
+                    <module-eth-txs-history v-if="state.tab === routes[2]" :tab="state.tab" :address-ref="props.addressRef" />
+                    <module-pending-transfers v-if="state.tab === routes[3]" :tab="state.tab" :address-ref="props.addressRef" />
                 </div>
             </v-card>
         </v-col>
@@ -20,6 +21,7 @@ import AppTabs from '@/core/components/AppTabs'
 import ModulePendingTransfers from '@module/address/ModulePendingEthTransfers.vue'
 import ModuleAllAndInternal from '@module/address/ModuleAllAndInternalEthTransfers.vue'
 import ModuleAddressBalance from '@module/address/ModuleAddressBalance.vue'
+import ModuleEthTxsHistory from '@module/address/ModuleEthTxsHistory.vue'
 import { reactive } from 'vue'
 import { useAppViewGrid } from '@core/composables/AppViewGrid/AppViewGrid.composable'
 import { Tab } from '@core/components/props'
