@@ -46,3 +46,16 @@ query getEthTransactionTransfers($direction: TransferDirection, $hash: String!, 
         nextKey
     }
 }
+
+query getEthTransfersByHash($owner: String!, $_limit: Int, $hash: String!) {
+    getEthTransfersByHash(owner: $owner, limit: $_limit, hash: $hash) {
+        transfers {
+            transfer{
+                type
+                subtype
+                transactionHash
+            }
+        }
+        nextKey
+    }
+}

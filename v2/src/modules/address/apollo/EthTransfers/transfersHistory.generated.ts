@@ -91,6 +91,24 @@ export type GetEthTransactionTransfersQuery = {
     }
 }
 
+export type GetEthTransfersByHashQueryVariables = Types.Exact<{
+    owner: Types.Scalars['String']
+    _limit?: Types.InputMaybe<Types.Scalars['Int']>
+    hash: Types.Scalars['String']
+}>
+
+export type GetEthTransfersByHashQuery = {
+    __typename?: 'Query'
+    getEthTransfersByHash: {
+        __typename?: 'ETHTransfers'
+        nextKey?: string | null
+        transfers: Array<{
+            __typename?: 'EthTransfer'
+            transfer: { __typename?: 'Transfer'; type: Types.TransferType; subtype: Types.TransferSubtype; transactionHash: string }
+        } | null>
+    }
+}
+
 export const TransfersFragmentDoc = gql`
     fragment Transfers on Transfer {
         type
@@ -195,4 +213,64 @@ export function useGetEthTransactionTransfersLazyQuery(
 export type GetEthTransactionTransfersQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<
     GetEthTransactionTransfersQuery,
     GetEthTransactionTransfersQueryVariables
+>
+export const GetEthTransfersByHashDocument = gql`
+    query getEthTransfersByHash($owner: String!, $_limit: Int, $hash: String!) {
+        getEthTransfersByHash(owner: $owner, limit: $_limit, hash: $hash) {
+            transfers {
+                transfer {
+                    type
+                    subtype
+                    transactionHash
+                }
+            }
+            nextKey
+        }
+    }
+`
+
+/**
+ * __useGetEthTransfersByHashQuery__
+ *
+ * To run a query within a Vue component, call `useGetEthTransfersByHashQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetEthTransfersByHashQuery` returns an object from Apollo Client that contains result, loading and error properties
+ * you can use to render your UI.
+ *
+ * @param variables that will be passed into the query
+ * @param options that will be passed into the query, supported options are listed on: https://v4.apollo.vuejs.org/guide-composable/query.html#options;
+ *
+ * @example
+ * const { result, loading, error } = useGetEthTransfersByHashQuery({
+ *   owner: // value for 'owner'
+ *   _limit: // value for '_limit'
+ *   hash: // value for 'hash'
+ * });
+ */
+export function useGetEthTransfersByHashQuery(
+    variables:
+        | GetEthTransfersByHashQueryVariables
+        | VueCompositionApi.Ref<GetEthTransfersByHashQueryVariables>
+        | ReactiveFunction<GetEthTransfersByHashQueryVariables>,
+    options:
+        | VueApolloComposable.UseQueryOptions<GetEthTransfersByHashQuery, GetEthTransfersByHashQueryVariables>
+        | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<GetEthTransfersByHashQuery, GetEthTransfersByHashQueryVariables>>
+        | ReactiveFunction<VueApolloComposable.UseQueryOptions<GetEthTransfersByHashQuery, GetEthTransfersByHashQueryVariables>> = {}
+) {
+    return VueApolloComposable.useQuery<GetEthTransfersByHashQuery, GetEthTransfersByHashQueryVariables>(GetEthTransfersByHashDocument, variables, options)
+}
+export function useGetEthTransfersByHashLazyQuery(
+    variables:
+        | GetEthTransfersByHashQueryVariables
+        | VueCompositionApi.Ref<GetEthTransfersByHashQueryVariables>
+        | ReactiveFunction<GetEthTransfersByHashQueryVariables>,
+    options:
+        | VueApolloComposable.UseQueryOptions<GetEthTransfersByHashQuery, GetEthTransfersByHashQueryVariables>
+        | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<GetEthTransfersByHashQuery, GetEthTransfersByHashQueryVariables>>
+        | ReactiveFunction<VueApolloComposable.UseQueryOptions<GetEthTransfersByHashQuery, GetEthTransfersByHashQueryVariables>> = {}
+) {
+    return VueApolloComposable.useLazyQuery<GetEthTransfersByHashQuery, GetEthTransfersByHashQueryVariables>(GetEthTransfersByHashDocument, variables, options)
+}
+export type GetEthTransfersByHashQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<
+    GetEthTransfersByHashQuery,
+    GetEthTransfersByHashQueryVariables
 >
