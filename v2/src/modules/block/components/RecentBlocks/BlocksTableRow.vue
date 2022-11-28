@@ -11,7 +11,7 @@
                 <p class="text-info mb-0">{{ _block.timestamp }}</p>
             </v-col>
             <v-col cols="6">
-                <div class="d-flex align-center">
+                <div class="d-flex align-center justify-end">
                     <app-address-blockie :address="_block.miner || ''" :size="6" class="mr-1 mr-sm-2" />
                     <app-transform-hash is-short is-blue :hash="eth.toCheckSum(_block.miner)" :link="`/address/${_block.miner}`" />
                 </div>
@@ -22,7 +22,7 @@
                         <p class="text-info">Transactions</p>
                         {{ _block.totalTx }}
                     </v-col>
-                    <v-col cols="6">
+                    <v-col cols="6" class="text-right">
                         <p class="text-info">Reward</p>
                         {{ _block.rewards.value }}
                     </v-col>
