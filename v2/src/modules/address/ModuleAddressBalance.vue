@@ -88,7 +88,7 @@
                 =========================
                 -->
                 <v-col v-if="isSmallView" cols="6" md="4">
-                    <p class="text-caption mb-1 text-h6">24h Change</p>
+                    <p :class="[isSmallView ? 'text-caption mb-1' : 'text-h6', 'text-info ']">24h Change</p>
                     <div v-if="loadingMarketInfo" class="skeleton-box rounded-xl" :style="xs || sm ? 'height: 20px' : 'height: 28px'"></div>
                     <p v-else :class="['text-body-1', percentageClass]">{{ percentageFormatted }}%</p>
                 </v-col>
