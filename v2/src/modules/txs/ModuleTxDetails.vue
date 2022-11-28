@@ -33,7 +33,9 @@
                             <template v-if="loadingTransactionHash">
                                 <div class="skeleton-box rounded-xl mt-1" style="height: 24px"></div>
                             </template>
-                            <p v-else class="text-body-1 text-secondary mt-1">{{ formatNumber(blockMined) }}</p>
+                            <router-link :to="`/block/number/${blockMined}`" class="text-secondary">
+                                {{ formatNumber(blockMined) }}
+                            </router-link>
                         </div>
                     </v-col>
                     <v-col cols="12" lg="2">
