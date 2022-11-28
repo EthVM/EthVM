@@ -19,9 +19,11 @@
             <v-col cols="12" v-if="state.showMoreDetails">
                 <v-row>
                     <v-col cols="6">
+                        <p class="text-info">Transactions</p>
                         {{ _block.totalTx }}
                     </v-col>
                     <v-col cols="6">
+                        <p class="text-info">Reward</p>
                         {{ _block.rewards.value }}
                     </v-col>
                 </v-row>
