@@ -13,7 +13,7 @@
                 >
                     <div class="d-flex align-center">
                         <app-address-blockie v-if="index !== 0" :address="i.hash" :size="4" class="mr-2" />
-                        <p>{{ i.name }}</p>
+                        <p class="text-ellipses" style="max-width: 260px">{{ i.name }}</p>
                     </div></v-btn
                 >
             </v-col>
