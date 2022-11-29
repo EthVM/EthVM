@@ -234,7 +234,7 @@ const balanceAfterFormatted = computed<FormattedNumber>(() => {
 })
 
 const totalBalanceChange = computed<string | number>(() => {
-    const balanceChange = formatNonVariableEthValue(balanceAfter.value.minus(balanceBefore.value))
+    const balanceChange = formatNonVariableEthValue(balanceAfter.value.minus(balanceBefore.value).absoluteValue())
     return balanceChange.value
 })
 
@@ -263,10 +263,10 @@ const txFee = computed<FormattedNumber>(() => {
 const internalTransferValue = computed<FormattedNumber | false>(() => {
     const txValue = new BN(props.transfer.value)
     const txFee = new BN(props.transfer.transfer.txFee)
-    const totalTxsAmount = txValue.plus(txFee)
-    const balanceChange = balanceAfter.value.minus(balanceBefore.value)
-    if (totalTxsAmount.isLessThan(balanceChange)) {
-        const internalTransfer = balanceChange.minus(totalTxsAmount)
+    const totalTxsAmount = isIncoming.value ? txValue : txValue.plus(txFee)
+    const balanceChange = balanceAfter.value.minus(balanceBefore.value).absoluteValue()
+    if (!totalTxsAmount.isEqualTo(balanceChange)) {
+        const internalTransfer = balanceChange.minus(totalTxsAmount).absoluteValue()
         return formatNonVariableEthValue(internalTransfer)
     }
     return false
