@@ -1,6 +1,6 @@
 <template>
-    <v-card :color="state.showMore ? 'pillGrey' : 'transparent'" flat class="mx-n6 rounded-0 pt-2 mt-n2" @click="openMoreInfo()">
-        <v-row :dense="xs" class="text-body-1 my-3 mt-sm-0 mb-sm-5 flex-row align-start align-lg-center mx-4" align="start">
+    <v-card :color="state.showMore ? 'pillGrey' : 'transparent'" flat class="mx-n6 rounded-0 py-1" @click="openMoreInfo()">
+        <v-row class="text-body-1 my-0 flex-row mx-4" align="start">
             <!--
                 Token on Overview:
                 XS: NONE
@@ -11,11 +11,11 @@
                 SM : 4
                 LG: 2 
              -->
-            <v-col cols="6" sm="4" :lg="props.isOverview ? 4 : 2" :class="['py-0', 'd-flex align-center']">
+            <v-col cols="6" sm="4" :lg="props.isOverview ? 4 : 3" :class="['d-flex align-center']">
                 <app-token-icon :token-icon="token.image || undefined" img-size="32px" />
                 <p class="text-truncate ml-4">
                     {{ token.name }}
-                    <span v-if="props.isOverview || mdAndDown" class="text-info text-uppercase text-truncate d-block pt-1">{{ token.symbol }}</span>
+                    <span class="text-info text-uppercase text-truncate d-block pt-1">{{ token.symbol }}</span>
                 </p>
             </v-col>
             <!--
@@ -26,9 +26,6 @@
                 XS: NONE
                 LG: 1
              -->
-            <v-col v-if="!props.isOverview" cols="1" class="py-0 d-none d-lg-block">
-                <p class="text-uppercase text-truncate text-info">{{ token.symbol }}</p>
-            </v-col>
             <!--
                 OTHER on Overview:
                 XS: NONE
@@ -39,15 +36,15 @@
                 SM: 8
                 LG: 9
              -->
-            <v-col cols="6" sm="8" :lg="props.isOverview ? 8 : 9" class="py-0">
-                <v-row :dense="xs" class="align-start align-lg-center">
+            <v-col cols="6" sm="8" :lg="props.isOverview ? 8 : 9">
+                <v-row class="align-start">
                     <!-- Price-->
                     <v-col cols="4" :lg="props.isOverview ? 4 : 3" class="pb-0 d-none d-sm-block">
                         <p v-if="token.current_price">{{ formatUsdValue(new BN(token.current_price)).value }}</p>
                         <p :class="[priceChangeClass, 'd-lg-none mt-1']">{{ token.getPriceChangeFormatted() }}</p>
                     </v-col>
                     <!-- Price Change-->
-                    <v-col v-if="!props.isOverview" lg="3" class="py-0 d-none d-lg-block">
+                    <v-col v-if="!props.isOverview" lg="3" class="pb-0 d-none d-lg-block">
                         <p :class="priceChangeClass">{{ token.getPriceChangeFormatted() }}</p>
                     </v-col>
                     <!-- 
@@ -56,17 +53,11 @@
                         <p class="text-right text-sm-left">{{ token.getUSDValueFormatted() }}</p>
                     </v-col>
                     <!-- Balance -->
-                    <v-col cols="12" sm="4" :lg="props.isOverview ? 4 : 3" class="pb-0 d-block d-sm-flex justify-sm-space-between align-start align-lg-center">
+                    <v-col cols="12" sm="4" :lg="props.isOverview ? 4 : 3" class="pb-0 d-block d-sm-flex justify-sm-space-between align-start">
                         <p class="text-right text-sm-left">{{ token.getBalanceFormatted() }}</p>
                         <p class="d-sm-none text-right text-sm-left text-info mt-1">{{ token.getUSDValueFormatted() }}</p>
-                        <div v-if="!props.isOverview && marketData" class="mt-n2 mt-lg-0">
-                            <app-btn-icon
-                                :icon="state.showMore ? 'expand_less' : 'expand_more'"
-                                size="small"
-                                @click="openMoreInfo()"
-                                class="d-none d-sm-block"
-                            ></app-btn-icon>
-                        </div>
+                        <v-icon v-if="!props.isOverview && marketData" :icon="state.showMore ? 'expand_less' : 'expand_more'" class="d-none d-sm-block">
+                        </v-icon>
                     </v-col>
                 </v-row>
             </v-col>

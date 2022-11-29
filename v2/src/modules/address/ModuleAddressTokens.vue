@@ -43,24 +43,11 @@
                 SM : 4
                 LG: 2
              -->
-            <v-col sm="4" :lg="props.isOverview ? 4 : 2" class="py-0 d-none d-sm-block">
+            <v-col sm="4" :lg="props.isOverview ? 4 : 3" class="py-0 d-none d-sm-block">
                 <v-btn variant="text" color="info" class="font-weight-regular ml-n3" rounded="pill" size="small" @click="sortTable(SORT_KEY.NAME)">
                     Token <v-icon v-if="isActiveSort(SORT_KEY.NAME)" class="ml-1" size="x-small">{{ sortIcon }}</v-icon></v-btn
                 >
             </v-col>
-            <!--
-                Symbol on Overview:
-                XS and UP: NONE
-                ------------
-                Symbol
-                XS: NONE
-                LG: 1
-             -->
-            <v-col v-if="!props.isOverview" sm="1" class="py-0 d-none d-lg-block">
-                <v-btn variant="text" color="info" class="font-weight-regular ml-n3" rounded="pill" size="small" @click="sortTable(SORT_KEY.SYMBOL)">
-                    Symbol <v-icon v-if="isActiveSort(SORT_KEY.SYMBOL)" class="ml-1" size="x-small">{{ sortIcon }}</v-icon></v-btn
-                ></v-col
-            >
             <!--
                 OTHER on Overview:
                 XS: NONE
@@ -100,7 +87,6 @@
                         <v-btn variant="text" color="info" class="font-weight-regular ml-n3" rounded="pill" size="small" @click="sortTable(SORT_KEY.BALANCE)">
                             Balance <v-icon v-if="isActiveSort(SORT_KEY.BALANCE)" class="ml-1" size="x-small">{{ sortIcon }}</v-icon></v-btn
                         >
-                        <p v-if="!props.isOverview" class="text-right">More</p>
                     </v-col>
                 </v-row>
             </v-col>
@@ -112,19 +98,15 @@
             </v-col>
         </v-row>
 
-        <v-divider class="mx-n4 mx-sm-n6 mb-1 mb-sm-5" />
+        <v-divider class="mx-n4 mx-sm-n6" />
         <!--Loading -->
-        <v-row v-if="loadingTokens || loadingCoinData">
-            <v-col v-for="col in 7" :key="col" cols="12" class="my-1">
+        <v-row v-if="loadingTokens || loadingCoinData" class="mt-5">
+            <v-col v-for="col in 7" :key="col" cols="12" class="pb-5 pt-0">
                 <div class="skeleton-box rounded-xl" style="min-height: 44px"></div>
             </v-col>
         </v-row>
         <!--Token Row -->
-        <div
-            v-else-if="renderState.renderTable"
-            :class="['mx-n4 mx-sm-n6 px-4 px-sm-6 mt-2', { 'module-body mt-n1 mt-sm-n5 pt-1 pt-sm-5': props.isOverview }]"
-            :style="tableHeight"
-        >
+        <div v-else-if="renderState.renderTable" :class="['mx-n4 mx-sm-n6 px-4 px-sm-6 p-ten-top', { 'module-body': props.isOverview }]" :style="tableHeight">
             <div v-if="tokens.length > 0">
                 <div v-for="token in tokens" :key="token.contract" :ref="el => assignRef(token.contract, el)">
                     <table-row-token-balance
