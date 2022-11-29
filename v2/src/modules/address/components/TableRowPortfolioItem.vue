@@ -1,10 +1,12 @@
 <template>
     <v-card :color="state.showMore && xs ? 'pillGrey' : 'transparent'" rounded="0" flat class="mx-n5 px-5 py-2" :link="xs" @click="openMoreInfo">
         <v-row :dense="xs" class="d-flex align-center jusify-start text-body-1 mt-0 mb-1" :justify="xs ? 'end' : 'start'">
-            <v-col cols="12" sm="6" lg="3" :class="['py-0 d-flex align-center justify-start', { 'mb-5': state.showMore }]">
+            <v-col cols="12" sm="6" lg="3" :class="['py-0 d-flex align-center justify-start flex-nowrap', { 'mb-5': state.showMore }]">
                 <app-address-blockie :address="props.adr.hash" class="mr-4" />
-                <div>
-                    <p v-if="mdAndDown" :style="!xs ? 'width: 120px;' : ''">{{ props.adr.name }}</p>
+                <div class="overflow-hidden">
+                    <p v-if="mdAndDown" :style="!xs ? 'width: 120px;' : ''" :class="{ 'text-ellipses pr-5': xs }">
+                        {{ props.adr.name }}
+                    </p>
                     <app-transform-hash
                         v-if="!xs"
                         :hash="eth.toCheckSum(props.adr.hash)"
@@ -27,8 +29,8 @@
                 NAME:
                 hidden on xs-md
             -->
-            <v-col lg="3" class="py-0 d-none d-lg-flex align-center">
-                <p>{{ props.adr.name }}</p>
+            <v-col lg="3" class="py-0 d-none d-lg-flex align-center pr-5">
+                <p class="text-ellipses">{{ props.adr.name }}</p>
             </v-col>
             <!--
                 ETH Balance:
