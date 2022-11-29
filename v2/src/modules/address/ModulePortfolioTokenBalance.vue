@@ -117,7 +117,7 @@
                     <table-row-token-balance :token="token" :is-overview="false" :is-active="false"> </table-row-token-balance>
                 </div>
             </div>
-            <app-no-result v-else text="This portfolio does not have any tokens" class="mt-3 mt-sm-1"></app-no-result>
+            <app-no-result v-else :text="messageNoTokens" class="mt-3 mt-sm-1"></app-no-result>
         </div>
     </div>
 </template>
@@ -182,6 +182,10 @@ const state: ComponentState = reactive({
 /**------------------------
  * Table Filter
  -------------------------*/
+
+const messageNoTokens = computed<string>(() => {
+    return state.searchParams === '' ? 'This portfolio does not have any tokens' : 'Selected addresses do not own this token'
+})
 
 store.portfolio.forEach(i => {
     const isSelected = props.addressRef?.toLowerCase() === i.hash.toLowerCase()
