@@ -49,7 +49,7 @@
                     :link="`/tx/${transfer.transfer.transactionHash}`"
                 />
             </v-col>
-            <v-col sm="2"> {{ totalBalanceChange }} ETH </v-col>
+            <v-col sm="2"> {{ totalBalanceChange.value }} ETH </v-col>
             <v-col sm="1">
                 <app-btn-icon icon="expand_more" tooltip-text="Show transfer details" @click="showMoreDetails = !showMoreDetails" />
             </v-col>
@@ -80,7 +80,7 @@
                 <v-divider class="mx-n5 mx-sm-0" />
                 <v-row class="my-5" align="center">
                     <v-col cols="6" class="text-info">Total Balance Change</v-col>
-                    <span class="text-error">{{ totalBalanceChange }} ETH</span>
+                    <span :class="totalBalanceChange.color">{{ totalBalanceChange.value }} ETH</span>
                 </v-row>
                 <v-row class="my-5" align="center">
                     <v-col cols="6" class="text-info">Balance Before</v-col>
@@ -233,9 +233,14 @@ const balanceAfterFormatted = computed<FormattedNumber>(() => {
     return formatNonVariableEthValue(balanceAfter.value)
 })
 
-const totalBalanceChange = computed<string | number>(() => {
-    const balanceChange = formatNonVariableEthValue(balanceAfter.value.minus(balanceBefore.value).absoluteValue())
-    return balanceChange.value
+const totalBalanceChange = computed<{ [key: string]: string | number }>(() => {
+    const actualBalanceChange = balanceAfter.value.minus(balanceBefore.value)
+    const isBalanceNegative = actualBalanceChange.isNegative()
+    const balanceChange = formatNonVariableEthValue(actualBalanceChange.absoluteValue())
+    return {
+        value: isBalanceNegative ? `-${balanceChange.value}` : balanceChange.value,
+        color: isBalanceNegative ? 'text-error' : 'text-success'
+    }
 })
 
 const txAddress = computed<string>(() => {
