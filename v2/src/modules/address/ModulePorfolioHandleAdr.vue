@@ -37,6 +37,7 @@
                             class="mb-1"
                             :error-message="addressErrorMes"
                             @on-user-input="setAddress"
+                            is-required
                         >
                             <template #prepend>
                                 <div class="empty-identicon">
@@ -172,7 +173,7 @@ const setAddress = (_value: string) => {
  * @param _value user input
  */
 const hasAddressError = computed<boolean>(() => {
-    return !props.isEditMode && (state.adrInput === '' || !isValidAddress.value || !addressIsNew.value)
+    return !props.isEditMode && state.adrInput !== '' && (!isValidAddress.value || !addressIsNew.value)
 })
 
 /**
