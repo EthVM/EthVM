@@ -5,7 +5,7 @@
                  Desktop View
                =========================
         -->
-        <v-row v-if="!mdAndDown" class="my-5 px-0 text-subtitle-2 font-weight-regular" align="center">
+        <v-row v-if="!mdAndDown" class="my-5 px-0" align="center">
             <v-col :cols="props.isOverview ? 4 : 3" class="py-0">
                 <v-row class="ma-0 flex-nowrap" align="center">
                     <img :src="tokenImg" alt="" height="41" width="41" class="mr-2 rounded-circle" />
@@ -51,11 +51,7 @@
                        =========================
                 -->
         <template v-else>
-            <v-row
-                class="mt-5 mx-0 text-subtitle-2 font-weight-regular justify-space-between align-start flex-nowrap"
-                :class="state.showMoreDetails ? 'mb-3' : 'mb-5'"
-                @click="toggleMoreDetails"
-            >
+            <v-row class="mt-5 mx-0 justify-space-between align-start flex-nowrap" :class="state.showMoreDetails ? 'mb-3' : 'mb-5'" @click="toggleMoreDetails">
                 <div class="flex-shrink-0">
                     <div class="d-flex align-center flex-nowrap mb-2">
                         <div class="mobile-chip rounded-circle mr-2" :class="transferType === 'in' ? 'bg-success' : 'bg-warning'">
@@ -78,11 +74,11 @@
             </v-row>
             <div v-if="state.showMoreDetails" class="row-bg bg-tableGrey"></div>
             <div v-if="state.showMoreDetails">
-                <v-row class="mx-0 justify-space-between text-subtitle-2 font-weight-regular mb-2">
+                <v-row class="mx-0 justify-space-between mb-2">
                     <p v-if="props.transfer.tokenInfo.name" class="text-center">{{ props.transfer.tokenInfo.name }}</p>
                     <p>{{ totalTokens }} Copies</p>
                 </v-row>
-                <v-row class="ma-0 justify-space-between text-subtitle-2 font-weight-regular pb-5">
+                <v-row class="ma-0 justify-space-between pb-5">
                     <div>
                         <p class="text-info mb-2">From</p>
                         <div class="d-flex">

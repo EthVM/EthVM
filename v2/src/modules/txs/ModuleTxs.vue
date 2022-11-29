@@ -111,19 +111,15 @@ const isBlock = computed<boolean>(() => {
 })
 
 const hasMore = computed<boolean>(() => {
-    if (!isHome.value) {
-        return allEthTransfers.value ? !(allEthTransfers.value.nextKey === null) : false
+    if (isBlock.value) {
+        return state.index < totalPages.value
     }
-    return false
+    return !!allEthTransfers.value?.nextKey
 })
 
 const showPagination = computed<boolean>(() => {
     if (isHome.value) {
         return false
-    }
-
-    if (isBlock.value) {
-        return totalPages.value > 1
     }
 
     return hasMore.value

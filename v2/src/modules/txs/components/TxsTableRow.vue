@@ -23,7 +23,7 @@
                     </div>
                 </div>
             </v-col>
-            <v-col cols="6">
+            <v-col cols="6" class="text-right">
                 <app-transform-hash is-short is-blue :hash="transaction.hash" :link="`/tx/${transaction.hash}`" />
                 <div>
                     {{ transaction.value.value }}
@@ -88,7 +88,7 @@
                 </div>
             </v-col>
         </v-row>
-        <v-row v-if="state.showMoreDetails && mdAndDown" justify="space-between" align="center" class="text-subtitle-2 font-weight-regular mt-2 pb-5">
+        <v-row v-if="state.showMoreDetails && mdAndDown" justify="space-between" align="center" class="mt-2 pb-5">
             <v-col cols="5">
                 <div class="d-flex align-center">
                     <app-address-blockie :address="transaction.from || ''" :size="6" class="mr-1 mr-sm-2" />
@@ -97,7 +97,7 @@
             </v-col>
             <v-icon color="success">east</v-icon>
             <v-col cols="5">
-                <div class="d-flex align-center">
+                <div class="d-flex align-center justify-end">
                     <app-address-blockie :address="transaction.to || ''" :size="6" class="mr-1 mr-sm-2" />
                     <app-transform-hash
                         v-if="transaction.to && transaction.to !== ''"
