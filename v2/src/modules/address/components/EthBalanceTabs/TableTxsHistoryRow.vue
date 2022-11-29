@@ -67,7 +67,7 @@
                 <p class="font-weight-bold">Balance Change Breakdown</p>
                 <v-row class="my-5" align="center">
                     <v-col cols="6" class="text-info">Transaction Value</v-col>
-                    <span class="text-error">{{ txValue.value }} ETH</span>
+                    <span>{{ txValue.value }} ETH</span>
                 </v-row>
                 <v-row v-if="!isIncoming" class="my-5" align="center">
                     <v-col cols="6" class="text-info">TX Fee Paid</v-col>
