@@ -1,5 +1,5 @@
 <template>
-    <v-row justify="end" class="mx-5 my-3">
+    <v-row class="mx-5 my-3">
         <div class="mx-3">
             <v-btn
                 color="textPrimary"
@@ -101,7 +101,7 @@ interface ComponentState {
 }
 
 const state: ComponentState = reactive({
-    transferDirection: TransferDirection.Incoming
+    transferDirection: null
 })
 
 const {
