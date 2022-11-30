@@ -19,13 +19,13 @@
                                 <p v-if="props.transfer.tokenInfo.name" class="text-ellipses">{{ props.transfer.tokenInfo.name }}</p>
                                 <p v-else class="text-uppercase caption text-ellipses">{{ props.transfer.tokenInfo.symbol }}</p>
                             </router-link>
-                            <p v-if="props.isOverview" class="text-info pt-1 text-ellipses">
+                            <p v-if="props.isOverview" class="text-info pt-1 text-ellipses text-uppercase">
                                 {{ props.transfer.tokenInfo.symbol }}
                             </p>
                         </div>
                     </v-row>
                 </v-col>
-                <v-col v-if="!props.isOverview" cols="1" class="text-info py-0 text-ellipses">
+                <v-col v-if="!props.isOverview" cols="1" class="text-info py-0 text-ellipses text-uppercase">
                     {{ props.transfer.tokenInfo.symbol }}
                 </v-col>
                 <v-col :cols="props.isOverview ? 3 : 2" class="py-0">
@@ -64,9 +64,9 @@
             </v-row>
             <v-row v-if="state.showMoreDetails" class="pb-5">
                 <v-col md="3" class="text-right text-body-1 font-weight-bold text-info">Balance Before</v-col>
-                <v-col md="9" class="text-subtitle-2">{{ getTransferBalanceBefore.value }} {{ props.transfer.tokenInfo.symbol }}</v-col>
+                <v-col md="9" class="text-uppercase">{{ getTransferBalanceBefore.value }} {{ props.transfer.tokenInfo.symbol }}</v-col>
                 <v-col md="3" class="text-right text-body-1 font-weight-bold text-info">Balance After</v-col>
-                <v-col md="9" class="text-subtitle-2">{{ getTransferBalanceAfter.value }} {{ props.transfer.tokenInfo.symbol }}</v-col>
+                <v-col md="9" class="text-uppercase">{{ getTransferBalanceAfter.value }} {{ props.transfer.tokenInfo.symbol }}</v-col>
             </v-row>
         </template>
         <!--
@@ -91,7 +91,7 @@
                 <v-col cols="6" class="pb-2">
                     <div class="d-flex align-center">
                         <img :src="tokenImg" alt="" height="24" width="24" class="mr-2 rounded-circle" />
-                        <span> {{ tokenAmount.value }} {{ props.transfer.tokenInfo.symbol }} </span>
+                        <span class="text-uppercase"> {{ tokenAmount.value }} {{ props.transfer.tokenInfo.symbol }} </span>
                     </div>
                 </v-col>
                 <v-col cols="6" class="py-0 text-info">
@@ -117,7 +117,7 @@
                 <v-divider class="my-5 mx-n4 mx-sm-n6" />
                 <v-row justify="space-between" class="my-5 mx-0">
                     <p class="text-info">Balance Before</p>
-                    <p>{{ getTransferBalanceBefore.value }} {{ props.transfer.tokenInfo.symbol }}</p>
+                    <p class="text-uppercase">{{ getTransferBalanceBefore.value }} {{ props.transfer.tokenInfo.symbol }}</p>
                 </v-row>
                 <v-row justify="space-between" class="my-5 mx-0">
                     <p class="text-info">Tx Fee Paid</p>
@@ -125,7 +125,7 @@
                 </v-row>
                 <v-row justify="space-between" class="my-5 mx-0">
                     <p class="text-info">Balance After</p>
-                    <p>{{ getTransferBalanceAfter.value }} {{ props.transfer.tokenInfo.symbol }}</p>
+                    <p class="text-uppercase">{{ getTransferBalanceAfter.value }} {{ props.transfer.tokenInfo.symbol }}</p>
                 </v-row>
             </div>
         </template>
