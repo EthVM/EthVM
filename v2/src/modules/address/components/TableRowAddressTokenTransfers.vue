@@ -75,7 +75,7 @@
            =========================
         -->
         <template v-else>
-            <v-row class="my-5 text-subtitle-2 font-weight-regular" @click="toggleMoreDetails">
+            <v-row class="my-5" @click="toggleMoreDetails">
                 <v-col cols="6" class="pb-2">
                     <div class="d-flex align-center flex-nowrap">
                         <div class="mobile-chip rounded-circle mr-2" :class="transferType ? 'bg-success' : 'bg-orange'">
@@ -104,7 +104,7 @@
                     </div>
                 </v-col>
             </v-row>
-            <div v-if="state.showMoreDetails" class="pb-5 text-subtitle-2 font-weight-regular">
+            <div v-if="state.showMoreDetails" class="pb-5">
                 <div>
                     <p class="text-info mb-1">Hash</p>
                     <app-transform-hash
