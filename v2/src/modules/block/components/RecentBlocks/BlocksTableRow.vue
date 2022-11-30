@@ -17,15 +17,17 @@
                 </div>
             </v-col>
             <v-col cols="12" v-if="state.showMoreDetails">
-                <v-row>
-                    <v-col cols="6">
-                        <p class="text-info">Transactions</p>
+                <v-row justify="space-between" class="my-5 mx-0">
+                    <p class="text-info mr-2">Transactions:</p>
+                    <p>
                         {{ _block.totalTx }}
-                    </v-col>
-                    <v-col cols="6" class="text-right">
-                        <p class="text-info">Reward</p>
+                    </p>
+                </v-row>
+                <v-row justify="space-between" class="my-5 mx-0">
+                    <p class="text-info mr-2">Reward:</p>
+                    <p>
                         {{ _block.rewards.value }}
-                    </v-col>
+                    </p>
                 </v-row>
             </v-col>
         </v-row>
