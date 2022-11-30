@@ -1,7 +1,7 @@
 <template>
     <v-card fluid class="pa-4 pa-sm-6" elevation="1" rounded="xl" height="100%">
         <v-row align="center" :class="['fill-height', { 'flex-sm-nowrap': !props.addressRef }]" justify="space-between" class="mt-0">
-            <v-col cols="12" :sm="props.addressRef ? '12' : 'auto'" align-self="start" class="py-0">
+            <v-col cols="12" :sm="props.addressRef ? '12' : 'auto'" align-self="start" class="py-0 pr-sm-0">
                 <address-balance-totals title="Portfolio Value" :is-loading="isLoading" :balance="portfolioValue"> </address-balance-totals>
                 <v-divider v-if="!props.addressRef && !xs" class="mt-10 mb-6" length="154"></v-divider>
                 <address-balance-totals
@@ -22,22 +22,22 @@
             <v-col v-if="isLoading" cols="12" :sm="props.addressRef ? '12' : '7'" :md="props.addressRef ? '12' : '9'" :lg="props.addressRef ? '12' : '8'">
                 <div class="skeleton-box rounded-xl pl-10" :style="props.addressRef ? 'min-height: 154px' : 'min-height: 180px'"></div>
             </v-col>
-            <v-col v-if="!isLoading && portfolioValueBN.gt(0)" s cols="auto" class="mx-auto">
+            <v-col v-if="!isLoading && portfolioValueBN.gt(0)" s cols="auto" class="mx-auto px-0">
                 <chart-pie
                     :chart-data="chartData"
                     :loading="false"
                     :cutout="props.addressRef ? 42 : 56"
-                    :style="props.addressRef ? 'height: 130px; width: 130px' : 'height: 150px; width: 150px'"
+                    :style="props.addressRef ? 'height: 140px; width: 140px' : 'height: 170px; width: 170px'"
                     class="mx-auto mx-sm-0 my-3 my-sm-0"
                 ></chart-pie>
             </v-col>
             <v-col
                 v-if="!isLoading && portfolioValueBN.gt(0)"
                 cols="12"
-                :sm="props.addressRef ? 6 : 5"
+                :sm="props.addressRef ? 6 : 4"
                 :md="props.addressRef ? 7 : 4"
                 align-self="center"
-                class="pt-0"
+                class="pt-0 pl-sm-0"
             >
                 <v-row v-for="i in topTokens.slice(0, 4)" :key="i.symbol" justify="space-between" align="center" class="ma-0">
                     <v-col class="d-flex align-center py-1">
@@ -58,7 +58,7 @@ import { useAddressToken } from '@core/composables/AddressTokens/addressTokens.c
 import { useAddressEthBalance } from '@core/composables/AddressEthBalance/addressEthBalance.composable'
 import { useCoinData } from '@core/composables/CoinData/coinData.composable'
 import { computed, toRefs } from 'vue'
-import { formatUsdValue, formatPercentageValue, formatVariableUnitEthValue } from '@/core/helper/number-format-helper'
+import { formatUsdValue, formatPercentageValue, formatNonVariableEthValue } from '@/core/helper/number-format-helper'
 import { useTheme } from 'vuetify/lib/framework.mjs'
 import BN from 'bignumber.js'
 import { ChartData } from 'chart.js'
@@ -128,7 +128,7 @@ const portfolioValue = computed<string>(() => {
  * Returns formatted number for the total usd value of eth balance for the portfolio
  */
 const ethBalancePortfolio = computed<string>(() => {
-    return formatVariableUnitEthValue(store.portfolioWeiBalanceBN).value
+    return formatNonVariableEthValue(store.portfolioWeiBalanceBN).value
 })
 const ethBalanceFiat = computed<string>(() => {
     return formatUsdValue(store.portfolioEthFiatBN).value
