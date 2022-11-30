@@ -242,6 +242,10 @@ watch(
             })
             if (deleted > -1) {
                 state.filterList.splice(deleted, 1)
+                const selected = state.filterList.filter(i => i.isSelected)
+                if (selected.length === 0) {
+                    setFilter(0)
+                }
             }
         }
     }
