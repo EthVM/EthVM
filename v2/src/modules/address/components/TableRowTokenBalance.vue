@@ -1,5 +1,5 @@
 <template>
-    <v-card :color="state.showMore ? 'pillGrey' : 'transparent'" flat class="mx-n6 rounded-0 py-1" @click="openMoreInfo()">
+    <v-card :color="state.showMore ? 'pillGrey' : 'transparent'" flat class="mx-n6 rounded-0 py-1" @click="openMoreInfo()" :link="marketData !== null">
         <v-row class="text-body-1 my-0 flex-row mx-4" align="start">
             <!--
                 Token on Overview:
@@ -180,7 +180,7 @@ const emit = defineEmits<{
 }>()
 
 const openMoreInfo = () => {
-    if (!props.isOverview) {
+    if (!props.isOverview && marketData.value !== null) {
         state.showMore = !state.showMore
     } else {
         emit('setActiveToken', props.token.contract)
