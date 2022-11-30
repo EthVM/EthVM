@@ -23,16 +23,16 @@
                 </template>
             </v-text-field>
         </v-card>
-        <div v-if="props.showErrorMessage" class="input-error-messages">
+        <div v-if="props.showErrorMessage || props.isRequired" class="input-error-messages">
             <v-scroll-x-transition>
-                <p v-if="hasError && props.errorMessage" class="ml-11 text-error">{{ props.errorMessage }}</p>
+                <p v-if="(hasError && props.errorMessage) || showRequired" class="ml-11 text-error" key="error">{{ message }}</p>
             </v-scroll-x-transition>
         </div>
     </v-card>
 </template>
 
 <script setup lang="ts">
-import { defineProps, defineEmits, reactive, onBeforeUnmount, watch } from 'vue'
+import { defineProps, defineEmits, reactive, onBeforeUnmount, watch, computed } from 'vue'
 
 interface ComponentProps {
     isLoading?: boolean
@@ -43,6 +43,7 @@ interface ComponentProps {
     hasPreppendInner?: boolean
     errorMessage?: string
     showErrorMessage?: boolean
+    isRequired: boolean
 }
 const props = withDefaults(defineProps<ComponentProps>(), {
     isLoading: false,
@@ -51,7 +52,8 @@ const props = withDefaults(defineProps<ComponentProps>(), {
     modelValue: '',
     width: '540',
     hasPreppendInner: true,
-    showErrorMessage: false
+    showErrorMessage: false,
+    isRequired: false
 })
 
 const emit = defineEmits<{
@@ -67,27 +69,43 @@ const emit = defineEmits<{
 interface InputSate {
     timeout: number
     value: string
+    checkReq: boolean
 }
 
-const state: InputSate = reactive({ timeout: 0, value: props.modelValue })
+const state: InputSate = reactive({ timeout: 0, value: props.modelValue, checkReq: false })
 
 /**
  * Emits user input to parent with the timeout of 600
  */
 const onUserInput = (): void => {
     // allows to use v-model on the app-input component
-    emit('update:modelValue', state.value)
     clearTimeout(state.timeout)
     state.timeout = window.setTimeout(() => {
+        emit('update:modelValue', state.value)
         emit('onUserInput', state.value)
+        if (state.value === '') {
+            state.checkReq = true
+        }
     }, 600)
 }
+/**
+ * Check Required
+ * Show 'Required' message if empty
+ */
+const showRequired = computed(() => {
+    return props.isRequired && state.checkReq && state.value === ''
+})
+
+const message = computed(() => {
+    return showRequired.value ? 'Required' : props.errorMessage
+})
 
 /**
  * Resets search
  */
 const resetValues = (): void => {
     clearTimeout(state.timeout)
+    state.checkReq = true
     emit('onUserInput', state.value)
 }
 

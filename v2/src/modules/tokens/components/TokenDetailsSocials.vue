@@ -10,6 +10,7 @@
                         is-blue
                         :hash="eth.toCheckSum(props.tokenDetails.contract)"
                         class="w-100"
+                        :show-name="false"
                         :link="`/address/${props.tokenDetails.contract}`"
                     />
                 </template>
