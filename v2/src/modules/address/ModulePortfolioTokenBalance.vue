@@ -34,24 +34,11 @@
                 SM : 4
                 LG: 2
              -->
-            <v-col sm="4" :lg="2" class="py-0 d-none d-sm-block">
+            <v-col sm="4" :lg="3" class="py-0 d-none d-sm-block">
                 <v-btn variant="text" color="info" class="font-weight-regular ml-n3" rounded="pill" size="small" @click="sortTable(SORT_KEY.NAME)">
                     Token <v-icon v-if="isActiveSort(SORT_KEY.NAME)" class="ml-1" size="x-small">{{ sortIcon }}</v-icon></v-btn
                 >
             </v-col>
-            <!--
-                Symbol on Overview:
-                XS and UP: NONE
-                ------------
-                Symbol
-                XS: NONE
-                LG: 1
-             -->
-            <v-col sm="1" class="py-0 d-none d-lg-block">
-                <v-btn variant="text" color="info" class="font-weight-regular ml-n3" rounded="pill" size="small" @click="sortTable(SORT_KEY.SYMBOL)">
-                    Symbol <v-icon v-if="isActiveSort(SORT_KEY.SYMBOL)" class="ml-1" size="x-small">{{ sortIcon }}</v-icon></v-btn
-                ></v-col
-            >
             <!--
                 OTHER on Overview:
                 XS: NONE
@@ -91,7 +78,6 @@
                         <v-btn variant="text" color="info" class="font-weight-regular ml-n3" rounded="pill" size="small" @click="sortTable(SORT_KEY.BALANCE)">
                             Balance <v-icon v-if="isActiveSort(SORT_KEY.BALANCE)" class="ml-1" size="x-small">{{ sortIcon }}</v-icon></v-btn
                         >
-                        <p class="text-right">More</p>
                     </v-col>
                 </v-row>
             </v-col>
@@ -103,15 +89,15 @@
             </v-col>
         </v-row>
 
-        <v-divider class="mx-n4 mx-sm-n6 mb-1 mb-sm-5" />
+        <v-divider class="mx-n4 mx-sm-n6" />
         <!--Loading -->
-        <v-row v-if="!store.portfolioIsLoaded">
-            <v-col v-for="col in 7" :key="col" cols="12" class="my-1">
+        <v-row v-if="!store.portfolioIsLoaded" class="mt-5">
+            <v-col v-for="col in 7" :key="col" cols="12" class="pb-5 pt-0">
                 <div class="skeleton-box rounded-xl" style="min-height: 44px"></div>
             </v-col>
         </v-row>
         <!--Token Row -->
-        <div v-else-if="renderState.renderTable" class="mx-n4 mx-sm-n6 px-4 px-sm-6 mt-2">
+        <div v-else-if="renderState.renderTable" class="mx-n4 mx-sm-n6 px-4 px-sm-6 p-ten-top">
             <div v-if="tokens.length > 0">
                 <div v-for="token in tokens" :key="token.contract">
                     <table-row-token-balance :token="token" :is-overview="false" :is-active="false"> </table-row-token-balance>
