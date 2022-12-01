@@ -13,7 +13,7 @@
                 >
                     <div class="d-flex align-center">
                         <app-address-blockie v-if="index !== 0" :address="i.hash" :size="4" class="mr-2" />
-                        <p>{{ i.name }}</p>
+                        <p class="text-ellipses" style="max-width: 260px">{{ i.name }}</p>
                     </div></v-btn
                 >
             </v-col>
@@ -34,24 +34,11 @@
                 SM : 4
                 LG: 2
              -->
-            <v-col sm="4" :lg="2" class="py-0 d-none d-sm-block">
+            <v-col sm="4" :lg="3" class="py-0 d-none d-sm-block">
                 <v-btn variant="text" color="info" class="font-weight-regular ml-n3" rounded="pill" size="small" @click="sortTable(SORT_KEY.NAME)">
                     Token <v-icon v-if="isActiveSort(SORT_KEY.NAME)" class="ml-1" size="x-small">{{ sortIcon }}</v-icon></v-btn
                 >
             </v-col>
-            <!--
-                Symbol on Overview:
-                XS and UP: NONE
-                ------------
-                Symbol
-                XS: NONE
-                LG: 1
-             -->
-            <v-col sm="1" class="py-0 d-none d-lg-block">
-                <v-btn variant="text" color="info" class="font-weight-regular ml-n3" rounded="pill" size="small" @click="sortTable(SORT_KEY.SYMBOL)">
-                    Symbol <v-icon v-if="isActiveSort(SORT_KEY.SYMBOL)" class="ml-1" size="x-small">{{ sortIcon }}</v-icon></v-btn
-                ></v-col
-            >
             <!--
                 OTHER on Overview:
                 XS: NONE
@@ -91,7 +78,6 @@
                         <v-btn variant="text" color="info" class="font-weight-regular ml-n3" rounded="pill" size="small" @click="sortTable(SORT_KEY.BALANCE)">
                             Balance <v-icon v-if="isActiveSort(SORT_KEY.BALANCE)" class="ml-1" size="x-small">{{ sortIcon }}</v-icon></v-btn
                         >
-                        <p class="text-right">More</p>
                     </v-col>
                 </v-row>
             </v-col>
@@ -103,21 +89,21 @@
             </v-col>
         </v-row>
 
-        <v-divider class="mx-n4 mx-sm-n6 mb-1 mb-sm-5" />
+        <v-divider class="mx-n4 mx-sm-n6" />
         <!--Loading -->
-        <v-row v-if="!store.portfolioIsLoaded">
-            <v-col v-for="col in 7" :key="col" cols="12" class="my-1">
+        <v-row v-if="!store.portfolioIsLoaded" class="mt-5">
+            <v-col v-for="col in 7" :key="col" cols="12" class="pb-5 pt-0">
                 <div class="skeleton-box rounded-xl" style="min-height: 44px"></div>
             </v-col>
         </v-row>
         <!--Token Row -->
-        <div v-else-if="renderState.renderTable" class="mx-n4 mx-sm-n6 px-4 px-sm-6 mt-2">
+        <div v-else-if="renderState.renderTable" class="mx-n4 mx-sm-n6 px-4 px-sm-6 p-ten-top">
             <div v-if="tokens.length > 0">
                 <div v-for="token in tokens" :key="token.contract">
                     <table-row-token-balance :token="token" :is-overview="false" :is-active="false"> </table-row-token-balance>
                 </div>
             </div>
-            <app-no-result v-else text="This portfolio does not have any tokens" class="mt-3 mt-sm-1"></app-no-result>
+            <app-no-result v-else :text="messageNoTokens" class="mt-3 mt-sm-1"></app-no-result>
         </div>
     </div>
 </template>
@@ -183,6 +169,10 @@ const state: ComponentState = reactive({
  * Table Filter
  -------------------------*/
 
+const messageNoTokens = computed<string>(() => {
+    return state.searchParams === '' ? 'This portfolio does not have any tokens' : 'Selected addresses do not own this token'
+})
+
 store.portfolio.forEach(i => {
     const isSelected = props.addressRef?.toLowerCase() === i.hash.toLowerCase()
     if (isSelected) {
@@ -238,6 +228,10 @@ watch(
             })
             if (deleted > -1) {
                 state.filterList.splice(deleted, 1)
+                const selected = state.filterList.filter(i => i.isSelected)
+                if (selected.length === 0) {
+                    setFilter(0)
+                }
             }
         }
     }

@@ -59,7 +59,8 @@ const mainnetLightTheme: ThemeDefinition = {
         greyCard: COLORS.greyCardLM,
         tabActive: COLORS.blue,
         greyInputText: COLORS.greyInputText,
-        snackbar: COLORS.navy
+        snackbar: COLORS.navy,
+        darkSurface: COLORS.greyBackdroundDM
     },
     variables: {
         'skeleton-gradient': 0.3
@@ -94,7 +95,8 @@ const mainnetDarkTheme: ThemeDefinition = {
         greyCard: COLORS.greyBackdroundDM,
         tabActive: COLORS.blue,
         greyInputText: COLORS.greyInputText,
-        snackbar: COLORS.lightBlue
+        snackbar: COLORS.lightBlue,
+        darkSurface: COLORS.greyBackgroundLM
     },
     variables: {
         'skeleton-gradient': 0.03

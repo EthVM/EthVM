@@ -37,6 +37,7 @@
                             class="mb-1"
                             :error-message="addressErrorMes"
                             @on-user-input="setAddress"
+                            is-required
                         >
                             <template #prepend>
                                 <div class="empty-identicon">
@@ -115,7 +116,7 @@ const state: ComponentState = reactive({
  * @param _value user input
  */
 const addressPropIsValid = computed<boolean>(() => {
-    return eth.isValidAddress(eth.toCheckSum(props.address || ''))
+    return eth.isValidAddress(props.address || '')
 })
 
 /**
@@ -172,7 +173,7 @@ const setAddress = (_value: string) => {
  * @param _value user input
  */
 const hasAddressError = computed<boolean>(() => {
-    return !props.isEditMode && (state.adrInput === '' || !isValidAddress.value || !addressIsNew.value)
+    return !props.isEditMode && state.adrInput !== '' && (!isValidAddress.value || !addressIsNew.value)
 })
 
 /**
@@ -180,7 +181,7 @@ const hasAddressError = computed<boolean>(() => {
  * @param _value user input
  */
 const isValidAddress = computed<boolean>(() => {
-    return eth.isValidAddress(eth.toCheckSum(hashNoSpaces.value))
+    return eth.isValidAddress(hashNoSpaces.value)
 })
 
 /**
@@ -188,7 +189,7 @@ const isValidAddress = computed<boolean>(() => {
  * @param _value user input
  */
 const addressIsNew = computed<boolean>(() => {
-    return !store.addressHashIsSaved(state.adrInput)
+    return !store.addressHashIsSaved(hashNoSpaces.value)
 })
 
 /**
@@ -240,7 +241,7 @@ watch(
 
 const isRequiredName = computed<boolean>(() => {
     if (props.isEditMode) {
-        return store.addressHashIsSaved(state.adrInput)
+        return store.addressHashIsSaved(hashNoSpaces.value)
     }
     return true
 })
@@ -250,20 +251,20 @@ const isRequiredName = computed<boolean>(() => {
  ---------------------*/
 const isValidInput = computed<boolean>(() => {
     if (props.isEditMode) {
-        return store.addressHashIsSaved(state.adrInput) ? state.nameInput !== '' && !hasNameError.value : !hasNameError.value
+        return store.addressHashIsSaved(hashNoSpaces.value) ? state.nameInput !== '' && !hasNameError.value : !hasNameError.value
     }
     return state.nameInput !== '' && state.adrInput !== '' && !hasAddressError.value && !hasNameError.value
 })
 
 const addAddressToPortfolio = (): void => {
     if (props.isEditMode) {
-        const isSaved = store.addressHashIsSaved(state.adrInput) || store.addressHashIsSaved(state.adrInput, true)
+        const isSaved = store.addressHashIsSaved(hashNoSpaces.value) || store.addressHashIsSaved(hashNoSpaces.value, true)
         if (isSaved) {
-            const isAddressBook = store.addressHashIsSaved(state.adrInput, true)
+            const isAddressBook = store.addressHashIsSaved(hashNoSpaces.value, true)
             if (state.nameInput !== '') {
-                store.changeAddressName(state.adrInput, state.nameInput, isAddressBook)
+                store.changeAddressName(hashNoSpaces.value, state.nameInput, isAddressBook)
             } else if (isAddressBook) {
-                store.removeAddress(state.adrInput, true)
+                store.removeAddress(hashNoSpaces.value, true)
             }
         } else {
             store.addAddress(hashNoSpaces.value, state.nameInput, true)
@@ -306,6 +307,10 @@ const isDisabled = computed<boolean>(() => {
 const emit = defineEmits(['close-module'])
 const closeModule = () => {
     emit('close-module')
+    if (!props.address) {
+        state.adrInput = ''
+        state.nameInput = ''
+    }
 }
 </script>
 
