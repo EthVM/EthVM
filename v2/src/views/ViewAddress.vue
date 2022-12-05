@@ -108,12 +108,6 @@ const tabs = reactive([
         text: 'Tokens',
         routeName: ROUTE_NAME.ADDRESS_TOKENS.NAME,
         secondaryTab: ADDRESS_ROUTE_QUERY.Q_TOKENS[0]
-    },
-    {
-        id: 4,
-        text: 'Mining History',
-        routeName: ROUTE_NAME.ADDRESS_MINER.NAME,
-        secondaryTab: ADDRESS_ROUTE_QUERY.Q_MINER[0]
     }
 ])
 
