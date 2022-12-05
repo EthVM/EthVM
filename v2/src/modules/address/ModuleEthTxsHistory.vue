@@ -165,6 +165,4 @@ const setTransferDirection = (direction: TransferDirection): void => {
         state.transferDirection = null
     }
 }
-
-console.log(formatVariableUnitEthValue(new BN('0x28bdbbe97c362fcd')))
 </script>
