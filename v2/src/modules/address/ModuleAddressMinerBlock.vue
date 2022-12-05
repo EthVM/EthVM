@@ -1,6 +1,10 @@
 <template>
-    <v-card :variant="!props.isOverview ? 'flat' : 'elevated'" :elevation="props.isOverview ? 1 : 0" rounded="xl" class="pa-4 pa-sm-6 fill-height">
-        <v-card-title class="card-title d-flex justify-space-between align-center mb-5 px-0">
+    <div
+        :class="{
+            'pa-4 pa-sm-6 fill-height v-card v-card--variant-elevated rounded-xl elevation-1': props.isOverview
+        }"
+    >
+        <v-card-title v-if="props.isOverview || props.newRewards" class="card-title d-flex justify-space-between align-center mb-5 px-0">
             <div>
                 <span v-if="props.isOverview" class="text-h6 font-weight-bold">{{ headerTitle }}</span>
                 <!-- Notice new update-->
@@ -133,6 +137,13 @@ const addressRewards = computed<RewardSummaryFragment | undefined>(() => {
         return addressRewardsBlockQueryResult.value?.getBlockRewards
     }
     return addressRewardsUncleQueryResult.value?.getUncleRewards
+})
+
+const noResultText = computed<RewardSummaryFragment | undefined>(() => {
+    if (props.rewardType === 'block') {
+        return 'This address does not have any miner rewards'
+    }
+    return 'This address does not have any uncle rewards'
 })
 
 const newRewardsText = computed<string>(() => {
