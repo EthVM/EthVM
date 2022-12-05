@@ -115,7 +115,6 @@ const {
         _limit: MAX_ITEMS
     }),
     () => ({
-        fetchPolicy: 'network-only',
         notifyOnNetworkStatusChange: true
     })
 )

@@ -1,6 +1,10 @@
 <template>
-    <v-card :variant="!props.isOverview ? 'flat' : 'elevated'" :elevation="props.isOverview ? 1 : 0" rounded="xl" class="pa-4 pa-sm-6 fill-height">
-        <v-card-title class="card-title d-flex justify-space-between align-center mb-5 px-0">
+    <div
+        :class="{
+            'pa-4 pa-sm-6 fill-height v-card v-card--variant-elevated rounded-xl elevation-1': props.isOverview
+        }"
+    >
+        <v-card-title v-if="props.isOverview || props.newRewards" class="card-title d-flex justify-space-between align-center mb-5 px-0">
             <div>
                 <span v-if="props.isOverview" class="text-h6 font-weight-bold">{{ headerTitle }}</span>
                 <!-- Notice new update-->
@@ -11,31 +15,28 @@
                 <app-btn-icon v-else icon="more_horiz" @click="goToAddressMiningPage"></app-btn-icon>
             </template>
         </v-card-title>
-        <div>
-            <!--Table Header-->
-            <v-row class="d-none d-sm-flex text-body-1 text-info my-0">
-                <v-col md="3" class="py-0"> Block # </v-col>
-                <v-col md="3" class="py-0"> Reward </v-col>
-                <v-col md="3" class="py-0"> Balance Before </v-col>
-                <v-col md="3" class="py-0"> Balance After </v-col>
-            </v-row>
-            <v-divider class="my-0 mt-sm-4 mx-n4 mx-sm-n6" />
-            <template v-if="!initialLoad && renderState.renderTable">
-                <template v-if="rewards.length > 0">
-                    <div v-for="(reward, index) in rewards" :key="index">
-                        <minor-blocks-table-row :reward="reward" />
-                    </div>
-                    <app-intersect v-if="!props.isOverview && hasMore" @intersect="loadMoreData">
-                        <div class="skeleton-box rounded-xl mt-1 my-4" style="height: 24px"></div>
-                        <v-divider />
-                    </app-intersect>
-                </template>
-                <template v-if="rewards.length < 1 && !isLoadingRewards">
-                    <app-no-result text="This address does not have any mining history" class="mt-4 mt-sm-6"></app-no-result>
-                </template>
+        <!--Table Header-->
+        <v-row class="d-none d-sm-flex text-body-1 text-info my-3">
+            <v-col md="3" class="py-0"> Block # </v-col>
+            <v-col md="3" class="py-0"> Reward </v-col>
+            <v-col md="3" class="py-0"> Balance Before </v-col>
+            <v-col md="3" class="py-0"> Balance After </v-col>
+        </v-row>
+        <v-divider class="my-0 mt-sm-4 mx-n4 mx-sm-n6" />
+        <template v-if="!initialLoad && renderState.renderTable">
+            <template v-if="rewards.length > 0">
+                <div v-for="(reward, index) in rewards" :key="index">
+                    <minor-blocks-table-row :reward="reward" />
+                </div>
+                <app-intersect v-if="!props.isOverview && hasMore" @intersect="loadMoreData">
+                    <div class="skeleton-box rounded-xl mt-1 my-4" style="height: 24px"></div>
+                </app-intersect>
             </template>
-        </div>
-    </v-card>
+            <template v-if="rewards.length < 1 && !isLoadingRewards">
+                <app-no-result :text="noResultText" class="mt-4 mt-sm-6"></app-no-result>
+            </template>
+        </template>
+    </div>
 </template>
 
 <script setup lang="ts">
@@ -129,6 +130,13 @@ const addressRewards = computed<RewardSummaryFragment | undefined>(() => {
         return addressRewardsBlockQueryResult.value?.getBlockRewards
     }
     return addressRewardsUncleQueryResult.value?.getUncleRewards
+})
+
+const noResultText = computed<RewardSummaryFragment | undefined>(() => {
+    if (props.rewardType === 'block') {
+        return 'This address does not have any miner rewards'
+    }
+    return 'This address does not have any uncle rewards'
 })
 
 const newRewardsText = computed<string>(() => {

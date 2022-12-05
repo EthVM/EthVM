@@ -8,8 +8,55 @@
                 <div>
                     <app-tabs v-model="state.tab" :routes="routes" :tabs="tabs" @update:modelValue="setLastViewedTab()" class="mb-4 mb-sm-0"></app-tabs>
                     <module-all-and-internal v-if="state.tab === routes[0] || state.tab === routes[1]" :tab="state.tab" :address-ref="props.addressRef" />
-                    <module-eth-txs-history v-if="state.tab === routes[2]" :tab="state.tab" :address-ref="props.addressRef" />
+                    <module-eth-txs-history v-if="state.tab === routes[2]" :address-ref="props.addressRef" />
                     <module-pending-transfers v-if="state.tab === routes[3]" :tab="state.tab" :address-ref="props.addressRef" />
+                    <template v-if="isAddressMiner && state.tab === routes[4]">
+                        <v-row class="my-3">
+                            <div class="mr-3">
+                                <v-btn
+                                    color="textPrimary"
+                                    :variant="state.minerTab === minerRoutes[0] ? 'flat' : 'outlined'"
+                                    density="compact"
+                                    rounded="pill"
+                                    class="px-2"
+                                    height="24"
+                                    @click="setMinerTab(minerRoutes[0])"
+                                >
+                                    Miner rewards
+                                </v-btn>
+                            </div>
+                            <div class="mx-3">
+                                <v-btn
+                                    color="textPrimary"
+                                    :variant="state.minerTab === minerRoutes[1] ? 'flat' : 'outlined'"
+                                    density="compact"
+                                    rounded="pill"
+                                    class="px-2"
+                                    height="24"
+                                    @click="setMinerTab(minerRoutes[1])"
+                                >
+                                    Uncle rewards
+                                </v-btn>
+                            </div>
+                        </v-row>
+                        <div class="mt-2 mt-sm-6">
+                            <module-address-miner-block
+                                v-if="state.minerTab === minerRoutes[0]"
+                                reward-type="block"
+                                :address-hash="props.addressRef"
+                                :new-rewards="newMinedBlocks"
+                                @resetUpdateCount="resetCount"
+                            />
+                            <module-address-miner-block
+                                v-show="state.minerTab === minerRoutes[1]"
+                                class="mb-4"
+                                reward-type="uncle"
+                                :address-hash="props.addressRef"
+                                :new-rewards="newMinedUncles"
+                                @resetUpdateCount="resetCount"
+                            />
+                        </div>
+                    </template>
                 </div>
             </v-card>
         </v-col>
@@ -22,12 +69,18 @@ import ModulePendingTransfers from '@module/address/ModulePendingEthTransfers.vu
 import ModuleAllAndInternal from '@module/address/ModuleAllAndInternalEthTransfers.vue'
 import ModuleAddressBalance from '@module/address/ModuleAddressBalance.vue'
 import ModuleEthTxsHistory from '@module/address/ModuleEthTxsHistory.vue'
-import { reactive } from 'vue'
+import ModuleAddressMinerBlock from '@module/address/ModuleAddressMinerBlock.vue'
+import { reactive, computed } from 'vue'
 import { useAppViewGrid } from '@core/composables/AppViewGrid/AppViewGrid.composable'
 import { Tab } from '@core/components/props'
-import { Q_ADDRESS_TRANSFERS } from '@core/router/routesNames'
+import { ADDRESS_ROUTE_QUERY, Q_ADDRESS_TRANSFERS } from '@core/router/routesNames'
+import { useIsAddressMiner } from '@core/composables/IsAddressMiner/isAddressMiner.composable'
+import { useAddressUpdate } from '@core/composables/AddressUpdate/addressUpdate.composable'
 
 const routes = Q_ADDRESS_TRANSFERS
+const minerRoutes = ADDRESS_ROUTE_QUERY.Q_MINER
+
+const { newMinedBlocks, newMinedUncles, resetCount } = useAddressUpdate(props.addressRef)
 
 const props = defineProps({
     addressRef: {
@@ -41,29 +94,56 @@ const props = defineProps({
 })
 
 const state = reactive({
-    tab: props.tab
+    tab: props.tab,
+    minerTab: minerRoutes[0]
 })
 
 const { columnPadding, rowMargin } = useAppViewGrid()
 
-const tabs: Tab[] = [
+const { isAddressMiner } = useIsAddressMiner(props.addressRef)
+const tabs = computed<Tab[]>(() => {
+    const tabs = [
+        {
+            value: routes[0],
+            title: 'All'
+        },
+        {
+            value: routes[1],
+            title: 'Internal'
+        },
+        {
+            value: routes[2],
+            title: 'TX History'
+        },
+        {
+            value: routes[3],
+            title: 'Pending TX'
+        }
+    ]
+
+    return [
+        ...tabs,
+        isAddressMiner.value && {
+            value: routes[4],
+            title: 'Rewards'
+        }
+    ].filter(Boolean)
+})
+
+const minerTabs: Tab[] = [
     {
-        value: routes[0],
-        title: 'All'
+        value: minerRoutes[0],
+        title: 'Blocks'
     },
     {
-        value: routes[1],
-        title: 'Internal'
-    },
-    {
-        value: routes[2],
-        title: 'TX History'
-    },
-    {
-        value: routes[3],
-        title: 'Pending TX'
+        value: minerRoutes[1],
+        title: 'Uncles'
     }
 ]
+
+const setMinerTab = (tabName: string) => {
+    state.minerTab = tabName
+}
 
 const emit = defineEmits<{
     (e: 'tabChange', newTab: string): void
