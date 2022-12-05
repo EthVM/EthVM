@@ -87,7 +87,6 @@ const {
         _limit: MAX_ITEMS
     }),
     () => ({
-        fetchPolicy: 'network-only',
         enabled: isItxEnabled.value
     })
 )
@@ -102,7 +101,6 @@ const {
         _limit: MAX_ITEMS
     }),
     () => ({
-        fetchPolicy: 'network-only',
         enabled: !isItxEnabled.value
     })
 )
