@@ -153,7 +153,7 @@ function subscribeToMoreHandler() {
                 }
                 return {
                     __typename: 'BlockSummary',
-                    getBlocksArrayByNumber: [newB, ...prevB]
+                    getBlocksArrayByNumber: isHome.value ? [newB, ...prevB].slice(0, 10) : [newB, ...prevB]
                 }
             }
         }
