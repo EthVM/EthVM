@@ -22,7 +22,7 @@
                                     height="24"
                                     @click="setMinerTab(minerRoutes[0])"
                                 >
-                                    Miner rewards
+                                    Block rewards
                                 </v-btn>
                             </div>
                             <div class="mx-3">

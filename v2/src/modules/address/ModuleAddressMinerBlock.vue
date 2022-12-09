@@ -141,7 +141,7 @@ const addressRewards = computed<RewardSummaryFragment | undefined>(() => {
 
 const noResultText = computed<RewardSummaryFragment | undefined>(() => {
     if (props.rewardType === 'block') {
-        return 'This address does not have any miner rewards'
+        return 'This address does not have any block rewards'
     }
     return 'This address does not have any uncle rewards'
 })
