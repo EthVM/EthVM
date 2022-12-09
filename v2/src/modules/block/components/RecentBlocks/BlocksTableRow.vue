@@ -1,11 +1,11 @@
 <template>
-    <div class="position-relative">
+    <div>
         <!--
               =====================================================================================
                 Mobile (XS-SM)
               =====================================================================================
         -->
-        <v-row v-if="xs" align="start" justify="start" class="my-5 px-0" @click="toggleMoreDetails">
+        <app-table-row v-if="xs" @click="toggleMoreDetails" align="start">
             <v-col cols="6">
                 <router-link :to="`/block/number/${props.block.number}`" class="text-secondary">{{ _block.number }}</router-link>
                 <p class="text-info mb-0">{{ _block.timestamp }}</p>
@@ -30,14 +30,15 @@
                     </p>
                 </v-row>
             </v-col>
-        </v-row>
+            <div v-if="state.showMoreDetails && xs" class="row-bg bg-tableGrey"></div>
+        </app-table-row>
 
         <!--
               =====================================================================================
                 Tablet/ Desktop (SM - XL)
               =====================================================================================
         -->
-        <v-row v-else align="center" justify="start" class="my-5 px-0">
+        <app-table-row v-else>
             <v-col sm="2">
                 <router-link :to="`/block/number/${props.block.number}`" class="text-secondary">{{ _block.number }}</router-link>
             </v-col>
@@ -56,8 +57,9 @@
             <v-col sm="3">
                 {{ _block.rewards.value }}
             </v-col>
-        </v-row>
-        <div v-if="state.showMoreDetails && xs" class="row-bg bg-tableGrey"></div>
+        </app-table-row>
+        <!--        <v-row v-else align="center" justify="start" class="my-5 px-0">-->
+        <!--        </v-row>-->
     </div>
 </template>
 
@@ -70,6 +72,7 @@ import AppTooltip from '@core/components/AppTooltip.vue'
 import { computed, reactive } from 'vue'
 import { useDisplay } from 'vuetify'
 import { formatNonVariableEthValue, formatNumber } from '@core/helper/number-format-helper'
+import AppTableRow from '@core/components/AppTableRow.vue'
 
 const { xs } = useDisplay()
 
