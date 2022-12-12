@@ -122,13 +122,6 @@ const routes: Array<RouteRecordRaw> = [
                 name: ROUTE_NAME.ADDRESS_CONTRACT.NAME,
                 component: ViewTemp,
                 props: true
-            },
-            {
-                path: ROUTE_NAME.ADDRESS_MINER.PATH,
-                name: ROUTE_NAME.ADDRESS_MINER.NAME,
-                component: ViewAddressMiners,
-                props: route => ({ tab: route.query.t }),
-                beforeEnter: tabViewRouteGuard(ADDRESS_ROUTE_QUERY.Q_MINER[0])
             }
         ]
     },
