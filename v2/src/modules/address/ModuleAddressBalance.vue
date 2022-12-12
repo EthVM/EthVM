@@ -1,24 +1,23 @@
 <template>
-    <v-card class="pa-4 pa-sm-6" elevation="1" rounded="xl" height="100%">
-        <!--
+    <!--
         ========================
           VIEW: Overview
         =========================
         -->
-        <div v-if="isOverview">
-            <address-balance-totals title="ETH Balance" :is-loading="loadingBalanceData" :balance="`${balanceFormatted} ETH`">
-                <template #extra>
-                    <v-col v-if="loadingMarketInfo || loadingBalanceData" cols="6" sm="4" md="6" class="pa-0">
-                        <div class="skeleton-box rounded-xl mt-1" style="height: 24px"></div>
-                    </v-col>
-                    <p v-else class="text-h5 font-weight-regular">{{ balanceFiatFormatted }}</p>
-                </template>
-            </address-balance-totals>
-            <div class="temp-chart pa-4 rounded-xl">
-                <p>Chart Area</p>
-            </div>
+    <v-card v-if="isOverview" class="pa-4 pa-sm-6" elevation="1" rounded="xl" height="100%">
+        <address-balance-totals title="ETH Balance" :is-loading="loadingBalanceData" :balance="`${balanceFormatted} ETH`">
+            <template #extra>
+                <v-col v-if="loadingMarketInfo || loadingBalanceData" cols="6" sm="4" md="6" class="pa-0">
+                    <div class="skeleton-box rounded-xl mt-1" style="height: 24px"></div>
+                </v-col>
+                <p v-else class="text-h5 font-weight-regular">{{ balanceFiatFormatted }}</p>
+            </template>
+        </address-balance-totals>
+        <div class="temp-chart pa-4 rounded-xl">
+            <p>Chart Area</p>
         </div>
-        <!--
+    </v-card>
+    <!--
         ========================
           VIEW: Eth Balance and History
         =========================
