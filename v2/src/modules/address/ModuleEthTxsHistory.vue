@@ -1,6 +1,6 @@
 <template>
-    <v-row class="mx-5 my-3">
-        <div class="mx-3">
+    <v-row class="my-3">
+        <div class="mr-3">
             <v-btn
                 color="textPrimary"
                 :variant="state.transferDirection === TransferDirection.Incoming ? 'flat' : 'outlined'"
@@ -47,9 +47,10 @@
                 <span class="ml-4">Tx Value</span>
             </v-col>
             <v-col v-if="!mdAndDown" sm="2"> To/From </v-col>
+            <v-spacer v-else />
             <v-col sm="3"> Address </v-col>
             <v-col sm="2"> Hash</v-col>
-            <v-col sm="2"> Balance Change </v-col>
+            <v-col sm="3"> Balance Change </v-col>
         </v-row>
         <v-divider class="my-0 mt-md-4 mx-n4 mx-sm-n6" />
     </template>

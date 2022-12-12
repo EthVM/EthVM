@@ -9,7 +9,7 @@
                     {{ transferDirection.text }}
                 </span>
             </v-col>
-            <v-col cols="6" class="text-right">{{ txFee.value }} ETH</v-col>
+            <v-col cols="6" class="text-right">{{ txValue.value }} ETH</v-col>
             <v-col cols="6" class="text-info text-lowercase"> {{ timestamp }} {{ transferDirection.direction }} </v-col>
             <v-col cols="6">
                 <div class="d-flex align-center justify-end">
@@ -25,14 +25,14 @@
                         <v-icon :color="statusIcon.color">{{ statusIcon.icon }}</v-icon>
                     </span>
                     <div class="ml-4">
-                        {{ txFee.value }} ETH
-                        <div class="text-lowercase">
+                        {{ txValue.value }} ETH
+                        <div class="text-lowercase text-info">
                             {{ timestamp }} <span v-if="mdAndDown">{{ transferDirection.direction }}</span>
                         </div>
                     </div>
                 </div>
             </v-col>
-            <v-col v-if="!mdAndDown" cols="2">
+            <v-col cols="1" lg="2">
                 <app-chip :bg="transferDirection.color" :text="transferDirection.direction" />
             </v-col>
             <v-col md="3">
@@ -49,9 +49,15 @@
                     :link="`/tx/${transfer.transfer.transactionHash}`"
                 />
             </v-col>
-            <v-col sm="2"> {{ totalBalanceChange.value }} ETH </v-col>
-            <v-col sm="1">
-                <app-btn-icon icon="expand_more" tooltip-text="Show transfer details" @click="showMoreDetails = !showMoreDetails" />
+            <v-col sm="3">
+                <div class="d-flex justify-space-between align-center">
+                    {{ totalBalanceChange.value }} ETH
+                    <app-btn-icon
+                        :icon="showMoreDetails ? 'expand_less' : 'expand_more'"
+                        tooltip-text="Show transfer details"
+                        @click="showMoreDetails = !showMoreDetails"
+                    />
+                </div>
             </v-col>
         </v-row>
         <v-row v-if="showMoreDetails" justify="space-between" class="my-4 flex-column-reverse flex-sm-row">
