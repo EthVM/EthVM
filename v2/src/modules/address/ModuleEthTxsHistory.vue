@@ -1,5 +1,5 @@
 <template>
-    <v-row class="my-3">
+    <v-row class="px-1 my-3">
         <div class="mr-3">
             <v-btn
                 color="textPrimary"
