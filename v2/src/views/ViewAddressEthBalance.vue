@@ -10,18 +10,8 @@
                     <module-all-and-internal v-if="state.tab === routes[0] || state.tab === routes[1]" :tab="state.tab" :address-ref="props.addressRef" />
                     <module-eth-txs-history v-if="state.tab === routes[2]" :address-ref="props.addressRef" />
                     <module-pending-transfers v-if="state.tab === routes[3]" :tab="state.tab" :address-ref="props.addressRef" />
-                    <template v-if="isAddressMiner && state.tab === routes[4]">
+                    <template v-if="props.isAddressMiner && state.tab === routes[4]">
                         <module-address-miner-block :address-hash="props.addressRef" />
-                        <!--                        <div class="mt-2 mt-sm-6">-->
-                        <!--                            <module-address-miner-block-->
-                        <!--                                v-show="state.minerTab === minerRoutes[1]"-->
-                        <!--                                class="mb-4"-->
-                        <!--                                reward-type="uncle"-->
-                        <!--                                :address-hash="props.addressRef"-->
-                        <!--                                :new-rewards="newMinedUncles"-->
-                        <!--                                @resetUpdateCount="resetCount"-->
-                        <!--                            />-->
-                        <!--                        </div>-->
                     </template>
                 </div>
             </v-card>
@@ -40,7 +30,6 @@ import { reactive, computed } from 'vue'
 import { useAppViewGrid } from '@core/composables/AppViewGrid/AppViewGrid.composable'
 import { Tab } from '@core/components/props'
 import { ADDRESS_ROUTE_QUERY, Q_ADDRESS_TRANSFERS } from '@core/router/routesNames'
-import { useIsAddressMiner } from '@core/composables/IsAddressMiner/isAddressMiner.composable'
 import { useAddressUpdate } from '@core/composables/AddressUpdate/addressUpdate.composable'
 
 const routes = Q_ADDRESS_TRANSFERS
@@ -56,7 +45,8 @@ const props = defineProps({
     tab: {
         type: String,
         required: true
-    }
+    },
+    isAddressMiner: { type: Boolean }
 })
 
 const state = reactive({
@@ -66,7 +56,6 @@ const state = reactive({
 
 const { columnPadding, rowMargin } = useAppViewGrid()
 
-const { isAddressMiner } = useIsAddressMiner(props.addressRef)
 const tabs = computed<Tab[]>(() => {
     const tabs = [
         {
@@ -89,7 +78,7 @@ const tabs = computed<Tab[]>(() => {
 
     return [
         ...tabs,
-        isAddressMiner.value && {
+        props.isAddressMiner && {
             value: routes[4],
             title: 'Rewards'
         }

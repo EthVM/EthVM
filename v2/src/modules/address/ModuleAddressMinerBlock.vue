@@ -1,74 +1,76 @@
 <template>
-    <v-row v-if="!props.isOverview" class="mt-3 mb-6">
-        <div class="mr-3">
-            <v-btn
-                color="textPrimary"
-                :variant="state.tab === minerRoutes[0] ? 'flat' : 'outlined'"
-                density="compact"
-                rounded="pill"
-                class="px-2"
-                height="24"
-                @click="setMinerTab(minerRoutes[0])"
-            >
-                Block rewards
-            </v-btn>
-        </div>
-        <div class="mx-3">
-            <v-btn
-                color="textPrimary"
-                :variant="state.tab === minerRoutes[1] ? 'flat' : 'outlined'"
-                density="compact"
-                rounded="pill"
-                class="px-2"
-                height="24"
-                @click="setMinerTab(minerRoutes[1])"
-            >
-                Uncle rewards
-            </v-btn>
-        </div>
-    </v-row>
-    <div
-        :class="{
-            'pa-4 pa-sm-6 fill-height v-card v-card--variant-elevated rounded-xl elevation-1': props.isOverview
-        }"
-    >
-        <v-card-title v-if="props.isOverview || newRewards" class="card-title d-flex justify-space-between align-center mb-5 px-0">
-            <div>
-                <span v-if="props.isOverview" class="text-h6 font-weight-bold">{{ headerTitle }}</span>
-                <!-- Notice new update-->
-                <app-new-update :icon-only="props.isOverview" :text="newRewardsText" :update-count="newRewards" @reload="setPage(0, true)" />
+    <div>
+        <v-row v-if="!props.isOverview" class="mt-3 mb-6">
+            <div class="mr-3">
+                <v-btn
+                    color="textPrimary"
+                    :variant="state.tab === minerRoutes[0] ? 'flat' : 'outlined'"
+                    density="compact"
+                    rounded="pill"
+                    class="px-2"
+                    height="24"
+                    @click="setMinerTab(minerRoutes[0])"
+                >
+                    Block rewards
+                </v-btn>
             </div>
-            <template v-if="props.isOverview">
-                <app-btn v-if="!smAndDown" text="More" isSmall icon="east" @click="goToAddressMiningTab"></app-btn>
-                <app-btn-icon v-else icon="more_horiz" @click="goToAddressMiningTab"></app-btn-icon>
-            </template>
-        </v-card-title>
-        <!--Table Header-->
-        <v-row class="d-none d-sm-flex text-body-1 text-info my-3">
-            <v-col md="3" class="py-0"> Block # </v-col>
-            <v-col md="3" class="py-0"> Reward </v-col>
-            <v-col md="3" class="py-0"> Balance Before </v-col>
-            <v-col md="3" class="py-0"> Balance After </v-col>
+            <div class="mx-3">
+                <v-btn
+                    color="textPrimary"
+                    :variant="state.tab === minerRoutes[1] ? 'flat' : 'outlined'"
+                    density="compact"
+                    rounded="pill"
+                    class="px-2"
+                    height="24"
+                    @click="setMinerTab(minerRoutes[1])"
+                >
+                    Uncle rewards
+                </v-btn>
+            </div>
         </v-row>
-        <v-divider class="my-0 mt-sm-4 mx-n4 mx-sm-n6" />
-        <template v-if="!initialLoad && renderState.renderTable">
-            <template v-if="rewards.length > 0">
-                <div v-for="(reward, index) in rewards" :key="index">
-                    <minor-blocks-table-row :reward="reward" />
+        <div
+            :class="{
+                'pa-4 pa-sm-6 fill-height v-card v-card--variant-elevated rounded-xl elevation-1': props.isOverview
+            }"
+        >
+            <v-card-title v-if="props.isOverview || newRewards" class="card-title d-flex justify-space-between align-center mb-5 px-0">
+                <div>
+                    <span v-if="props.isOverview" class="text-h6 font-weight-bold">{{ headerTitle }}</span>
+                    <!-- Notice new update-->
+                    <app-new-update :icon-only="props.isOverview" :text="newRewardsText" :update-count="newRewards" @reload="setPage(0, true)" />
                 </div>
-                <app-intersect v-if="!props.isOverview && hasMore" @intersect="loadMoreData">
-                    <div class="skeleton-box rounded-xl mt-1 my-4" style="height: 24px"></div>
-                </app-intersect>
+                <template v-if="props.isOverview">
+                    <app-btn v-if="!smAndDown" text="More" isSmall icon="east" @click="goToAddressMiningTab"></app-btn>
+                    <app-btn-icon v-else icon="more_horiz" @click="goToAddressMiningTab"></app-btn-icon>
+                </template>
+            </v-card-title>
+            <!--Table Header-->
+            <v-row class="d-none d-sm-flex text-body-1 text-info my-3">
+                <v-col md="3" class="py-0"> Block # </v-col>
+                <v-col md="3" class="py-0"> Reward </v-col>
+                <v-col md="3" class="py-0"> Balance Before </v-col>
+                <v-col md="3" class="py-0"> Balance After </v-col>
+            </v-row>
+            <v-divider class="my-0 mt-sm-4 mx-n4 mx-sm-n6" />
+            <template v-if="!initialLoad && renderState.renderTable">
+                <template v-if="rewards.length > 0">
+                    <div v-for="(reward, index) in rewards" :key="index">
+                        <minor-blocks-table-row :reward="reward" />
+                    </div>
+                    <app-intersect v-if="!props.isOverview && hasMore" @intersect="loadMoreData">
+                        <div class="skeleton-box rounded-xl mt-1 my-4" style="height: 24px"></div>
+                    </app-intersect>
+                </template>
+                <template v-if="rewards.length < 1 && !isLoadingRewards">
+                    <app-no-result :text="noResultText" class="mt-4 mt-sm-6"></app-no-result>
+                </template>
             </template>
-            <template v-if="rewards.length < 1 && !isLoadingRewards">
-                <app-no-result :text="noResultText" class="mt-4 mt-sm-6"></app-no-result>
+            <template v-else>
+                <div v-for="item in 10" :key="item" class="my-5">
+                    <div class="skeleton-box rounded-xl my-5" style="height: 24px"></div>
+                </div>
             </template>
-        </template>
-        <template v-else>
-            <div v-for="item in 10" :key="item" class="my-5">
-                <div class="skeleton-box rounded-xl my-5" style="height: 24px"></div>
-            </div>
-        </template>
+        </div>
     </div>
 </template>
 
