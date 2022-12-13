@@ -83,7 +83,13 @@
         =========================
         -->
         <div class="mx-2 mx-sm-6 mx-xl-auto mt-2 mt-md-6">
-            <router-view v-slot="{ Component }" :address-ref="addressRef" :scroll-id="scrollId" @tabChange="setLastViewedTab">
+            <router-view
+                v-slot="{ Component }"
+                :address-ref="addressRef"
+                :is-address-miner="isAddressMiner"
+                :scroll-id="scrollId"
+                @tabChange="setLastViewedTab"
+            >
                 <v-container class="pa-0">
                     <Transition name="fade" mode="out-in">
                         <component :is="Component" :key="route.name" />
@@ -109,6 +115,7 @@ import ModuleAddAdressToPorfolio from '@module/address/ModulePorfolioHandleAdr.v
 import ModulePorfolioHandleAdr from '@module/address/ModulePorfolioHandleAdr.vue'
 import { useDisplay } from 'vuetify/lib/framework.mjs'
 import { useStore } from '@/store'
+import { useIsAddressMiner } from '@core/composables/IsAddressMiner/isAddressMiner.composable'
 
 const { smAndDown, xs } = useDisplay()
 
@@ -159,6 +166,8 @@ const state: ComponentState = reactive({
     tab: ROUTE_NAME.ADDRESS.NAME,
     showEdit: false
 })
+
+const { isAddressMiner } = useIsAddressMiner(props.addressRef)
 
 const openEditDialog = (_value: boolean) => {
     state.showEdit = _value
