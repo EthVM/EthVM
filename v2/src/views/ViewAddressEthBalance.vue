@@ -11,51 +11,17 @@
                     <module-eth-txs-history v-if="state.tab === routes[2]" :address-ref="props.addressRef" />
                     <module-pending-transfers v-if="state.tab === routes[3]" :tab="state.tab" :address-ref="props.addressRef" />
                     <template v-if="isAddressMiner && state.tab === routes[4]">
-                        <v-row class="my-3">
-                            <div class="mr-3">
-                                <v-btn
-                                    color="textPrimary"
-                                    :variant="state.minerTab === minerRoutes[0] ? 'flat' : 'outlined'"
-                                    density="compact"
-                                    rounded="pill"
-                                    class="px-2"
-                                    height="24"
-                                    @click="setMinerTab(minerRoutes[0])"
-                                >
-                                    Block rewards
-                                </v-btn>
-                            </div>
-                            <div class="mx-3">
-                                <v-btn
-                                    color="textPrimary"
-                                    :variant="state.minerTab === minerRoutes[1] ? 'flat' : 'outlined'"
-                                    density="compact"
-                                    rounded="pill"
-                                    class="px-2"
-                                    height="24"
-                                    @click="setMinerTab(minerRoutes[1])"
-                                >
-                                    Uncle rewards
-                                </v-btn>
-                            </div>
-                        </v-row>
-                        <div class="mt-2 mt-sm-6">
-                            <module-address-miner-block
-                                v-if="state.minerTab === minerRoutes[0]"
-                                reward-type="block"
-                                :address-hash="props.addressRef"
-                                :new-rewards="newMinedBlocks"
-                                @resetUpdateCount="resetCount"
-                            />
-                            <module-address-miner-block
-                                v-show="state.minerTab === minerRoutes[1]"
-                                class="mb-4"
-                                reward-type="uncle"
-                                :address-hash="props.addressRef"
-                                :new-rewards="newMinedUncles"
-                                @resetUpdateCount="resetCount"
-                            />
-                        </div>
+                        <module-address-miner-block :address-hash="props.addressRef" />
+                        <!--                        <div class="mt-2 mt-sm-6">-->
+                        <!--                            <module-address-miner-block-->
+                        <!--                                v-show="state.minerTab === minerRoutes[1]"-->
+                        <!--                                class="mb-4"-->
+                        <!--                                reward-type="uncle"-->
+                        <!--                                :address-hash="props.addressRef"-->
+                        <!--                                :new-rewards="newMinedUncles"-->
+                        <!--                                @resetUpdateCount="resetCount"-->
+                        <!--                            />-->
+                        <!--                        </div>-->
                     </template>
                 </div>
             </v-card>
@@ -129,21 +95,6 @@ const tabs = computed<Tab[]>(() => {
         }
     ].filter(Boolean)
 })
-
-const minerTabs: Tab[] = [
-    {
-        value: minerRoutes[0],
-        title: 'Blocks'
-    },
-    {
-        value: minerRoutes[1],
-        title: 'Uncles'
-    }
-]
-
-const setMinerTab = (tabName: string) => {
-    state.minerTab = tabName
-}
 
 const emit = defineEmits<{
     (e: 'tabChange', newTab: string): void

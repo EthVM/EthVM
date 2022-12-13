@@ -60,7 +60,7 @@
                 <table-txs-history-row :loading="initialLoad" :transfer="transfer" :address-ref="props.addressRef" />
             </div>
         </template>
-        <app-no-result v-else text="This address does not have any internal transfers" class="mt-4 mt-sm-6 mb-5"></app-no-result>
+        <app-no-result v-else :text="noResultText" class="mt-4 mt-sm-6 mb-5"></app-no-result>
         <app-intersect v-if="hasMore" @intersect="loadMoreData">
             <div class="skeleton-box rounded-xl mt-1 my-4" style="height: 24px"></div>
             <v-divider />
@@ -130,6 +130,15 @@ const initialLoad = computed<boolean>(() => {
 
 const hasMore = computed<boolean>(() => {
     return !!txsTransfersData.value?.getEthTransactionTransfers.nextKey
+})
+
+const noResultText = computed<string>(() => {
+    if (state.transferDirection === TransferDirection.Outgoing) {
+        return 'This address does not have any outgoing transfers'
+    } else if (state.transferDirection === TransferDirection.Incoming) {
+        return 'This address does not have any incoming transfers'
+    }
+    return 'This address does not have any internal transfers'
 })
 
 const loadMoreTxsTransfersData = (): void => {
