@@ -5,7 +5,7 @@
                 Mobile (XS-SM)
               =====================================================================================
         -->
-        <app-table-row v-if="xs" @click="toggleMoreDetails" align="start">
+        <app-table-row v-if="xs" @click="toggleMoreDetails" :color="state.showMoreDetails ? 'pillGrey' : 'transparent'">
             <v-col cols="6">
                 <router-link :to="`/block/number/${props.block.number}`" class="text-secondary">{{ _block.number }}</router-link>
                 <p class="text-info mb-0">{{ _block.timestamp }}</p>
@@ -30,7 +30,6 @@
                     </p>
                 </v-row>
             </v-col>
-            <div v-if="state.showMoreDetails && xs" class="row-bg bg-tableGrey"></div>
         </app-table-row>
 
         <!--
@@ -38,7 +37,7 @@
                 Tablet/ Desktop (SM - XL)
               =====================================================================================
         -->
-        <app-table-row v-else>
+        <app-table-row v-else row-align="center">
             <v-col sm="2">
                 <router-link :to="`/block/number/${props.block.number}`" class="text-secondary">{{ _block.number }}</router-link>
             </v-col>

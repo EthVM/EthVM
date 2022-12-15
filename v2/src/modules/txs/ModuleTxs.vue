@@ -8,7 +8,6 @@
             <app-btn v-if="isHome" text="More" isSmall icon="east" @click="goToTransactionsPage"></app-btn>
         </v-card-title>
         <txs-table
-            class="mt-5"
             :max-items="props.maxItems"
             :index="state.index"
             :is-loading="state.initialLoad"
@@ -37,6 +36,9 @@ import TxsTable from '@module/txs/components/TxsTable.vue'
 import BN from 'bignumber.js'
 import { Q_BLOCKS_AND_TXS, ROUTE_NAME } from '@core/router/routesNames'
 import { useRouter } from 'vue-router'
+import { useDisplay } from 'vuetify'
+
+const { mdAndDown } = useDisplay()
 
 interface ModuleState {
     initialLoad: boolean

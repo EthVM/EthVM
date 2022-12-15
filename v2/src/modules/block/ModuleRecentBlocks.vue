@@ -8,7 +8,6 @@
             <app-btn v-if="isHome" text="More" isSmall icon="east" @click="goToBlocksPage"></app-btn>
         </v-card-title>
         <table-blocks
-            :class="isHome && !smAndDown ? 'pt-13' : null"
             :max-items="props.maxItems"
             :index="state.index"
             :is-loading="state.initialLoad"

@@ -1,22 +1,28 @@
 <template>
-    <v-card flat class="mx-n6 rounded-0 py-1 position-relative" v-bind="$attrs">
-        <v-row class="text-body-1 my-0 flex-row mx-4" :align="rowAlign">
+    <v-card flat class="mx-n6 rounded-0 py-1 position-relative" v-bind="vCardAttrs">
+        <v-row class="text-body-1 my-0 flex-row mx-4" v-bind="vRowAttrs">
             <slot />
         </v-row>
     </v-card>
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, useAttrs } from 'vue'
 
-interface ComponentProps {
-    align: string
-}
-const props = defineProps<ComponentProps>()
+const attrs = useAttrs()
 
-const rowAlign = computed<string>(() => {
-    return props.align || 'center'
-})
+const vRowAttrs = Object.keys(attrs)
+    .filter(el => el.startsWith('row-'))
+    .reduce((acc, key) => {
+        const atrrKey = key.split('row-')[1]
+        return { ...acc, [atrrKey]: attrs[key] }
+    }, {})
+
+const vCardAttrs = Object.keys(attrs)
+    .filter(el => !el.startsWith('row-'))
+    .reduce((acc, key) => {
+        return { ...acc, [key]: attrs[key] }
+    }, {})
 </script>
 
 <style lang="scss"></style>

@@ -18,7 +18,7 @@
               TABLE BODY
             =====================================================================================
         -->
-        <div v-if="!hasMessage">
+        <div v-if="!hasMessage" class="p-ten-top">
             <template v-if="!props.isLoading">
                 <div v-for="(block, index) in props.blockData" :key="index">
                     <table-blocks-row :block="block" :page-type="props.pageType" />
