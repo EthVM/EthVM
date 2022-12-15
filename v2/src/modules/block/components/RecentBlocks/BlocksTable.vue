@@ -6,10 +6,10 @@
             =====================================================================================
         -->
         <v-row v-if="!xs" align="center" justify="start" class="text-body-1 text-info">
-            <v-col sm="2"> Block # </v-col>
-            <v-col sm="2"> Timestamp </v-col>
-            <v-col sm="2"> Transactions </v-col>
-            <v-col sm="3"> Miner </v-col>
+            <v-col> Block # </v-col>
+            <v-col v-if="!mdAndDown" sm="2"> Timestamp </v-col>
+            <v-col sm="3" lg="2"> Transactions </v-col>
+            <v-col sm="4" lg="3"> Miner </v-col>
             <v-col sm="3"> Reward </v-col>
         </v-row>
         <v-divider class="my-0 mt-md-4 mx-n4 mx-sm-n6" />
@@ -43,7 +43,7 @@ import AppIntersect from '@core/components/AppIntersect.vue'
 import { useDisplay } from 'vuetify/lib/framework.mjs'
 import { computed } from 'vue'
 
-const { xs } = useDisplay()
+const { xs, mdAndDown } = useDisplay()
 
 const props = defineProps({
     blockData: Array,

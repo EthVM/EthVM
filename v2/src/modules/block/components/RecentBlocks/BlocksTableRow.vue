@@ -40,14 +40,17 @@
         <app-table-row v-else row-align="center">
             <v-col sm="2">
                 <router-link :to="`/block/number/${props.block.number}`" class="text-secondary">{{ _block.number }}</router-link>
+                <p class="text-info mb-0">
+                    {{ _block.timestamp }}
+                </p>
             </v-col>
-            <v-col sm="2">
+            <v-col v-if="!mdAndDown" sm="2">
                 {{ _block.timestamp }}
             </v-col>
-            <v-col sm="2">
+            <v-col sm="3" lg="2">
                 {{ _block.totalTx }}
             </v-col>
-            <v-col sm="3">
+            <v-col sm="4" lg="3">
                 <div class="d-flex align-center">
                     <app-address-blockie :address="_block.miner || ''" :size="8" class="mr-2 mr-sm-2" />
                     <app-transform-hash is-short is-blue :hash="eth.toCheckSum(_block.miner)" :link="`/address/${_block.miner}`" />
@@ -73,7 +76,7 @@ import { useDisplay } from 'vuetify'
 import { formatNonVariableEthValue, formatNumber } from '@core/helper/number-format-helper'
 import AppTableRow from '@core/components/AppTableRow.vue'
 
-const { xs } = useDisplay()
+const { xs, mdAndDown } = useDisplay()
 
 const props = defineProps({
     block: Object

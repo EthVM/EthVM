@@ -1,22 +1,16 @@
 <template>
     <div>
-        <!--
-          =====================================================================================
-            Mobile (XS-SM)
-          =====================================================================================
-        -->
-        <!--        <app-table-row v-if="xs" row-align="center" row-justify="start" @click="toggleMoreDetails"> </app-table-row>-->
-        <!--
-          =====================================================================================
-            Tablet/ Desktop (SM - XL)
-          =====================================================================================
-        -->
         <app-table-row
             row-align="center"
             row-justify="start"
             :color="state.showMoreDetails ? 'pillGrey' : 'transparent'"
             v-on="{ click: mdAndDown ? toggleMoreDetails : null }"
         >
+            <!--
+                 =====================================================================================
+                   Mobile (XS-SM)
+                 =====================================================================================
+            -->
             <template v-if="xs">
                 <v-col cols="6">
                     <div class="d-flex align-start">
@@ -43,6 +37,11 @@
                     </div>
                 </v-col>
             </template>
+            <!--
+                  =====================================================================================
+                    Tablet/ Desktop (SM - XL)
+                  =====================================================================================
+            -->
             <template v-else>
                 <v-col v-if="!props.isPending && !props.isBlock" sm="3" lg="2">
                     <router-link :to="`/block/number/${transferObj.block}`" class="text-secondary pb-1">{{ transaction.block }}</router-link>
@@ -116,7 +115,6 @@
                 </v-col>
             </v-row>
         </app-table-row>
-        <!--        <div v-if="state.showMoreDetails && mdAndDown" class="row-bg bg-tableGrey"></div>-->
     </div>
 </template>
 
