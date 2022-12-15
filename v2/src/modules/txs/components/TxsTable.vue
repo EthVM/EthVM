@@ -37,7 +37,6 @@
             </template>
             <app-intersect v-if="props.showIntersect" @intersect="$emit('loadMore')">
                 <div class="skeleton-box rounded-xl mt-1 my-4" style="height: 24px"></div>
-                <v-divider />
             </app-intersect>
         </div>
     </div>
