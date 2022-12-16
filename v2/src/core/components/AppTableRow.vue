@@ -14,6 +14,10 @@ import { computed, useAttrs } from 'vue'
 
 const attrs = useAttrs()
 
+// To pass props to the v-row, use row-props-name
+// Other non-row props automatically gets passed to the v-card
+// <app-table-row row-align="center" /> ---- the v-row would have attribute align="center"
+// <app-table-row @click="handleClick" /> ---- the v-card would have attribute click="handleClick"
 const vRowAttrs = Object.keys(attrs)
     .filter(el => el.startsWith('row-'))
     .reduce((acc, key) => {
