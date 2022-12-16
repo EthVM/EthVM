@@ -43,22 +43,21 @@
             <v-divider class="my-0 mt-md-4 mx-n4 mx-sm-n6" />
             <template v-if="initialLoad">
                 <div v-for="item in 10" :key="item" class="my-2">
-                    <div class="skeleton-box rounded-xl mt-1 my-4" style="height: 24px"></div>
+                    <div class="skeleton-box rounded-xl mt-4" style="height: 24px"></div>
                 </div>
             </template>
             <template v-else>
                 <template v-if="transfers.length < 1">
                     <app-no-result text="This address does not have any NFT transfer history" class="mt-4 mt-sm-6"></app-no-result>
                 </template>
-                <template v-else-if="transfers.length > 0 && renderState.renderTable">
-                    <div v-for="(transfer, index) in transfers" :key="`${transfer.transfer.transactionHash} - ${index}`" class="position-relative">
+                <div v-else-if="transfers.length > 0 && renderState.renderTable" class="p-ten-top">
+                    <div v-for="(transfer, index) in transfers" :key="`${transfer.transfer.transactionHash} - ${index}`">
                         <nft-transfers-table-row :transfer="transfer" :is-overview="props.isOverview" :address-hash="props.addressHash" />
                     </div>
                     <app-intersect v-if="!props.isOverview && hasMore" @intersect="loadMoreData">
                         <div class="skeleton-box rounded-xl mt-1 my-4" style="height: 24px"></div>
-                        <v-divider />
                     </app-intersect>
-                </template>
+                </div>
             </template>
         </div>
     </v-card>
@@ -72,6 +71,7 @@ import AppBtnIcon from '@core/components/AppBtnIcon.vue'
 import AddressBalanceTotals from './components/AddressBalanceTotals.vue'
 import NftTransfersTableRow from '@module/address/components/TableRowNftTransfers.vue'
 import AppIntersect from '@core/components/AppIntersect.vue'
+import AppNoResult from '@/core/components/AppNoResult.vue'
 import { MarketDataFragment as TokenMarketData } from '@core/composables/CoinData/getLatestPrices.generated'
 import { useCoinData } from '@core/composables/CoinData/coinData.composable'
 import { TOKEN_FILTER_VALUES } from '@module/address/models/TokenSort'
@@ -82,7 +82,6 @@ import { useAddressToken } from '@core/composables/AddressTokens/addressTokens.c
 import { useRouter } from 'vue-router'
 import { ADDRESS_ROUTE_QUERY, ROUTE_NAME } from '@core/router/routesNames'
 import { useAppTableRowRender } from '@core/composables/AppTableRowRender/useAppTableRowRender.composable'
-import AppNoResult from '@/core/components/AppNoResult.vue'
 
 const MAX_ITEMS = 10
 const OVERVIEW_MAX_ITEMS = 6

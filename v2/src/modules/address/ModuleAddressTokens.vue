@@ -112,7 +112,7 @@
             </v-col>
         </v-row>
 
-        <v-divider class="mx-n4 mx-sm-n6 mb-1 mb-sm-5" />
+        <v-divider class="mx-n4 mx-sm-n6" />
         <!--Loading -->
         <v-row v-if="loadingTokens || loadingCoinData">
             <v-col v-for="col in 7" :key="col" cols="12" class="my-1">
@@ -122,10 +122,10 @@
         <!--Token Row -->
         <div
             v-else-if="renderState.renderTable"
-            :class="['mx-n4 mx-sm-n6 px-4 px-sm-6 mt-2', { 'module-body mt-n1 mt-sm-n5 pt-1 pt-sm-5': props.isOverview }]"
+            :class="['mx-n4 mx-sm-n6 px-4 px-sm-6', { 'module-body mt-n1 mt-sm-n5 pt-1 pt-sm-5': props.isOverview }]"
             :style="tableHeight"
         >
-            <div v-if="tokens.length > 0">
+            <div v-if="tokens.length > 0" class="p-ten-top">
                 <div v-for="token in tokens" :key="token.contract" :ref="el => assignRef(token.contract, el)">
                     <table-row-token-balance
                         :token="token"

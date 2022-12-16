@@ -43,7 +43,7 @@
                 </div>
             </template>
             <template v-else-if="!initialLoad && renderState.renderTable">
-                <div v-if="transfers.length > 0">
+                <div v-if="transfers.length > 0" class="p-ten-top">
                     <div v-for="(transfer, index) in transfers" :key="`${transfer.transfer.transactionHash} - ${index}`">
                         <address-token-transfers-row
                             :transfer="transfer"
@@ -55,7 +55,6 @@
                     </div>
                     <app-intersect v-if="!props.isOverview && hasMore" @intersect="loadMoreData">
                         <div class="skeleton-box rounded-xl mt-1 my-4" style="height: 24px"></div>
-                        <v-divider />
                     </app-intersect>
                 </div>
                 <app-no-result v-else text="This address does not have any token transfer history" class="mt-4 mt-sm-6 mb-5"></app-no-result>

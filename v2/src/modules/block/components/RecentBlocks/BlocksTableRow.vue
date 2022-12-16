@@ -16,20 +16,22 @@
                     <app-transform-hash is-short is-blue :hash="eth.toCheckSum(_block.miner)" :link="`/address/${_block.miner}`" />
                 </div>
             </v-col>
-            <v-col cols="12" v-if="state.showMoreDetails">
-                <v-row justify="space-between" class="my-5 mx-0">
-                    <p class="text-info mr-2">Transactions:</p>
-                    <p>
-                        {{ _block.totalTx }}
-                    </p>
-                </v-row>
-                <v-row justify="space-between" class="my-5 mx-0">
-                    <p class="text-info mr-2">Reward:</p>
-                    <p>
-                        {{ _block.rewards.value }}
-                    </p>
-                </v-row>
-            </v-col>
+            <template #expandable>
+                <v-col cols="12" v-if="state.showMoreDetails">
+                    <v-row justify="space-between" class="my-5 mx-0">
+                        <p class="text-info mr-2">Transactions:</p>
+                        <p>
+                            {{ _block.totalTx }}
+                        </p>
+                    </v-row>
+                    <v-row justify="space-between" class="my-5 mx-0">
+                        <p class="text-info mr-2">Reward:</p>
+                        <p>
+                            {{ _block.rewards.value }}
+                        </p>
+                    </v-row>
+                </v-col>
+            </template>
         </app-table-row>
 
         <!--
