@@ -42,7 +42,7 @@
         <app-table-row v-else row-align="center">
             <v-col sm="2">
                 <router-link :to="`/block/number/${props.block.number}`" class="text-secondary">{{ _block.number }}</router-link>
-                <p class="text-info mb-0">
+                <p v-if="mdAndDown" class="text-info mb-0">
                     {{ _block.timestamp }}
                 </p>
             </v-col>
