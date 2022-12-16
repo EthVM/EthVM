@@ -1,6 +1,6 @@
 <template>
     <v-card :variant="!props.isOverview ? 'flat' : 'elevated'" :elevation="props.isOverview ? 1 : 0" rounded="xl" class="pa-4 pa-sm-6 fill-height">
-        <v-card-title class="d-flex justify-space-between align-center pa-0">
+        <v-card-title class="d-flex justify-space-between align-center pa-0 mb-5">
             <div>
                 <v-row align="center" class="my-0 mx-0">
                     <div v-if="!props.isOverview && !mdAndDown" class="mr-10">
@@ -23,7 +23,7 @@
             <app-btn v-if="props.isOverview && !xs" text="More" isSmall icon="east" @click="goToTokenTransfersPage"></app-btn>
             <app-btn-icon v-if="props.isOverview && xs" icon="more_horiz" @click="goToTokenTransfersPage"></app-btn-icon>
         </v-card-title>
-        <div class="mt-2 mt-sm-5 mb-n5">
+        <div class="mb-n5">
             <!--            Table Header-->
 
             <v-row v-if="!mdAndDown" class="my-0 text-body-1 text-info">

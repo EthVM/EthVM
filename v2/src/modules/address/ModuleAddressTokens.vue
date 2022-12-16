@@ -1,6 +1,6 @@
 <template>
     <v-card :variant="!props.isOverview ? 'flat' : 'elevated'" :elevation="props.isOverview ? 1 : 0" rounded="xl" class="pa-4 pa-sm-6 fill-height">
-        <v-card-title class="d-none d-sm-flex justify-space-between align-center pa-0">
+        <v-card-title class="d-none d-sm-flex justify-space-between align-center pa-0 mb-5">
             <div>
                 <span v-if="props.isOverview" class="text-h6 font-weight-bold">Token Balance</span>
                 <!-- Notice new update-->
@@ -15,7 +15,7 @@
                 <app-btn text="More" is-small icon="east" @click="goToTokensBalancePage"></app-btn>
             </template>
         </v-card-title>
-        <div class="d-flex align-center">
+        <div v-if="!props.isOverview" class="d-flex align-center">
             <v-col lg="3">
                 <address-balance-totals
                     title="Token Balance"
@@ -32,7 +32,7 @@
         </div>
 
         <!--Table Header-->
-        <v-row :dense="xs" :class="[isOverview ? 'mt-sm-5' : 'mt-sm-4', 'd-flex text-body-1 text-info mb-sm-3']" :justify="xs ? 'end' : 'start'">
+        <v-row :dense="xs" :class="[isOverview ? 'mt-0' : 'mt-sm-4', 'd-flex text-body-1 text-info mb-sm-3']" :justify="xs ? 'end' : 'start'">
             <!--
                 Token on Overview:
                 XS: NONE
