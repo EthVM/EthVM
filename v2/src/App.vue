@@ -9,12 +9,14 @@
                 <app-btn @click="toggleTheme" text="toggle theme"></app-btn>
             </v-container>
         </v-main>
+        <the-app-footer />
     </v-app>
 </template>
 
 <script setup lang="ts">
 import AppBtn from './core/components/AppBtn.vue'
 import TheAppHeader from './core/components/TheAppHeader.vue'
+import TheAppFooter from '@core/components/TheAppFooter.vue'
 import TheAppNavigationDrawerVue from './core/components/TheAppNavigationDrawer.vue'
 import { useStore } from '@/store'
 import { useGetLatestPricesQuery } from '@core/composables/CoinData/getLatestPrices.generated'
