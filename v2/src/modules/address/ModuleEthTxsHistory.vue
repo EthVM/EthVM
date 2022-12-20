@@ -13,7 +13,7 @@
                 Incoming
             </v-btn>
         </div>
-        <div class="mx-3">
+        <div class="mr-3">
             <v-btn
                 color="textPrimary"
                 :variant="state.transferDirection === TransferDirection.Outgoing ? 'flat' : 'outlined'"
@@ -26,7 +26,7 @@
                 Outgoing
             </v-btn>
         </div>
-        <div class="mx-3">
+        <div>
             <v-btn
                 color="textPrimary"
                 :variant="state.transferDirection === null ? 'flat' : 'outlined'"
@@ -138,7 +138,7 @@ const noResultText = computed<string>(() => {
     } else if (state.transferDirection === TransferDirection.Incoming) {
         return 'This address does not have any incoming transfers'
     }
-    return 'This address does not have any internal transfers'
+    return 'This address does not have any transactions'
 })
 
 const loadMoreTxsTransfersData = (): void => {
