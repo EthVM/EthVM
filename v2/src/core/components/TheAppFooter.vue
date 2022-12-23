@@ -3,83 +3,83 @@
         <v-container class="footer px-0 mx-2 mx-sm-6">
             <div class="px-4 px-sm-6">
                 <v-row justify="space-between" justify-lg="center" class="flex-column flex-sm-row mx-0">
-                    <v-col cols="12" sm="6" md="4" lg="2" class="position-relative">
+                    <v-col cols="12" class="d-block d-lg-none mb-7">
                         <router-link to="/">
-                            <v-img :src="require('@/assets/logo.svg')" height="35" :width="xs ? '80' : '100'" contain />
+                            <v-img :src="require('@/assets/logo.svg')" height="25" width="80" contain />
                         </router-link>
-                        <v-img
-                            :src="require('@/assets/footer-hero.png')"
-                            width="260"
-                            aspect-ratio="1"
-                            cover
-                            class="footer-hero"
-                            :class="{ 'footer-hero-lg': !mdAndDown }"
-                        />
                     </v-col>
-                    <v-col cols="12" sm="6" md="4" lg="2">
-                        <p class="footer-item-title text-h5 font-weight-bold mb-2">Discover</p>
-                        <ul class="footer-item-lists pa-0 surf">
-                            <li class="mb-2">
-                                <a href="#" class="text-link">About us</a>
-                            </li>
-                            <li class="mb-2">
-                                <a href="#" class="text-link">Privacy Policy</a>
-                            </li>
-                            <li class="mb-2">
-                                <a href="#" class="text-link">Knowledge Base</a>
-                            </li>
-                            <li class="mb-2">
-                                <a href="#" class="text-link">Tools</a>
-                            </li>
-                            <li class="mb-2">
-                                <div class="d-flex">
-                                    <a href="https://twitter.com/Eth_VM" class="text-link">
-                                        <v-icon>facebook</v-icon>
-                                    </a>
-                                    <a href="https://twitter.com/Eth_VM" class="text-link">
-                                        <v-icon>youtube</v-icon>
-                                    </a>
-                                    <a href="https://twitter.com/Eth_VM" class="text-link">
-                                        <v-icon>twitter</v-icon>
-                                    </a>
+                    <v-col cols="12" sm="7" md="6" lg="9">
+                        <v-row class="flex-column flex-lg-row">
+                            <v-col cols="12" lg="3" class="d-none d-lg-block">
+                                <router-link to="/">
+                                    <v-img :src="require('@/assets/logo.svg')" height="25" width="80" contain />
+                                </router-link>
+                                <v-img
+                                    :src="require('@/assets/footer-hero.webp')"
+                                    width="225"
+                                    aspect-ratio="1"
+                                    cover
+                                    class="footer-hero mt-4"
+                                    :class="{ 'footer-hero-lg': !mdAndDown }"
+                                />
+                            </v-col>
+                            <v-spacer />
+                            <v-col cols="12" lg="3">
+                                <p class="footer-item-title text-h5 font-weight-bold mb-2">Discover</p>
+                                <ul class="footer-item-lists pa-0 surf">
+                                    <li class="mb-2">
+                                        <a href="#" class="text-link">About us</a>
+                                    </li>
+                                    <li class="mb-2">
+                                        <a href="#" class="text-link">Privacy Policy</a>
+                                    </li>
+                                    <li class="mb-2">
+                                        <a href="#" class="text-link">Knowledge Base</a>
+                                    </li>
+                                    <li class="mb-2">
+                                        <a href="#" class="text-link">Tools</a>
+                                    </li>
+                                </ul>
+                            </v-col>
+                            <v-col cols="12" lg="5">
+                                <p class="footer-item-title text-h5 font-weight-bold mb-2">Love ethVM</p>
+                                <p class="footer-item-text">
+                                    Help us keep ethVM free and open-source, your donations go a long way towards making that possible.
+                                </p>
+                                <div class="mt-5">
+                                    <div class="mb-2">
+                                        <a href="#" class="d-inline-flex align-center primary--text">
+                                            <v-img
+                                                :src="require('@/assets/icon-ethereum.svg')"
+                                                alt="Ethereum symbol in circle with purple background"
+                                                width="32"
+                                                height="32"
+                                                class="mr-3"
+                                            />
+                                            <p>Ethereum Donation</p>
+                                        </a>
+                                    </div>
+                                    <div>
+                                        <a href="#" class="d-inline-flex align-center primary--text">
+                                            <v-img
+                                                :src="require('@/assets/icon-bitcoin.svg')"
+                                                alt="Bitcoin symbol in circle with yellow background"
+                                                width="32"
+                                                height="32"
+                                                class="mr-3"
+                                            />
+                                            <p>Bitcoin Donation</p>
+                                        </a>
+                                    </div>
                                 </div>
-                            </li>
-                        </ul>
+                            </v-col>
+                        </v-row>
                     </v-col>
-                    <v-col cols="12" sm="6" md="4" lg="4">
-                        <p class="footer-item-title text-h5 font-weight-bold mb-2">Love ethVM</p>
-                        <p class="footer-item-text">Help us keep ethVM free and open-source, your donations go a long way towards making that possible.</p>
-                        <div class="mt-5">
-                            <div class="mb-2">
-                                <a href="#" class="d-inline-flex align-center primary--text">
-                                    <v-img
-                                        :src="require('@/assets/icon-ethereum.svg')"
-                                        alt="Ethereum symbol in circle with purple background"
-                                        width="32"
-                                        height="32"
-                                        class="mr-3"
-                                    />
-                                    <p>Ethereum Donation</p>
-                                </a>
-                            </div>
-                            <div>
-                                <a href="#" class="d-inline-flex align-center primary--text">
-                                    <v-img
-                                        :src="require('@/assets/icon-bitcoin.svg')"
-                                        alt="Bitcoin symbol in circle with yellow background"
-                                        width="32"
-                                        height="32"
-                                        class="mr-3"
-                                    />
-                                    <p>Bitcoin Donation</p>
-                                </a>
-                            </div>
-                        </div>
-                    </v-col>
-                    <v-col cols="12" sm="6" md="4" lg="2">
+                    <v-spacer></v-spacer>
+                    <v-col cols="12" sm="4" md="3" lg="2" class="text-lg-right">
                         <p class="footer-item-title text-h5 font-weight-bold mb-2">Settings</p>
                         <p class="mb-3">Pricing from Coingecko</p>
-                        <div class="d-flex font-weight-light align-center">
+                        <div class="d-flex font-weight-light align-center justify-lg-end">
                             <p class="text-uppercase mb-0 mr-2 text-caption font-weight-light">Powered by</p>
                             <div class="d-flex align-center">
                                 <v-img :src="require('@/assets/logo/mew.svg')" width="24" height="24" contain class="mr-1" />
@@ -87,11 +87,69 @@
                             </div>
                         </div>
                     </v-col>
-                    <!--                    <v-col cols="8">-->
-                    <!--                        <v-row class="flex-column flex-md-row mx-0">-->
-                    <!--                        </v-row>-->
-                    <!--                    </v-col>-->
                 </v-row>
+                <div class="d-flex justify-lg-end flex-wrap pa-2 mt-10 mt-lg-0">
+                    <a href="https://twitter.com/Eth_VM" class="text-link">
+                        <v-img
+                            :src="require('@/assets/social-media/facebook.svg')"
+                            alt="Facebook icon"
+                            width="22"
+                            height="22"
+                            class="mr-4 mb-4 mb-lg-0 mr-lg-3 text-red"
+                        />
+                        <p class="d-sr-only">Link to facebook</p>
+                    </a>
+                    <a href="https://twitter.com/Eth_VM" class="text-link">
+                        <v-img
+                            :src="require('@/assets/social-media/twitter.svg')"
+                            alt="Facebook icon"
+                            width="22"
+                            height="22"
+                            class="mr-4 mb-4 mb-lg-0 mr-lg-3"
+                        />
+                        <p class="d-sr-only">Link to twitter</p>
+                    </a>
+                    <a href="https://twitter.com/Eth_VM" class="text-link">
+                        <v-img
+                            :src="require('@/assets/social-media/instagram.svg')"
+                            alt="Instagram icon"
+                            width="22"
+                            height="22"
+                            class="mr-4 mb-4 mb-lg-0 mr-lg-3"
+                        />
+                        <p class="d-sr-only">Link to instagram</p>
+                    </a>
+                    <a href="https://twitter.com/Eth_VM" class="text-link">
+                        <v-img
+                            :src="require('@/assets/social-media/linkedin.svg')"
+                            alt="Linkedin icon"
+                            width="22"
+                            height="22"
+                            class="mr-4 mb-4 mb-lg-0 mr-lg-3"
+                        />
+                        <p class="d-sr-only">Link to linkedin</p>
+                    </a>
+                    <a href="https://twitter.com/Eth_VM" class="text-link">
+                        <v-img :src="require('@/assets/social-media/github.svg')" alt="Github icon" width="22" height="22" class="mr-4 mb-4 mb-lg-0 mr-lg-3" />
+                        <p class="d-sr-only">Link to github</p>
+                    </a>
+                    <a href="https://twitter.com/Eth_VM" class="text-link">
+                        <v-img :src="require('@/assets/social-media/reddit.svg')" alt="Reddit icon" width="22" height="22" class="mr-4 mb-4 mb-lg-0 mr-lg-3" />
+                        <p class="d-sr-only">Link to reddit</p>
+                    </a>
+                    <a href="https://twitter.com/Eth_VM" class="text-link">
+                        <v-img :src="require('@/assets/social-media/youtube.svg')" alt="Youtube icon" width="22" height="22" class="mr-3" />
+                        <p class="d-sr-only">Link to youtube</p>
+                    </a>
+                    <a href="https://twitter.com/Eth_VM" class="text-link">
+                        <v-img :src="require('@/assets/social-media/medium.svg')" alt="Medium icon" width="22" height="22" class="mr-3" />
+                        <p class="d-sr-only">Link to medium</p>
+                    </a>
+                    <a href="https://twitter.com/Eth_VM" class="text-link">
+                        <v-img :src="require('@/assets/social-media/telegram.svg')" alt="Telegram icon" width="22" height="22" />
+                        <p class="d-sr-only">Link to telegram</p>
+                    </a>
+                </div>
             </div>
         </v-container>
         <div class="copyright bg-tabActive w-100">
@@ -126,12 +184,8 @@ a {
 
 .footer-hero {
     &-lg {
-        overflow: visible;
-        position: absolute;
-        left: -50px;
-        margin-top: 30px;
-        max-width: 300px;
-        max-height: 300px;
+        max-width: 250px;
+        max-height: 250px;
     }
 }
 </style>
