@@ -14,14 +14,7 @@
                                 <router-link to="/">
                                     <v-img :src="require('@/assets/logo.svg')" height="25" width="80" contain />
                                 </router-link>
-                                <v-img
-                                    :src="require('@/assets/footer-hero.webp')"
-                                    width="225"
-                                    aspect-ratio="1"
-                                    cover
-                                    class="footer-hero mt-4"
-                                    :class="{ 'footer-hero-lg': !mdAndDown }"
-                                />
+                                <v-img :src="require('@/assets/footer-hero.webp')" width="225" aspect-ratio="1" cover class="footer-hero mt-4" />
                             </v-col>
                             <v-spacer />
                             <v-col cols="12" lg="3">
@@ -162,11 +155,7 @@
     </v-footer>
 </template>
 
-<script setup lang="ts">
-import { useDisplay } from 'vuetify/lib/framework.mjs'
-/* Vuetify BreakPoints */
-const { xs, mdAndDown } = useDisplay()
-</script>
+<script setup lang="ts"></script>
 
 <style lang="scss" scoped>
 a {
@@ -183,9 +172,7 @@ a {
 }
 
 .footer-hero {
-    &-lg {
-        max-width: 250px;
-        max-height: 250px;
-    }
+    max-width: 250px;
+    max-height: 250px;
 }
 </style>
