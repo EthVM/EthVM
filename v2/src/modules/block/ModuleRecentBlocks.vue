@@ -30,6 +30,7 @@ import BN from 'bignumber.js'
 import {
     useGetBlocksArrayByNumberQuery,
     GetBlocksArrayByNumberQuery as TypeBlocks,
+    BlockSummaryFragment,
     NewBlockTableDocument,
     GetBlocksArrayByNumberQuery,
     NewBlockTableSubscription
@@ -76,8 +77,8 @@ const props = defineProps({
  * COMPUTED
  * =======================================================
  */
-const { numberOfPages } = useAppPaginate()
-const blocks = computed<TypeBlocks | []>(() => {
+const { numberOfPages } = useAppPaginate(0)
+const blocks = computed<Array<BlockSummaryFragment | null> | []>(() => {
     const { start, end } = useAppPaginate(state.pageNum)
     if (blockArrays.value && !state.initialLoad) {
         return blockArrays.value.getBlocksArrayByNumber.slice(start, end)
@@ -148,10 +149,9 @@ function subscribeToMoreHandler() {
     return {
         document: NewBlockTableDocument,
         updateQuery: (previousResult: GetBlocksArrayByNumberQuery, { subscriptionData }: { subscriptionData: NewBlockTableSubscription }) => {
-            if (previousResult && subscriptionData.data.newBlockFeed) {
+            if (previousResult && subscriptionData.newBlockFeed) {
                 const prevB = [...previousResult.getBlocksArrayByNumber.slice(0)]
-                const newB = subscriptionData.data.newBlockFeed
-                newB.txFail = 0
+                const newB = { ...subscriptionData.newBlockFeed, txFail: 0 }
                 const index = prevB.findIndex(block => block?.number === newB.number)
                 if (index != -1) {
                     prevB.splice(index, 1, newB)
@@ -203,13 +203,15 @@ onBlockArrayLoaded(result => {
     if (!result.loading) {
         if (state.initialLoad) {
             state.initialLoad = false
-            state.startBlock = result.data.getBlocksArrayByNumber[0].number
+            state.startBlock = result.data.getBlocksArrayByNumber[0]?.number || 0
             state.pageNum = 1
             state.totalPages = Math.ceil(new BN(state.startBlock + 1).div(ITEMS_PER_PAGE).toNumber())
         }
         if (props.pageType === 'home') {
-            if (result.data.getBlocksArrayByNumber[0].number - result.data.getBlocksArrayByNumber[1].number > 1) {
-                refetchBlockArray()
+            if (result.data.getBlocksArrayByNumber.length > 1) {
+                if (result.data.getBlocksArrayByNumber[0].number - result.data.getBlocksArrayByNumber[1].number > 1) {
+                    refetchBlockArray()
+                }
             }
         }
         const newBlocks = result.data.getBlocksArrayByNumber
