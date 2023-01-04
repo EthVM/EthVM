@@ -1,7 +1,7 @@
 <template>
     <app-table-row row-align="center">
         <!-- Blocks Mined-->
-        <v-col cols="7" sm="3" class="py-0">
+        <v-col cols="7" sm="3">
             <v-row class="d-flex flex-sm-column ma-0 text-caption text-sm-body-1">
                 <v-col cols="6" sm="12" class="pa-0">
                     <router-link :to="`/block/number/${props.reward.transfer.block}`" class="text-secondary">
@@ -16,13 +16,13 @@
             </v-row>
         </v-col>
         <!-- Mined Rewards -->
-        <v-col cols="5" sm="3" class="py-0">
+        <v-col cols="5" sm="3">
             <p class="text-right text-sm-left">+ {{ miningReward.value }} ETH</p>
         </v-col>
         <!-- Balance Before -->
-        <v-col md="3" class="d-none d-sm-block py-0"> {{ getRewardBalanceBefore.value }} ETH </v-col>
+        <v-col md="3" class="d-none d-sm-block"> {{ getRewardBalanceBefore.value }} ETH </v-col>
         <!-- Balance After -->
-        <v-col md="3" class="d-none d-sm-block py-0"> {{ getRewardBalanceAfter.value }} ETH </v-col>
+        <v-col md="3" class="d-none d-sm-block"> {{ getRewardBalanceAfter.value }} ETH </v-col>
     </app-table-row>
 </template>
 
