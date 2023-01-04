@@ -17,7 +17,7 @@
                                 <v-img :src="require('@/assets/footer-hero.webp')" width="225" aspect-ratio="1" cover class="footer-hero mt-4" />
                             </v-col>
                             <v-spacer />
-                            <v-col cols="12" lg="3">
+                            <v-col cols="12" lg="3" class="mb-7 mb-md-0">
                                 <p class="footer-item-title text-h5 font-weight-bold mb-2">Discover</p>
                                 <ul class="footer-item-lists pa-0 surf">
                                     <li class="mb-2">
@@ -34,8 +34,8 @@
                                     </li>
                                 </ul>
                             </v-col>
-                            <v-col cols="12" lg="5">
-                                <p class="footer-item-title text-h5 font-weight-bold mb-2">Love ethVM</p>
+                            <v-col cols="12" lg="5" class="mb-7 mb-md-0">
+                                <p class="footer-item-title text-h5 font-weight-bold mb-2">Love ethVM?</p>
                                 <p class="footer-item-text">
                                     Help us keep ethVM free and open-source, your donations go a long way towards making that possible.
                                 </p>
@@ -82,65 +82,9 @@
                     </v-col>
                 </v-row>
                 <div class="d-flex justify-lg-end flex-wrap pa-2 mt-10 mt-lg-0">
-                    <a href="https://twitter.com/Eth_VM" class="text-link">
-                        <v-img
-                            :src="require('@/assets/social-media/facebook.svg')"
-                            alt="Facebook icon"
-                            width="22"
-                            height="22"
-                            class="mr-4 mb-4 mb-lg-0 mr-lg-3 text-red"
-                        />
-                        <p class="d-sr-only">Link to facebook</p>
-                    </a>
-                    <a href="https://twitter.com/Eth_VM" class="text-link">
-                        <v-img
-                            :src="require('@/assets/social-media/twitter.svg')"
-                            alt="Facebook icon"
-                            width="22"
-                            height="22"
-                            class="mr-4 mb-4 mb-lg-0 mr-lg-3"
-                        />
-                        <p class="d-sr-only">Link to twitter</p>
-                    </a>
-                    <a href="https://twitter.com/Eth_VM" class="text-link">
-                        <v-img
-                            :src="require('@/assets/social-media/instagram.svg')"
-                            alt="Instagram icon"
-                            width="22"
-                            height="22"
-                            class="mr-4 mb-4 mb-lg-0 mr-lg-3"
-                        />
-                        <p class="d-sr-only">Link to instagram</p>
-                    </a>
-                    <a href="https://twitter.com/Eth_VM" class="text-link">
-                        <v-img
-                            :src="require('@/assets/social-media/linkedin.svg')"
-                            alt="Linkedin icon"
-                            width="22"
-                            height="22"
-                            class="mr-4 mb-4 mb-lg-0 mr-lg-3"
-                        />
-                        <p class="d-sr-only">Link to linkedin</p>
-                    </a>
-                    <a href="https://twitter.com/Eth_VM" class="text-link">
-                        <v-img :src="require('@/assets/social-media/github.svg')" alt="Github icon" width="22" height="22" class="mr-4 mb-4 mb-lg-0 mr-lg-3" />
-                        <p class="d-sr-only">Link to github</p>
-                    </a>
-                    <a href="https://twitter.com/Eth_VM" class="text-link">
-                        <v-img :src="require('@/assets/social-media/reddit.svg')" alt="Reddit icon" width="22" height="22" class="mr-4 mb-4 mb-lg-0 mr-lg-3" />
-                        <p class="d-sr-only">Link to reddit</p>
-                    </a>
-                    <a href="https://twitter.com/Eth_VM" class="text-link">
-                        <v-img :src="require('@/assets/social-media/youtube.svg')" alt="Youtube icon" width="22" height="22" class="mr-3" />
-                        <p class="d-sr-only">Link to youtube</p>
-                    </a>
-                    <a href="https://twitter.com/Eth_VM" class="text-link">
-                        <v-img :src="require('@/assets/social-media/medium.svg')" alt="Medium icon" width="22" height="22" class="mr-3" />
-                        <p class="d-sr-only">Link to medium</p>
-                    </a>
-                    <a href="https://twitter.com/Eth_VM" class="text-link">
-                        <v-img :src="require('@/assets/social-media/telegram.svg')" alt="Telegram icon" width="22" height="22" />
-                        <p class="d-sr-only">Link to telegram</p>
+                    <a v-for="(link, index) in socialIcons" :key="index" :href="link.link" class="text-link">
+                        <v-img :src="link.img" :alt="link.altText" width="22" height="22" class="mr-4 mb-4 mb-lg-0 mr-lg-3 text-red" />
+                        <p class="d-sr-only">{{ link.srText }}</p>
                     </a>
                 </div>
             </div>
@@ -155,7 +99,64 @@
     </v-footer>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+const socialIcons = [
+    {
+        link: 'https://www.facebook.com/MyEtherWallet',
+        img: require('@/assets/social-media/facebook.svg'),
+        srText: 'Link to facebook',
+        altText: 'Facebook icon'
+    },
+    {
+        link: 'https://twitter.com/myetherwallet',
+        img: require('@/assets/social-media/twitter.svg'),
+        srText: 'Link to twitter',
+        altText: 'Twitter icon'
+    },
+    {
+        link: 'https://www.instagram.com/myetherwallet/',
+        img: require('@/assets/social-media/instagram.svg'),
+        srText: 'Link to instagram',
+        altText: 'Instagram icon'
+    },
+    {
+        link: 'https://www.linkedin.com/company/myetherwallet',
+        img: require('@/assets/social-media/linkedin.svg'),
+        srText: 'Link to linkedin',
+        altText: 'Linkedin icon'
+    },
+    {
+        link: 'https://github.com/EthVM/EthVM',
+        img: require('@/assets/social-media/github.svg'),
+        srText: 'Link to github',
+        altText: 'Github icon'
+    },
+    {
+        link: 'https://www.reddit.com/r/MyEtherWallet/',
+        img: require('@/assets/social-media/reddit.svg'),
+        srText: 'Link to reddit',
+        altText: 'Reddit icon'
+    },
+    {
+        link: 'https://www.youtube.com/channel/UCQU5QbObwmaHNEMsuX3uQKA',
+        img: require('@/assets/social-media/youtube.svg'),
+        srText: 'Link to youtube',
+        altText: 'Youtube icon'
+    },
+    {
+        link: 'https://medium.com/@myetherwallet',
+        img: require('@/assets/social-media/medium.svg'),
+        srText: 'Link to medium',
+        altText: 'Medium icon'
+    },
+    {
+        link: 'https://t.me/myetherwallet',
+        img: require('@/assets/social-media/telegram.svg'),
+        srText: 'Link to telegram',
+        altText: 'Telegram icon'
+    }
+]
+</script>
 
 <style lang="scss" scoped>
 a {
