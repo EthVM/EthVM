@@ -17,7 +17,7 @@
                                 <v-img :src="require('@/assets/footer-hero.webp')" width="225" aspect-ratio="1" cover class="footer-hero mt-4" />
                             </v-col>
                             <v-spacer />
-                            <v-col cols="12" lg="3" class="mb-7 mb-lg-0">
+                            <v-col cols="12" lg="3" class="mb-11 mb-lg-0">
                                 <p class="footer-item-title text-h5 font-weight-bold mb-2">Discover</p>
                                 <ul class="footer-item-lists pa-0 surf">
                                     <li class="mb-2">
@@ -29,12 +29,12 @@
                                     <li class="mb-2">
                                         <a href="#" class="text-link">Knowledge Base</a>
                                     </li>
-                                    <li class="mb-2">
-                                        <a href="#" class="text-link">Tools</a>
-                                    </li>
+                                    <!--                                    <li class="mb-2">-->
+                                    <!--                                        <a href="#" class="text-link">Tools</a>-->
+                                    <!--                                    </li>-->
                                 </ul>
                             </v-col>
-                            <v-col cols="12" lg="5" class="mb-7 mb-lg-0">
+                            <v-col cols="12" lg="5" class="mb-11 mb-lg-0">
                                 <p class="footer-item-title text-h5 font-weight-bold mb-2">Love ethVM?</p>
                                 <p class="footer-item-text">
                                     Help us keep ethVM free and open-source, your donations go a long way towards making that possible.
@@ -69,8 +69,11 @@
                         </v-row>
                     </v-col>
                     <v-spacer></v-spacer>
-                    <v-col cols="12" sm="4" md="3" lg="2" class="text-lg-right">
-                        <p class="footer-item-title text-h5 font-weight-bold mb-2">Settings</p>
+                    <v-col cols="12" sm="4" md="3" lg="2" class="text-lg-right mb-11 mb-lg-0">
+                        <a href="#" class="footer-item-title d-block text-h5 font-weight-bold mb-2">
+                            Settings
+                            <v-icon class="ml-2">settings</v-icon>
+                        </a>
                         <p class="mb-3">Pricing from Coingecko</p>
                         <div class="d-flex font-weight-light align-center justify-lg-end">
                             <p class="text-uppercase mb-0 mr-2 text-caption font-weight-light">Powered by</p>
@@ -81,7 +84,7 @@
                         </div>
                     </v-col>
                 </v-row>
-                <div class="d-flex justify-lg-end flex-wrap pa-2 mt-10 mt-lg-0">
+                <div class="d-flex justify-lg-end flex-wrap pa-2">
                     <a v-for="(link, index) in socialIcons" :key="index" :href="link.link" class="text-link">
                         <v-img :src="link.img" :alt="link.altText" width="22" height="22" class="mr-4 mb-4 mb-lg-0 mr-lg-3 text-red" />
                         <p class="d-sr-only">{{ link.srText }}</p>
