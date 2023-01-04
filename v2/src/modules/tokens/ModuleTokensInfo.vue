@@ -106,6 +106,7 @@ import { MarketDataFragment as TokenMarketData } from '@core/composables/CoinDat
 import { TOKEN_FILTER_VALUES, KEY, DIRECTION, TokenSortMarket, TokenMarket } from '@module/address/models/TokenSort'
 
 import { ADDRESS_ROUTE_QUERY } from '@core/router/routesNames'
+import { searchHelper } from '@core/helper/search'
 const routes = ADDRESS_ROUTE_QUERY.Q_NFTS
 
 // const MAX_TOKENS = 200
@@ -146,7 +147,10 @@ const { tokensWithMarketCap, loading: loadingCoinData, getEthereumTokenByContrac
 const tokens = computed<TokenSortMarket | null>(() => {
     if (!store.loadingCoinData && tokensWithMarketCap) {
         const filtered = tokensWithMarketCap.value.filter((x): x is TokenMarketData => x !== null)
-        const all = filtered.map(i => new TokenMarket(i))
+        let all = filtered.map(i => new TokenMarket(i))
+        if (state.tokenSearch) {
+            all = searchHelper(all, ['name', 'symbol', 'contract'], state.tokenSearch) as Array<TokenMarket>
+        }
         const topTokens = new TokenSortMarket(all).getSortedTokens(TOKEN_FILTER_VALUES[13]).splice(0, 500)
         return new TokenSortMarket(topTokens)
     }
