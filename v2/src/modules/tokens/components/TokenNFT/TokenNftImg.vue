@@ -1,0 +1,121 @@
+<template>
+    <v-img
+        cover
+        :src="imagePreview"
+        @error="imgLoadFail"
+        :height="height"
+        :max-width="width"
+        class="border-radius-default img-clickable"
+        @click="setDialog(true)"
+    ></v-img>
+    <app-dialog v-model="state.showDetails" @update:modelValue="setDialog" width="656" height="550">
+        <template v-if="state.showDetails" #no-scroll-content>
+            <v-carousel hide-delimiters :show-arrows="!xs">
+                <template #prev="{ props }">
+                    <app-btn-icon icon="chevron_left" @click="props.onClick" size="large" />
+                </template>
+                <template #next="{ props }">
+                    <app-btn-icon icon="chevron_right" @click="props.onClick" size="large" />
+                </template>
+                <v-carousel-item v-for="(token, index) in displayTokens" :key="index" class="overflow-y-auto">
+                    <token-nft-details :nft="token" />
+                </v-carousel-item>
+            </v-carousel>
+        </template>
+    </app-dialog>
+</template>
+
+<script setup lang="ts">
+import { computed, reactive } from 'vue'
+import { NFTDetails } from './propModel'
+import TokenNftDetails from './TokenNftDetails.vue'
+import AppDialog from '@core/components/AppDialog.vue'
+import AppBtnIcon from '@/core/components/AppBtnIcon.vue'
+import { useDisplay } from 'vuetify/lib/framework.mjs'
+const { xs } = useDisplay()
+
+interface PropType {
+    nft: NFTDetails
+    loading: boolean
+    height?: string
+    width?: string
+    index?: number
+    tokens?: NFTDetails[]
+}
+
+const props = withDefaults(defineProps<PropType>(), {
+    height: '58'
+})
+interface ComponentState {
+    imageExists: boolean
+    showDetails: boolean
+}
+
+const state: ComponentState = reactive({
+    imageExists: true,
+    showDetails: false
+})
+
+/*
+===================================================================================
+  Methods:
+===================================================================================
+*/
+/**
+ * Image loading failed catcher
+ */
+const imgLoadFail = (): void => {
+    state.imageExists = false
+}
+
+/**
+ * Opens/closes details dialog
+ */
+const setDialog = (_value: boolean) => {
+    state.showDetails = _value
+}
+
+/*
+===================================================================================
+  Computed Values
+===================================================================================
+*/
+
+const displayTokens = computed<NFTDetails[]>(() => {
+    if (props.tokens && props.index !== undefined) {
+        if (props.index > 0) {
+            const start = props.tokens.slice(props.index, props.tokens.length)
+            const end = props.tokens.slice(0, props.index)
+            return start.concat(end)
+        }
+        return props.tokens
+    }
+    return [props.nft]
+})
+
+const imagePreview = computed<string>(() => {
+    if (!props.loading && state.imageExists) {
+        if (props.nft.meta) {
+            return props.nft.meta.previews.image_small_url
+                ? props.nft.meta.previews.image_small_url
+                : props.nft.meta.image_url
+                ? props.nft.meta.image_url
+                : require('@/assets/icon-token.png')
+        }
+    }
+
+    return require('@/assets/icon-token.png')
+})
+</script>
+<style lang="scss" scoped>
+.img-clickable {
+    cursor: pointer;
+}
+.border-radius-default {
+    border-radius: 8px;
+}
+
+.carusel-icon {
+    font-size: 20px;
+}
+</style>

@@ -16,7 +16,8 @@
   $container-padding-x: settings.$container-padding-x,
   $grid-breakpoints: settings.$grid-breakpoints,
   $container-max-widths: settings.$container-max-widths,
-  $input-density: settings.$input-density
+  $input-density: settings.$input-density,
+  $window-controls-padding: settings.$window-controls-padding
 );
 a {
     text-decoration: none;
@@ -54,6 +55,9 @@ a {
     overflow: hidden;
     white-space: nowrap;
     max-width: 100%;
+}
+.text-break-new-line {
+    overflow-wrap: break-word;
 }
 
 .mobile-chip {

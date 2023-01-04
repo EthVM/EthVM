@@ -134,6 +134,23 @@ export type GetNfTcontractsMetaQuery = {
     }
 }
 
+export type GetOwnersNftTokensQueryVariables = Types.Exact<{
+    address: Types.Scalars['String']
+}>
+
+export type GetOwnersNftTokensQuery = {
+    __typename?: 'Query'
+    getOwnersNFTTokens: {
+        __typename?: 'NFTTokenBalances'
+        tokens: Array<{
+            __typename?: 'NFTTokenBalance'
+            type: Types.NftType
+            balance: string
+            tokenInfo: { __typename?: 'EthTokenInfo'; contract: string; tokenId?: string | null; name?: string | null }
+        }>
+    }
+}
+
 export const TokenFragmentFragmentDoc = gql`
     fragment TokenFragment on EthTokenInfo {
         name
@@ -419,3 +436,53 @@ export function useGetNfTcontractsMetaLazyQuery(
     return VueApolloComposable.useLazyQuery<GetNfTcontractsMetaQuery, GetNfTcontractsMetaQueryVariables>(GetNfTcontractsMetaDocument, variables, options)
 }
 export type GetNfTcontractsMetaQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<GetNfTcontractsMetaQuery, GetNfTcontractsMetaQueryVariables>
+export const GetOwnersNftTokensDocument = gql`
+    query getOwnersNftTokens($address: String!) {
+        getOwnersNFTTokens(address: $address, limit: 9) {
+            tokens {
+                type
+                balance
+                tokenInfo {
+                    contract
+                    tokenId
+                    name
+                }
+            }
+        }
+    }
+`
+
+/**
+ * __useGetOwnersNftTokensQuery__
+ *
+ * To run a query within a Vue component, call `useGetOwnersNftTokensQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetOwnersNftTokensQuery` returns an object from Apollo Client that contains result, loading and error properties
+ * you can use to render your UI.
+ *
+ * @param variables that will be passed into the query
+ * @param options that will be passed into the query, supported options are listed on: https://v4.apollo.vuejs.org/guide-composable/query.html#options;
+ *
+ * @example
+ * const { result, loading, error } = useGetOwnersNftTokensQuery({
+ *   address: // value for 'address'
+ * });
+ */
+export function useGetOwnersNftTokensQuery(
+    variables: GetOwnersNftTokensQueryVariables | VueCompositionApi.Ref<GetOwnersNftTokensQueryVariables> | ReactiveFunction<GetOwnersNftTokensQueryVariables>,
+    options:
+        | VueApolloComposable.UseQueryOptions<GetOwnersNftTokensQuery, GetOwnersNftTokensQueryVariables>
+        | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<GetOwnersNftTokensQuery, GetOwnersNftTokensQueryVariables>>
+        | ReactiveFunction<VueApolloComposable.UseQueryOptions<GetOwnersNftTokensQuery, GetOwnersNftTokensQueryVariables>> = {}
+) {
+    return VueApolloComposable.useQuery<GetOwnersNftTokensQuery, GetOwnersNftTokensQueryVariables>(GetOwnersNftTokensDocument, variables, options)
+}
+export function useGetOwnersNftTokensLazyQuery(
+    variables: GetOwnersNftTokensQueryVariables | VueCompositionApi.Ref<GetOwnersNftTokensQueryVariables> | ReactiveFunction<GetOwnersNftTokensQueryVariables>,
+    options:
+        | VueApolloComposable.UseQueryOptions<GetOwnersNftTokensQuery, GetOwnersNftTokensQueryVariables>
+        | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<GetOwnersNftTokensQuery, GetOwnersNftTokensQueryVariables>>
+        | ReactiveFunction<VueApolloComposable.UseQueryOptions<GetOwnersNftTokensQuery, GetOwnersNftTokensQueryVariables>> = {}
+) {
+    return VueApolloComposable.useLazyQuery<GetOwnersNftTokensQuery, GetOwnersNftTokensQueryVariables>(GetOwnersNftTokensDocument, variables, options)
+}
+export type GetOwnersNftTokensQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<GetOwnersNftTokensQuery, GetOwnersNftTokensQueryVariables>
