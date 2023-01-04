@@ -3,7 +3,14 @@
         <v-card-title v-if="isHome || state.newMinedTransfers || tableTitle" class="px-0 mb-5 d-flex align-center justify-space-between">
             <div class="d-flex align-center">
                 <h1 v-if="tableTitle" class="text-h6 font-weight-bold">{{ tableTitle }}</h1>
-                <app-new-update v-if="!isHome && !isBlock" icon-only text="New Txs" :update-count="state.newMinedTransfers" @reload="setPage(0, true)" />
+                <app-new-update
+                    v-if="!isHome && !isBlock"
+                    icon-only
+                    text="New Txs Found, Refresh"
+                    :update-count="state.newMinedTransfers"
+                    @reload="setPage(0, true)"
+                    hide-count
+                />
             </div>
             <app-btn v-if="isHome" text="More" isSmall icon="east" @click="goToTransactionsPage"></app-btn>
         </v-card-title>
