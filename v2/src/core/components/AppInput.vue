@@ -106,7 +106,7 @@ const message = computed(() => {
 const resetValues = (): void => {
     clearTimeout(state.timeout)
     state.checkReq = true
-    emit('onUserInput', state.value)
+    emit('update:modelValue', state.value)
 }
 
 /**

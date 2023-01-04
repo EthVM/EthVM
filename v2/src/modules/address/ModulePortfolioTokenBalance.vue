@@ -274,7 +274,7 @@ const tokens = computed<Token[]>(() => {
     let _tokens: Token[] = []
     if (store.portfolioIsLoaded && hasTokens.value && tokenSort.value) {
         const tokenSorted = tokenSort.value?.getSortedTokens(state.sortKey)
-        if (state.searchParams) {
+        if (state.searchParams !== '') {
             _tokens = searchHelper(tokenSorted, ['name', 'symbol', 'contract'], state.searchParams) as Token[]
         } else {
             _tokens = tokenSorted
