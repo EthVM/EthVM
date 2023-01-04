@@ -17,7 +17,7 @@
                                 <v-img :src="require('@/assets/footer-hero.webp')" width="225" aspect-ratio="1" cover class="footer-hero mt-4" />
                             </v-col>
                             <v-spacer />
-                            <v-col cols="12" lg="3" class="mb-7 mb-md-0">
+                            <v-col cols="12" lg="3" class="mb-7 mb-lg-0">
                                 <p class="footer-item-title text-h5 font-weight-bold mb-2">Discover</p>
                                 <ul class="footer-item-lists pa-0 surf">
                                     <li class="mb-2">
@@ -34,7 +34,7 @@
                                     </li>
                                 </ul>
                             </v-col>
-                            <v-col cols="12" lg="5" class="mb-7 mb-md-0">
+                            <v-col cols="12" lg="5" class="mb-7 mb-lg-0">
                                 <p class="footer-item-title text-h5 font-weight-bold mb-2">Love ethVM?</p>
                                 <p class="footer-item-text">
                                     Help us keep ethVM free and open-source, your donations go a long way towards making that possible.
