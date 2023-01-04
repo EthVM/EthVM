@@ -6,10 +6,10 @@
             =====================================================================================
         -->
         <v-row v-if="!xs" align="center" justify="start" class="text-body-1 text-info">
-            <v-col sm="2"> Block # </v-col>
-            <v-col sm="2"> Timestamp </v-col>
-            <v-col sm="2"> Transactions </v-col>
-            <v-col sm="3"> Miner </v-col>
+            <v-col> Block # </v-col>
+            <v-col v-if="!mdAndDown" sm="2"> Timestamp </v-col>
+            <v-col sm="3" lg="2"> Transactions </v-col>
+            <v-col sm="4" lg="3"> Miner </v-col>
             <v-col sm="3"> Reward </v-col>
         </v-row>
         <v-divider class="my-0 mt-md-4 mx-n4 mx-sm-n6" />
@@ -18,7 +18,7 @@
               TABLE BODY
             =====================================================================================
         -->
-        <div v-if="!hasMessage">
+        <div v-if="!hasMessage" class="p-ten-top">
             <template v-if="!props.isLoading">
                 <div v-for="(block, index) in props.blockData" :key="index">
                     <table-blocks-row :block="block" :page-type="props.pageType" />
@@ -31,7 +31,6 @@
             </div>
             <app-intersect v-if="props.showIntersect" @intersect="$emit('loadMore')">
                 <div class="skeleton-box rounded-xl mt-1 my-4" style="height: 24px"></div>
-                <v-divider />
             </app-intersect>
         </div>
     </div>
@@ -43,7 +42,7 @@ import AppIntersect from '@core/components/AppIntersect.vue'
 import { useDisplay } from 'vuetify/lib/framework.mjs'
 import { computed } from 'vue'
 
-const { xs } = useDisplay()
+const { xs, mdAndDown } = useDisplay()
 
 const props = defineProps({
     blockData: Array,

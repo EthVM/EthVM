@@ -1,6 +1,6 @@
 <template>
     <v-card :variant="!props.isOverview ? 'flat' : 'elevated'" :elevation="props.isOverview ? 1 : 0" rounded="xl" class="pa-4 pa-sm-6 fill-height">
-        <v-card-title class="d-none d-sm-flex justify-space-between align-center pa-0">
+        <v-card-title class="d-none d-sm-flex justify-space-between align-center pa-0 mb-5">
             <div>
                 <span v-if="props.isOverview" class="text-h6 font-weight-bold">Token Balance</span>
                 <!-- Notice new update-->
@@ -15,7 +15,7 @@
                 <app-btn text="More" is-small icon="east" @click="goToTokensBalancePage"></app-btn>
             </template>
         </v-card-title>
-        <div class="d-flex align-center">
+        <div v-if="!props.isOverview" class="d-flex align-center">
             <v-col lg="3">
                 <address-balance-totals
                     title="Token Balance"
@@ -32,7 +32,7 @@
         </div>
 
         <!--Table Header-->
-        <v-row :dense="xs" :class="[isOverview ? 'mt-sm-5' : 'mt-sm-4', 'd-flex text-body-1 text-info mb-sm-3']" :justify="xs ? 'end' : 'start'">
+        <v-row :dense="xs" :class="[isOverview ? 'mt-0' : 'mt-sm-4', 'd-flex text-body-1 text-info mb-sm-3']" :justify="xs ? 'end' : 'start'">
             <!--
                 Token on Overview:
                 XS: NONE
@@ -112,7 +112,7 @@
             </v-col>
         </v-row>
 
-        <v-divider class="mx-n4 mx-sm-n6 mb-1 mb-sm-5" />
+        <v-divider class="mx-n4 mx-sm-n6" />
         <!--Loading -->
         <v-row v-if="loadingTokens || loadingCoinData">
             <v-col v-for="col in 7" :key="col" cols="12" class="my-1">
@@ -122,10 +122,10 @@
         <!--Token Row -->
         <div
             v-else-if="renderState.renderTable"
-            :class="['mx-n4 mx-sm-n6 px-4 px-sm-6 mt-2', { 'module-body mt-n1 mt-sm-n5 pt-1 pt-sm-5': props.isOverview }]"
+            :class="['mx-n4 mx-sm-n6 px-4 px-sm-6', { 'module-body mt-n1 mt-sm-n5 pt-1 pt-sm-5': props.isOverview }]"
             :style="tableHeight"
         >
-            <div v-if="tokens.length > 0">
+            <div v-if="tokens.length > 0" class="p-ten-top">
                 <div v-for="token in tokens" :key="token.contract" :ref="el => assignRef(token.contract, el)">
                     <table-row-token-balance
                         :token="token"

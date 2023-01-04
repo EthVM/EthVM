@@ -1,13 +1,13 @@
 <template>
-    <div class="position-relative" :class="state.showMoreDetails && props.index > 0 ? 'mt-10' : null">
+    <div>
         <!--
           ========================
             Desktop View
           =========================
        -->
         <template v-if="!mdAndDown">
-            <v-row class="my-5 px-0 text-body-1 font-weight-regular" align="center">
-                <v-col :cols="props.isOverview ? 3 : 2" class="py-0">
+            <app-table-row row-align="center" @click="toggleMoreDetails" :color="state.showMoreDetails ? 'pillGrey' : 'transparent'">
+                <v-col :cols="props.isOverview ? 3 : 2">
                     <v-row class="ma-0 flex-nowrap" align="center">
                         <img :src="tokenImg" alt="" height="32" width="32" class="mr-2 rounded-circle" />
                         <div style="display: grid">
@@ -25,10 +25,10 @@
                         </div>
                     </v-row>
                 </v-col>
-                <v-col v-if="!props.isOverview" cols="1" class="text-info py-0 text-ellipses text-uppercase">
+                <v-col v-if="!props.isOverview" cols="1" class="text-info text-ellipses text-uppercase">
                     {{ props.transfer.tokenInfo.symbol }}
                 </v-col>
-                <v-col :cols="props.isOverview ? 3 : 2" class="py-0">
+                <v-col :cols="props.isOverview ? 3 : 2">
                     <v-row class="ma-0" align="center">
                         <p>
                             {{ tokenAmount.value }}
@@ -38,7 +38,7 @@
                         {{ timeAgo(new Date(props.transfer.transfer.timestamp * 1e3)) }}
                     </p>
                 </v-col>
-                <v-col :cols="props.isOverview ? 2 : 1" class="py-0">
+                <v-col :cols="props.isOverview ? 2 : 1">
                     <app-chip :bg="transferType === 'in' ? 'success' : 'warning'" :text="transferType === 'in' ? 'From' : 'To'" />
                 </v-col>
                 <v-col :cols="props.isOverview ? 4 : 2" class="text-secondary py-0">
@@ -47,7 +47,7 @@
                         <app-transform-hash is-blue is-short :hash="eth.toCheckSum(transferTypeAddress)" :link="`/address/${transferTypeAddress}`" />
                     </div>
                 </v-col>
-                <v-col v-if="!props.isOverview" cols="2" class="text-secondary py-0">
+                <v-col v-if="!props.isOverview" cols="2" class="text-secondary">
                     <app-transform-hash
                         is-blue
                         is-short
@@ -55,19 +55,23 @@
                         :link="`/tx/${eth.toCheckSum(props.transfer.transfer.transactionHash)}`"
                     />
                 </v-col>
-                <v-col v-if="!props.isOverview" cols="1" class="text-info py-0">
+                <v-col v-if="!props.isOverview" cols="1" class="text-info">
                     {{ timeAgo(new Date(props.transfer.transfer.timestamp * 1e3)) }}
                 </v-col>
-                <v-col v-if="!props.isOverview" cols="1" class="py-0 text-right">
+                <v-col v-if="!props.isOverview" cols="1" class="text-right">
                     <app-btn-icon :icon="dropdownIcon" @click="toggleMoreDetails"></app-btn-icon>
                 </v-col>
-            </v-row>
-            <v-row v-if="state.showMoreDetails" class="pb-5">
-                <v-col md="3" class="text-right text-body-1 font-weight-bold text-info">Balance Before</v-col>
-                <v-col md="9" class="text-uppercase">{{ getTransferBalanceBefore.value }} {{ props.transfer.tokenInfo.symbol }}</v-col>
-                <v-col md="3" class="text-right text-body-1 font-weight-bold text-info">Balance After</v-col>
-                <v-col md="9" class="text-uppercase">{{ getTransferBalanceAfter.value }} {{ props.transfer.tokenInfo.symbol }}</v-col>
-            </v-row>
+                <template #expandable>
+                    <v-col v-if="state.showMoreDetails" cols="12" class="mt-6">
+                        <v-row class="my-0">
+                            <v-col md="3" class="text-right text-body-1 font-weight-bold text-info">Balance Before</v-col>
+                            <v-col md="9" class="text-uppercase">{{ getTransferBalanceBefore.value }} {{ props.transfer.tokenInfo.symbol }}</v-col>
+                            <v-col md="3" class="text-right text-body-1 font-weight-bold text-info">Balance After</v-col>
+                            <v-col md="9" class="text-uppercase">{{ getTransferBalanceAfter.value }} {{ props.transfer.tokenInfo.symbol }}</v-col>
+                        </v-row>
+                    </v-col>
+                </template>
+            </app-table-row>
         </template>
         <!--
            ========================
@@ -75,7 +79,7 @@
            =========================
         -->
         <template v-else>
-            <v-row class="my-5" @click="toggleMoreDetails">
+            <app-table-row @click="toggleMoreDetails">
                 <v-col cols="6" class="pb-2">
                     <div class="d-flex align-center flex-nowrap">
                         <div class="mobile-chip rounded-circle mr-2" :class="transferType ? 'bg-success' : 'bg-orange'">
@@ -103,33 +107,34 @@
                         <app-transform-hash is-blue is-short :hash="eth.toCheckSum(transferTypeAddress)" :link="`/address/${transferTypeAddress}`" />
                     </div>
                 </v-col>
-            </v-row>
-            <div v-if="state.showMoreDetails" class="pb-5">
-                <div>
-                    <p class="text-info mb-1">Hash</p>
-                    <app-transform-hash
-                        is-blue
-                        is-short
-                        :hash="eth.toCheckSum(props.transfer.transfer.transactionHash)"
-                        :link="`/tx/${props.transfer.transfer.transactionHash}`"
-                    />
-                </div>
-                <v-divider class="my-5 mx-n4 mx-sm-n6" />
-                <v-row justify="space-between" class="my-5 mx-0">
-                    <p class="text-info">Balance Before</p>
-                    <p class="text-uppercase">{{ getTransferBalanceBefore.value }} {{ props.transfer.tokenInfo.symbol }}</p>
-                </v-row>
-                <v-row justify="space-between" class="my-5 mx-0">
-                    <p class="text-info">Tx Fee Paid</p>
-                    <p class="text-error">-{{ txFee.value }} {{ txFee.unit.toUpperCase() }}</p>
-                </v-row>
-                <v-row justify="space-between" class="my-5 mx-0">
-                    <p class="text-info">Balance After</p>
-                    <p class="text-uppercase">{{ getTransferBalanceAfter.value }} {{ props.transfer.tokenInfo.symbol }}</p>
-                </v-row>
-            </div>
+                <template #expandable>
+                    <v-col cols="12" v-if="state.showMoreDetails">
+                        <div>
+                            <p class="text-info mb-1">Hash</p>
+                            <app-transform-hash
+                                is-blue
+                                is-short
+                                :hash="eth.toCheckSum(props.transfer.transfer.transactionHash)"
+                                :link="`/tx/${props.transfer.transfer.transactionHash}`"
+                            />
+                        </div>
+                        <v-divider class="my-5 mx-n4 mx-sm-n6" />
+                        <v-row justify="space-between" class="my-5 mx-0">
+                            <p class="text-info">Balance Before</p>
+                            <p class="text-uppercase">{{ getTransferBalanceBefore.value }} {{ props.transfer.tokenInfo.symbol }}</p>
+                        </v-row>
+                        <v-row justify="space-between" class="my-5 mx-0">
+                            <p class="text-info">Tx Fee Paid</p>
+                            <p class="text-error">-{{ txFee.value }} {{ txFee.unit.toUpperCase() }}</p>
+                        </v-row>
+                        <v-row justify="space-between" class="mt-5 mx-0">
+                            <p class="text-info">Balance After</p>
+                            <p class="text-uppercase">{{ getTransferBalanceAfter.value }} {{ props.transfer.tokenInfo.symbol }}</p>
+                        </v-row>
+                    </v-col>
+                </template>
+            </app-table-row>
         </template>
-        <div v-if="state.showMoreDetails" class="row-bg bg-tableGrey"></div>
     </div>
 </template>
 
@@ -138,6 +143,7 @@ import AppChip from '@core/components/AppChip.vue'
 import AppAddressBlockie from '@core/components/AppAddressBlockie.vue'
 import AppTransformHash from '@core/components/AppTransformHash.vue'
 import AppBtnIcon from '@core/components/AppBtnIcon.vue'
+import AppTableRow from '@core/components/AppTableRow.vue'
 import { useDisplay } from 'vuetify'
 import { computed, reactive } from 'vue'
 import { TransferFragmentFragment as Transfer } from '../apollo/AddressTransfers/transfers.generated'
@@ -145,6 +151,7 @@ import { MarketDataFragment as TokenMarketData } from '@core/composables/CoinDat
 import BN from 'bignumber.js'
 import { formatFloatingPointValue, formatNonVariableEthValue, FormattedNumber } from '@core/helper/number-format-helper'
 import { timeAgo, eth } from '@core/helper'
+
 const { mdAndDown } = useDisplay()
 
 interface ComponentProps {
