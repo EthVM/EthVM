@@ -85,7 +85,7 @@
                     </v-col>
                 </v-row>
                 <div class="d-flex justify-lg-end flex-wrap pa-2">
-                    <a v-for="(link, index) in socialIcons" :key="index" :href="link.link" class="text-link">
+                    <a v-for="(link, index) in socialIcons" :key="index" :href="link.link" target="_blank" class="text-link">
                         <v-img :src="link.img" :alt="link.altText" width="22" height="22" class="mr-4 mb-4 mb-lg-0 mr-lg-3 text-red" />
                         <p class="d-sr-only">{{ link.srText }}</p>
                     </a>
