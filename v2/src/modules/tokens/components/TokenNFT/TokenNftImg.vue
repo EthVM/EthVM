@@ -8,7 +8,9 @@
         class="border-radius-default img-clickable align-end"
         @click="setDialog(true)"
     >
-        <div v-if="state.imageExists" class="no-image text-uppercase text-caption text-center py-2 justify-end">image not available</div></v-img
+        <div v-if="imagePreview === require('@/assets/icon-nft.png')" class="no-image text-uppercase text-caption text-center py-2 justify-end">
+            image not available
+        </div></v-img
     >
     <app-dialog v-model="state.showDetails" @update:modelValue="setDialog" width="656" height="550">
         <template v-if="state.showDetails" #no-scroll-content>
@@ -105,7 +107,6 @@ const imagePreview = computed<string>(() => {
                 : require('@/assets/icon-nft.png')
         }
     }
-
     return require('@/assets/icon-nft.png')
 })
 </script>

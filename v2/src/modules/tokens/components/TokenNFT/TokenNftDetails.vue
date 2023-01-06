@@ -2,7 +2,9 @@
     <v-row class="mt-2 mt-sm-6 align-center align-md-start px-2 px-sm-10" :no-gutters="xs">
         <v-col cols="12" sm="6" order-sm="2">
             <v-img contain :src="imageLarge" @error="imgLoadFail" max-width="w-100" class="border-radius-default mb-4 align-end">
-                <div v-if="state.imageExists" class="no-image text-uppercase text-caption text-center py-2 justify-end">image not available</div></v-img
+                <div v-if="imageLarge === require('@/assets/icon-nft.png')" class="no-image text-uppercase text-caption text-center py-2 justify-end">
+                    image not available
+                </div></v-img
             >
         </v-col>
         <v-col cols="12" sm="6" order-sm="1" class="py-0">
