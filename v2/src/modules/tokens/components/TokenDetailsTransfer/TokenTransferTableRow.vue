@@ -1,11 +1,11 @@
 <template>
-    <div class="position-relative">
+    <div>
         <!--
     =====================================================================================
       Tablet/ Desktop (SM - XL)
     =====================================================================================
     -->
-        <v-row class="my-5 px-0 d-none d-sm-flex" align="center">
+        <app-table-row row-align="center" class="d-none d-sm-flex">
             <!-- Column 1: Tx Hash -->
             <v-col sm="3" :md="2">
                 <app-transform-hash is-blue is-short :hash="props.transfer.transfer.transactionHash" :link="`/tx/${props.transfer.transfer.transactionHash}`" />
@@ -58,10 +58,11 @@
                 {{ timeAgo(date) }}
             </v-col>
             <!-- End Column 6 -->
-        </v-row>
-        <v-row
-            justify="space-between"
-            class="d-sm-none my-5 text-subtitle-2 font-weight-regular"
+        </app-table-row>
+        <app-table-row
+            row-justify="space-between"
+            class="d-sm-none"
+            :color="visibleDetails.has(props.transfer.transfer.transactionHash) ? 'pillGrey' : 'transparent'"
             @click="toggleMoreDetails(props.transfer.transfer.transactionHash)"
         >
             <v-col cols="6" sm="5">
@@ -71,41 +72,43 @@
             <v-col cols="6" sm="3">
                 <span>{{ transferValue.value }} {{ symbolFormatted }} </span>
             </v-col>
-        </v-row>
-        <transition name="slide-y-transition">
-            <v-row v-if="visibleDetails.has(props.transfer.transfer.transactionHash)" justify="space-between" align="center" class="d-sm-none">
-                <v-col cols="5">
-                    <div class="d-flex align-center">
-                        <app-address-blockie :address="props.transfer.transfer.from || ''" :size="6" class="mr-2" />
-                        <app-transform-hash
-                            is-blue
-                            is-short
-                            :hash="eth.toCheckSum(props.transfer.transfer.from)"
-                            :link="`/address/${props.transfer.transfer.from}`"
-                        />
-                    </div>
+            <template #expandable>
+                <v-col v-if="visibleDetails.has(props.transfer.transfer.transactionHash)">
+                    <v-row justify="space-between" align="center" class="d-sm-none">
+                        <v-col cols="5">
+                            <div class="d-flex align-center">
+                                <app-address-blockie :address="props.transfer.transfer.from || ''" :size="6" class="mr-2" />
+                                <app-transform-hash
+                                    is-blue
+                                    is-short
+                                    :hash="eth.toCheckSum(props.transfer.transfer.from)"
+                                    :link="`/address/${props.transfer.transfer.from}`"
+                                />
+                            </div>
+                        </v-col>
+                        <v-icon color="success">east</v-icon>
+                        <v-col cols="5">
+                            <div class="d-flex align-center">
+                                <app-address-blockie :address="props.transfer.transfer.to || ''" :size="6" class="mr-2" />
+                                <app-transform-hash
+                                    is-blue
+                                    is-short
+                                    :hash="eth.toCheckSum(props.transfer.transfer.to)"
+                                    :link="`/address/${props.transfer.transfer.to}`"
+                                />
+                            </div>
+                        </v-col>
+                    </v-row>
                 </v-col>
-                <v-icon color="success">east</v-icon>
-                <v-col cols="5">
-                    <div class="d-flex align-center">
-                        <app-address-blockie :address="props.transfer.transfer.to || ''" :size="6" class="mr-2" />
-                        <app-transform-hash
-                            is-blue
-                            is-short
-                            :hash="eth.toCheckSum(props.transfer.transfer.to)"
-                            :link="`/address/${props.transfer.transfer.to}`"
-                        />
-                    </div>
-                </v-col>
-            </v-row>
-        </transition>
-        <div v-if="visibleDetails.has(props.transfer.transfer.transactionHash)" class="row-bg bg-tableGrey d-sm-none"></div>
+            </template>
+        </app-table-row>
     </div>
 </template>
 
 <script setup lang="ts">
 import AppTransformHash from '@core/components/AppTransformHash.vue'
 import AppAddressBlockie from '@core/components/AppAddressBlockie.vue'
+import AppTableRow from '@core/components/AppTableRow.vue'
 import BigNumber from 'bignumber.js'
 import {
     TokenTransferFragment as Erc20TokenTransferType,
@@ -117,6 +120,7 @@ import { reactive, computed, ref } from 'vue'
 import { formatFloatingPointValue, FormattedNumber } from '@core/helper/number-format-helper'
 import { useDisplay } from 'vuetify'
 import { eth, timeAgo } from '@core/helper'
+
 const TYPES = ['ERC20', 'ERC721']
 
 const { lgAndUp } = useDisplay()

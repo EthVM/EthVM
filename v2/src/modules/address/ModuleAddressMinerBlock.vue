@@ -20,19 +20,23 @@
                 <v-col md="3" class="py-0"> Balance After </v-col>
             </v-row>
             <v-divider class="my-0 mt-sm-4 mx-n4 mx-sm-n6" />
-            <template v-if="!initialLoad && renderState.renderTable">
+            <div v-if="!initialLoad && renderState.renderTable" class="p-ten-top">
                 <template v-if="rewards.length > 0">
                     <div v-for="(reward, index) in rewards" :key="index">
                         <minor-blocks-table-row :reward="reward" />
                     </div>
                     <app-intersect v-if="!props.isOverview && hasMore" @intersect="loadMoreData">
                         <div class="skeleton-box rounded-xl mt-1 my-4" style="height: 24px"></div>
-                        <v-divider />
                     </app-intersect>
                 </template>
                 <template v-if="rewards.length < 1 && !isLoadingRewards">
                     <app-no-result text="This address does not have any mining history" class="mt-4 mt-sm-6"></app-no-result>
                 </template>
+            </div>
+            <template v-else>
+                <div v-for="i in props.maxItems" :key="i">
+                    <div class="skeleton-box rounded-xl mt-5" style="height: 24px"></div>
+                </div>
             </template>
         </div>
     </v-card>

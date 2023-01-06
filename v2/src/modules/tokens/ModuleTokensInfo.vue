@@ -7,15 +7,7 @@
             <app-tabs v-model="state.activeList" :routes="routes" :tabs="list" class="my-5" btn-variant></app-tabs>
 
             <v-row class="mb-10" align="center">
-                <v-text-field
-                    v-model="state.tokenSearch"
-                    class="search-field mr-5"
-                    placeholder="Search tokens"
-                    prepend-inner-icon="search"
-                    variant="outlined"
-                    density="comfortable"
-                    hide-details
-                />
+                <app-input place-holder="Search tokens" v-model="state.tokenSearch" />
                 <module-add-fav-token v-if="state.activeList === list[1].value" />
             </v-row>
             <v-row align="center" justify="start" class="text-body-1 text-info my-0 d-none d-sm-flex">
@@ -95,6 +87,7 @@
 
 <script setup lang="ts">
 import AppTabs from '@core/components/AppTabs.vue'
+import AppInput from '@core/components/AppInput.vue'
 import { Tab } from '@/core/components/props'
 import TokenMarketInfoTableRow from '@module/tokens/components/TokenMarketInfo/TableRowTokenMarketInfo.vue'
 import ModuleAddFavToken from './ModuleAddFavToken.vue'
@@ -106,6 +99,8 @@ import { MarketDataFragment as TokenMarketData } from '@core/composables/CoinDat
 import { TOKEN_FILTER_VALUES, KEY, DIRECTION, TokenSortMarket, TokenMarket } from '@module/address/models/TokenSort'
 
 import { ADDRESS_ROUTE_QUERY } from '@core/router/routesNames'
+import { searchHelper } from '@core/helper/search'
+
 const routes = ADDRESS_ROUTE_QUERY.Q_NFTS
 
 // const MAX_TOKENS = 200
@@ -146,7 +141,10 @@ const { tokensWithMarketCap, loading: loadingCoinData, getEthereumTokenByContrac
 const tokens = computed<TokenSortMarket | null>(() => {
     if (!store.loadingCoinData && tokensWithMarketCap) {
         const filtered = tokensWithMarketCap.value.filter((x): x is TokenMarketData => x !== null)
-        const all = filtered.map(i => new TokenMarket(i))
+        let all = filtered.map(i => new TokenMarket(i))
+        if (state.tokenSearch) {
+            all = searchHelper(all, ['name', 'symbol', 'contract'], state.tokenSearch) as Array<TokenMarket>
+        }
         const topTokens = new TokenSortMarket(all).getSortedTokens(TOKEN_FILTER_VALUES[13]).splice(0, 500)
         return new TokenSortMarket(topTokens)
     }
@@ -206,34 +204,6 @@ const sortTable = (key: KEY): void => {
 
     &--active {
         opacity: 1;
-    }
-}
-
-.search-field {
-    max-width: 536px;
-
-    :deep(.v-input__control) {
-        .v-field--variant-outlined .v-field__outline__end {
-            border-radius: 30px;
-            border-width: 0px;
-            background-color: rgba(var(--v-theme-info), 0.5);
-        }
-
-        .v-field--variant-outlined .v-field__outline__start {
-            display: none;
-        }
-
-        .v-field:hover {
-            .v-field__outline {
-                --v-field-border-opacity: 0.5;
-            }
-        }
-
-        .v-field--focused {
-            .v-field__outline {
-                --v-field-border-opacity: 0.4;
-            }
-        }
     }
 }
 </style>
