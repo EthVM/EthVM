@@ -24,6 +24,37 @@ enum TypeNames {
 const nftTypeDef = `${RespContract} ${RespNftOwner} ${RespNftPreviews} ${RespNftFloorPrice}  ${RespPaymentToken} ${RespMarketplace} ${RespCollection} ${RespNftMeta} ${RespNFT} ${RespNftTrait} ${RespTokens} ${Query}`
 
 const transformNFTMeta = (data: ResponceTokens) => {
+    if (data.result.nfts) {
+        data.result.nfts.forEach(nft => {
+            if (nft.extra_metadata.attributes && nft.extra_metadata.attributes.length > 0) {
+                return
+            }
+            if (nft.extra_metadata.attributes && nft.extra_metadata.attributes instanceof Object) {
+                const traits = Object.keys(nft.extra_metadata.attributes)
+                const newAttr = traits.map(i => {
+                    return {
+                        trait_type: i,
+                        value: nft.extra_metadata.attributes[i]
+                    }
+                })
+                nft.extra_metadata.attributes = newAttr
+            }
+            if (nft.extra_metadata.traits && nft.extra_metadata.traits instanceof Object) {
+                const traits = Object.keys(nft.extra_metadata.traits)
+                const newAttr = traits.map(i => {
+                    return {
+                        trait_type: i,
+                        value: nft.extra_metadata.traits[i]
+                    }
+                })
+                nft.extra_metadata.traits = newAttr
+            } else {
+                // SEND TO SENTRY OTHERWISE TO ADD PROCCESSING METHOD
+                // nft.extra_metadata is not standardized, keep adding new processing methods
+                nft.extra_metadata.attributes = []
+            }
+        })
+    }
     return data.result
 }
 const nftRestLink = new RestLink({

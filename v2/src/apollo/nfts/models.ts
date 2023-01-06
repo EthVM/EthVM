@@ -73,6 +73,14 @@ export interface RespNFT {
         symbol: string | null
     }
     collection: RespCollection
+    extra_metadata: {
+        image_original_url: string | null
+        animation_original_url: string | null
+        // eslint-disable-next-line
+        attributes?: any
+        // eslint-disable-next-line
+        traits?: any
+    }
 }
 
 export interface ResponceTokens {
