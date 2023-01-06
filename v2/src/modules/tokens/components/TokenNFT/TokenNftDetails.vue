@@ -1,7 +1,9 @@
 <template>
     <v-row class="mt-2 mt-sm-6 align-center align-md-start px-2 px-sm-10" :no-gutters="xs">
         <v-col cols="12" sm="6" order-sm="2">
-            <v-img contain :src="imageLarge" @error="imgLoadFail" max-width="w-100" class="border-radius-default mb-4"></v-img>
+            <v-img contain :src="imageLarge" @error="imgLoadFail" max-width="w-100" class="border-radius-default mb-4 align-end">
+                <div v-if="state.imageExists" class="no-image text-uppercase text-caption text-center py-2 justify-end">image not available</div></v-img
+            >
         </v-col>
         <v-col cols="12" sm="6" order-sm="1" class="py-0">
             <p v-if="props.nft.meta?.name" class="text-h4 font-weight-bold">{{ props.nft.meta?.name }}</p>
@@ -79,11 +81,11 @@ const imageLarge = computed<string>(() => {
                 ? props.nft.meta.previews.image_large_url
                 : props.nft.meta.image_url
                 ? props.nft.meta.image_url
-                : require('@/assets/icon-token.png')
+                : require('@/assets/icon-nft.png')
         }
     }
 
-    return require('@/assets/icon-token.png')
+    return require('@/assets/icon-nft.png')
 })
 
 const attributes = computed(() => {
@@ -98,5 +100,14 @@ const attributes = computed(() => {
 }
 .border-radius-default {
     border-radius: 8px;
+}
+</style>
+
+<style lang="scss" scoped>
+.no-image {
+    background-color: rgb(var(--v-theme-primary));
+    color: rgba(255, 255, 255, 0.5);
+    min-height: 36px;
+    width: 100%;
 }
 </style>
