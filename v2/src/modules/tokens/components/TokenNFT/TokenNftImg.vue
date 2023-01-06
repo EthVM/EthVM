@@ -5,9 +5,11 @@
         @error="imgLoadFail"
         :height="height"
         :max-width="width"
-        class="border-radius-default img-clickable"
+        class="border-radius-default img-clickable align-end"
         @click="setDialog(true)"
-    ></v-img>
+    >
+        <div v-if="state.imageExists" class="no-image text-uppercase text-caption text-center py-2 justify-end">image not available</div></v-img
+    >
     <app-dialog v-model="state.showDetails" @update:modelValue="setDialog" width="656" height="550">
         <template v-if="state.showDetails" #no-scroll-content>
             <v-carousel hide-delimiters :show-arrows="!xs">
@@ -100,11 +102,11 @@ const imagePreview = computed<string>(() => {
                 ? props.nft.meta.previews.image_small_url
                 : props.nft.meta.image_url
                 ? props.nft.meta.image_url
-                : require('@/assets/icon-token.png')
+                : require('@/assets/icon-nft.png')
         }
     }
 
-    return require('@/assets/icon-token.png')
+    return require('@/assets/icon-nft.png')
 })
 </script>
 <style lang="scss" scoped>
@@ -117,5 +119,12 @@ const imagePreview = computed<string>(() => {
 
 .carusel-icon {
     font-size: 20px;
+}
+
+.no-image {
+    background-color: rgb(var(--v-theme-primary));
+    color: rgba(255, 255, 255, 0.5);
+    min-height: 36px;
+    width: 100%;
 }
 </style>
