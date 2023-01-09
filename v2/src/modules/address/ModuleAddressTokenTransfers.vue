@@ -82,6 +82,8 @@ import { useRouter } from 'vue-router'
 import { ADDRESS_ROUTE_QUERY, ROUTE_NAME } from '@core/router/routesNames'
 import { useAppTableRowRender } from '@core/composables/AppTableRowRender/useAppTableRowRender.composable'
 import AppNoResult from '@/core/components/AppNoResult.vue'
+import { useStore } from '@/store'
+import { WatchQueryFetchPolicy } from '@apollo/client/core'
 
 const { getEthereumTokensMap } = useCoinData()
 
@@ -122,8 +124,12 @@ const state: ComponentState = reactive({
     index: 0
 })
 
+const store = useStore()
+const queryPolicy = computed<WatchQueryFetchPolicy>(() => {
+    return store.addressHashIsSaved(props.addressHash.toLowerCase()) || props.isOverview ? 'cache-only' : 'cache-first'
+})
 const { addressHash } = toRefs(props)
-const { tokenBalanceValue, tokenCount, initialLoad: loadingAddressTokens } = useAddressToken(addressHash)
+const { tokenBalanceValue, tokenCount, initialLoad: loadingAddressTokens } = useAddressToken(addressHash, queryPolicy)
 const { loading: loadingMarketInfo } = useCoinData()
 
 const {

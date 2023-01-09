@@ -16,7 +16,11 @@
   $container-padding-x: settings.$container-padding-x,
   $grid-breakpoints: settings.$grid-breakpoints,
   $container-max-widths: settings.$container-max-widths,
-  $input-density: settings.$input-density
+  $input-density: settings.$input-density,
+  $tooltip-background-color: settings.$tooltip-background-color,
+  $tooltip-font-size: settings.$tooltip-font-size,
+  $tooltip-border-radius: settings.$tooltip-border-radius,
+  $tooltip-padding: settings.$tooltip-padding
 );
 a {
     text-decoration: none;
@@ -79,4 +83,8 @@ a {
 
 .p-ten-top {
     padding-top: 10px !important;
+}
+
+.font-mono {
+    font-family: 'Roboto Mono', monospace;
 }

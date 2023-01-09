@@ -6,7 +6,10 @@
         </v-col>
         <p v-else class="text-h4 font-weight-bold">{{ props.balance }}</p>
         <slot name="extra"></slot>
-        <p v-if="props.subtext" class="text-info text-caption">{{ props.subtext }}</p>
+        <v-col v-if="props.isLoading && props.subtext" cols="6" sm="4" md="6" class="pa-0">
+            <div class="skeleton-box rounded-xl mt-1" style="min-height: 16px"></div>
+        </v-col>
+        <p v-else-if="!props.isLoading && props.subtext" class="text-info text-caption">{{ props.subtext }}</p>
     </div>
 </template>
 

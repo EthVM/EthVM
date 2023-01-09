@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory, createWebHashHistory, RouteRecordRaw } from 'vue-router'
-import { ADDRESS_ROUTE_QUERY, ROUTE_NAME, Q_TOKEN_DETAILS, Q_BLOCKS_AND_TXS, Q_BLOCK_DETAILS, Q_TXS_DETAILS } from './routesNames'
+import { ADDRESS_ROUTE_QUERY, ROUTE_NAME, Q_TOKEN_DETAILS, Q_BLOCKS_AND_TXS, Q_BLOCK_DETAILS, Q_TXS_DETAILS, Q_PORTFOLIO } from './routesNames'
 import HomeView from '@view/ViewHome.vue'
 import BlocksView from '@view/ViewBlocks.vue'
 import BlocksAndTxsView from '@view/ViewBlocksAndTransactions.vue'
@@ -16,6 +16,7 @@ import ViewAddressEthBalance from '@view/ViewAddressEthBalance.vue'
 import ViewTokens from '@view/ViewTokens.vue'
 import ViewAddressNfts from '@view/ViewAddressNfts.vue'
 import ViewTemp from '@view/ViewTemp.vue'
+import ViewPortfolio from '@view/ViewPortfolio.vue'
 import configs from '@/configs'
 import { tabViewRouteGuard } from './helpers'
 const routes: Array<RouteRecordRaw> = [
@@ -133,9 +134,11 @@ const routes: Array<RouteRecordRaw> = [
     },
 
     {
-        path: ROUTE_NAME.FAV_ADDRESS.PATH,
-        name: ROUTE_NAME.FAV_ADDRESS.NAME,
-        component: ViewTemp
+        path: ROUTE_NAME.PORTFOLIO.PATH,
+        name: ROUTE_NAME.PORTFOLIO.NAME,
+        component: ViewPortfolio,
+        props: route => ({ tab: route.query.t }),
+        beforeEnter: tabViewRouteGuard(Q_PORTFOLIO[0])
     },
     {
         path: ROUTE_NAME.FAV_TOKENS.PATH,

@@ -3,19 +3,43 @@
 
     <div v-if="isValid && props.addressRef" :class="[xs ? 'adr-core-background-mobile' : 'adr-core-background', 'pb-6']">
         <v-card class="px-xl-auto mx-0" flat rounded="0" :min-height="smAndDown ? '100%' : '92px'">
-            <v-container fluid class="core-container fill-height px-5 px-sm-6 pb-4 pb-sm-6 pt-4 pt-sm-10">
-                <v-row align="center" justify="center" class="flex-nowrap px-0">
-                    <app-address-blockie :address="props.addressRef || ''" :size="10" />
-                    <app-transform-hash v-if="smAndDown" :hash="props.addressRef" class="text-h4 font-weight-regular px-2 px-sm-4"></app-transform-hash>
-                    <p v-else class="mx-sm-4 text-h4">{{ props.addressRef }}</p>
-                    <app-copy-to-clip :value-to-copy="props.addressRef || ''" class="ml-3" />
-                    <app-btn-icon icon="favorite"></app-btn-icon>
-                    <app-btn-icon icon="qr_code"></app-btn-icon>
+            <v-container class="core-container fill-height px-3 px-sm-6 pb-4 pb-sm-6 px-md-16 pt-4 pt-sm-10">
+                <v-row align="center" justify="center" class="px-3 px-sm-0 px-md-16 flex-nowrap" no-gutters>
+                    <app-address-blockie :address="props.addressRef || ''" :size="xs ? 9 : 10" />
+                    <v-col cols="6" sm="8" :md="store.getAddressName(props.addressRef) ? '7' : 'auto'" lg="auto" class="pl-2 pl-sm-4 pr-sm-0">
+                        <div v-if="store.getAddressName(props.addressRef)" class="text-h4 font-weight-bold">
+                            {{ store.getAddressName(props.addressRef) }}
+                        </div>
+                        <div>
+                            <app-transform-hash
+                                v-if="(xs && store.getAddressName(props.addressRef)) || (smAndDown && !store.getAddressName(props.addressRef))"
+                                :hash="props.addressRef"
+                                :class="['font-weight-regular', { 'text-h4': !store.getAddressName(props.addressRef) }]"
+                                :show-name="false"
+                                :is-short="xs"
+                            ></app-transform-hash>
+                            <p v-else :class="[{ 'text-h4': !store.getAddressName(props.addressRef) }]">{{ props.addressRef }}</p>
+                        </div>
+                    </v-col>
+                    <v-col cols="6" sm="auto" md="6" lg="auto" class="d-flex flex-grow-0 flex-shrink-1 ml-auto ml-md-6 ml-lg-16 justify-end">
+                        <app-copy-to-clip :value-to-copy="props.addressRef || ''" />
+                        <module-add-adress-to-porfolio :address="props.addressRef" :name="store.getAddressName(props.addressRef)" />
+                        <app-btn-icon icon="qr_code"></app-btn-icon>
+                        <app-btn-icon icon="edit" @click="openEditDialog(true)"></app-btn-icon>
+                    </v-col>
                     <!-- <v-divider :vertical="!smAndDown" class="my-1 my-sm-3 mx-n1 mx-sm-n3 mx-md-none"></v-divider>
                     <v-col cols="12" md="4" lg="3" class="d-flex align-center"> </v-col> -->
                 </v-row>
             </v-container>
         </v-card>
+        <module-porfolio-handle-adr
+            v-if="state.showEdit"
+            is-edit-mode
+            :address="props.addressRef"
+            :name="store.getAddressName(props.addressRef)"
+            @close-module="openEditDialog(false)"
+        >
+        </module-porfolio-handle-adr>
         <!--
             ========================
                 Mobile Menu
@@ -58,7 +82,7 @@
             Router View
         =========================
         -->
-        <div class="mx-2 mx-sm-6 mx-xl-auto mt-2 mt-sm-6">
+        <div class="mx-2 mx-sm-6 mx-xl-auto mt-2 mt-md-6">
             <router-view v-slot="{ Component }" :address-ref="addressRef" :scroll-id="scrollId" @tabChange="setLastViewedTab">
                 <v-container class="pa-0">
                     <Transition name="fade" mode="out-in">
@@ -81,11 +105,14 @@ import AppBtnIcon from '@/core/components/AppBtnIcon.vue'
 import AppCopyToClip from '@/core/components/AppCopyToClip.vue'
 import AppAddressBlockie from '@/core/components/AppAddressBlockie.vue'
 import AppTransformHash from '@/core/components/AppTransformHash.vue'
-import AppMenu from '@/core/components/AppMenu.vue'
+import ModuleAddAdressToPorfolio from '@module/address/ModulePorfolioHandleAdr.vue'
+import ModulePorfolioHandleAdr from '@module/address/ModulePorfolioHandleAdr.vue'
 import { useDisplay } from 'vuetify/lib/framework.mjs'
+import { useStore } from '@/store'
 
 const { smAndDown, xs } = useDisplay()
 
+const store = useStore()
 const tabs = reactive([
     {
         id: 0,
@@ -129,14 +156,19 @@ interface ComponentState {
     errorMessages: ErrorMessage[]
     error: string
     tab: string
+    showEdit: boolean
 }
 
 const state: ComponentState = reactive({
     errorMessages: [],
     error: '',
-    tab: ROUTE_NAME.ADDRESS.NAME
+    tab: ROUTE_NAME.ADDRESS.NAME,
+    showEdit: false
 })
 
+const openEditDialog = (_value: boolean) => {
+    state.showEdit = _value
+}
 /**------------------------
  * Tab Handling
  -------------------------*/

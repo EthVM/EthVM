@@ -188,7 +188,7 @@ const emit = defineEmits<{
 }>()
 
 const openMoreInfo = () => {
-    if (!props.isOverview) {
+    if (!props.isOverview && marketData.value !== null) {
         state.showMore = !state.showMore
     } else {
         emit('setActiveToken', props.token.contract)

@@ -103,9 +103,7 @@ $rounded:
     'xl': 12px
 );
 
-/**
---- Grid
-*/
+
 $grid-breakpoints:
 (
     'xs': 0,
@@ -130,4 +128,15 @@ $grid-gutter: 12px; //24
 $form-grid-gutter: $spacer*2;
 $container-padding-x: $spacer * 12;
 
+/**
+--- Input
+*/
 $input-density: ('default': 0, 'comfortable': -4, 'compact': -6) !default;
+
+/**
+--- Tooltip
+*/
+$tooltip-background-color: 	rgba(var(--v-theme-darkSurface), 1);
+$tooltip-font-size: 14px;
+$tooltip-border-radius: 8px;
+$tooltip-padding: 12px 20px;

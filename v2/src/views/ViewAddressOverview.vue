@@ -1,7 +1,7 @@
 <template>
     <v-row :class="rowMargin">
         <v-col cols="12" md="6" lg="4" :class="columnPadding">
-            <module-address-portfolio :address-ref="props.addressRef" />
+            <module-portfolio-total :address-ref="props.addressRef" />
         </v-col>
         <v-col cols="12" md="6" lg="4" :class="columnPadding">
             <module-address-balance :address-ref="props.addressRef" is-overview />
@@ -34,7 +34,7 @@
 <script setup lang="ts">
 import ModuleAddressBalance from '@module/address/ModuleAddressBalance.vue'
 import ModuleAddressTokenBalance from '@module/address/ModuleAddressTokenBalance.vue'
-import ModuleAddressPortfolio from '@/modules/address/ModuleAddressPortfolio.vue'
+import ModulePortfolioTotal from '@/modules/address/ModulePortfolioTotal.vue'
 import ModuleAddressTokens from '@module/address/ModuleAddressTokens.vue'
 import ModuleAddressMinerBlock from '@module/address/ModuleAddressMinerBlock.vue'
 import ModuleAddressTokenTransfers from '@module/address/ModuleAddressTokenTransfers.vue'

@@ -10,7 +10,7 @@
             <v-col :sm="!isERC721 ? 3 : 4">
                 <div class="d-flex align-center">
                     <app-address-blockie :address="props.holder.owner || ''" :size="8" class="mr-1 mr-sm-2" />
-                    <app-transform-hash is-blue is-short :hash="eth.toCheckSum(props.holder.owner)" :link="holderLink" />
+                    <app-transform-hash is-blue is-short :hash="eth.toCheckSum(props.holder.owner)" :link="holderLink" :show-name="false" />
                 </div>
             </v-col>
             <!-- End Column 1 -->
@@ -45,7 +45,7 @@
             <v-col cols="6">
                 <div class="d-flex align-center">
                     <app-address-blockie :address="eth.toCheckSum(props.holder.owner) || ''" :size="6" class="mr-1" />
-                    <app-transform-hash is-blue is-short :hash="eth.toCheckSum(props.holder.owner)" :link="holderLink" />
+                    <app-transform-hash is-blue is-short :hash="eth.toCheckSum(props.holder.owner)" :link="holderLink" :show-name="false" />
                 </div>
             </v-col>
             <v-col cols="6" class="text-right">

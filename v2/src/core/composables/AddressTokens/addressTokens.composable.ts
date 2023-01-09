@@ -1,25 +1,78 @@
 import { TokenOwnersFragment, useGetOwnersErc20TokensQuery } from '@module/address/apollo/AddressTokens/tokens.generated'
-import { computed, Ref } from 'vue'
+import { computed, Ref, ref, unref } from 'vue'
 import { MarketDataFragment as TokenMarketData } from '@core/composables/CoinData/getLatestPrices.generated'
 import { useCoinData } from '@core/composables/CoinData/coinData.composable'
 import { TokenSort } from '@module/address/models/TokenSort'
 import { formatUsdValue } from '@core/helper/number-format-helper'
+import { eth } from '@/core/helper'
 import BN from 'bignumber.js'
+import { WatchQueryFetchPolicy } from '@apollo/client/core'
 
-export function useAddressToken(addressHash: Ref<string>) {
+export function useAddressToken(addressHash: Ref<string> | string, policy: Ref<WatchQueryFetchPolicy> | WatchQueryFetchPolicy = 'cache-first') {
     const { getEthereumTokensMap, loading: loadingEthTokens } = useCoinData()
+    const nextKey = ref<string | undefined | null>(undefined)
+    const enableQuery = computed<boolean>(() => {
+        return eth.isValidAddress(unref(addressHash))
+    })
+
     const {
         result: erc20TokensResult,
-        loading,
-        refetch: refetchTokens
+        refetch: refetchTokens,
+        onResult,
+        fetchMore: fetchMoreTokens
     } = useGetOwnersErc20TokensQuery(
         () => ({
-            hash: addressHash.value
+            hash: unref(addressHash).toLowerCase()
         }),
-        { notifyOnNetworkStatusChange: true }
+        () => ({
+            fetchPolicy: unref(policy),
+            enabled: enableQuery.value
+        })
     )
+    onResult(({ data }) => {
+        if (data && data.getOwnersERC20Tokens) {
+            nextKey.value = data.getOwnersERC20Tokens.nextKey
+            if (nextKey.value && unref(policy) !== 'cache-only') {
+                loadMoreTokens()
+            }
+        }
+    })
+
+    const initialLoad = computed<boolean>(() => {
+        if (erc20TokensResult.value) {
+            if (erc20TokensResult.value.getOwnersERC20Tokens.nextKey) {
+                return !(erc20TokensResult.value.getOwnersERC20Tokens.nextKey === null || erc20TokensResult.value.getOwnersERC20Tokens.nextKey === undefined)
+            }
+            return false
+        }
+        return true
+    })
+
+    const loadMoreTokens = () => {
+        fetchMoreTokens({
+            variables: {
+                hash: unref(addressHash).toLowerCase(),
+                _nextKey: nextKey.value
+            },
+            updateQuery: (previousResult, { fetchMoreResult }) => {
+                if (!fetchMoreResult) {
+                    return previousResult
+                }
+                const newT = fetchMoreResult.getOwnersERC20Tokens.owners
+                const prevT = previousResult.getOwnersERC20Tokens.owners
+                return {
+                    getOwnersERC20Tokens: {
+                        __typename: previousResult.getOwnersERC20Tokens.__typename,
+                        owners: [...prevT, ...newT],
+                        nextKey: fetchMoreResult.getOwnersERC20Tokens.nextKey
+                    }
+                }
+            }
+        })
+    }
+
     const loadingTokens = computed<boolean>(() => {
-        return loading.value
+        return initialLoad.value || loadingEthTokens.value
     })
     const erc20Tokens = computed<Array<TokenOwnersFragment | null> | undefined>(() => {
         return erc20TokensResult.value?.getOwnersERC20Tokens.owners
@@ -33,10 +86,6 @@ export function useAddressToken(addressHash: Ref<string>) {
         return tokenBalance.value || '0'
     })
 
-    const initialLoad = computed<boolean>(() => {
-        return erc20TokensResult.value ? false : true
-    })
-
     /**
      * Gets an object with all sorted arrays
      *
@@ -44,7 +93,7 @@ export function useAddressToken(addressHash: Ref<string>) {
      * @returns  null  otherwise
      */
     const tokenPrices = computed<Map<string, TokenMarketData> | false | null>(() => {
-        if (!loadingTokens.value && erc20Tokens.value && !loadingEthTokens.value) {
+        if (!initialLoad.value && erc20Tokens.value && !loadingEthTokens.value) {
             const contracts: string[] = []
             erc20Tokens.value.forEach(token => {
                 if (token) {
@@ -67,7 +116,7 @@ export function useAddressToken(addressHash: Ref<string>) {
      */
 
     const tokenSort = computed<TokenSort | false>(() => {
-        if (!loadingTokens.value && erc20Tokens.value && tokenPrices.value !== null) {
+        if (!initialLoad.value && erc20Tokens.value && tokenPrices.value !== null) {
             return new TokenSort(erc20Tokens.value, tokenPrices.value, true)
         }
         return false
@@ -77,7 +126,7 @@ export function useAddressToken(addressHash: Ref<string>) {
      * @returns {BN} - total token balance
      */
     const tokenTotalBalanceBN = computed<BN>(() => {
-        if (tokenSort.value) {
+        if (!initialLoad.value && tokenSort.value) {
             const tokenAmounts = tokenSort.value.usdValue?.ascend.reduce((acc, el) => {
                 return new BN(el.usdValue).plus(acc).toNumber()
             }, 0)
@@ -95,5 +144,16 @@ export function useAddressToken(addressHash: Ref<string>) {
         return formatUsdValue(tokenTotalBalanceBN.value).value
     })
 
-    return { erc20Tokens, tokenPrices, loadingTokens, refetchTokens, tokenSort, tokenBalance, tokenTotalBalanceBN, initialLoad, tokenCount, tokenBalanceValue }
+    return {
+        erc20Tokens,
+        tokenPrices,
+        loadingTokens,
+        refetchTokens,
+        tokenSort,
+        tokenBalance,
+        tokenTotalBalanceBN,
+        initialLoad,
+        tokenCount,
+        tokenBalanceValue
+    }
 }

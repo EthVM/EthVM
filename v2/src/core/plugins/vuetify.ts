@@ -58,7 +58,9 @@ const mainnetLightTheme: ThemeDefinition = {
         tableGrey: COLORS.greyTableBGLight,
         greyCard: COLORS.greyCardLM,
         tabActive: COLORS.blue,
-        greyInputText: COLORS.greyInputText
+        greyInputText: COLORS.greyInputText,
+        snackbar: COLORS.navy,
+        darkSurface: COLORS.greyBackdroundDM
     },
     variables: {
         'skeleton-gradient': 0.3
@@ -92,7 +94,9 @@ const mainnetDarkTheme: ThemeDefinition = {
         whiteLogo: COLORS.white,
         greyCard: COLORS.greyBackdroundDM,
         tabActive: COLORS.blue,
-        greyInputText: COLORS.greyInputText
+        greyInputText: COLORS.greyInputText,
+        snackbar: COLORS.lightBlue,
+        darkSurface: COLORS.greyBackgroundLM
     },
     variables: {
         'skeleton-gradient': 0.03

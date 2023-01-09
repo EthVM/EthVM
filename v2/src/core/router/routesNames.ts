@@ -102,9 +102,9 @@ const ROUTE_NAME: Route = {
         PATH: `/search/not_found/:${ROUTE_PROP.SEARCH_NOT_FOUND}`,
         NAME: 'search-not-found'
     },
-    FAV_ADDRESS: {
-        PATH: '/fav_addresses',
-        NAME: 'fav_addresses'
+    PORTFOLIO: {
+        PATH: '/portfolio',
+        NAME: 'portfolio'
     },
     FAV_TOKENS: {
         PATH: '/tokens/favorites',
@@ -117,11 +117,10 @@ const ADDRESS_ROUTE_QUERY = {
     Q_TOKENS: ['balance', 'transfers'],
     Q_MINER: ['blocks', 'uncles']
 }
-
+const Q_PORTFOLIO = ['address-list', 'balances']
 const Q_TOKEN_DETAILS = ['transfers', 'holders']
-
 const Q_BLOCKS_AND_TXS = ['blocks', 'transactions']
 const Q_BLOCK_DETAILS = ['transaction', 'more']
 const Q_TXS_DETAILS = ['state', 'more']
 
-export { ROUTE_NAME, ROUTE_PROP, ADDRESS_ROUTE_QUERY, Q_TOKEN_DETAILS, Q_BLOCKS_AND_TXS, Q_BLOCK_DETAILS, Q_TXS_DETAILS }
+export { ROUTE_NAME, ROUTE_PROP, ADDRESS_ROUTE_QUERY, Q_TOKEN_DETAILS, Q_BLOCKS_AND_TXS, Q_BLOCK_DETAILS, Q_TXS_DETAILS, Q_PORTFOLIO }
