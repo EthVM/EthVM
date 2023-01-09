@@ -32,12 +32,12 @@
             </template>
             <template v-if="props.isLoading">
                 <div v-for="i in props.maxItems" :key="i" class="my-5">
-                    <div class="skeleton-box rounded-xl my-5" style="height: 24px"></div>
+                    <div class="skeleton-box rounded-xl my-5" style="height: 40px"></div>
                 </div>
             </template>
-            <app-intersect v-if="props.showIntersect" @intersect="$emit('loadMore')">
-                <div class="skeleton-box rounded-xl mt-1 my-4" style="height: 24px"></div>
-            </app-intersect>
+            <template v-if="!props.initialLoad && props.showIntersect">
+                <app-pagination :length="pages" :has-next="props.showIntersect" @update:modelValue="$emit('loadMore', $event)" />
+            </template>
         </div>
     </div>
 </template>
@@ -48,6 +48,7 @@ import { computed } from 'vue'
 import TxsTableRow from '@module/txs/components/TxsTableRow.vue'
 import AppIntersect from '@core/components/AppIntersect.vue'
 import AppNoResult from '@core/components/AppNoResult.vue'
+import AppPagination from '@core/components/AppPagination.vue'
 
 const { xs, mdAndDown } = useDisplay()
 
@@ -56,6 +57,7 @@ const props = defineProps({
     isLoading: Boolean,
     maxItems: Number,
     index: Number,
+    pages: Number,
     address: {
         type: String,
         default: ''
@@ -73,6 +75,10 @@ const props = defineProps({
         default: false
     },
     isBlock: {
+        type: Boolean,
+        default: false
+    },
+    initialLoad: {
         type: Boolean,
         default: false
     },
