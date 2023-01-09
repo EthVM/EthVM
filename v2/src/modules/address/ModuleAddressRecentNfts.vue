@@ -7,7 +7,7 @@
             <app-btn-icon v-else icon="more_horiz" @click="goToNftsPage"></app-btn-icon>
         </v-card-title>
         <div>
-            <template v-if="loading !== false">
+            <template v-if="loadingBalance !== false">
                 <div v-for="item in 9" :key="item" class="my-2">
                     <div class="skeleton-box rounded-xl mt-1 my-4" style="height: 24px"></div>
                 </div>
@@ -39,7 +39,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, reactive, toRefs, ref } from 'vue'
+import { computed, reactive, toRefs, ref, watch } from 'vue'
 import AppNewUpdate from '@core/components/AppNewUpdate.vue'
 import AppBtn from '@core/components/AppBtn.vue'
 import AppBtnIcon from '@core/components/AppBtnIcon.vue'
@@ -73,43 +73,43 @@ const props = defineProps({
 //     (e: 'resetCount', eventType: AddressEventType, isReset: boolean): void
 // }>()
 
-interface ComponentState {
-    nftMeta: Map<string, NftMetaFragment>
-}
+// interface ComponentState {
+//     nftMeta: Map<string, NftMetaFragment>
+// }
 
-const state: ComponentState = reactive({
-    nftMeta: new Map()
-})
+// const state: ComponentState = reactive({
+//     nftMeta: new Map()
+// })
 
 // const { addressHash } = toRefs(props)
 
 // const { tokenBalanceValue, tokenCount, initialLoad: loadingAddressTokens } = useAddressToken(addressHash)
 // const { loading: loadingMarketInfo } = useCoinData()
 
-const { result, fetchMore, refetch, loading, onResult } = useGetOwnersNftTokensQuery(
+const {
+    result: resultBalance,
+    refetch,
+    loading: loadingBalance
+} = useGetOwnersNftTokensQuery(
     () => ({
         address: props.addressHash
     }),
     { notifyOnNetworkStatusChange: true }
 )
 
-const tokenIDS = ref<string>('')
-
-onResult(data => {
-    if (data) {
-        result.value?.getOwnersNFTTokens.tokens.forEach(i => {
+const tokenIDS = computed<string>(() => {
+    if (!loadingBalance.value && resultBalance.value) {
+        let ids = ''
+        resultBalance.value?.getOwnersNFTTokens.tokens.forEach(i => {
             const id = Web3Utils.hexToNumberString(i.tokenInfo.tokenId || '')
-            tokenIDS.value = `${tokenIDS.value}ethereum.${i.tokenInfo.contract}.${id},`
-            console.log(tokenIDS.value)
+            ids = `${ids}ethereum.${i.tokenInfo.contract}.${id},`
         })
+        return ids
     }
+    return ''
 })
 
-const {
-    result: metaResult,
-    loading: loadingMeta,
-    onResult: onResultMeta
-} = useGetNftTokensMetaQuery(
+const { result: metaResult, loading: loadingMeta } = useGetNftTokensMetaQuery(
     () => ({
         input: tokenIDS.value
     }),
@@ -119,35 +119,27 @@ const {
     })
 )
 
-onResultMeta(data => {
-    if (data) {
-        console.log(metaResult.value)
-        metaResult.value?.getNFTTokensMeta?.nfts?.forEach(i => {
-            // console.log(i)
+const nftMeta = computed<Map<string, NftMetaFragment>>(() => {
+    if (!loadingBalance.value && !loadingMeta.value && metaResult.value && metaResult.value.getNFTTokensMeta) {
+        const map = new Map<string, NftMetaFragment>()
+        metaResult.value.getNFTTokensMeta.nfts?.forEach(i => {
             if (i.token_id) {
-                // console.log('hello')
-                state.nftMeta.set(i.token_id, i)
-                // console.log(state.nftMeta.get(i.token_id))
+                map.set(i.token_id, i)
             }
         })
+        return map
     }
-
-    // if (data) {
-    //     result.value?.getOwnersNFTTokens.tokens.forEach(i => {
-    //         tokenIDS.value = `${tokenIDS.value}ethereum.${i.tokenInfo.contract}.${i.tokenInfo.tokenId},`
-    //     })
-    //     console.log(tokenIDS.value)
-    // }
+    return new Map()
 })
 
 const tokens = computed<NFTDetails[]>(() => {
-    return result.value
-        ? result.value?.getOwnersNFTTokens.tokens.map(token => {
+    return resultBalance.value
+        ? resultBalance.value?.getOwnersNFTTokens.tokens.map(token => {
               return {
                   type: token.type,
                   contract: token.tokenInfo.contract,
                   id: Web3Utils.hexToNumberString(token.tokenInfo.tokenId || ''),
-                  meta: state.nftMeta.get(Web3Utils.hexToNumberString(token.tokenInfo.tokenId || ''))
+                  meta: nftMeta.value.get(Web3Utils.hexToNumberString(token.tokenInfo.tokenId || ''))
               }
           })
         : []
