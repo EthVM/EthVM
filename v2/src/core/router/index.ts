@@ -1,5 +1,14 @@
 import { createRouter, createWebHistory, createWebHashHistory, RouteRecordRaw } from 'vue-router'
-import { ADDRESS_ROUTE_QUERY, ROUTE_NAME, Q_TOKEN_DETAILS, Q_BLOCKS_AND_TXS, Q_BLOCK_DETAILS, Q_TXS_DETAILS, Q_PORTFOLIO, Q_ADDRESS_TRANSFERS } from './routesNames'
+import {
+    ADDRESS_ROUTE_QUERY,
+    ROUTE_NAME,
+    Q_TOKEN_DETAILS,
+    Q_BLOCKS_AND_TXS,
+    Q_BLOCK_DETAILS,
+    Q_TXS_DETAILS,
+    Q_ADDRESS_TRANSFERS,
+    Q_PORTFOLIO
+} from './routesNames'
 import HomeView from '@view/ViewHome.vue'
 import BlocksView from '@view/ViewBlocks.vue'
 import BlocksAndTxsView from '@view/ViewBlocksAndTransactions.vue'

@@ -449,6 +449,8 @@ export type Query = {
     getTransactionsByHashes: Array<Maybe<Tx>>
     getUncleByHash: Uncle
     getUncleRewards: EthTransfers
+    getUncleRewardsPg: EthTransfers
+    tmpTest: Scalars['String']
 }
 
 export type QueryGetAllEthTransfersArgs = {
@@ -739,6 +741,12 @@ export type QueryGetUncleRewardsArgs = {
     owner: Scalars['String']
 }
 
+export type QueryGetUncleRewardsPgArgs = {
+    limit?: InputMaybe<Scalars['Int']>
+    nextKey?: InputMaybe<Scalars['String']>
+    owner: Scalars['String']
+}
+
 export type StateDiffChange = {
     __typename?: 'StateDiffChange'
     from?: Maybe<BalanceDiff>
@@ -967,6 +975,7 @@ export enum TransferDirection {
 
 export enum TransferSubtype {
     BlockReward = 'BlockReward',
+    ContractDestroyed = 'ContractDestroyed',
     DaoHardFork = 'DaoHardFork',
     Erc20 = 'ERC20',
     Erc721 = 'ERC721',
