@@ -26,7 +26,7 @@
             </template>
             <div v-if="props.isLoading">
                 <div v-for="i in props.maxItems" :key="i">
-                    <div class="skeleton-box rounded-xl my-5" style="height: 44px"></div>
+                    <div class="skeleton-box rounded-xl my-5" style="height: 32px"></div>
                 </div>
             </div>
             <template v-if="!props.initialLoad && props.showIntersect">
