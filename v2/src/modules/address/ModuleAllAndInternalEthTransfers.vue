@@ -26,7 +26,7 @@
         </v-row>
         <v-divider class="my-0 mt-md-4 mx-n4 mx-sm-n6" />
     </template>
-    <template v-if="!initialLoad">
+    <div v-if="!initialLoad" class="p-ten-top">
         <template v-if="transfers && transfers.length > 0">
             <div v-for="transfer in transfers" :key="transfer.transfer.transactionHash">
                 <table-all-and-internal-row :tab="props.tab" :loading="initialLoad" :transfer="transfer" :address-ref="props.addressRef" />
@@ -37,7 +37,7 @@
             <div class="skeleton-box rounded-xl mt-1 my-4" style="height: 24px"></div>
             <v-divider />
         </app-intersect>
-    </template>
+    </div>
     <template v-else>
         <div v-for="item in 10" :key="item" class="my-2">
             <div class="skeleton-box rounded-xl my-5" style="height: 24px"></div>

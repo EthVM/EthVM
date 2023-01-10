@@ -51,17 +51,17 @@
         <div v-if="pendingTxs.length < 1">
             <app-no-result text="This address does not have pending transactions" class="mt-4 mt-sm-6" />
         </div>
-        <template v-else>
+        <div v-else class="p-ten-top">
             <div v-for="tx in pendingTxs" :key="tx.hash">
-                <table-mined-and-pending-row :tx="tx" :addressRef="props.addressRef" />
+                <table-pending-row :tx="tx" :addressRef="props.addressRef" />
             </div>
-        </template>
+        </div>
     </template>
 </template>
 
 <script setup lang="ts">
 import AppNoResult from '@core/components/AppNoResult.vue'
-import TableMinedAndPendingRow from '@module/address/components/EthBalanceTabs/TableMinedAndPendingRow.vue'
+import TablePendingRow from '@module/address/components/EthBalanceTabs/TablePendingRow.vue'
 import { computed } from 'vue'
 import { Q_ADDRESS_TRANSFERS } from '@core/router/routesNames'
 import { PendingTxsFragmentFragment, useGetPendingTransactionsQuery } from '@module/address/apollo/EthTransfers/pendingTransfers.generated'

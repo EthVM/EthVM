@@ -1,106 +1,96 @@
 <template>
-    <div class="position-relative">
-        <v-row v-if="smAndDown" class="my-5" justify="space-between" @click="showMoreDetails = !showMoreDetails">
-            <v-col cols="6">
-                <v-avatar :color="transferDirection.color" size="22">
-                    <v-icon size="13" color="white"> {{ transferDirection.icon }} </v-icon>
-                </v-avatar>
-                <span class="ml-2">
-                    {{ transferDirection.text }}
+    <app-table-row
+        v-if="smAndDown"
+        row-justify="space-between"
+        @click="showMoreDetails = !showMoreDetails"
+        :color="showMoreDetails ? 'pillGrey' : 'transparent'"
+    >
+        <v-col cols="6">
+            <v-avatar :color="transferDirection.color" size="22">
+                <v-icon size="13" color="white"> {{ transferDirection.icon }} </v-icon>
+            </v-avatar>
+            <span class="ml-2">
+                {{ transferDirection.text }}
+            </span>
+        </v-col>
+        <v-col cols="6" class="text-right">{{ txValue.value }} ETH</v-col>
+        <v-col cols="6" class="text-info text-lowercase"> {{ timestamp }} {{ transferDirection.direction }} </v-col>
+        <v-col cols="6">
+            <div class="d-flex align-center justify-end">
+                <app-address-blockie :address="txAddress || ''" :size="6" class="mr-2 mr-sm-2" />
+                <app-transform-hash is-short is-blue :hash="eth.toCheckSum(txAddress)" :link="`/address/${txAddress}`" />
+            </div>
+        </v-col>
+    </app-table-row>
+    <app-table-row v-else row-align="center" @click="showMoreDetails = !showMoreDetails" :color="showMoreDetails ? 'pillGrey' : 'transparent'">
+        <v-col :sm="mdAndDown ? 3 : 2">
+            <div class="d-flex">
+                <span style="width: 30px" class="d-inline-block">
+                    <v-icon :color="statusIcon.color">{{ statusIcon.icon }}</v-icon>
                 </span>
-            </v-col>
-            <v-col cols="6" class="text-right">{{ txValue.value }} ETH</v-col>
-            <v-col cols="6" class="text-info text-lowercase"> {{ timestamp }} {{ transferDirection.direction }} </v-col>
-            <v-col cols="6">
-                <div class="d-flex align-center justify-end">
-                    <app-address-blockie :address="txAddress || ''" :size="6" class="mr-2 mr-sm-2" />
-                    <app-transform-hash is-short is-blue :hash="eth.toCheckSum(txAddress)" :link="`/address/${txAddress}`" />
-                </div>
-            </v-col>
-        </v-row>
-        <v-row v-else class="my-5" align="center">
-            <v-col :sm="mdAndDown ? 3 : 2">
-                <div class="d-flex">
-                    <span style="width: 30px" class="d-inline-block">
-                        <v-icon :color="statusIcon.color">{{ statusIcon.icon }}</v-icon>
-                    </span>
-                    <div class="ml-4">
-                        {{ txValue.value }} ETH
-                        <div class="text-lowercase text-info">
-                            {{ timestamp }} <span v-if="mdAndDown">{{ transferDirection.direction }}</span>
-                        </div>
+                <div class="ml-4">
+                    {{ txValue.value }} ETH
+                    <div class="text-lowercase text-info">
+                        {{ timestamp }} <span v-if="mdAndDown">{{ transferDirection.direction }}</span>
                     </div>
                 </div>
-            </v-col>
-            <v-col cols="1" lg="2">
-                <app-chip :bg="transferDirection.color" :text="transferDirection.direction" />
-            </v-col>
-            <v-col md="3">
-                <div class="d-flex align-center">
-                    <app-address-blockie :address="txAddress || ''" :size="8" class="mr-2 mr-sm-2" />
-                    <app-transform-hash is-short is-blue :hash="eth.toCheckSum(txAddress)" :link="`/address/${txAddress}`" />
-                </div>
-            </v-col>
-            <v-col sm="2">
-                <app-transform-hash
-                    is-short
-                    is-blue
-                    :hash="eth.toCheckSum(transfer.transfer.transactionHash)"
-                    :link="`/tx/${transfer.transfer.transactionHash}`"
-                />
-            </v-col>
-            <v-col sm="3">
-                <div class="d-flex justify-space-between align-center">
-                    {{ totalBalanceChange.value }} ETH
-                    <app-btn-icon
-                        :icon="showMoreDetails ? 'expand_less' : 'expand_more'"
-                        tooltip-text="Show transfer details"
-                        @click="showMoreDetails = !showMoreDetails"
-                    />
-                </div>
-            </v-col>
-        </v-row>
-        <v-row v-if="showMoreDetails" justify="space-between" class="my-4 flex-column-reverse flex-sm-row">
-            <v-col cols="2" class="d-none d-md-block"></v-col>
-            <v-col cols="12" sm="5" md="4">
-                <p class="font-weight-bold">Events</p>
-                <p class="my-5 text-info">
-                    {{ txEvents }}
-                </p>
-            </v-col>
-            <v-spacer />
-            <v-col cols="12" sm="7" md="4">
-                <p class="font-weight-bold">Balance Change Breakdown</p>
-                <v-row class="my-5" align="center">
-                    <v-col cols="6" class="text-info">Transaction Value</v-col>
-                    <span>{{ txValue.value }} ETH</span>
-                </v-row>
-                <v-row v-if="!isIncoming" class="my-5" align="center">
-                    <v-col cols="6" class="text-info">TX Fee Paid</v-col>
-                    <span class="text-error">{{ txFee.value }} ETH</span>
-                </v-row>
-                <v-row v-if="internalTransferValue" class="my-5" align="center">
-                    <v-col cols="6" class="text-info">Internal Transfer Value</v-col>
-                    <span class="text-success">{{ internalTransferValue.value }} ETH</span>
-                </v-row>
-                <v-divider class="mx-n5 mx-sm-0" />
-                <v-row class="my-5" align="center">
-                    <v-col cols="6" class="text-info">Total Balance Change</v-col>
-                    <span :class="totalBalanceChange.color">{{ totalBalanceChange.value }} ETH</span>
-                </v-row>
-                <v-row class="my-5" align="center">
-                    <v-col cols="6" class="text-info">Balance Before</v-col>
-                    <span>{{ balanceBeforeFormatted.value }} ETH</span>
-                </v-row>
-                <v-row class="my-5" align="center">
-                    <v-col cols="6" class="text-info">Balance After</v-col>
-                    <span>{{ balanceAfterFormatted.value }} ETH</span>
-                </v-row>
-            </v-col>
-            <v-col cols="1" class="d-none d-md-block"></v-col>
-        </v-row>
-        <div v-if="showMoreDetails" class="row-bg bg-tableGrey"></div>
-    </div>
+            </div>
+        </v-col>
+        <v-col cols="1" lg="2">
+            <app-chip :bg="transferDirection.color" :text="transferDirection.direction" />
+        </v-col>
+        <v-col md="3">
+            <div class="d-flex align-center">
+                <app-address-blockie :address="txAddress || ''" :size="8" class="mr-2 mr-sm-2" />
+                <app-transform-hash is-short is-blue :hash="eth.toCheckSum(txAddress)" :link="`/address/${txAddress}`" />
+            </div>
+        </v-col>
+        <v-col sm="2">
+            <app-transform-hash is-short is-blue :hash="eth.toCheckSum(transfer.transfer.transactionHash)" :link="`/tx/${transfer.transfer.transactionHash}`" />
+        </v-col>
+        <v-col sm="3"> {{ totalBalanceChange.value }} ETH </v-col>
+        <template #expandable>
+            <v-row v-if="showMoreDetails" justify="space-between" class="my-4 flex-column-reverse flex-sm-row">
+                <v-col cols="2" class="d-none d-md-block"></v-col>
+                <v-col cols="12" sm="5" md="4">
+                    <p class="font-weight-bold">Events</p>
+                    <p class="my-5 text-info">
+                        {{ txEvents }}
+                    </p>
+                </v-col>
+                <v-spacer />
+                <v-col cols="12" sm="7" md="4">
+                    <p class="font-weight-bold">Balance Change Breakdown</p>
+                    <v-row class="my-5" align="center">
+                        <v-col cols="6" class="text-info">Transaction Value</v-col>
+                        <span>{{ txValue.value }} ETH</span>
+                    </v-row>
+                    <v-row v-if="!isIncoming" class="my-5" align="center">
+                        <v-col cols="6" class="text-info">TX Fee Paid</v-col>
+                        <span class="text-error">{{ txFee.value }} ETH</span>
+                    </v-row>
+                    <v-row v-if="internalTransferValue" class="my-5" align="center">
+                        <v-col cols="6" class="text-info">Internal Transfer Value</v-col>
+                        <span class="text-success">{{ internalTransferValue.value }} ETH</span>
+                    </v-row>
+                    <v-divider class="mx-n5 mx-sm-0" />
+                    <v-row class="my-5" align="center">
+                        <v-col cols="6" class="text-info">Total Balance Change</v-col>
+                        <span :class="totalBalanceChange.color">{{ totalBalanceChange.value }} ETH</span>
+                    </v-row>
+                    <v-row class="my-5" align="center">
+                        <v-col cols="6" class="text-info">Balance Before</v-col>
+                        <span>{{ balanceBeforeFormatted.value }} ETH</span>
+                    </v-row>
+                    <v-row class="my-5" align="center">
+                        <v-col cols="6" class="text-info">Balance After</v-col>
+                        <span>{{ balanceAfterFormatted.value }} ETH</span>
+                    </v-row>
+                </v-col>
+                <v-col cols="1" class="d-none d-md-block"></v-col>
+            </v-row>
+        </template>
+    </app-table-row>
 </template>
 
 <script setup lang="ts">
@@ -108,6 +98,7 @@ import AppBtnIcon from '@core/components/AppBtnIcon.vue'
 import AppAddressBlockie from '@/core/components/AppAddressBlockie.vue'
 import AppTransformHash from '@/core/components/AppTransformHash.vue'
 import AppChip from '@core/components/AppChip.vue'
+import AppTableRow from '@core/components/AppTableRow.vue'
 import { Q_ADDRESS_TRANSFERS } from '@core/router/routesNames'
 import { timeAgo, eth } from '@core/helper'
 import { TxsTransfersFragment, useGetEthTransfersByHashQuery } from '@module/address/apollo/EthTransfers/transfersHistory.generated'

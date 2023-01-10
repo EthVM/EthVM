@@ -98,7 +98,6 @@ import { useAppTableRowRender } from '@core/composables/AppTableRowRender/useApp
 import { useAddressUpdate } from '@core/composables/AddressUpdate/addressUpdate.composable'
 const { smAndDown, mdAndDown } = useDisplay()
 
-const { newMinedBlocks, newMinedUncles, resetCount } = useAddressUpdate(props.addressRef)
 const minerRoutes = ADDRESS_ROUTE_QUERY.Q_MINER
 const MOBILE_MAX_ITEMS = 4
 
@@ -128,6 +127,8 @@ const props = defineProps({
         default: false
     }
 })
+
+const { newMinedBlocks, newMinedUncles, resetCount } = useAddressUpdate(props.addressHash)
 
 const enableBlockRewardsQuery = computed<boolean>(() => {
     return state.tab === minerRoutes[0]
@@ -170,7 +171,7 @@ const addressRewards = computed<RewardSummaryFragment | undefined>(() => {
     return addressRewardsUncleQueryResult.value?.getUncleRewards
 })
 
-const noResultText = computed<RewardSummaryFragment | undefined>(() => {
+const noResultText = computed<string>(() => {
     if (state.tab === minerRoutes[0]) {
         return 'This address does not have any block rewards'
     }
@@ -185,7 +186,7 @@ const newRewards = computed<number>(() => {
 })
 
 const newRewardsText = computed<string>(() => {
-    const isPlural = props.newRewards > 1
+    const isPlural = newRewards.value > 1
     if (state.tab === minerRoutes[0]) {
         return isPlural ? 'New blocks' : 'New block'
     }
@@ -277,7 +278,7 @@ const setPage = async (page: number, reset = false): Promise<boolean> => {
                 refetchAddressRewardsUncle()
             }
             emit('resetUpdateCount', eventType.value, true)
-            resetCount()
+            resetCount(eventType.value)
         } else {
             if (page > state.isEnd && hasMore.value && addressRewards.value) {
                 if (state.tab === minerRoutes[0]) {

@@ -55,11 +55,11 @@
         <v-divider class="my-0 mt-md-4 mx-n4 mx-sm-n6" />
     </template>
     <template v-if="!initialLoad">
-        <template v-if="transfers && transfers.length > 0">
+        <div v-if="transfers && transfers.length > 0" class="p-ten-top">
             <div v-for="transfer in transfers" :key="transfer.transfer.transactionHash">
                 <table-txs-history-row :loading="initialLoad" :transfer="transfer" :address-ref="props.addressRef" />
             </div>
-        </template>
+        </div>
         <app-no-result v-else :text="noResultText" class="mt-4 mt-sm-6 mb-5"></app-no-result>
         <app-intersect v-if="hasMore" @intersect="loadMoreData">
             <div class="skeleton-box rounded-xl mt-1 my-4" style="height: 24px"></div>
