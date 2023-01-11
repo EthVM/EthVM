@@ -449,11 +449,14 @@ export type Query = {
     getTransactionsByHashes: Array<Maybe<Tx>>
     getUncleByHash: Uncle
     getUncleRewards: EthTransfers
+    getUncleRewardsPg: EthTransfers
+    tmpTest: Scalars['String']
 }
 
 export type QueryGetAllEthTransfersArgs = {
     limit?: InputMaybe<Scalars['Int']>
     nextKey?: InputMaybe<Scalars['String']>
+    owner?: InputMaybe<Scalars['String']>
 }
 
 export type QueryGetAllTransfersArgs = {
@@ -515,7 +518,7 @@ export type QueryGetErc20TransfersArgs = {
 export type QueryGetErc20TransfersV2TmpArgs = {
     limit?: InputMaybe<Scalars['Int']>
     nextKey?: InputMaybe<Scalars['String']>
-    owner: Scalars['String']
+    owner?: InputMaybe<Scalars['String']>
 }
 
 export type QueryGetErc721TokenBalanceArgs = {
@@ -568,7 +571,7 @@ export type QueryGetErc1155TransfersArgs = {
 export type QueryGetErc1155TransfersV2TmpArgs = {
     limit?: InputMaybe<Scalars['Int']>
     nextKey?: InputMaybe<Scalars['String']>
-    owner: Scalars['String']
+    owner?: InputMaybe<Scalars['String']>
 }
 
 export type QueryGetEthBalanceArgs = {
@@ -578,7 +581,7 @@ export type QueryGetEthBalanceArgs = {
 export type QueryGetEthInternalTransactionTransfersArgs = {
     limit?: InputMaybe<Scalars['Int']>
     nextKey?: InputMaybe<Scalars['String']>
-    owner: Scalars['String']
+    owner?: InputMaybe<Scalars['String']>
 }
 
 export type QueryGetEthOwnersArgs = {
@@ -591,9 +594,10 @@ export type QueryGetEthSigsArgs = {
 }
 
 export type QueryGetEthTransactionTransfersArgs = {
+    direction?: InputMaybe<TransferDirection>
     limit?: InputMaybe<Scalars['Int']>
     nextKey?: InputMaybe<Scalars['String']>
-    owner: Scalars['String']
+    owner?: InputMaybe<Scalars['String']>
 }
 
 export type QueryGetEthTransfersArgs = {
@@ -627,7 +631,7 @@ export type QueryGetHashTypeArgs = {
 }
 
 export type QueryGetNftTransfersArgs = {
-    address: Scalars['String']
+    address?: InputMaybe<Scalars['String']>
     limit?: InputMaybe<Scalars['Int']>
     nextKey?: InputMaybe<Scalars['String']>
 }
@@ -732,6 +736,12 @@ export type QueryGetUncleByHashArgs = {
 }
 
 export type QueryGetUncleRewardsArgs = {
+    limit?: InputMaybe<Scalars['Int']>
+    nextKey?: InputMaybe<Scalars['String']>
+    owner: Scalars['String']
+}
+
+export type QueryGetUncleRewardsPgArgs = {
     limit?: InputMaybe<Scalars['Int']>
     nextKey?: InputMaybe<Scalars['String']>
     owner: Scalars['String']
@@ -965,6 +975,7 @@ export enum TransferDirection {
 
 export enum TransferSubtype {
     BlockReward = 'BlockReward',
+    ContractDestroyed = 'ContractDestroyed',
     DaoHardFork = 'DaoHardFork',
     Erc20 = 'ERC20',
     Erc721 = 'ERC721',

@@ -1,6 +1,6 @@
 <template>
     <v-card flat class="mx-n6 rounded-0 py-1 position-relative" v-bind="vCardAttrs">
-        <v-row class="text-body-1 my-0 flex-row mx-4" v-bind="vRowAttrs">
+        <v-row class="text-body-1 my-0 flex-row mx-4" v-bind="vRowAttrs" :dense="xs">
             <slot />
             <v-expand-transition v-if="$slots.expandable">
                 <slot name="expandable" />
@@ -11,6 +11,9 @@
 
 <script setup lang="ts">
 import { computed, useAttrs } from 'vue'
+import { useDisplay } from 'vuetify'
+
+const { xs } = useDisplay()
 
 const attrs = useAttrs()
 

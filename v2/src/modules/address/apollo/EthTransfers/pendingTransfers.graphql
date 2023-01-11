@@ -1,0 +1,56 @@
+fragment PendingTxsFragment on Tx {
+    baseFeePerGas
+    blockHash
+    blockNumber
+    contractAddress
+    from
+    gas
+    gasPrice
+    gasUsed
+    hash
+    input
+    logs {
+        address
+        data
+        logIndex
+        removed
+        topics
+        type
+    }
+    maxFeePerGas
+    maxPriorityFeePerGas
+    nonce
+    r
+    replacedBy
+    s
+    status
+    timestamp
+    to
+    trace {
+        action {
+            callType
+            from
+            gas
+            input
+            to
+            value
+        }
+        result {
+            gasUsed
+            output
+        }
+        subtraces
+        traceAddress
+        transactionPosition
+        type
+    }
+    transactionIndex
+    v
+    value
+}
+
+query getPendingTransactions($hash: String!) {
+    getPendingTransactions(owner: $hash) {
+        ...PendingTxsFragment
+    }
+}

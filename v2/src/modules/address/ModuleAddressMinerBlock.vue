@@ -1,14 +1,46 @@
 <template>
-    <v-card :variant="!props.isOverview ? 'flat' : 'elevated'" :elevation="props.isOverview ? 1 : 0" rounded="xl" class="pa-4 pa-sm-6 fill-height">
-        <v-card-title class="card-title d-flex justify-space-between align-center mb-5 px-0">
+    <v-row v-if="!props.isOverview" class="mt-3 mb-6">
+        <div class="mr-3">
+            <v-btn
+                color="textPrimary"
+                :variant="state.tab === minerRoutes[0] ? 'flat' : 'outlined'"
+                density="compact"
+                rounded="pill"
+                class="px-2"
+                height="24"
+                @click="setMinerTab(minerRoutes[0])"
+            >
+                Block rewards
+            </v-btn>
+        </div>
+        <div class="mx-3">
+            <v-btn
+                color="textPrimary"
+                :variant="state.tab === minerRoutes[1] ? 'flat' : 'outlined'"
+                density="compact"
+                rounded="pill"
+                class="px-2"
+                height="24"
+                @click="setMinerTab(minerRoutes[1])"
+            >
+                Uncle rewards
+            </v-btn>
+        </div>
+    </v-row>
+    <div
+        :class="{
+            'pa-4 pa-sm-6 fill-height v-card v-card--variant-elevated rounded-xl elevation-1': props.isOverview
+        }"
+    >
+        <v-card-title v-if="props.isOverview || newRewards" class="card-title d-flex justify-space-between align-center mb-5 px-0">
             <div>
                 <span v-if="props.isOverview" class="text-h6 font-weight-bold">{{ headerTitle }}</span>
                 <!-- Notice new update-->
-                <app-new-update :icon-only="props.isOverview" :text="newRewardsText" :update-count="props.newRewards" @reload="setPage(0, true)" />
+                <app-new-update :icon-only="props.isOverview" :text="newRewardsText" :update-count="newRewards" @reload="setPage(0, true)" />
             </div>
             <template v-if="props.isOverview">
-                <app-btn v-if="!smAndDown" text="More" isSmall icon="east" @click="goToAddressMiningPage"></app-btn>
-                <app-btn-icon v-else icon="more_horiz" @click="goToAddressMiningPage"></app-btn-icon>
+                <app-btn v-if="!smAndDown" text="More" isSmall icon="east" @click="goToAddressMiningTab"></app-btn>
+                <app-btn-icon v-else icon="more_horiz" @click="goToAddressMiningTab"></app-btn-icon>
             </template>
         </v-card-title>
         <div>
@@ -30,16 +62,16 @@
                     </app-intersect>
                 </template>
                 <template v-if="rewards.length < 1 && !isLoadingRewards">
-                    <app-no-result text="This address does not have any mining history" class="mt-4 mt-sm-6"></app-no-result>
+                    <app-no-result :text="noResultText" class="mt-4 mt-sm-6"></app-no-result>
                 </template>
             </div>
             <template v-else>
-                <div v-for="i in props.maxItems" :key="i">
-                    <div class="skeleton-box rounded-xl mt-5" style="height: 24px"></div>
+                <div v-for="item in 10" :key="item" class="my-5">
+                    <div class="skeleton-box rounded-xl my-5" style="height: 24px"></div>
                 </div>
             </template>
         </div>
-    </v-card>
+    </div>
 </template>
 
 <script setup lang="ts">
@@ -61,21 +93,27 @@ import { excpInvariantViolation } from '@/apollo/errorExceptions'
 import { AddressEventType } from '@/apollo/types'
 import { useRouter } from 'vue-router'
 import { useDisplay } from 'vuetify'
-import { ROUTE_NAME, ADDRESS_ROUTE_QUERY } from '@core/router/routesNames'
+import { ROUTE_NAME, ADDRESS_ROUTE_QUERY, Q_ADDRESS_TRANSFERS } from '@core/router/routesNames'
 import { useAppTableRowRender } from '@core/composables/AppTableRowRender/useAppTableRowRender.composable'
+import { useAddressUpdate } from '@core/composables/AddressUpdate/addressUpdate.composable'
 const { smAndDown, mdAndDown } = useDisplay()
 
+const minerRoutes = ADDRESS_ROUTE_QUERY.Q_MINER
 const MOBILE_MAX_ITEMS = 4
-const state = reactive({
+
+interface ComponentState {
+    isEnd: number
+    index: number
+    tab: string
+}
+
+const state: ComponentState = reactive({
     isEnd: 0,
-    index: 0
+    index: 0,
+    tab: minerRoutes[0]
 })
 
 const props = defineProps({
-    rewardType: {
-        type: String,
-        default: 'block'
-    },
     addressHash: {
         type: String,
         required: true
@@ -84,22 +122,20 @@ const props = defineProps({
         type: Number,
         default: 6
     },
-    newRewards: {
-        type: Number,
-        required: true
-    },
     isOverview: {
         type: Boolean,
         default: false
     }
 })
 
-const enableBlockRewardsQuery = ref(false)
+const { newMinedBlocks, newMinedUncles, resetCount } = useAddressUpdate(props.addressHash)
 
-if (props.rewardType === 'block') {
-    enableBlockRewardsQuery.value = true
-} else {
-    enableBlockRewardsQuery.value = false
+const enableBlockRewardsQuery = computed<boolean>(() => {
+    return state.tab === minerRoutes[0]
+})
+
+const setMinerTab = (tabName: string) => {
+    state.tab = tabName
 }
 
 const {
@@ -112,7 +148,7 @@ const {
         hash: props.addressHash,
         _limit: 10
     }),
-    { notifyOnNetworkStatusChange: true, enabled: enableBlockRewardsQuery.value }
+    () => ({ notifyOnNetworkStatusChange: true, enabled: enableBlockRewardsQuery.value })
 )
 
 const {
@@ -125,19 +161,33 @@ const {
         hash: props.addressHash,
         _limit: 10
     }),
-    { notifyOnNetworkStatusChange: true, enabled: !enableBlockRewardsQuery.value }
+    () => ({ notifyOnNetworkStatusChange: true, enabled: !enableBlockRewardsQuery.value })
 )
 
 const addressRewards = computed<RewardSummaryFragment | undefined>(() => {
-    if (props.rewardType === 'block') {
+    if (state.tab === minerRoutes[0]) {
         return addressRewardsBlockQueryResult.value?.getBlockRewards
     }
     return addressRewardsUncleQueryResult.value?.getUncleRewards
 })
 
+const noResultText = computed<string>(() => {
+    if (state.tab === minerRoutes[0]) {
+        return 'This address does not have any block rewards'
+    }
+    return 'This address does not have any uncle rewards'
+})
+
+const newRewards = computed<number>(() => {
+    if (state.tab === minerRoutes[0]) {
+        return newMinedBlocks.value
+    }
+    return newMinedUncles.value
+})
+
 const newRewardsText = computed<string>(() => {
-    const isPlural = props.newRewards > 1
-    if (props.rewardType === 'block') {
+    const isPlural = newRewards.value > 1
+    if (state.tab === minerRoutes[0]) {
         return isPlural ? 'New blocks' : 'New block'
     }
     return isPlural ? 'New uncles' : 'New uncle'
@@ -147,7 +197,7 @@ const headerTitle = computed<string>(() => {
     if (props.isOverview) {
         return 'Blocks Mined'
     }
-    if (props.rewardType === 'block') {
+    if (state.tab === minerRoutes[0]) {
         return 'Mined Blocks Reward'
     }
     return 'Mined Uncles Rewards'
@@ -157,7 +207,7 @@ const headerTitle = computed<string>(() => {
  * Initial load will be true only when the data is being loaded initially
  */
 const initialLoad = computed<boolean>(() => {
-    if (props.rewardType === 'block') {
+    if (state.tab === minerRoutes[0]) {
         return !addressRewardsBlockQueryResult.value
     }
     return !addressRewardsUncleQueryResult.value
@@ -203,7 +253,7 @@ const hasMore = computed<boolean>(() => {
 })
 
 const eventType = computed<AddressEventType>(() => {
-    if (props.rewardType === 'block') {
+    if (state.tab === minerRoutes[0]) {
         return AddressEventType.NewMinedBlock
     }
     return AddressEventType.NewMinedUncle
@@ -222,15 +272,16 @@ const setPage = async (page: number, reset = false): Promise<boolean> => {
     try {
         if (reset) {
             state.isEnd = 0
-            if (props.rewardType === 'block') {
+            if (state.tab === minerRoutes[0]) {
                 refetchAddressRewardsBlock()
             } else {
                 refetchAddressRewardsUncle()
             }
             emit('resetUpdateCount', eventType.value, true)
+            resetCount(eventType.value)
         } else {
             if (page > state.isEnd && hasMore.value && addressRewards.value) {
-                if (props.rewardType === 'block') {
+                if (state.tab === minerRoutes[0]) {
                     await fetchMoreAddressRewardsBlock({
                         variables: {
                             hash: props.addressHash,
@@ -293,10 +344,10 @@ const loadMoreData = (e: boolean): void => {
 }
 
 const router = useRouter()
-const goToAddressMiningPage = async (): Promise<void> => {
+const goToAddressMiningTab = async (): Promise<void> => {
     await router.push({
-        name: ROUTE_NAME.ADDRESS_MINER.NAME,
-        query: { t: ADDRESS_ROUTE_QUERY.Q_MINER[0] }
+        name: ROUTE_NAME.ADDRESS_BALANCE.NAME,
+        query: { t: Q_ADDRESS_TRANSFERS[4] }
     })
 }
 </script>

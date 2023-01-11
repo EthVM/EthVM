@@ -68,7 +68,7 @@ const isHomeView = computed<boolean>(() => {
 /*
 ===================================================================================
  Handle   PORTFOLIO
- Fetches eth balances for for the addresses in the portfolio 
+ Fetches eth balances for for the addresses in the portfolio
 ===================================================================================
 */
 interface SetPortfolio {

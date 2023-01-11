@@ -1,5 +1,14 @@
 import { createRouter, createWebHistory, createWebHashHistory, RouteRecordRaw } from 'vue-router'
-import { ADDRESS_ROUTE_QUERY, ROUTE_NAME, Q_TOKEN_DETAILS, Q_BLOCKS_AND_TXS, Q_BLOCK_DETAILS, Q_TXS_DETAILS, Q_PORTFOLIO } from './routesNames'
+import {
+    ADDRESS_ROUTE_QUERY,
+    ROUTE_NAME,
+    Q_TOKEN_DETAILS,
+    Q_BLOCKS_AND_TXS,
+    Q_BLOCK_DETAILS,
+    Q_TXS_DETAILS,
+    Q_ADDRESS_TRANSFERS,
+    Q_PORTFOLIO
+} from './routesNames'
 import HomeView from '@view/ViewHome.vue'
 import BlocksView from '@view/ViewBlocks.vue'
 import BlocksAndTxsView from '@view/ViewBlocksAndTransactions.vue'
@@ -101,7 +110,8 @@ const routes: Array<RouteRecordRaw> = [
                 path: ROUTE_NAME.ADDRESS_BALANCE.PATH,
                 name: ROUTE_NAME.ADDRESS_BALANCE.NAME,
                 component: ViewAddressEthBalance,
-                props: true
+                props: route => ({ tab: route.query.t }),
+                beforeEnter: tabViewRouteGuard(Q_ADDRESS_TRANSFERS[0])
             },
             {
                 path: ROUTE_NAME.ADDRESS_TOKENS.PATH,
@@ -122,13 +132,6 @@ const routes: Array<RouteRecordRaw> = [
                 name: ROUTE_NAME.ADDRESS_CONTRACT.NAME,
                 component: ViewTemp,
                 props: true
-            },
-            {
-                path: ROUTE_NAME.ADDRESS_MINER.PATH,
-                name: ROUTE_NAME.ADDRESS_MINER.NAME,
-                component: ViewAddressMiners,
-                props: route => ({ tab: route.query.t }),
-                beforeEnter: tabViewRouteGuard(ADDRESS_ROUTE_QUERY.Q_MINER[0])
             }
         ]
     },
