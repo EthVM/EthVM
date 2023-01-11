@@ -2,17 +2,11 @@
     <v-card variant="elevated" elevation="1" rounded="xl" class="pa-4 pa-sm-6 h-100" z>
         <v-card-title class="card-title d-flex justify-space-between align-center mb-5 pa-0">
             <span class="text-h6 font-weight-bold">NFT Collection</span>
-
             <app-btn v-if="!xs" text="More" isSmall icon="east" @click="goToNftsPage"></app-btn>
             <app-btn-icon v-else icon="more_horiz" @click="goToNftsPage"></app-btn-icon>
         </v-card-title>
         <div>
-            <template v-if="loadingBalance !== false">
-                <div v-for="item in 9" :key="item" class="my-2">
-                    <div class="skeleton-box rounded-xl mt-1 my-4" style="height: 24px"></div>
-                </div>
-            </template>
-            <template v-else>
+            <template v-if="loadingBalance === false && loadingMeta === false">
                 <template v-if="!tokens || tokens.length < 1">
                     <app-no-result text="This address does not have any NFTs" class="mt-4 mt-sm-6"></app-no-result>
                 </template>
@@ -29,10 +23,14 @@
                             ></token-nft-img>
                         </v-col>
                     </v-row>
-                    <!-- <div v-for="(transfer, index) in transfers" :key="`${transfer.transfer.transactionHash} - ${index}`" class="position-relative">
-                        <nft-transfers-table-row :transfer="transfer" :is-overview="props.isOverview" :address-hash="props.addressHash" />
-                    </div> -->
                 </template>
+            </template>
+            <template v-else>
+                <v-row :dense="xs">
+                    <v-col v-for="item in 9" :key="item" cols="6" sm="4">
+                        <div class="skeleton-box rounded-xl" style="height: 154px"></div>
+                    </v-col>
+                </v-row>
             </template>
         </div>
     </v-card>
