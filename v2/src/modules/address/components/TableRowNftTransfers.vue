@@ -11,7 +11,7 @@
                     <img :src="tokenImg" alt="" height="41" width="41" class="mr-2 rounded-circle" />
                     <div style="display: grid">
                         <router-link
-                            v-if="props.transfer.tokenInfo.name !== '' || props.transfer.tokenInfo.symbol"
+                            v-if="props.transfer.tokenInfo.name !== ''"
                             :to="`/token/${props.transfer.contract}`"
                             class="text-textPrimary text-ellipses"
                         >
@@ -42,7 +42,7 @@
                 />
             </v-col>
             <v-col v-if="!props.isOverview" cols="2" class="text-info py-0">
-                {{ timeAgo(new Date(props.transfer.transfer.timestamp * 1e3)) }}
+                {{ timeAgo(new Date(props.transfer.transfer.timestamp * 1e3), true) }}
             </v-col>
         </v-row>
         <!--
@@ -106,7 +106,7 @@ import AppTransformHash from '@core/components/AppTransformHash.vue'
 import AppChip from '@core/components/AppChip.vue'
 import AppAddressBlockie from '@core/components/AppAddressBlockie.vue'
 import { useDisplay } from 'vuetify'
-import { TransferFragmentFragment as Transfer } from '../apollo/AddressTransfers/transfers.generated'
+import { NftTransferFragmentFragment as Transfer } from '../apollo/AddressTransfers/transfers.generated'
 import BN from 'bignumber.js'
 import configs from '@/configs'
 import { formatNumber, FormattedNumber } from '@core/helper/number-format-helper'
@@ -142,11 +142,11 @@ const tokenImg = computed<string>(() => {
     return require('@/assets/icon-token.png')
 })
 
-const totalTokens = computed<FormattedNumber | string>(() => {
-    if (props.transfer.token) {
-        return formatNumber(new BN(props.transfer.token).toNumber())
+const totalTokens = computed<string>(() => {
+    if (props.transfer.value) {
+        return formatNumber(new BN(props.transfer.value).toNumber())
     }
-    return 1
+    return '1'
 })
 
 const TYPES = ['in', 'out', 'self']

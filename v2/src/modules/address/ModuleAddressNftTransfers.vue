@@ -51,7 +51,7 @@
                     <app-no-result text="This address does not have any NFT transfer history" class="mt-4 mt-sm-6"></app-no-result>
                 </template>
                 <template v-else-if="transfers.length > 0 && renderState.renderTable">
-                    <div v-for="(transfer, index) in transfers" :key="`${transfer.transfer.transactionHash} - ${index}`" class="position-relative">
+                    <div v-for="(transfer, index) in transfers" :key="`${transfer?.transfer.transactionHash} - ${index}`" class="position-relative">
                         <nft-transfers-table-row :transfer="transfer" :is-overview="props.isOverview" :address-hash="props.addressHash" />
                     </div>
                     <app-intersect v-if="!props.isOverview && hasMore" @intersect="loadMoreData">
@@ -76,7 +76,7 @@ import { MarketDataFragment as TokenMarketData } from '@core/composables/CoinDat
 import { useCoinData } from '@core/composables/CoinData/coinData.composable'
 import { TOKEN_FILTER_VALUES } from '@module/address/models/TokenSort'
 import { useDisplay } from 'vuetify'
-import { Erc721TransferFragmentFragment as Transfer, useGetAddressErc721TransfersQuery } from './apollo/AddressTransfers/transfers.generated'
+import { NftTransferFragmentFragment as Transfer, useGetAddressNftTransfersQuery } from './apollo/AddressTransfers/transfers.generated'
 import { AddressEventType } from '@/apollo/types'
 import { useAddressToken } from '@core/composables/AddressTokens/addressTokens.composable'
 import { useRouter } from 'vue-router'
@@ -126,7 +126,7 @@ const { addressHash } = toRefs(props)
 const { tokenBalanceValue, tokenCount, initialLoad: loadingAddressTokens } = useAddressToken(addressHash)
 const { loading: loadingMarketInfo } = useCoinData()
 
-const { result, fetchMore, refetch } = useGetAddressErc721TransfersQuery(
+const { result, fetchMore, refetch } = useGetAddressNftTransfersQuery(
     () => ({
         hash: props.addressHash,
         _limit: MAX_ITEMS
@@ -135,10 +135,10 @@ const { result, fetchMore, refetch } = useGetAddressErc721TransfersQuery(
 )
 
 const hasMore = computed<boolean>(() => {
-    return result.value?.getERC721Transfers.nextKey !== null
+    return result.value?.getNFTTransfers.nextKey !== null
 })
 
-const transferHistory = computed<Array<Transfer | null>>(() => result.value?.getERC721Transfers.transfers || [])
+const transferHistory = computed<Array<Transfer | null>>(() => result.value?.getNFTTransfers.transfers || [])
 
 /**
  * Render State Tracking
@@ -183,14 +183,14 @@ const setPage = (page: number, reset = false) => {
                 variables: {
                     hash: props.addressHash,
                     _limit: MAX_ITEMS,
-                    _nextKey: result.value?.getERC721Transfers?.nextKey
+                    _nextKey: result.value?.getNFTTransfers.nextKey
                 },
                 updateQuery: (prev, { fetchMoreResult }) => {
                     return {
-                        getERC721Transfers: {
-                            nextKey: fetchMoreResult?.getERC721Transfers.nextKey,
-                            transfers: [...prev.getERC721Transfers.transfers, ...(fetchMoreResult?.getERC721Transfers.transfers || [])],
-                            __typename: fetchMoreResult?.getERC721Transfers.__typename
+                        getNFTTransfers: {
+                            nextKey: fetchMoreResult?.getNFTTransfers.nextKey,
+                            transfers: [...prev.getNFTTransfers.transfers, ...(fetchMoreResult?.getNFTTransfers.transfers || [])],
+                            __typename: fetchMoreResult?.getNFTTransfers.__typename
                         }
                     }
                 }
