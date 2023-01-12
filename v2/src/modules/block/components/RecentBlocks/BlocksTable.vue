@@ -18,13 +18,13 @@
               TABLE BODY
             =====================================================================================
         -->
-        <div v-if="!hasMessage" class="p-ten-top">
-            <template v-if="!props.isLoading">
+        <div v-if="!hasMessage">
+            <div v-if="!props.isLoading" class="p-ten-top">
                 <div v-for="(block, index) in props.blockData" :key="index">
                     <table-blocks-row :block="block" :page-type="props.pageType" />
                 </div>
-            </template>
-            <div v-if="props.isLoading">
+            </div>
+            <div v-if="props.isLoading" style="padding-top: 6px">
                 <div v-for="i in props.maxItems" :key="i">
                     <div class="skeleton-box rounded-xl my-5" style="height: 32px"></div>
                 </div>

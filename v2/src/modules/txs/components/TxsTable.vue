@@ -21,20 +21,20 @@
               TABLE BODY
             =====================================================================================
         -->
-        <div v-if="!hasMessage" class="p-ten-top">
-            <template v-if="!props.isLoading">
+        <div v-if="!hasMessage">
+            <div v-if="!props.isLoading" class="p-ten-top">
                 <template v-if="txsData.length > 0">
-                    <div v-for="(tx, index) in displayData" :key="index">
+                    <div v-for="(tx, index) in txsData" :key="index">
                         <txs-table-row :tx="tx" :is-pending="props.pending" :is-block="props.isBlock" />
                     </div>
                 </template>
                 <app-no-result v-else text="This block does not have any transactions" class="mt-4 mt-sm-6" />
-            </template>
-            <template v-if="props.isLoading">
+            </div>
+            <div v-if="props.isLoading" style="padding-top: 6px">
                 <div v-for="i in props.maxItems" :key="i" class="my-5">
                     <div class="skeleton-box rounded-xl my-5" style="height: 40px"></div>
                 </div>
-            </template>
+            </div>
             <template v-if="!props.initialLoad && props.showIntersect">
                 <app-pagination :length="pages" :has-next="props.showIntersect" @update:modelValue="$emit('loadMore', $event)" />
             </template>
@@ -90,16 +90,6 @@ const props = defineProps({
 
 const hasMessage = computed<boolean>(() => {
     return props.tableMessage !== ''
-})
-
-const displayData = computed<any[]>(() => {
-    if (props.isBlock && props.txsData) {
-        const maxItems = props.maxItems || 10
-        const index = props.index || 0
-        const end = index * maxItems || props.maxItems
-        return props.txsData.slice(0, end)
-    }
-    return props.txsData || []
 })
 </script>
 

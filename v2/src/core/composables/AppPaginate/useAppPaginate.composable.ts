@@ -5,8 +5,11 @@ export function useAppPaginate(dataToPaginate: Ref<Array<unknown>>) {
     const pageNum = ref(1)
 
     const pageData = computed(() => {
+        console.log(dataToPaginate.value)
         const start = (pageNum.value - 1) * ITEMS_PER_PAGE
         const end = pageNum.value * ITEMS_PER_PAGE
+        console.log(start, end)
+        console.log('sliced', dataToPaginate.value.slice(start, end))
         return dataToPaginate.value.slice(start, end)
     })
 

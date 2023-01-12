@@ -75,7 +75,6 @@ const props = defineProps({
  * COMPUTED
  * =======================================================
  */
-// const { numberOfPages } = useAppPaginate(0)
 const blocks = computed<Array<BlockSummaryFragment | null> | []>(() => {
     if (blockArrays.value && !state.initialLoad) {
         return blockArrays.value.getBlocksArrayByNumber
