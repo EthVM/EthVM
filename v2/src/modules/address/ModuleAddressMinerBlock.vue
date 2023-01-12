@@ -37,7 +37,7 @@
                 <div>
                     <span v-if="props.isOverview" class="text-h6 font-weight-bold">{{ headerTitle }}</span>
                     <!-- Notice new update-->
-                    <app-new-update :icon-only="props.isOverview" :text="newRewardsText" :update-count="newRewards" @reload="setPage(0, true)" />
+                    <app-new-update :icon-only="props.isOverview" :text="newRewardsText" :update-count="newRewards" @reload="setPage(1, true)" />
                 </div>
                 <template v-if="props.isOverview">
                     <app-btn v-if="!smAndDown" text="More" isSmall icon="east" @click="goToAddressMiningTab"></app-btn>
@@ -53,23 +53,23 @@
                     <v-col md="3" class="py-0"> Balance After </v-col>
                 </v-row>
                 <v-divider class="my-0 mt-sm-4 mx-n4 mx-sm-n6" />
-                <div v-if="!initialLoad && renderState.renderTable" class="p-ten-top">
+                <div v-if="!initialLoad && !isLoadingRewards" class="p-ten-top">
                     <template v-if="rewards.length > 0">
-                        <div v-for="(reward, index) in rewards" :key="index">
+                        <div v-for="(reward, index) in currentPageData" :key="index">
                             <minor-blocks-table-row :reward="reward" />
                         </div>
-                        <app-intersect v-if="!props.isOverview && hasMore" @intersect="loadMoreData">
-                            <div class="skeleton-box rounded-xl mt-1 my-4" style="height: 24px"></div>
-                        </app-intersect>
                     </template>
-                    <template v-if="rewards.length < 1 && !isLoadingRewards">
+                    <template v-if="rewards.length < 1">
                         <app-no-result :text="noResultText" class="mt-4 mt-sm-6"></app-no-result>
                     </template>
                 </div>
-                <template v-else>
-                    <div v-for="item in 10" :key="item" class="my-5">
-                        <div class="skeleton-box rounded-xl my-5" style="height: 24px"></div>
+                <div v-else style="padding-top: 6px">
+                    <div v-for="item in 10" :key="item">
+                        <div class="skeleton-box rounded-xl my-5" style="height: 44px"></div>
                     </div>
+                </div>
+                <template v-if="showPagination">
+                    <app-pagination :length="numberOfPages" :has-next="hasMore" @update:modelValue="loadMoreData" />
                 </template>
             </div>
         </div>
@@ -77,13 +77,15 @@
 </template>
 
 <script setup lang="ts">
-import { computed, reactive, ref } from 'vue'
 import MinorBlocksTableRow from '@module/address/components/TableRowMinerRewards.vue'
 import AppNewUpdate from '@core/components/AppNewUpdate.vue'
 import AppBtn from '@core/components/AppBtn.vue'
 import AppBtnIcon from '@core/components/AppBtnIcon.vue'
 import AppIntersect from '@core/components/AppIntersect.vue'
 import AppNoResult from '@/core/components/AppNoResult.vue'
+import AppPagination from '@core/components/AppPagination.vue'
+
+import { computed, reactive, ref } from 'vue'
 
 import {
     RewardSummaryFragment,
@@ -98,6 +100,8 @@ import { useDisplay } from 'vuetify'
 import { ROUTE_NAME, ADDRESS_ROUTE_QUERY, Q_ADDRESS_TRANSFERS } from '@core/router/routesNames'
 import { useAppTableRowRender } from '@core/composables/AppTableRowRender/useAppTableRowRender.composable'
 import { useAddressUpdate } from '@core/composables/AddressUpdate/addressUpdate.composable'
+import { useAppPaginate } from '@core/composables/AppPaginate/useAppPaginate.composable'
+import { ITEMS_PER_PAGE } from '@core/constants'
 const { smAndDown, mdAndDown } = useDisplay()
 
 const minerRoutes = ADDRESS_ROUTE_QUERY.Q_MINER
@@ -105,24 +109,20 @@ const MOBILE_MAX_ITEMS = 4
 
 interface ComponentState {
     isEnd: number
-    index: number
     tab: string
+    refetching: boolean
 }
 
 const state: ComponentState = reactive({
-    isEnd: 0,
-    index: 0,
-    tab: minerRoutes[0]
+    isEnd: 1,
+    tab: minerRoutes[0],
+    refetching: false
 })
 
 const props = defineProps({
     addressHash: {
         type: String,
         required: true
-    },
-    maxItems: {
-        type: Number,
-        default: 6
     },
     isOverview: {
         type: Boolean,
@@ -215,36 +215,24 @@ const initialLoad = computed<boolean>(() => {
     return !addressRewardsUncleQueryResult.value
 })
 
-/**
- * Render State Tracking
- */
-
-const rewardsLength = computed<number>(() => {
-    if (!initialLoad.value && addressRewards.value) {
-        return addressRewards.value?.transfers.length
-    }
-    return 0
-})
-
-const { renderState } = useAppTableRowRender(rewardsLength.value)
-
 /*
  * Handle result and render on preloaded tables
  */
 const rewards = computed<Array<RewardTransferFragment | null>>(() => {
     if (!initialLoad.value && addressRewards.value) {
-        const start = state.index * props.maxItems
         // If on mobile screen and on overview page
         if (mdAndDown.value && props.isOverview) {
-            return addressRewards.value?.transfers.slice(start, MOBILE_MAX_ITEMS)
+            return addressRewards.value?.transfers.slice(0, MOBILE_MAX_ITEMS)
         }
         if (props.isOverview) {
-            return addressRewards.value?.transfers.slice(start, props.maxItems)
+            return addressRewards.value?.transfers.slice(0, ITEMS_PER_PAGE)
         }
-        return renderState.isActive ? addressRewards.value?.transfers.slice(0, renderState.maxItems) : addressRewards.value?.transfers
+        return addressRewards.value?.transfers
     }
     return []
 })
+
+const { numberOfPages, pageData: currentPageData, setPageNum, pageNum } = useAppPaginate(rewards)
 
 const isLoadingRewards = computed<boolean>(() => {
     return loadingAddressRewardsBlock.value || loadingAddressRewardsUncle.value
@@ -254,16 +242,16 @@ const hasMore = computed<boolean>(() => {
     return !!addressRewards.value && addressRewards?.value.nextKey !== null
 })
 
+const showPagination = computed<boolean>(() => {
+    return !props.isOverview && hasMore.value && !initialLoad.value && !state.refetching
+})
+
 const eventType = computed<AddressEventType>(() => {
     if (state.tab === minerRoutes[0]) {
         return AddressEventType.NewMinedBlock
     }
     return AddressEventType.NewMinedUncle
 })
-
-const emit = defineEmits<{
-    (e: 'resetUpdateCount', eventType: AddressEventType, isReset: boolean): void
-}>()
 
 /**
  * Sets page number and fetch more data or reset state
@@ -273,20 +261,23 @@ const emit = defineEmits<{
 const setPage = async (page: number, reset = false): Promise<boolean> => {
     try {
         if (reset) {
-            state.isEnd = 0
+            state.isEnd = 1
+            state.refetching = true
             if (state.tab === minerRoutes[0]) {
-                refetchAddressRewardsBlock()
+                await refetchAddressRewardsBlock()
             } else {
-                refetchAddressRewardsUncle()
+                await refetchAddressRewardsUncle()
             }
+            state.refetching = false
+            setPageNum(1)
             resetCount(eventType.value, true)
         } else {
-            if (page > state.isEnd && hasMore.value && addressRewards.value) {
+            if (page > state.isEnd && hasMore.value) {
                 if (state.tab === minerRoutes[0]) {
                     await fetchMoreAddressRewardsBlock({
                         variables: {
                             hash: props.addressHash,
-                            _limit: props.maxItems,
+                            _limit: ITEMS_PER_PAGE,
                             _nextKey: addressRewards.value.nextKey
                         },
                         updateQuery: (previousResult, { fetchMoreResult }) => {
@@ -307,7 +298,7 @@ const setPage = async (page: number, reset = false): Promise<boolean> => {
                     await fetchMoreAddressRewardsUncle({
                         variables: {
                             hash: props.addressHash,
-                            _limit: props.maxItems,
+                            _limit: ITEMS_PER_PAGE,
                             _nextKey: addressRewards.value.nextKey
                         },
                         updateQuery: (previousResult, { fetchMoreResult }) => {
@@ -327,7 +318,7 @@ const setPage = async (page: number, reset = false): Promise<boolean> => {
                 }
             }
         }
-        state.index = page
+        setPageNum(page)
         return true
     } catch (e) {
         const newE = JSON.stringify(e)
@@ -338,9 +329,9 @@ const setPage = async (page: number, reset = false): Promise<boolean> => {
     }
 }
 
-const loadMoreData = (e: boolean): void => {
-    if (addressRewards.value && e && !props.isOverview) {
-        setPage(state.index + 1)
+const loadMoreData = (pageNum: number): void => {
+    if (addressRewards.value) {
+        setPage(pageNum)
     }
 }
 
