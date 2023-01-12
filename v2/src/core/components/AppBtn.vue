@@ -10,10 +10,11 @@
             :disabled="componentProps.disabled"
             :height="isSmall ? '24px' : '40px'"
             @click.stop="btnClick()"
-            :class="[isSmall ? 'small-button px-3' : 'large-button px-6', 'text-button']"
+            :class="[isSmall ? 'small-button px-3' : 'large-button px-3', 'text-button']"
         >
+            <v-icon v-if="componentProps.icon && !isSmall" class="mr-2">{{ componentProps.icon }}</v-icon>
             {{ componentProps.text }}
-            <v-icon v-if="componentProps.icon" class="ml-2">{{ componentProps.icon }}</v-icon>
+            <v-icon v-if="componentProps.icon && isSmall" class="ml-2">{{ componentProps.icon }}</v-icon>
         </v-btn>
     </v-hover>
 </template>
@@ -55,7 +56,7 @@ const button = computed<ButtonState>(() => {
               color: componentProps.btnColor ? componentProps.btnColor : 'secondary',
               size: 'default',
               rounded: 'pill',
-              minWidth: '172'
+              minWidth: '84'
           }
 })
 

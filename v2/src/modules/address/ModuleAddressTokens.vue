@@ -1,6 +1,6 @@
 <template>
     <v-card :variant="!props.isOverview ? 'flat' : 'elevated'" :elevation="props.isOverview ? 1 : 0" rounded="xl" class="pa-4 pa-sm-6 fill-height">
-        <v-card-title class="d-none d-sm-flex justify-space-between align-center pa-0">
+        <v-card-title class="d-none d-sm-flex justify-space-between align-center pa-0 mb-5">
             <div>
                 <span v-if="props.isOverview" class="text-h6 font-weight-bold">Token Balance</span>
                 <!-- Notice new update-->
@@ -15,7 +15,7 @@
                 <app-btn text="More" is-small icon="east" @click="goToTokensBalancePage"></app-btn>
             </template>
         </v-card-title>
-        <div class="d-flex align-center">
+        <div v-if="!props.isOverview" class="d-flex align-center">
             <v-col lg="3">
                 <address-balance-totals
                     title="Token Balance"
@@ -32,7 +32,7 @@
         </div>
 
         <!--Table Header-->
-        <v-row :dense="xs" :class="[isOverview ? 'mt-sm-5' : 'mt-sm-4', 'd-flex text-body-1 text-info mb-sm-3']" :justify="xs ? 'end' : 'start'">
+        <v-row :dense="xs" :class="[isOverview ? 'mt-0' : 'mt-sm-4', 'd-flex text-body-1 text-info mb-sm-3']" :justify="xs ? 'end' : 'start'">
             <!--
                 Token on Overview:
                 XS: NONE
@@ -43,24 +43,11 @@
                 SM : 4
                 LG: 2
              -->
-            <v-col sm="4" :lg="props.isOverview ? 4 : 2" class="py-0 d-none d-sm-block">
+            <v-col sm="4" :lg="props.isOverview ? 4 : 3" class="py-0 d-none d-sm-block">
                 <v-btn variant="text" color="info" class="font-weight-regular ml-n3" rounded="pill" size="small" @click="sortTable(SORT_KEY.NAME)">
                     Token <v-icon v-if="isActiveSort(SORT_KEY.NAME)" class="ml-1" size="x-small">{{ sortIcon }}</v-icon></v-btn
                 >
             </v-col>
-            <!--
-                Symbol on Overview:
-                XS and UP: NONE
-                ------------
-                Symbol
-                XS: NONE
-                LG: 1
-             -->
-            <v-col v-if="!props.isOverview" sm="1" class="py-0 d-none d-lg-block">
-                <v-btn variant="text" color="info" class="font-weight-regular ml-n3" rounded="pill" size="small" @click="sortTable(SORT_KEY.SYMBOL)">
-                    Symbol <v-icon v-if="isActiveSort(SORT_KEY.SYMBOL)" class="ml-1" size="x-small">{{ sortIcon }}</v-icon></v-btn
-                ></v-col
-            >
             <!--
                 OTHER on Overview:
                 XS: NONE
@@ -100,7 +87,6 @@
                         <v-btn variant="text" color="info" class="font-weight-regular ml-n3" rounded="pill" size="small" @click="sortTable(SORT_KEY.BALANCE)">
                             Balance <v-icon v-if="isActiveSort(SORT_KEY.BALANCE)" class="ml-1" size="x-small">{{ sortIcon }}</v-icon></v-btn
                         >
-                        <p v-if="!props.isOverview" class="text-right">More</p>
                     </v-col>
                 </v-row>
             </v-col>
@@ -112,20 +98,20 @@
             </v-col>
         </v-row>
 
-        <v-divider class="mx-n4 mx-sm-n6 mb-1 mb-sm-5" />
+        <v-divider class="mx-n4 mx-sm-n6" />
         <!--Loading -->
-        <v-row v-if="loadingTokens || loadingCoinData">
-            <v-col v-for="col in 7" :key="col" cols="12" class="my-1">
+        <v-row v-if="loadingTokens || loadingCoinData" class="mt-5">
+            <v-col v-for="col in 7" :key="col" cols="12" class="pb-5 pt-0">
                 <div class="skeleton-box rounded-xl" style="min-height: 44px"></div>
             </v-col>
         </v-row>
         <!--Token Row -->
         <div
             v-else-if="renderState.renderTable"
-            :class="['mx-n4 mx-sm-n6 px-4 px-sm-6 mt-2', { 'module-body mt-n1 mt-sm-n5 pt-1 pt-sm-5': props.isOverview }]"
+            :class="['mx-n4 mx-sm-n6 px-4 px-sm-6', { 'module-body mt-n1 mt-sm-n5 pt-1 pt-sm-5': props.isOverview }]"
             :style="tableHeight"
         >
-            <div v-if="tokens.length > 0">
+            <div v-if="tokens.length > 0" class="p-ten-top">
                 <div v-for="token in tokens" :key="token.contract" :ref="el => assignRef(token.contract, el)">
                     <table-row-token-balance
                         :token="token"
@@ -158,7 +144,8 @@ import AppNoResult from '@/core/components/AppNoResult.vue'
 import { useDisplay } from 'vuetify/lib/framework.mjs'
 import { useAppTableRowRender } from '@core/composables/AppTableRowRender/useAppTableRowRender.composable'
 import { searchHelper } from '@core/helper/search'
-
+import { useStore } from '@/store'
+import { WatchQueryFetchPolicy } from '@apollo/client/core'
 const { xs } = useDisplay()
 const { loading: loadingCoinData } = useCoinData()
 
@@ -209,8 +196,12 @@ const state: ComponentState = reactive({
  * Tokens Data
  -------------------------*/
 const { addressHash } = toRefs(props)
+const store = useStore()
+const queryPolicy = computed<WatchQueryFetchPolicy>(() => {
+    return store.addressHashIsSaved(props.addressHash.toLowerCase()) ? 'cache-only' : 'cache-first'
+})
 
-const { erc20Tokens, loadingTokens, refetchTokens, tokenSort, tokenBalance } = useAddressToken(addressHash)
+const { erc20Tokens, loadingTokens, refetchTokens, tokenSort, tokenBalance } = useAddressToken(addressHash, queryPolicy)
 
 const hasTokens = computed<boolean>(() => {
     return !!erc20Tokens.value
@@ -225,12 +216,12 @@ const tokensLength = computed<number>(() => {
 
 const { renderState } = useAppTableRowRender(tokensLength.value)
 
-const tokens = computed(() => {
+const tokens = computed<Token[]>(() => {
     if (!loadingTokens.value && hasTokens.value && tokenSort.value) {
         const tokenSorted = tokenSort.value?.getSortedTokens(state.sortKey)
-        let tokens
+        let tokens: Token[]
         if (state.searchParams) {
-            tokens = searchHelper(tokenSorted, ['name', 'symbol', 'contract'], state.searchParams)
+            tokens = searchHelper(tokenSorted, ['name', 'symbol', 'contract'], state.searchParams) as Token[]
         } else {
             tokens = tokenSorted
         }

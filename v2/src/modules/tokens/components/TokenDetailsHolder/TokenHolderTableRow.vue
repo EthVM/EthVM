@@ -1,16 +1,16 @@
 <template>
     <div>
         <!--
-    =====================================================================================
-      Tablet/ Desktop (SM - XL)
-    =====================================================================================
-    -->
-        <v-row class="my-5 px-0 d-none d-sm-flex" align="center">
+            =====================================================================================
+              Tablet/ Desktop (SM - XL)
+            =====================================================================================
+        -->
+        <app-table-row class="d-none d-sm-flex" row-align="center">
             <!-- Column 1: Holders Address -->
             <v-col :sm="!isERC721 ? 3 : 4">
                 <div class="d-flex align-center">
                     <app-address-blockie :address="props.holder.owner || ''" :size="8" class="mr-1 mr-sm-2" />
-                    <app-transform-hash is-blue is-short :hash="eth.toCheckSum(props.holder.owner)" :link="holderLink" />
+                    <app-transform-hash is-blue is-short :hash="eth.toCheckSum(props.holder.owner)" :link="holderLink" :show-name="false" />
                 </div>
             </v-col>
             <!-- End Column 1 -->
@@ -40,12 +40,12 @@
                 <p class="mb-0 ml-2">{{ share.value }}%</p>
             </v-col>
             <!-- End Column 4 -->
-        </v-row>
-        <v-row class="d-sm-none my-5">
+        </app-table-row>
+        <app-table-row class="d-sm-none">
             <v-col cols="6">
                 <div class="d-flex align-center">
                     <app-address-blockie :address="eth.toCheckSum(props.holder.owner) || ''" :size="6" class="mr-1" />
-                    <app-transform-hash is-blue is-short :hash="eth.toCheckSum(props.holder.owner)" :link="holderLink" />
+                    <app-transform-hash is-blue is-short :hash="eth.toCheckSum(props.holder.owner)" :link="holderLink" :show-name="false" />
                 </div>
             </v-col>
             <v-col cols="6" class="text-right">
@@ -57,13 +57,14 @@
                     <p>{{ share.value }}%</p>
                 </div>
             </v-col>
-        </v-row>
+        </app-table-row>
     </div>
 </template>
 
 <script setup lang="ts">
 import AppTransformHash from '@core/components/AppTransformHash.vue'
 import AppAddressBlockie from '@core/components/AppAddressBlockie.vue'
+import AppTableRow from '@core/components/AppTableRow.vue'
 import BigNumber from 'bignumber.js'
 import BN from 'bignumber.js'
 import configs from '@/configs'

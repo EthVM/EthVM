@@ -1,11 +1,11 @@
 <template>
-    <div class="position-relative">
+    <div>
         <!--
               =====================================================================================
                 Mobile (XS-SM)
               =====================================================================================
         -->
-        <v-row v-if="xs" align="start" justify="start" class="my-5 px-0" @click="toggleMoreDetails">
+        <app-table-row v-if="xs" @click="toggleMoreDetails" :color="state.showMoreDetails ? 'pillGrey' : 'transparent'">
             <v-col cols="6">
                 <router-link :to="`/block/number/${props.block.number}`" class="text-secondary">{{ _block.number }}</router-link>
                 <p class="text-info mb-0">{{ _block.timestamp }}</p>
@@ -16,36 +16,43 @@
                     <app-transform-hash is-short is-blue :hash="eth.toCheckSum(_block.miner)" :link="`/address/${_block.miner}`" />
                 </div>
             </v-col>
-            <v-col cols="12" v-if="state.showMoreDetails">
-                <v-row>
-                    <v-col cols="6">
-                        <p class="text-info">Transactions</p>
-                        {{ _block.totalTx }}
-                    </v-col>
-                    <v-col cols="6" class="text-right">
-                        <p class="text-info">Reward</p>
-                        {{ _block.rewards.value }}
-                    </v-col>
-                </v-row>
-            </v-col>
-        </v-row>
+            <template #expandable>
+                <v-col cols="12" v-if="state.showMoreDetails">
+                    <v-row justify="space-between" class="my-5 mx-0">
+                        <p class="text-info mr-2">Transactions:</p>
+                        <p>
+                            {{ _block.totalTx }}
+                        </p>
+                    </v-row>
+                    <v-row justify="space-between" class="my-5 mx-0">
+                        <p class="text-info mr-2">Reward:</p>
+                        <p>
+                            {{ _block.rewards.value }}
+                        </p>
+                    </v-row>
+                </v-col>
+            </template>
+        </app-table-row>
 
         <!--
               =====================================================================================
                 Tablet/ Desktop (SM - XL)
               =====================================================================================
         -->
-        <v-row v-else align="center" justify="start" class="my-5 px-0">
+        <app-table-row v-else row-align="center">
             <v-col sm="2">
                 <router-link :to="`/block/number/${props.block.number}`" class="text-secondary">{{ _block.number }}</router-link>
+                <p v-if="mdAndDown" class="text-info mb-0">
+                    {{ _block.timestamp }}
+                </p>
             </v-col>
-            <v-col sm="2">
+            <v-col v-if="!mdAndDown" sm="2">
                 {{ _block.timestamp }}
             </v-col>
-            <v-col sm="2">
+            <v-col sm="3" lg="2">
                 {{ _block.totalTx }}
             </v-col>
-            <v-col sm="3">
+            <v-col sm="4" lg="3">
                 <div class="d-flex align-center">
                     <app-address-blockie :address="_block.miner || ''" :size="8" class="mr-2 mr-sm-2" />
                     <app-transform-hash is-short is-blue :hash="eth.toCheckSum(_block.miner)" :link="`/address/${_block.miner}`" />
@@ -54,8 +61,9 @@
             <v-col sm="3">
                 {{ _block.rewards.value }}
             </v-col>
-        </v-row>
-        <div v-if="state.showMoreDetails && xs" class="row-bg bg-tableGrey"></div>
+        </app-table-row>
+        <!--        <v-row v-else align="center" justify="start" class="my-5 px-0">-->
+        <!--        </v-row>-->
     </div>
 </template>
 
@@ -68,8 +76,9 @@ import AppTooltip from '@core/components/AppTooltip.vue'
 import { computed, reactive } from 'vue'
 import { useDisplay } from 'vuetify'
 import { formatNonVariableEthValue, formatNumber } from '@core/helper/number-format-helper'
+import AppTableRow from '@core/components/AppTableRow.vue'
 
-const { xs } = useDisplay()
+const { xs, mdAndDown } = useDisplay()
 
 const props = defineProps({
     block: Object

@@ -3,12 +3,18 @@
         <v-card-title v-if="isHome || state.newMinedTransfers || tableTitle" class="px-0 mb-5 d-flex align-center justify-space-between">
             <div class="d-flex align-center">
                 <h1 v-if="tableTitle" class="text-h6 font-weight-bold">{{ tableTitle }}</h1>
-                <app-new-update v-if="!isHome" icon-only text="New Txs" :update-count="state.newMinedTransfers" @reload="setPage(0, true)" />
+                <app-new-update
+                    v-if="!isHome && !isBlock"
+                    icon-only
+                    text="New Txs Found, Refresh"
+                    :update-count="state.newMinedTransfers"
+                    @reload="setPage(0, true)"
+                    hide-count
+                />
             </div>
             <app-btn v-if="isHome" text="More" isSmall icon="east" @click="goToTransactionsPage"></app-btn>
         </v-card-title>
         <txs-table
-            class="mt-5"
             :max-items="props.maxItems"
             :index="state.index"
             :is-loading="state.initialLoad"
@@ -37,6 +43,9 @@ import TxsTable from '@module/txs/components/TxsTable.vue'
 import BN from 'bignumber.js'
 import { Q_BLOCKS_AND_TXS, ROUTE_NAME } from '@core/router/routesNames'
 import { useRouter } from 'vue-router'
+import { useDisplay } from 'vuetify'
+
+const { mdAndDown } = useDisplay()
 
 interface ModuleState {
     initialLoad: boolean
@@ -134,7 +143,7 @@ const {
     result: getAllEthTransfers,
     onResult: onTxsArrayLoaded,
     refetch: refetchTxArray,
-    fetchMore
+    fetchMore: fetchMoreTxs
 } = useGetAllTxsQuery(
     {
         _limit: props.maxItems,
@@ -153,7 +162,8 @@ const enableBlockTranfersQuery = computed<boolean>(() => {
 const {
     result: getAllBlockTransfersResult,
     onResult: onBlockTransfersArrayLoaded,
-    refetch: refetchBlockTransfers
+    refetch: refetchBlockTransfers,
+    fetchMore: fetchMoreBlockTransfers
 } = useGetBlockTransfersQuery(
     () => ({
         _number: props.blockRef ? parseInt(props.blockRef) : undefined
@@ -206,41 +216,71 @@ const setPage = async (page: number, reset = false): Promise<boolean> => {
     state.index = page
     if (reset) {
         state.isEnd = 0
-        if (isHome.value) {
-            state.newMinedTransfers = 0
-        }
         await refetchTxArray()
+        state.newMinedTransfers = 0
     } else {
         if (page >= state.isEnd && hasMore.value) {
-            await fetchMore({
-                variables: {
-                    nextKey: allEthTransfers.value?.nextKey,
-                    _limit: props.maxItems
-                },
-                updateQuery: (previousResult, { fetchMoreResult }) => {
-                    state.isEnd = page
-                    const newT = fetchMoreResult?.getAllEthTransfers.transfers
-                    const prevT = previousResult.getAllEthTransfers.transfers
-                    if (newT) {
+            if (props.isMined && isBlock.value) {
+                await fetchMoreBlockTransfers({
+                    variables: {
+                        nextKey: allBlockTransfersResult.value?.nextKey,
+                        _limit: props.maxItems
+                    },
+                    updateQuery: (previousResult, { fetchMoreResult }) => {
+                        state.isEnd = page
+                        const newT = fetchMoreResult?.getBlockTransfers.transfers
+                        const prevT = previousResult.getBlockTransfers.transfers
+                        if (newT) {
+                            return {
+                                ...previousResult,
+                                getBlockTransfers: {
+                                    __typename: previousResult.getBlockTransfers.__typename,
+                                    nextKey: fetchMoreResult?.getBlockTransfers.nextKey,
+                                    transfers: [...prevT, ...newT]
+                                }
+                            }
+                        }
+                        return {
+                            ...previousResult,
+                            getBlockTransfers: {
+                                __typename: previousResult.getBlockTransfers.__typename,
+                                nextKey: previousResult.getBlockTransfers.nextKey,
+                                transfers: [...prevT]
+                            }
+                        }
+                    }
+                })
+            } else {
+                await fetchMoreTxs({
+                    variables: {
+                        nextKey: allEthTransfers.value?.nextKey,
+                        _limit: props.maxItems
+                    },
+                    updateQuery: (previousResult, { fetchMoreResult }) => {
+                        state.isEnd = page
+                        const newT = fetchMoreResult?.getAllEthTransfers.transfers
+                        const prevT = previousResult.getAllEthTransfers.transfers
+                        if (newT) {
+                            return {
+                                ...previousResult,
+                                getAllEthTransfers: {
+                                    __typename: previousResult.getAllEthTransfers.__typename,
+                                    nextKey: fetchMoreResult?.getAllEthTransfers.nextKey,
+                                    transfers: [...prevT, ...newT]
+                                }
+                            }
+                        }
                         return {
                             ...previousResult,
                             getAllEthTransfers: {
                                 __typename: previousResult.getAllEthTransfers.__typename,
-                                nextKey: fetchMoreResult?.getAllEthTransfers.nextKey,
-                                transfers: [...prevT, ...newT]
+                                nextKey: previousResult.getAllEthTransfers.nextKey,
+                                transfers: [...prevT]
                             }
                         }
                     }
-                    return {
-                        ...previousResult,
-                        getAllEthTransfers: {
-                            __typename: previousResult.getAllEthTransfers.__typename,
-                            nextKey: previousResult.getAllEthTransfers.nextKey,
-                            transfers: [...prevT]
-                        }
-                    }
-                }
-            })
+                })
+            }
         }
     }
 
