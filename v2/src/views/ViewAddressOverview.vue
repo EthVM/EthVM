@@ -19,7 +19,7 @@
             <module-address-nft-transfers :address-hash="props.addressRef" :new-erc721-transfer="newErc721Transfer" @resetCount="resetCount" is-overview />
         </v-col>
         <v-col cols="12" lg="6" :class="columnPadding">
-            <module-address-miner-block class="mb-4" is-overview :address-hash="props.addressRef" />
+            <module-address-miner-block is-overview :address-hash="props.addressRef" />
         </v-col>
     </v-row>
 </template>
