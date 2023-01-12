@@ -3,7 +3,7 @@
         <v-card-title class="px-0 mb-5 d-flex align-center justify-space-between">
             <div class="d-flex align-center">
                 <h1 class="text-h6 font-weight-bold">{{ getTitle }}</h1>
-                <notice-new-block v-if="!isHome" @reload="setPage(0, true)" />
+                <notice-new-block v-if="!isHome" @reload="setPage(1, true)" />
             </div>
             <app-btn v-if="isHome" text="More" isSmall icon="east" @click="goToBlocksPage"></app-btn>
         </v-card-title>
