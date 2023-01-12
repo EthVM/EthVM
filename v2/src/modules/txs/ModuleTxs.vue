@@ -8,7 +8,7 @@
                     icon-only
                     text="New Txs Found, Refresh"
                     :update-count="state.newMinedTransfers"
-                    @reload="setPage(0, true)"
+                    @reload="setPage(1, true)"
                     hide-count
                 />
             </div>
@@ -96,7 +96,6 @@ const isBlock = computed<boolean>(() => {
  */
 const {
     result: getAllEthTransfers,
-    onResult: onTxsArrayLoaded,
     loading: loadingTxs,
     refetch: refetchTxArray,
     fetchMore: fetchMoreTxs
@@ -117,10 +116,8 @@ const enableBlockTranfersQuery = computed<boolean>(() => {
 
 const {
     result: getAllBlockTransfersResult,
-    onResult: onBlockTransfersArrayLoaded,
     loading: loadingBlockTransfers,
-    refetch: refetchBlockTransfers,
-    fetchMore: fetchMoreBlockTransfers
+    refetch: refetchBlockTransfers
 } = useGetBlockTransfersQuery(
     () => ({
         _number: props.blockRef ? parseInt(props.blockRef) : undefined
@@ -219,7 +216,7 @@ const setPage = async (page: number, reset = false): Promise<boolean> => {
         state.refetching = false
     } else {
         if (page > state.isEnd && hasMore.value) {
-            await fetchMore({
+            await fetchMoreTxs({
                 variables: {
                     _nextKey: allEthTransfers.value?.nextKey,
                     _limit: props.maxItems
