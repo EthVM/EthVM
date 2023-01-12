@@ -15,11 +15,6 @@ import {
 import { ApolloClient, InMemoryCache } from '@apollo/client/core'
 import { RestLink } from 'apollo-link-rest'
 import { ResponceTokens } from './models'
-import configs from '../../configs'
-
-enum TypeNames {
-    NftTokenMeta = 'NftTokenMeta'
-}
 
 const nftTypeDef = `${RespContract} ${RespNftOwner} ${RespNftPreviews} ${RespNftFloorPrice}  ${RespPaymentToken} ${RespMarketplace} ${RespCollection} ${RespNftMeta} ${RespNFT} ${RespNftTrait} ${RespTokens} ${Query}`
 
