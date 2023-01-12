@@ -8,7 +8,7 @@
                     icon-only
                     text="New Txs Found, Refresh"
                     :update-count="state.newMinedTransfers"
-                    @reload="setPage(0, true)"
+                    @reload="setPage(1, true)"
                     hide-count
                 />
             </div>
@@ -17,11 +17,13 @@
         <txs-table
             :max-items="props.maxItems"
             :index="state.index"
-            :is-loading="state.initialLoad"
+            :initial-load="initialLoad"
+            :is-loading="isLoading"
             :table-message="message"
-            :txs-data="transactions"
+            :txs-data="currentPageData"
             :is-scroll-view="isHome"
             :show-intersect="showPagination"
+            :pages="numberOfPages"
             :is-block="isBlock"
             @loadMore="loadMoreData"
         />
@@ -38,29 +40,28 @@ import {
     TransferFragment,
     EthTransfersFragment
 } from './apollo/transfersQuery.generated'
-import { computed, onMounted, reactive, watch } from 'vue'
+import { computed, onMounted, reactive, toRefs, watch } from 'vue'
 import TxsTable from '@module/txs/components/TxsTable.vue'
 import BN from 'bignumber.js'
 import { Q_BLOCKS_AND_TXS, ROUTE_NAME } from '@core/router/routesNames'
 import { useRouter } from 'vue-router'
 import { useDisplay } from 'vuetify'
+import { useAppPaginate } from '@core/composables/AppPaginate/useAppPaginate.composable'
 
 const { mdAndDown } = useDisplay()
 
 interface ModuleState {
-    initialLoad: boolean
-    index: number
+    refetching: boolean
     isEnd: number
     newMinedTransfers: number
     hasError: boolean
 }
 
 const state: ModuleState = reactive({
-    initialLoad: true,
-    index: 0,
-    isEnd: 0,
+    isEnd: 1,
     newMinedTransfers: 0,
-    hasError: false
+    hasError: false,
+    refetching: false
 })
 
 const props = defineProps({
@@ -83,55 +84,9 @@ const props = defineProps({
  * COMPUTED
  * =======================================================
  */
-const transactions = computed<Array<TransferFragment | null>>(() => {
-    if (!isBlock.value && allEthTransfers.value && allEthTransfers.value.transfers !== null) {
-        return allEthTransfers.value.transfers
-    }
-    if (isBlock.value && allBlockTransfersResult.value && allBlockTransfersResult.value.transfers !== null) {
-        return allBlockTransfersResult.value.transfers
-    }
-    return []
-})
-
-const totalPages = computed<number>(() => {
-    if (isBlock.value) {
-        return Math.ceil(new BN(transactions.value.length).div(props.maxItems || 10).toNumber())
-    }
-    return 0
-})
-
-const message = computed<string>(() => {
-    return ''
-})
-
-const tableTitle = computed<string>(() => {
-    if (isBlock.value) {
-        return ''
-    }
-    return isHome.value ? 'Last Transactions' : 'All Transactions'
-})
-
-const isHome = computed<boolean>(() => {
-    return props.pageType === 'home'
-})
 
 const isBlock = computed<boolean>(() => {
     return props.pageType === 'blockDetails'
-})
-
-const hasMore = computed<boolean>(() => {
-    if (isBlock.value) {
-        return state.index < totalPages.value
-    }
-    return !!allEthTransfers.value?.nextKey
-})
-
-const showPagination = computed<boolean>(() => {
-    if (isHome.value) {
-        return false
-    }
-
-    return hasMore.value
 })
 
 /*
@@ -141,7 +96,7 @@ const showPagination = computed<boolean>(() => {
  */
 const {
     result: getAllEthTransfers,
-    onResult: onTxsArrayLoaded,
+    loading: loadingTxs,
     refetch: refetchTxArray,
     fetchMore: fetchMoreTxs
 } = useGetAllTxsQuery(
@@ -161,9 +116,8 @@ const enableBlockTranfersQuery = computed<boolean>(() => {
 
 const {
     result: getAllBlockTransfersResult,
-    onResult: onBlockTransfersArrayLoaded,
-    refetch: refetchBlockTransfers,
-    fetchMore: fetchMoreBlockTransfers
+    loading: loadingBlockTransfers,
+    refetch: refetchBlockTransfers
 } = useGetBlockTransfersQuery(
     () => ({
         _number: props.blockRef ? parseInt(props.blockRef) : undefined
@@ -174,17 +128,6 @@ const {
     })
 )
 
-onBlockTransfersArrayLoaded(data => {
-    // data.loading is going to be true when the block hasn't been mined and the useGetBlockTransfersQuery is skipped
-    if (!data.loading) {
-        setTimeout(() => {
-            state.initialLoad = false
-        }, 1000)
-    }
-})
-
-const { onResult: onNewTransferLoaded } = useNewTransfersCompleteFeedSubscription()
-
 const allEthTransfers = computed<EthTransfersFragment | undefined>(() => {
     return getAllEthTransfers.value?.getAllEthTransfers
 })
@@ -193,9 +136,60 @@ const allBlockTransfersResult = computed<EthTransfersFragment | undefined>(() =>
     return getAllBlockTransfersResult.value?.getBlockTransfers
 })
 
-onTxsArrayLoaded(() => {
-    state.initialLoad = false
+const transactions = computed<Array<TransferFragment | null>>(() => {
+    if (!isBlock.value && allEthTransfers.value && allEthTransfers.value.transfers !== null) {
+        return allEthTransfers.value.transfers
+    }
+    if (isBlock.value && allBlockTransfersResult.value && allBlockTransfersResult.value.transfers !== null) {
+        return allBlockTransfersResult.value.transfers
+    }
+    return []
 })
+
+const { numberOfPages, pageData: currentPageData, setPageNum, pageNum } = useAppPaginate(transactions)
+
+const message = computed<string>(() => {
+    return ''
+})
+
+const tableTitle = computed<string>(() => {
+    if (isBlock.value) {
+        return ''
+    }
+    return isHome.value ? 'Last Transactions' : 'All Transactions'
+})
+
+const isHome = computed<boolean>(() => {
+    return props.pageType === 'home'
+})
+
+const hasMore = computed<boolean>(() => {
+    if (isBlock.value) {
+        return pageNum < numberOfPages.value
+    }
+    return !!allEthTransfers.value?.nextKey
+})
+
+const showPagination = computed<boolean>(() => {
+    if (isHome.value) {
+        return false
+    }
+
+    return hasMore.value && !state.refetching
+})
+
+const isLoading = computed<boolean>(() => {
+    return loadingTxs.value || loadingBlockTransfers.value
+})
+
+const initialLoad = computed<boolean>(() => {
+    if (isBlock.value) {
+        return !getAllBlockTransfersResult.value
+    }
+    return !getAllEthTransfers.value
+})
+
+const { onResult: onNewTransferLoaded } = useNewTransfersCompleteFeedSubscription()
 
 onNewTransferLoaded(result => {
     if (result?.data.newTransfersCompleteFeed.type === 'ETH') {
@@ -213,78 +207,48 @@ onNewTransferLoaded(result => {
  * =======================================================
  */
 const setPage = async (page: number, reset = false): Promise<boolean> => {
-    state.index = page
+    setPageNum(page)
     if (reset) {
-        state.isEnd = 0
-        await refetchTxArray()
+        state.isEnd = 1
         state.newMinedTransfers = 0
+        state.refetching = true
+        await refetchTxArray()
+        state.refetching = false
     } else {
-        if (page >= state.isEnd && hasMore.value) {
-            if (props.isMined && isBlock.value) {
-                await fetchMoreBlockTransfers({
-                    variables: {
-                        nextKey: allBlockTransfersResult.value?.nextKey,
-                        _limit: props.maxItems
-                    },
-                    updateQuery: (previousResult, { fetchMoreResult }) => {
-                        state.isEnd = page
-                        const newT = fetchMoreResult?.getBlockTransfers.transfers
-                        const prevT = previousResult.getBlockTransfers.transfers
-                        if (newT) {
-                            return {
-                                ...previousResult,
-                                getBlockTransfers: {
-                                    __typename: previousResult.getBlockTransfers.__typename,
-                                    nextKey: fetchMoreResult?.getBlockTransfers.nextKey,
-                                    transfers: [...prevT, ...newT]
-                                }
-                            }
-                        }
-                        return {
-                            ...previousResult,
-                            getBlockTransfers: {
-                                __typename: previousResult.getBlockTransfers.__typename,
-                                nextKey: previousResult.getBlockTransfers.nextKey,
-                                transfers: [...prevT]
-                            }
-                        }
-                    }
-                })
-            } else {
-                await fetchMoreTxs({
-                    variables: {
-                        nextKey: allEthTransfers.value?.nextKey,
-                        _limit: props.maxItems
-                    },
-                    updateQuery: (previousResult, { fetchMoreResult }) => {
-                        state.isEnd = page
-                        const newT = fetchMoreResult?.getAllEthTransfers.transfers
-                        const prevT = previousResult.getAllEthTransfers.transfers
-                        if (newT) {
-                            return {
-                                ...previousResult,
-                                getAllEthTransfers: {
-                                    __typename: previousResult.getAllEthTransfers.__typename,
-                                    nextKey: fetchMoreResult?.getAllEthTransfers.nextKey,
-                                    transfers: [...prevT, ...newT]
-                                }
-                            }
-                        }
+        if (page > state.isEnd && hasMore.value) {
+            await fetchMoreTxs({
+                variables: {
+                    _nextKey: allEthTransfers.value?.nextKey,
+                    _limit: props.maxItems
+                },
+                updateQuery: (previousResult, { fetchMoreResult }) => {
+                    state.isEnd = page
+                    const newT = fetchMoreResult?.getAllEthTransfers.transfers
+                    const prevT = previousResult.getAllEthTransfers.transfers
+                    if (newT) {
                         return {
                             ...previousResult,
                             getAllEthTransfers: {
                                 __typename: previousResult.getAllEthTransfers.__typename,
-                                nextKey: previousResult.getAllEthTransfers.nextKey,
-                                transfers: [...prevT]
+                                nextKey: fetchMoreResult?.getAllEthTransfers.nextKey,
+                                transfers: [...prevT, ...newT]
                             }
                         }
                     }
-                })
-            }
+                    return {
+                        ...previousResult,
+                        getAllEthTransfers: {
+                            __typename: previousResult.getAllEthTransfers.__typename,
+                            nextKey: previousResult.getAllEthTransfers.nextKey,
+                            transfers: [...prevT]
+                        }
+                    }
+                }
+            })
         }
     }
 
-    state.index = page
+    setPageNum(page)
     return true
 }
 
@@ -296,12 +260,11 @@ const goToTransactionsPage = async (): Promise<void> => {
     })
 }
 
-const loadMoreData = () => {
-    setPage(state.index + 1)
+const loadMoreData = (pageNum: number) => {
+    setPage(pageNum)
 }
 
 onMounted(() => {
-    state.initialLoad = true
     state.hasError = false
     refetchBlockTransfers()
 })
@@ -309,7 +272,6 @@ onMounted(() => {
 watch(
     () => props.blockRef,
     () => {
-        state.initialLoad = true
         state.hasError = false
         refetchBlockTransfers({ _number: parseInt(props.blockRef) })
     }

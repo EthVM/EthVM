@@ -9,14 +9,14 @@
         </v-card-title>
         <table-blocks
             :max-items="ITEMS_PER_PAGE"
-            :index="state.pageNum"
+            :index="pageNum"
             :initial-load="state.initialLoad"
             :is-loading="loading"
             :table-message="message"
-            :block-data="blocks"
+            :block-data="currentPageData"
             :is-scroll-view="isHome"
             :show-intersect="showPagination"
-            :pages="pages"
+            :pages="numberOfPages"
             @loadMore="loadMoreData"
         />
     </v-card>
@@ -51,7 +51,6 @@ interface ComponentState {
     initialLoad: boolean
     hasError: boolean
     indexedBlocks: BlockMap
-    pageNum: number
     totalPages: number
     startBlock: number
 }
@@ -60,7 +59,6 @@ const state: ComponentState = reactive({
     initialLoad: true,
     hasError: false,
     indexedBlocks: {},
-    pageNum: 1,
     totalPages: 0,
     startBlock: 0
 })
@@ -77,11 +75,9 @@ const props = defineProps({
  * COMPUTED
  * =======================================================
  */
-const { numberOfPages } = useAppPaginate(0)
 const blocks = computed<Array<BlockSummaryFragment | null> | []>(() => {
-    const { start, end } = useAppPaginate(state.pageNum)
     if (blockArrays.value && !state.initialLoad) {
-        return blockArrays.value.getBlocksArrayByNumber.slice(start, end)
+        return blockArrays.value.getBlocksArrayByNumber
     }
     return []
 })
@@ -113,14 +109,7 @@ const isHome = computed<boolean>(() => {
     return props.pageType === 'home'
 })
 
-const currentPage = computed<number>(() => {
-    return state.pageNum
-})
-
-const pages = computed<number>(() => {
-    const data = blockArrays.value?.getBlocksArrayByNumber || []
-    return numberOfPages(data)
-})
+const { numberOfPages, pageData: currentPageData, setPageNum, pageNum } = useAppPaginate(blocks)
 
 const showPagination = computed<boolean>(() => {
     return !state.initialLoad && !isHome.value && state.startBlock - ITEMS_PER_PAGE > 0
@@ -175,14 +164,14 @@ function subscribeToMoreHandler() {
  * =======================================================
  */
 const setPage = async (page: number, reset = false): Promise<boolean> => {
-    state.pageNum = page
+    setPageNum(page)
     if (reset) {
         state.indexedBlocks = {}
         state.initialLoad = true
         await refetchBlockArray()
     } else {
-        const from = state.startBlock - ITEMS_PER_PAGE * (state.pageNum - 1)
-        if (from >= 0 && !state.indexedBlocks[state.pageNum]) {
+        const from = state.startBlock - ITEMS_PER_PAGE * (pageNum.value - 1)
+        if (from >= 0 && !state.indexedBlocks[pageNum.value]) {
             await fetchMore({
                 variables: {
                     fromBlock: from,
@@ -204,7 +193,7 @@ onBlockArrayLoaded(result => {
         if (state.initialLoad) {
             state.initialLoad = false
             state.startBlock = result.data.getBlocksArrayByNumber[0]?.number || 0
-            state.pageNum = 1
+            setPageNum(1)
             state.totalPages = Math.ceil(new BN(state.startBlock + 1).div(ITEMS_PER_PAGE).toNumber())
         }
         if (props.pageType === 'home') {
@@ -215,7 +204,7 @@ onBlockArrayLoaded(result => {
             }
         }
         const newBlocks = result.data.getBlocksArrayByNumber
-        state.indexedBlocks[state.pageNum] = props.pageType === 'home' ? newBlocks.slice(0, ITEMS_PER_PAGE) : newBlocks
+        state.indexedBlocks[pageNum.value] = props.pageType === 'home' ? newBlocks.slice(0, ITEMS_PER_PAGE) : newBlocks
     }
 })
 
