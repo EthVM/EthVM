@@ -7,7 +7,7 @@
         -->
         <v-row v-if="!xs" align="center" justify="start" class="text-info d-none d-sm-flex">
             <v-col v-if="!props.pending && !props.isBlock" sm="3" lg="2"> Block / Timestamp </v-col>
-            <v-col sm="3" lg="2"> Hash </v-col>
+            <v-col sm="3" md="2"> Hash </v-col>
             <v-col v-if="!mdAndDown" lg="2"> From </v-col>
             <v-spacer v-if="props.isBlock" />
             <v-col v-if="!mdAndDown" lg="2"> To </v-col>
@@ -21,7 +21,7 @@
               TABLE BODY
             =====================================================================================
         -->
-        <div v-if="!hasMessage">
+        <div v-if="!hasMessage" class="p-ten-top">
             <template v-if="!props.isLoading">
                 <template v-if="txsData.length > 0">
                     <div v-for="(tx, index) in displayData" :key="index">
@@ -32,12 +32,11 @@
             </template>
             <template v-if="props.isLoading">
                 <div v-for="i in props.maxItems" :key="i" class="my-5">
-                    <div class="skeleton-box rounded-xl mt-1" style="height: 24px"></div>
+                    <div class="skeleton-box rounded-xl my-5" style="height: 24px"></div>
                 </div>
             </template>
             <app-intersect v-if="props.showIntersect" @intersect="$emit('loadMore')">
                 <div class="skeleton-box rounded-xl mt-1 my-4" style="height: 24px"></div>
-                <v-divider />
             </app-intersect>
         </div>
     </div>

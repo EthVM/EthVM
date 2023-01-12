@@ -23,13 +23,13 @@
 
             <!-- Start Rows -->
             <template v-if="props.initialLoad">
-                <div v-for="item in props.maxItems" :key="item" class="my-2">
+                <div v-for="item in props.maxItems" :key="item" class="p-ten-top">
                     <div class="skeleton-box rounded-xl mt-1 my-4" style="height: 24px"></div>
                 </div>
             </template>
-            <div v-else>
+            <div v-else class="p-ten-top">
                 <div v-if="!props.hasItems && !props.loading">
-                    <v-card-text class="text-xs-center secondary--text">There are no holders of this token</v-card-text>
+                    <app-no-result text="There are no holders of this token" class="mt-4 mt-sm-6"></app-no-result>
                 </div>
                 <div v-for="(holder, index) in props.holders" v-else :key="index">
                     <holders-table-row
@@ -42,7 +42,6 @@
                 </div>
                 <app-intersect v-if="props.hasMore" @intersect="loadMoreData">
                     <div class="skeleton-box rounded-xl mt-1 my-4" style="height: 24px"></div>
-                    <v-divider />
                 </app-intersect>
             </div>
         </div>
@@ -52,6 +51,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import AppIntersect from '@core/components/AppIntersect.vue'
+import AppNoResult from '@/core/components/AppNoResult.vue'
 import HoldersTableRow from './TokenHolderTableRow.vue'
 import { MarketDataFragment as TokenMarketData } from '@core/composables/CoinData/getLatestPrices.generated'
 import BN from 'bignumber.js'

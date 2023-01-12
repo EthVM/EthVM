@@ -397,19 +397,16 @@ export type Query = {
     getERC20TokenOwners: Erc20TokenOwners
     getERC20TokenTransfers: Erc20Transfers
     getERC20Transfers: Erc20Transfers
-    getERC20TransfersV2Tmp: Erc20Transfers
     /** Get the count of ERC721 tokens of a contract that are owned by the address */
     getERC721TokenBalance: Erc721TokenBalance
     /** Get addresses owning a contract's ERC721 tokens */
     getERC721TokenOwners: Erc721TokenOwners
     getERC721TokenTransfers: Erc721Transfers
     getERC721Transfers: Erc721Transfers
-    getERC721TransfersV2Tmp: Erc721Transfers
     getERC1155TokenTransfers: Erc1155Transfers
     /** Get ERC1155 tokens owned by an address */
     getERC1155TokensByOwner: Erc1155TokenBalances
     getERC1155Transfers: Erc1155Transfers
-    getERC1155TransfersV2Tmp: Erc1155Transfers
     getEthBalance: EthOwner
     getEthInternalTransactionTransfers: EthTransfers
     getEthOwners: EthOwners
@@ -424,9 +421,6 @@ export type Query = {
     getLatestPrices: Array<Maybe<TokenMarketInfo>>
     getNFTTokensMeta?: Maybe<RespTokens>
     getNFTTransfers: NftTransfers
-    getNFTTransfersByCounterparty: NftTransfers
-    getNFTTransfersByCounterpartyAndDirection: NftTransfers
-    getNFTTransfersByDirection: NftTransfers
     getNFTcontractsMeta: AddressNfTcontracts
     /** Get ERC20 tokens owned by an address */
     getOwnersERC20Tokens: Erc20TokenOwners
@@ -515,12 +509,6 @@ export type QueryGetErc20TransfersArgs = {
     owner: Scalars['String']
 }
 
-export type QueryGetErc20TransfersV2TmpArgs = {
-    limit?: InputMaybe<Scalars['Int']>
-    nextKey?: InputMaybe<Scalars['String']>
-    owner?: InputMaybe<Scalars['String']>
-}
-
 export type QueryGetErc721TokenBalanceArgs = {
     contract: Scalars['String']
     owner: Scalars['String']
@@ -544,12 +532,6 @@ export type QueryGetErc721TransfersArgs = {
     owner: Scalars['String']
 }
 
-export type QueryGetErc721TransfersV2TmpArgs = {
-    limit?: InputMaybe<Scalars['Int']>
-    nextKey?: InputMaybe<Scalars['String']>
-    owner: Scalars['String']
-}
-
 export type QueryGetErc1155TokenTransfersArgs = {
     contract: Scalars['String']
     limit?: InputMaybe<Scalars['Int']>
@@ -563,12 +545,6 @@ export type QueryGetErc1155TokensByOwnerArgs = {
 }
 
 export type QueryGetErc1155TransfersArgs = {
-    limit?: InputMaybe<Scalars['Int']>
-    nextKey?: InputMaybe<Scalars['String']>
-    owner?: InputMaybe<Scalars['String']>
-}
-
-export type QueryGetErc1155TransfersV2TmpArgs = {
     limit?: InputMaybe<Scalars['Int']>
     nextKey?: InputMaybe<Scalars['String']>
     owner?: InputMaybe<Scalars['String']>
@@ -636,28 +612,7 @@ export type QueryGetNftTokensMetaArgs = {
 
 export type QueryGetNftTransfersArgs = {
     address?: InputMaybe<Scalars['String']>
-    limit?: InputMaybe<Scalars['Int']>
-    nextKey?: InputMaybe<Scalars['String']>
-}
-
-export type QueryGetNftTransfersByCounterpartyArgs = {
-    address: Scalars['String']
-    counterparty: Scalars['String']
-    limit?: InputMaybe<Scalars['Int']>
-    nextKey?: InputMaybe<Scalars['String']>
-}
-
-export type QueryGetNftTransfersByCounterpartyAndDirectionArgs = {
-    address: Scalars['String']
-    counterparty: Scalars['String']
-    direction: TransferDirection
-    limit?: InputMaybe<Scalars['Int']>
-    nextKey?: InputMaybe<Scalars['String']>
-}
-
-export type QueryGetNftTransfersByDirectionArgs = {
-    address: Scalars['String']
-    direction: TransferDirection
+    direction?: InputMaybe<TransferDirection>
     limit?: InputMaybe<Scalars['Int']>
     nextKey?: InputMaybe<Scalars['String']>
 }

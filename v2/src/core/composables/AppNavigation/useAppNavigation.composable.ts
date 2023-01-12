@@ -103,7 +103,7 @@ export function useAppNavigation() {
             header: {
                 text: 'Your Portfolio',
                 icon: 'folder_special',
-                routerLink: ROUTE_NAME.FAV_ADDRESS.PATH
+                routerLink: ROUTE_NAME.PORTFOLIO.PATH
             }
         }
     ])
