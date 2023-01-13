@@ -5,6 +5,7 @@
         @error="imgLoadFail"
         :height="height"
         :max-width="width"
+        :width="width"
         class="border-radius-default img-clickable align-end"
         @click="setDialog(true)"
     >
@@ -14,7 +15,7 @@
     >
     <app-dialog v-model="state.showDetails" @update:modelValue="setDialog" width="656" height="550">
         <template v-if="state.showDetails" #no-scroll-content>
-            <v-carousel hide-delimiters :show-arrows="!xs">
+            <v-carousel hide-delimiters :show-arrows="!xs && tokens !== undefined">
                 <template #prev="{ props }">
                     <app-btn-icon icon="chevron_left" @click="props.onClick" size="large" />
                 </template>

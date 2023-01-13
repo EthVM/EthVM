@@ -11,7 +11,15 @@ import { TokenFragmentFragmentDoc } from '../AddressTokens/tokens.generated'
 import * as VueApolloComposable from '@vue/apollo-composable'
 import * as VueCompositionApi from 'vue'
 export type ReactiveFunction<TParam> = () => TParam
-export type TransferSummaryFragment = { __typename?: 'Transfer'; transactionHash: string; timestamp: number; from: string; to: string; txFee: string }
+export type TransferSummaryFragment = {
+    __typename?: 'Transfer'
+    transactionHash: string
+    timestamp: number
+    from: string
+    to: string
+    txFee: string
+    type: Types.TransferType
+}
 
 export type GetAddressEthTransfersQueryVariables = Types.Exact<{
     hash?: Types.InputMaybe<Types.Scalars['String']>
@@ -37,6 +45,7 @@ export type GetAddressEthTransfersQuery = {
                 from: string
                 to: string
                 txFee: string
+                type: Types.TransferType
             }
             stateDiff?: {
                 __typename?: 'StateDiffChange'
@@ -51,7 +60,7 @@ export type TransferFragmentFragment = {
     __typename?: 'ERC20Transfer'
     value: string
     contract: string
-    transfer: { __typename?: 'Transfer'; transactionHash: string; timestamp: number; from: string; to: string; txFee: string }
+    transfer: { __typename?: 'Transfer'; transactionHash: string; timestamp: number; from: string; to: string; txFee: string; type: Types.TransferType }
     stateDiff?: {
         __typename?: 'StateDiffChange'
         to: { __typename?: 'BalanceDiff'; before: string; after: string }
@@ -75,7 +84,7 @@ export type GetAddressErc20TransfersQuery = {
             __typename?: 'ERC20Transfer'
             value: string
             contract: string
-            transfer: { __typename?: 'Transfer'; transactionHash: string; timestamp: number; from: string; to: string; txFee: string }
+            transfer: { __typename?: 'Transfer'; transactionHash: string; timestamp: number; from: string; to: string; txFee: string; type: Types.TransferType }
             stateDiff?: {
                 __typename?: 'StateDiffChange'
                 to: { __typename?: 'BalanceDiff'; before: string; after: string }
@@ -91,7 +100,7 @@ export type NftTransferFragmentFragment = {
     tokenId: string
     contract: string
     value?: string | null
-    transfer: { __typename?: 'Transfer'; transactionHash: string; timestamp: number; from: string; to: string; txFee: string }
+    transfer: { __typename?: 'Transfer'; transactionHash: string; timestamp: number; from: string; to: string; txFee: string; type: Types.TransferType }
     tokenInfo: { __typename?: 'EthTokenInfo'; name?: string | null }
 }
 
@@ -111,7 +120,7 @@ export type GetAddressNftTransfersQuery = {
             tokenId: string
             contract: string
             value?: string | null
-            transfer: { __typename?: 'Transfer'; transactionHash: string; timestamp: number; from: string; to: string; txFee: string }
+            transfer: { __typename?: 'Transfer'; transactionHash: string; timestamp: number; from: string; to: string; txFee: string; type: Types.TransferType }
             tokenInfo: { __typename?: 'EthTokenInfo'; name?: string | null }
         } | null>
     }
@@ -135,6 +144,7 @@ export const TransferSummaryFragmentDoc = gql`
         from
         to
         txFee
+        type
     }
 `
 export const TransferFragmentFragmentDoc = gql`

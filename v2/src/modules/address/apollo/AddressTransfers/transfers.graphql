@@ -4,6 +4,7 @@ fragment TransferSummary on Transfer {
     from
     to
     txFee
+    type
 }
 
 fragment TokenFragment on EthTokenInfo {

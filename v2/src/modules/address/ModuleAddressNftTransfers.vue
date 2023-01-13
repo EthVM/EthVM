@@ -9,14 +9,7 @@
         <v-card-title class="card-title d-flex justify-space-between align-center mb-5 px-0">
             <div>
                 <v-row align="center" class="my-0 mx-0">
-                    <div v-if="!props.isOverview && !mdAndDown" class="mr-10">
-                        <!-- <address-balance-totals
-                            title="NFT Balance"
-                            :is-loading="loadingAddressTokens || loadingMarketInfo"
-                            :balance="tokenBalanceValue"
-                            :subtext="`${tokenCount} total NFT's`"
-                        /> -->
-                    </div>
+                    <div v-if="!props.isOverview && !mdAndDown" class="mr-10"></div>
                     <span v-if="props.isOverview || mdAndDown" class="text-h6 font-weight-bold">NFT History</span>
                     <app-new-update
                         :icon-only="props.isOverview"
@@ -52,7 +45,14 @@
                 </template>
                 <div v-else-if="transfers.length > 0 && renderState.renderTable" class="p-ten-top">
                     <div v-for="(transfer, index) in transfers" :key="`${transfer?.transfer.transactionHash} - ${index}`">
-                        <nft-transfers-table-row v-if="transfer" :transfer="transfer" :is-overview="props.isOverview" :address-hash="props.addressHash" />
+                        <nft-transfers-table-row
+                            v-if="transfer"
+                            :transfer="transfer"
+                            :nft-meta="getRowMeta(transfer.contract, transfer.tokenId)"
+                            :meta-is-loading="loadingMeta"
+                            :is-overview="props.isOverview"
+                            :address-hash="props.addressHash"
+                        />
                     </div>
                     <app-intersect v-if="!props.isOverview && hasMore" @intersect="loadMoreData">
                         <div class="skeleton-box rounded-xl mt-1 my-4" style="height: 24px"></div>
@@ -80,6 +80,9 @@ import { AddressEventType } from '@/apollo/types'
 import { useRouter } from 'vue-router'
 import { ADDRESS_ROUTE_QUERY, ROUTE_NAME } from '@core/router/routesNames'
 import { useAppTableRowRender } from '@core/composables/AppTableRowRender/useAppTableRowRender.composable'
+import { useGetNftsMeta } from '@core/composables/NftMeta/useGetNftsMeta.composable'
+import { NftMetaFragment } from '@core/composables/NftMeta/nftMeta.generated'
+import { NftId, generateId, generateMapId } from '@/core/composables/NftMeta/helpers'
 
 const MAX_ITEMS = 10
 const OVERVIEW_MAX_ITEMS = 6
@@ -122,13 +125,39 @@ const { addressHash } = toRefs(props)
 
 const { loading: loadingMarketInfo } = useCoinData()
 
-const { result, fetchMore, refetch } = useGetAddressNftTransfersQuery(
+const {
+    result,
+    fetchMore,
+    refetch,
+    loading: loadingTransfers
+} = useGetAddressNftTransfersQuery(
     () => ({
         hash: props.addressHash,
         _limit: MAX_ITEMS
     }),
     { notifyOnNetworkStatusChange: true }
 )
+
+/**
+ * Computed Property of token ids to fetch meta
+ */
+const tokenIDS = computed<NftId[]>(() => {
+    const _ids: NftId[] = []
+    if (!loadingTransfers.value && result.value && generateId) {
+        result.value?.getNFTTransfers.transfers.forEach(i => {
+            if (i) {
+                const id = {
+                    id: generateId(i.tokenId),
+                    contract: i.contract
+                }
+                _ids.push(id)
+            }
+        })
+    }
+    return _ids
+})
+
+const { nftMeta, loadingMeta } = useGetNftsMeta(tokenIDS, loadingTransfers)
 
 const hasMore = computed<boolean>(() => {
     return result.value?.getNFTTransfers.nextKey !== null
@@ -161,6 +190,10 @@ const transfers = computed<Array<Transfer | null>>(() => {
     }
     return []
 })
+
+const getRowMeta = (contract: string, id: string): NftMetaFragment | undefined => {
+    return nftMeta.value.get(generateMapId(contract, id))
+}
 
 /*
  * Initial load will be true only when the data is being loaded initially
