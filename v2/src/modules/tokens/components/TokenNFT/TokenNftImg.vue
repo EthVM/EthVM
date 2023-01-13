@@ -9,7 +9,10 @@
         class="border-radius-default img-clickable align-end"
         @click="setDialog(true)"
     >
-        <div v-if="imagePreview === require('@/assets/icon-nft.png')" class="no-image text-uppercase text-caption text-center py-2 justify-end">
+        <div
+            v-if="imagePreview === require('@/assets/icon-nft.png') && displayNoImageMes"
+            class="no-image text-uppercase text-caption text-center py-2 justify-end"
+        >
             image not available
         </div></v-img
     >
@@ -37,6 +40,7 @@ import TokenNftDetails from './TokenNftDetails.vue'
 import AppDialog from '@core/components/AppDialog.vue'
 import AppBtnIcon from '@/core/components/AppBtnIcon.vue'
 import { useDisplay } from 'vuetify/lib/framework.mjs'
+import BigNumber from 'bignumber.js'
 const { xs } = useDisplay()
 
 interface PropType {
@@ -85,6 +89,10 @@ const setDialog = (_value: boolean) => {
   Computed Values
 ===================================================================================
 */
+
+const displayNoImageMes = computed<boolean>(() => {
+    return new BigNumber(props.height).gte(100)
+})
 
 const displayTokens = computed<NFTDetails[]>(() => {
     if (props.tokens && props.index !== undefined) {

@@ -6,14 +6,21 @@
     -->
     <app-table-row v-if="!smAndDown" row-align="center">
         <v-col :cols="props.isOverview ? 4 : 3" class="d-flex align-center">
-            <token-nft-img v-if="!props.metaIsLoading" :loading="props.metaIsLoading" :nft="tokenMeta" height="40" width="40" class="rounded-1"></token-nft-img>
-            <div v-else class="skeleton-box rounded-xl" style="height: 40px; width: 40px"></div>
-            <p class="text-truncate pl-4">
+            <token-nft-img
+                v-if="!props.metaIsLoading"
+                :loading="props.metaIsLoading"
+                :nft="tokenMeta"
+                height="40"
+                width="40"
+                class="rounded-md"
+            ></token-nft-img>
+            <p v-if="!props.metaIsLoading" class="text-truncate pl-4">
                 {{ tokenName }}
                 <span v-if="props.isOverview" class="text-info text-truncate d-block">{{
                     timeAgo(new Date(props.transfer.transfer.timestamp * 1e3), true)
                 }}</span>
             </p>
+            <div v-else class="skeleton-box rounded-md" style="height: 40px"></div>
         </v-col>
         <v-col :cols="props.isOverview ? 2 : 1" class="text-info text-truncate">
             {{ totalTokens }}
@@ -60,18 +67,12 @@
                 <p class="text-info">{{ timeAgo(new Date(props.transfer.transfer.timestamp * 1e3)) }}</p>
             </v-col>
             <v-col v-if="!state.showMoreDetails" cols="6">
-                <p class="text-center text-truncate">{{ tokenName }}</p>
+                <p v-if="!props.metaIsLoading" class="text-center text-truncate">{{ tokenName }}</p>
+                <div v-else class="skeleton-box rounded-md" style="height: 20px"></div>
             </v-col>
             <v-col class="d-flex align-center justify-end">
-                <token-nft-img
-                    v-if="!props.metaIsLoading"
-                    :loading="props.metaIsLoading"
-                    :nft="tokenMeta"
-                    height="40"
-                    width="40"
-                    class="rounded-1"
-                ></token-nft-img>
-                <div v-else class="skeleton-box rounded-xl" style="height: 40px; width: 40px"></div>
+                <token-nft-img v-if="!props.metaIsLoading" :loading="props.metaIsLoading" :nft="tokenMeta" height="40" width="40"></token-nft-img>
+                <div v-else class="skeleton-box rounded-md" style="height: 40px; min-width: 40px; max-width: 40px"></div>
             </v-col>
             <template #expandable>
                 <v-col cols="12" v-if="state.showMoreDetails">
@@ -157,7 +158,7 @@ const tokenName = computed<string>(() => {
 })
 
 const totalTokens = computed<string>(() => {
-    if (props.transfer.value) {
+    if (props.transfer.value && props.transfer.value !== '0x0') {
         return formatNumber(new BN(props.transfer.value).toNumber())
     }
     return '1'

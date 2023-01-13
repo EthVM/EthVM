@@ -16,25 +16,16 @@ export function useGetNftsMeta(tokenIds: Ref<NftId[]>, loadingIds: Ref<boolean>)
     }
     /**
      * Computed Property of the original ids to fetch
-     * NOTE: Once pagination pr is implemented use end in slice to be equal to the number of items per page
      * Triggers apollo call based on the ids.
-     * Will not be triggered if more ids are added, use fetchMore
      */
     const ids = computed<string>(() => {
         if (tokenIds.value.length > 0) {
-            // //Make sure end in slice === to page limit
-            const first = tokenIds.value.slice(0, 10)
-            return generateFetchId(first)
+            return generateFetchId(tokenIds.value)
         }
         return ''
     })
 
-    const {
-        result: metaResult,
-        loading: loadingMeta,
-        fetchMore: fetchMoreNftTokensMeta,
-        refetch
-    } = useGetNftTokensMetaQuery(
+    const { result: metaResult, loading: loadingMeta } = useGetNftTokensMetaQuery(
         () => ({
             input: ids.value
         }),
@@ -62,28 +53,5 @@ export function useGetNftsMeta(tokenIds: Ref<NftId[]>, loadingIds: Ref<boolean>)
         return map
     })
 
-    /**
-     * Functions fetches more ids and adds them the previous result array
-     * @ids {NftId[]} - new ids to fetch
-     */
-    const fetchMoreNft = (_ids: NftId[]) => {
-        fetchMoreNftTokensMeta({
-            variables: {
-                input: generateFetchId(_ids)
-            },
-            updateQuery: (previousResult, { fetchMoreResult }) => {
-                const newT = fetchMoreResult?.getNFTTokensMeta?.nfts
-                const prevT: NftMetaFragment[] = previousResult?.getNFTTokensMeta?.nfts || []
-                const nfts = newT ? [...prevT, ...newT] : [...prevT]
-                return {
-                    getNFTTokensMeta: {
-                        nfts,
-                        __typename: previousResult?.getNFTTokensMeta?.__typename
-                    }
-                }
-            }
-        })
-    }
-
-    return { loadingMeta, nftMeta, refetch, fetchMoreNft }
+    return { loadingMeta, nftMeta }
 }

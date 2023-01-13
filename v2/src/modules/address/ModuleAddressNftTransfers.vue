@@ -36,7 +36,7 @@
             <v-divider class="my-0 mt-md-4 mx-n4 mx-sm-n6" />
             <template v-if="initialLoad">
                 <div v-for="item in 10" :key="item" class="my-2">
-                    <div class="skeleton-box rounded-xl mt-4" style="height: 24px"></div>
+                    <div class="skeleton-box rounded-xl mt-4" style="height: 40px"></div>
                 </div>
             </template>
             <template v-else>
@@ -55,7 +55,7 @@
                         />
                     </div>
                     <app-intersect v-if="!props.isOverview && hasMore" @intersect="loadMoreData">
-                        <div class="skeleton-box rounded-xl mt-1 my-4" style="height: 24px"></div>
+                        <div class="skeleton-box rounded-xl mb-4" style="height: 40px"></div>
                     </app-intersect>
                 </div>
             </template>
