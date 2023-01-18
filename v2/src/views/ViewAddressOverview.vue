@@ -13,7 +13,7 @@
             <module-address-tokens is-overview :address-hash="props.addressRef" />
         </v-col>
         <v-col cols="12" lg="6" :class="columnPadding">
-            <module-address-recent-nfts :address-hash="props.addressRef" />
+            <module-address-recent-nfts :address-hash="props.addressRef" is-overview />
         </v-col>
         <v-col cols="12" lg="6" :class="columnPadding">
             <module-address-token-transfers :address-hash="props.addressRef" :new-erc20-transfer="newErc20Transfer" @resetCount="resetCount" is-overview />

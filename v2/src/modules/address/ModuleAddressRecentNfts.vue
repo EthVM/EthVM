@@ -1,6 +1,6 @@
 <template>
-    <v-card variant="elevated" elevation="1" rounded="xl" class="pa-4 pa-sm-6 h-100" z>
-        <v-card-title class="card-title d-flex justify-space-between align-center mb-5 pa-0">
+    <v-card :variant="!props.isOverview ? 'flat' : 'elevated'" :elevation="props.isOverview ? 1 : 0" rounded="xl" class="pa-4 pa-sm-6 h-100" z>
+        <v-card-title v-if="props.isOverview" class="card-title d-flex justify-space-between align-center mb-5 pa-0">
             <span class="text-h6 font-weight-bold">NFT Collection</span>
             <app-btn v-if="!xs" text="More" isSmall icon="east" @click="goToNftsPage"></app-btn>
             <app-btn-icon v-else icon="more_horiz" @click="goToNftsPage"></app-btn-icon>
@@ -12,7 +12,7 @@
                 </template>
                 <template v-else>
                     <v-row :dense="xs">
-                        <v-col v-for="(token, index) in tokens" :key="index" cols="6" sm="4">
+                        <v-col v-for="(token, index) in tokens" :key="index" cols="6" sm="4" :lg="props.isOverview ? '4' : '2'">
                             <token-nft-img
                                 :loading="loadingMeta"
                                 :nft="token"
@@ -27,7 +27,7 @@
             </template>
             <template v-else>
                 <v-row :dense="xs">
-                    <v-col v-for="item in 9" :key="item" cols="6" sm="4">
+                    <v-col v-for="item in 9" :key="item" cols="6" sm="4" :lg="props.isOverview ? '4' : '2'">
                         <div class="skeleton-box rounded-xl" style="height: 154px"></div>
                     </v-col>
                 </v-row>
@@ -55,12 +55,20 @@ const props = defineProps({
     addressHash: {
         type: String,
         required: true
+    },
+    isOverview: {
+        type: Boolean
     }
 })
 
+/**------------------------
+ * NFT Data
+ -------------------------*/
+
 const { result: resultBalance, loading: loadingBalance } = useGetOwnersNftTokensQuery(
     () => ({
-        address: props.addressHash
+        address: props.addressHash,
+        limit: props.isOverview ? 9 : 50
     }),
     { notifyOnNetworkStatusChange: true }
 )
@@ -99,6 +107,10 @@ const tokens = computed<NFTDetails[]>(() => {
           })
         : []
 })
+
+/**------------------------
+ * Router
+ -------------------------*/
 
 const router = useRouter()
 const goToNftsPage = async (): Promise<void> => {

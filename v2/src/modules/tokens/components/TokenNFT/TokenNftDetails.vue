@@ -103,9 +103,7 @@ const attributes = computed(() => {
 .border-radius-default {
     border-radius: 8px;
 }
-</style>
 
-<style lang="scss" scoped>
 .no-image {
     background-color: rgb(var(--v-theme-primary));
     color: rgba(255, 255, 255, 0.5);
