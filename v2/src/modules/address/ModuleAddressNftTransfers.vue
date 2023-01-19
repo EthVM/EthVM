@@ -34,7 +34,7 @@
                 <v-col v-if="!props.isOverview" cols="2" class="py-0"> Timestamp </v-col>
             </v-row>
             <v-divider class="my-0 mt-md-4 mx-n4 mx-sm-n6" />
-            <template v-if="initialLoad">
+            <template v-if="initialLoad || loadingMeta">
                 <div v-for="item in 10" :key="item" class="my-2">
                     <div class="skeleton-box rounded-xl mt-4" style="height: 40px"></div>
                 </div>
