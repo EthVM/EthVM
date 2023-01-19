@@ -14,13 +14,12 @@
                 width="40"
                 class="rounded-md"
             ></token-nft-img>
-            <p v-if="!props.metaIsLoading" class="text-truncate pl-4">
+            <p class="text-truncate pl-4">
                 {{ tokenName }}
                 <span v-if="props.isOverview" class="text-info text-truncate d-block">{{
                     timeAgo(new Date(props.transfer.transfer.timestamp * 1e3), true)
                 }}</span>
             </p>
-            <div v-else class="skeleton-box rounded-md" style="height: 40px"></div>
         </v-col>
         <v-col :cols="props.isOverview ? 2 : 1" class="text-info text-truncate">
             {{ totalTokens }}
