@@ -299,14 +299,3 @@ const txEvents = computed<string>(() => {
     return events.join(', ')
 })
 </script>
-
-<style scoped lang="scss">
-.row-bg {
-    top: 0;
-    bottom: 0;
-}
-
-.tiny-text {
-    font-size: 10px !important;
-}
-</style>

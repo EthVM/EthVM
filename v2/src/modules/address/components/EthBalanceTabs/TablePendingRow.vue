@@ -167,10 +167,3 @@ const estimatedFee = computed<FormattedNumber>(() => {
     return formatVariableUnitEthValue(fee)
 })
 </script>
-
-<style scoped lang="scss">
-.row-bg {
-    top: 0;
-    bottom: 0;
-}
-</style>

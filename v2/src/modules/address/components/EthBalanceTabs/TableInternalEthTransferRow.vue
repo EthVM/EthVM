@@ -242,10 +242,3 @@ const txFee = computed<FormattedNumber>(() => {
     return formatNonVariableEthValue(new BN(props.transfer.transfer.txFee))
 })
 </script>
-
-<style scoped lang="scss">
-.row-bg {
-    top: 0;
-    bottom: 0;
-}
-</style>
