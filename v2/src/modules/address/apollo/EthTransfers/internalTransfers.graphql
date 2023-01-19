@@ -1,4 +1,6 @@
 fragment InternalTransactionTransfer on Transfer {
+    type
+    subtype
     transactionHash
     block
     timestamp
