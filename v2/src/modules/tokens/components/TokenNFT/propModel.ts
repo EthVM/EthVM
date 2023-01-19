@@ -3,5 +3,6 @@ export interface NFTDetails {
     contract: string
     type: string
     id: string
+    balance?: string
     meta?: NftMetaFragment
 }

@@ -21,6 +21,8 @@
                                 :index="index"
                                 :tokens="tokens"
                             ></token-nft-img>
+                            <p v-if="!props.isOverview && token.meta && token.meta.name">{{ token.meta.name }}</p>
+                            <p v-if="!props.isOverview && (!token.meta || !token.meta.name)">Unknown</p>
                         </v-col>
                     </v-row>
                 </template>
@@ -49,7 +51,7 @@ import TokenNftImg from '../tokens/components/TokenNFT/TokenNftImg.vue'
 import { NFTDetails } from '../tokens/components/TokenNFT/propModel'
 import { useGetNftsMeta } from '@core/composables/NftMeta/useGetNftsMeta.composable'
 import { NftId, generateId, generateMapId } from '@/core/composables/NftMeta/helpers'
-
+import { NftType } from '@/apollo/types'
 const { xs } = useDisplay()
 const props = defineProps({
     addressHash: {
@@ -100,6 +102,7 @@ const tokens = computed<NFTDetails[]>(() => {
         ? resultBalance.value?.getOwnersNFTTokens.tokens.map(token => {
               return {
                   type: token.type,
+                  balance: token.type === NftType.Erc1155 ? token.balance : undefined,
                   contract: token.tokenInfo.contract,
                   id: generateId(token.tokenInfo.tokenId),
                   meta: nftMeta.value.get(generateMapId(token.tokenInfo.contract, token.tokenInfo.tokenId))
