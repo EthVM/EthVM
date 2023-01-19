@@ -9,7 +9,7 @@
                     {{ transferDirection.text }}
                 </span>
             </v-col>
-            <v-col cols="6" class="text-right">{{ txFee.value }} ETH</v-col>
+            <v-col cols="6" class="text-right">{{ txValue.value }} ETH</v-col>
             <v-col cols="6" class="text-info text-lowercase"> {{ timestamp }} {{ transferDirection.direction }} </v-col>
             <v-col cols="6">
                 <div class="d-flex align-center justify-end">
@@ -49,7 +49,7 @@
                         <v-icon :color="statusIcon.color">{{ statusIcon.icon }}</v-icon>
                     </span>
                     <div class="ml-4">
-                        {{ txFee.value }} ETH
+                        {{ txValue.value }} ETH
                         <div class="text-lowercase">
                             {{ timestamp }} <span v-if="mdAndDown">{{ transferDirection.direction }}</span>
                         </div>
@@ -85,17 +85,13 @@ import AppAddressBlockie from '@/core/components/AppAddressBlockie.vue'
 import AppTransformHash from '@/core/components/AppTransformHash.vue'
 import AppChip from '@core/components/AppChip.vue'
 import AppTableRow from '@core/components/AppTableRow.vue'
-import { Q_ADDRESS_TRANSFERS } from '@core/router/routesNames'
 import { eth, timeAgo } from '@core/helper'
 import { EthInternalTransactionTransfersFragment } from '@module/address/apollo/EthTransfers/internalTransfers.generated'
 import { computed, ref } from 'vue'
-import { formatNonVariableEthValue, FormattedNumber, formatNumber } from '@core/helper/number-format-helper'
+import { formatNonVariableEthValue, FormattedNumber } from '@core/helper/number-format-helper'
 import BN from 'bignumber.js'
 import { useDisplay } from 'vuetify'
-import { TransferSubtype } from '@/apollo/types'
 
-const routes = Q_ADDRESS_TRANSFERS
-const BLOCK_REWARD_HASH = '0xBLOCK_REWARD'
 const { smAndDown, mdAndDown } = useDisplay()
 
 interface ComponentProps {
@@ -159,49 +155,6 @@ const transferDirection = computed<{ [key: string]: string }>(() => {
     }
 })
 
-const isBlockReward = computed<boolean>(() => {
-    return props.transfer.transfer.subtype === TransferSubtype.BlockReward
-})
-
-const isIncoming = computed<boolean>(() => {
-    return transferDirection.value.direction === TRANSFER_DIRECTION.FROM
-})
-
-const transferType = computed<{ [key: string]: string }>(() => {
-    switch (props.transfer.transfer.subtype) {
-        case TransferSubtype.BlockReward:
-            return {
-                text: 'block reward',
-                color: 'success'
-            }
-        case TransferSubtype.UncleReward:
-            return {
-                text: 'uncle reward',
-                color: 'success'
-            }
-        case TransferSubtype.Genesis:
-            return {
-                text: 'genesis reward',
-                color: 'success'
-            }
-        case TransferSubtype.InternalTransaction:
-            return {
-                text: 'internal transfer',
-                color: 'purple'
-            }
-        case TransferSubtype.DaoHardFork:
-            return {
-                text: 'dao hard fork',
-                color: 'purple'
-            }
-        default:
-            return {
-                text: 'transaction',
-                color: 'purple'
-            }
-    }
-})
-
 const balanceBefore = computed<FormattedNumber>(() => {
     if (props.transfer.transfer.to === props.addressRef) {
         // Use the stateDiff of the destination address
@@ -236,9 +189,5 @@ const timestamp = computed<string>(() => {
 
 const txValue = computed<FormattedNumber>(() => {
     return formatNonVariableEthValue(new BN(props.transfer.value))
-})
-
-const txFee = computed<FormattedNumber>(() => {
-    return formatNonVariableEthValue(new BN(props.transfer.transfer.txFee))
 })
 </script>
