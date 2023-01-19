@@ -28,15 +28,14 @@
     </template>
     <div v-if="!initialLoad" class="p-ten-top">
         <template v-if="transfers && transfers.length > 0">
-            <div v-for="transfer in transfers" :key="transfer.transfer.transactionHash">
+            <div v-for="transfer in currentPageData" :key="`${transfer.transfer.transactionHash}-${transfer.transfer.timestamp}`">
                 <table-all-and-internal-row :tab="props.tab" :loading="initialLoad" :transfer="transfer" :address-ref="props.addressRef" />
             </div>
         </template>
         <app-no-result v-else :text="emptyTransfersText" class="mt-4 mt-sm-6 mb-5"></app-no-result>
-        <app-intersect v-if="hasMore" @intersect="loadMoreData">
-            <div class="skeleton-box rounded-xl mt-1 my-4" style="height: 24px"></div>
-            <v-divider />
-        </app-intersect>
+        <template v-if="hasMore">
+            <app-pagination :length="numberOfPages" :has-next="hasMore" @update:modelValue="loadMoreData" :current-page="pageNum" />
+        </template>
     </div>
     <template v-else>
         <div v-for="item in 10" :key="item" class="my-2">
@@ -46,10 +45,10 @@
 </template>
 
 <script setup lang="ts">
-import AppIntersect from '@core/components/AppIntersect.vue'
 import AppNoResult from '@core/components/AppNoResult.vue'
 import TableAllAndInternalRow from '@module/address/components/EthBalanceTabs/TableAllAndInternalRow.vue'
-import { computed } from 'vue'
+import AppPagination from '@core/components/AppPagination.vue'
+import { computed, onMounted, ref } from 'vue'
 import { Q_ADDRESS_TRANSFERS } from '@core/router/routesNames'
 import {
     EthInternalTransactionTransfersFragment,
@@ -57,6 +56,9 @@ import {
 } from '@module/address/apollo/EthTransfers/internalTransfers.generated'
 import { useDisplay } from 'vuetify'
 import { useGetAllEthTransfersQuery } from '@module/address/apollo/EthTransfers/allTransfers.generated'
+import { useAppPaginate } from '@core/composables/AppPaginate/useAppPaginate.composable'
+import { ITEMS_PER_PAGE } from '@core/constants'
+import { useStore } from '@/store'
 
 const routes = Q_ADDRESS_TRANSFERS
 const MAX_ITEMS = 50
@@ -84,7 +86,7 @@ const {
 } = useGetEthInternalTransactionTransfersQuery(
     () => ({
         hash: props.addressRef,
-        _limit: MAX_ITEMS
+        _limit: ITEMS_PER_PAGE
     }),
     () => ({
         enabled: isItxEnabled.value
@@ -98,7 +100,7 @@ const {
 } = useGetAllEthTransfersQuery(
     () => ({
         hash: props.addressRef,
-        _limit: MAX_ITEMS
+        _limit: ITEMS_PER_PAGE
     }),
     () => ({
         enabled: !isItxEnabled.value
@@ -113,6 +115,17 @@ const transfers = computed<Array<EthInternalTransactionTransfersFragment | null>
     }
     return null
 })
+
+const tabId = computed<string>(() => {
+    if (props.tab === routes[1]) {
+        return 'tabInternal'
+    } else if (props.tab === routes[0]) {
+        return 'tabAll'
+    }
+    return ''
+})
+
+const { numberOfPages, pageData: currentPageData, setPageNum, pageNum } = useAppPaginate(transfers, tabId)
 
 const emptyTransfersText = computed<string>(() => {
     if (props.tab === routes[0]) {
@@ -143,7 +156,7 @@ const loadMoreItxData = (): void => {
     fetchMoreInternalTransfersData({
         variables: {
             hash: props.addressRef,
-            _limit: MAX_ITEMS,
+            _limit: ITEMS_PER_PAGE,
             _nextKey: internalTransfersData.value?.getEthInternalTransactionTransfers.nextKey
         },
         updateQuery: (prev, { fetchMoreResult }) => {
@@ -162,7 +175,7 @@ const loadMoreAllEthData = (): void => {
     fetchMoreAllTransfersData({
         variables: {
             hash: props.addressRef,
-            _limit: MAX_ITEMS,
+            _limit: ITEMS_PER_PAGE,
             _nextKey: allTransfersData.value?.getAllEthTransfers.nextKey
         },
         updateQuery: (prev, { fetchMoreResult }) => {
@@ -177,15 +190,13 @@ const loadMoreAllEthData = (): void => {
     })
 }
 
-const loadMoreData = (e: boolean): void => {
-    if (props.tab === routes[1]) {
-        if (hasMore.value && e) {
-            loadMoreItxData()
-        }
-    } else if (props.tab === routes[0]) {
-        if (hasMore.value && e) {
-            loadMoreAllEthData()
-        }
+const loadMoreData = (pageNum: number): void => {
+    setPageNum(pageNum)
+    if (pageNum > numberOfPages.value && hasMore.value) {
+        console.log(pageNum, numberOfPages.value)
+        props.tab === routes[1] ? loadMoreItxData() : loadMoreAllEthData()
     }
 }
+
+const store = useStore()
 </script>

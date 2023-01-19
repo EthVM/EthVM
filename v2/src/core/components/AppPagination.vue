@@ -3,11 +3,12 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 
 interface ComponentProps {
     length: number
     hasNext?: boolean
+    currentPage?: number
 }
 
 const props = withDefaults(defineProps<ComponentProps>(), {
@@ -17,6 +18,21 @@ const props = withDefaults(defineProps<ComponentProps>(), {
 const page = ref<number>(1)
 const pageLength = computed<number>(() => {
     return props.hasNext ? props.length + 1 : props.length
+})
+
+watch(
+    () => props.currentPage,
+    () => {
+        if (props.currentPage) {
+            page.value = props.currentPage
+        }
+    }
+)
+
+onMounted(() => {
+    if (props.currentPage) {
+        page.value = props.currentPage
+    }
 })
 </script>
 
