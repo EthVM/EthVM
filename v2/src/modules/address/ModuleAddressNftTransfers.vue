@@ -9,14 +9,7 @@
         <v-card-title class="card-title d-flex justify-space-between align-center mb-5 px-0">
             <div>
                 <v-row align="center" class="my-0 mx-0">
-                    <div v-if="!props.isOverview && !mdAndDown" class="mr-10">
-                        <!-- <address-balance-totals
-                            title="NFT Balance"
-                            :is-loading="loadingAddressTokens || loadingMarketInfo"
-                            :balance="tokenBalanceValue"
-                            :subtext="`${tokenCount} total NFT's`"
-                        /> -->
-                    </div>
+                    <div v-if="!props.isOverview && !mdAndDown" class="mr-10"></div>
                     <span v-if="props.isOverview || mdAndDown" class="text-h6 font-weight-bold">NFT History</span>
                     <app-new-update
                         :icon-only="props.isOverview"
@@ -41,9 +34,9 @@
                 <v-col v-if="!props.isOverview" cols="2" class="py-0"> Timestamp </v-col>
             </v-row>
             <v-divider class="my-0 mt-md-4 mx-n4 mx-sm-n6" />
-            <template v-if="initialLoad">
+            <template v-if="initialLoad || loadingMeta">
                 <div v-for="item in 10" :key="item" class="my-2">
-                    <div class="skeleton-box rounded-xl mt-4" style="height: 24px"></div>
+                    <div class="skeleton-box rounded-xl mt-4" style="height: 40px"></div>
                 </div>
             </template>
             <template v-else>
@@ -51,11 +44,18 @@
                     <app-no-result text="This address does not have any NFT transfer history" class="mt-4 mt-sm-6"></app-no-result>
                 </template>
                 <div v-else-if="transfers.length > 0 && renderState.renderTable" class="p-ten-top">
-                    <div v-for="(transfer, index) in transfers" :key="`${transfer.transfer.transactionHash} - ${index}`">
-                        <nft-transfers-table-row :transfer="transfer" :is-overview="props.isOverview" :address-hash="props.addressHash" />
+                    <div v-for="(transfer, index) in transfers" :key="`${transfer?.transfer.transactionHash} - ${index}`">
+                        <nft-transfers-table-row
+                            v-if="transfer"
+                            :transfer="transfer"
+                            :nft-meta="getRowMeta(transfer.contract, transfer.tokenId)"
+                            :meta-is-loading="loadingMeta"
+                            :is-overview="props.isOverview"
+                            :address-hash="props.addressHash"
+                        />
                     </div>
                     <app-intersect v-if="!props.isOverview && hasMore" @intersect="loadMoreData">
-                        <div class="skeleton-box rounded-xl mt-1 my-4" style="height: 24px"></div>
+                        <div class="skeleton-box rounded-xl mb-4" style="height: 40px"></div>
                     </app-intersect>
                 </div>
             </template>
@@ -68,7 +68,6 @@ import { computed, reactive, toRefs } from 'vue'
 import AppNewUpdate from '@core/components/AppNewUpdate.vue'
 import AppBtn from '@core/components/AppBtn.vue'
 import AppBtnIcon from '@core/components/AppBtnIcon.vue'
-import AddressBalanceTotals from './components/AddressBalanceTotals.vue'
 import NftTransfersTableRow from '@module/address/components/TableRowNftTransfers.vue'
 import AppIntersect from '@core/components/AppIntersect.vue'
 import AppNoResult from '@/core/components/AppNoResult.vue'
@@ -76,11 +75,14 @@ import { MarketDataFragment as TokenMarketData } from '@core/composables/CoinDat
 import { useCoinData } from '@core/composables/CoinData/coinData.composable'
 import { TOKEN_FILTER_VALUES } from '@module/address/models/TokenSort'
 import { useDisplay } from 'vuetify'
-import { Erc721TransferFragmentFragment as Transfer, useGetAddressErc721TransfersQuery } from './apollo/AddressTransfers/transfers.generated'
+import { NftTransferFragmentFragment as Transfer, useGetAddressNftTransfersQuery } from './apollo/AddressTransfers/transfers.generated'
 import { AddressEventType } from '@/apollo/types'
 import { useRouter } from 'vue-router'
 import { ADDRESS_ROUTE_QUERY, ROUTE_NAME } from '@core/router/routesNames'
 import { useAppTableRowRender } from '@core/composables/AppTableRowRender/useAppTableRowRender.composable'
+import { useGetNftsMeta } from '@core/composables/NftMeta/useGetNftsMeta.composable'
+import { NftMetaFragment } from '@core/composables/NftMeta/nftMeta.generated'
+import { NftId, generateId, generateMapId } from '@/core/composables/NftMeta/helpers'
 
 const MAX_ITEMS = 10
 const OVERVIEW_MAX_ITEMS = 6
@@ -123,7 +125,12 @@ const { addressHash } = toRefs(props)
 
 const { loading: loadingMarketInfo } = useCoinData()
 
-const { result, fetchMore, refetch } = useGetAddressErc721TransfersQuery(
+const {
+    result,
+    fetchMore,
+    refetch,
+    loading: loadingTransfers
+} = useGetAddressNftTransfersQuery(
     () => ({
         hash: props.addressHash,
         _limit: MAX_ITEMS
@@ -131,11 +138,32 @@ const { result, fetchMore, refetch } = useGetAddressErc721TransfersQuery(
     { notifyOnNetworkStatusChange: true }
 )
 
-const hasMore = computed<boolean>(() => {
-    return result.value?.getERC721Transfers.nextKey !== null
+/**
+ * Computed Property of token ids to fetch meta
+ */
+const tokenIDS = computed<NftId[]>(() => {
+    const _ids: NftId[] = []
+    if (!loadingTransfers.value && result.value && generateId) {
+        result.value?.getNFTTransfers.transfers.forEach(i => {
+            if (i) {
+                const id = {
+                    id: generateId(i.tokenId),
+                    contract: i.contract
+                }
+                _ids.push(id)
+            }
+        })
+    }
+    return _ids
 })
 
-const transferHistory = computed<Array<Transfer | null>>(() => result.value?.getERC721Transfers.transfers || [])
+const { nftMeta, loadingMeta } = useGetNftsMeta(tokenIDS, loadingTransfers)
+
+const hasMore = computed<boolean>(() => {
+    return result.value?.getNFTTransfers.nextKey !== null
+})
+
+const transferHistory = computed<Array<Transfer | null>>(() => result.value?.getNFTTransfers.transfers || [])
 
 /**
  * Render State Tracking
@@ -163,6 +191,10 @@ const transfers = computed<Array<Transfer | null>>(() => {
     return []
 })
 
+const getRowMeta = (contract: string, id: string): NftMetaFragment | undefined => {
+    return nftMeta.value.get(generateMapId(contract, id))
+}
+
 /*
  * Initial load will be true only when the data is being loaded initially
  */
@@ -180,14 +212,14 @@ const setPage = (page: number, reset = false) => {
                 variables: {
                     hash: props.addressHash,
                     _limit: MAX_ITEMS,
-                    _nextKey: result.value?.getERC721Transfers?.nextKey
+                    _nextKey: result.value?.getNFTTransfers.nextKey
                 },
                 updateQuery: (prev, { fetchMoreResult }) => {
                     return {
-                        getERC721Transfers: {
-                            nextKey: fetchMoreResult?.getERC721Transfers.nextKey,
-                            transfers: [...prev.getERC721Transfers.transfers, ...(fetchMoreResult?.getERC721Transfers.transfers || [])],
-                            __typename: fetchMoreResult?.getERC721Transfers.__typename
+                        getNFTTransfers: {
+                            nextKey: fetchMoreResult?.getNFTTransfers.nextKey,
+                            transfers: [...prev.getNFTTransfers.transfers, ...(fetchMoreResult?.getNFTTransfers.transfers || [])],
+                            __typename: fetchMoreResult?.getNFTTransfers.__typename
                         }
                     }
                 }

@@ -4,6 +4,7 @@ fragment TransferSummary on Transfer {
     from
     to
     txFee
+    type
 }
 
 fragment TokenFragment on EthTokenInfo {
@@ -67,21 +68,23 @@ query getAddressERC20Transfers($hash: String!, $_limit: Int, $_nextKey: String) 
     }
 }
 
-fragment Erc721TransferFragment on ERC721Transfer {
+fragment NFTTransferFragment on NFTTransfer {
     transfer {
         ...TransferSummary
     }
     tokenId
     contract
+    value
     tokenInfo {
         name
     }
 }
 
-query getAddressERC721Transfers($hash: String!, $_limit: Int, $_nextKey: String) {
-    getERC721Transfers(owner: $hash, limit: $_limit, nextKey: $_nextKey) {
+
+query getAddressNFTTransfers($hash: String!, $_limit: Int, $_nextKey: String) {
+    getNFTTransfers(address: $hash, limit: $_limit, nextKey: $_nextKey) {
         transfers {
-            ...Erc721TransferFragment
+            ...NFTTransferFragment
         }
         nextKey
     }

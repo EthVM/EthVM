@@ -48,7 +48,7 @@ import AppNoResult from '@/core/components/AppNoResult.vue'
 import TokenNftImg from '../tokens/components/TokenNFT/TokenNftImg.vue'
 import { NFTDetails } from '../tokens/components/TokenNFT/propModel'
 import { useGetNftsMeta } from '@core/composables/NftMeta/useGetNftsMeta.composable'
-import { NftId } from '@core/composables/NftMeta/model'
+import { NftId, generateId, generateMapId } from '@/core/composables/NftMeta/helpers'
 
 const { xs } = useDisplay()
 const props = defineProps({
@@ -82,7 +82,7 @@ const tokenIDS = computed<NftId[]>(() => {
     return _ids
 })
 
-const { nftMeta, loadingMeta, generateId, generateMapId } = useGetNftsMeta(tokenIDS, loadingBalance)
+const { nftMeta, loadingMeta } = useGetNftsMeta(tokenIDS, loadingBalance)
 
 /**
  * Computed Property that returns array of tokens to be dispalyed with Meta data
