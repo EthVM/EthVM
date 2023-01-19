@@ -103,7 +103,6 @@ import AppAddressBlockie from '@/core/components/AppAddressBlockie.vue'
 import AppTransformHash from '@/core/components/AppTransformHash.vue'
 import AppChip from '@core/components/AppChip.vue'
 import AppTableRow from '@core/components/AppTableRow.vue'
-import { Q_ADDRESS_TRANSFERS } from '@core/router/routesNames'
 import { eth, timeAgo } from '@core/helper'
 import { EthInternalTransactionTransfersFragment } from '@module/address/apollo/EthTransfers/internalTransfers.generated'
 import { computed, ref } from 'vue'
@@ -112,8 +111,6 @@ import BN from 'bignumber.js'
 import { useDisplay } from 'vuetify'
 import { TransferSubtype } from '@/apollo/types'
 
-const routes = Q_ADDRESS_TRANSFERS
-const BLOCK_REWARD_HASH = '0xBLOCK_REWARD'
 const { smAndDown, mdAndDown } = useDisplay()
 
 interface ComponentProps {
@@ -218,24 +215,6 @@ const transferType = computed<{ [key: string]: string }>(() => {
                 color: 'purple'
             }
     }
-})
-
-const balanceBefore = computed<FormattedNumber>(() => {
-    if (props.transfer.transfer.to === props.addressRef) {
-        // Use the stateDiff of the destination address
-        return formatNonVariableEthValue(new BN(props.transfer.stateDiff?.to.before || 0))
-    }
-    // use from address
-    return formatNonVariableEthValue(new BN(props.transfer.stateDiff?.from?.before || 0))
-})
-
-const balanceAfter = computed<FormattedNumber>(() => {
-    if (props.transfer.transfer.to === props.addressRef) {
-        // use to address
-        return formatNonVariableEthValue(new BN(props.transfer.stateDiff?.to.after || 0))
-    }
-    // use from address
-    return formatNonVariableEthValue(new BN(props.transfer.stateDiff?.from?.after || 0))
 })
 
 const txAddress = computed<string>(() => {
