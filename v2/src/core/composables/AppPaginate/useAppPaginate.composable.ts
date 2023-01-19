@@ -1,24 +1,28 @@
 import { ITEMS_PER_PAGE } from '@core/constants'
-import { computed, Ref, ref, toRefs, unref, watch } from 'vue'
+import { computed, isRef, Ref, ref, watch } from 'vue'
 import { useStore } from '@/store'
 
-export function useAppPaginate(dataToPaginate: Ref<Array<unknown>>, id?: Ref<string>) {
+export function useAppPaginate(dataToPaginate: Ref<Array<unknown>>, id?: Ref<string> | string) {
     const store = useStore()
     const pageNum = ref(1)
 
-    if (id) {
-        if (!store.paginationStateMap.has(id.value)) {
-            store.paginationStateMap.set(id.value, 1)
+    const pageId = isRef(id) ? id.value : id
+
+    if (pageId) {
+        if (!store.paginationStateMap.has(pageId)) {
+            store.paginationStateMap.set(pageId, 1)
         }
-        watch(id, () => {
-            if (id && !store.paginationStateMap.has(id.value)) {
-                store.paginationStateMap.set(id.value, 1)
-            }
-        })
+        if (isRef(id)) {
+            watch(id, val => {
+                if (id && !store.paginationStateMap.has(val)) {
+                    store.paginationStateMap.set(val, 1)
+                }
+            })
+        }
     }
 
     const computedPageNum = computed<number>(() => {
-        return id ? store.paginationStateMap.get(id.value) || 1 : pageNum.value
+        return pageId ? store.paginationStateMap.get(pageId) || 1 : pageNum.value
     })
 
     const pageData = computed(() => {
@@ -33,8 +37,8 @@ export function useAppPaginate(dataToPaginate: Ref<Array<unknown>>, id?: Ref<str
 
     const setPageNum = (page: number) => {
         pageNum.value = page
-        if (id) {
-            store.paginationStateMap.set(id.value, page)
+        if (pageId) {
+            store.paginationStateMap.set(pageId, page)
         }
     }
 

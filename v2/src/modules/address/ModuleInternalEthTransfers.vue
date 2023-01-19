@@ -1,54 +1,49 @@
 <template>
     <template v-if="!smAndDown">
         <v-row align="center" justify="start" class="text-info mt-2 mt-sm-6">
-            <v-col sm="3" lg="2">
+            <v-col :sm="mdAndDown ? 3 : 2">
                 <span style="width: 30px; height: 1px" class="d-inline-block"></span>
                 <span class="ml-4">Tx Value</span>
             </v-col>
-            <v-col v-if="!mdAndDown" sm="2"> Type </v-col>
-            <v-col sm="2"> Hash/Block </v-col>
-            <v-col sm="2"> To/From </v-col>
-            <v-col sm="3" lg="2"> Address </v-col>
-            <v-col sm="2"> Tx Fee Paid </v-col>
+            <v-spacer />
+            <v-col md="3" lg="2"> Address </v-col>
+            <v-col sm="2"> Hash </v-col>
+            <v-col sm="2"> Balance Before </v-col>
+            <v-col sm="2" lg="3"> Balance After </v-col>
         </v-row>
         <v-divider class="my-0 mt-md-4 mx-n4 mx-sm-n6" />
     </template>
-    <div v-if="!initialLoad && !loadingAllTransfersData" class="p-ten-top">
+    <div v-if="!initialLoad && !loadingInternalTransfersData" class="p-ten-top">
         <template v-if="transfers && transfers.length > 0">
             <div v-for="transfer in currentPageData" :key="`${transfer.transfer.transactionHash}-${transfer.transfer.timestamp}`">
-                <table-all-eth-transfer-row :transfer="transfer" :address-ref="props.addressRef" />
+                <table-internal-eth-transfer-row :transfer="transfer" :address-ref="props.addressRef" />
             </div>
         </template>
-        <app-no-result v-else text="This address does not have any transfers" class="mt-4 mt-sm-6 mb-5"></app-no-result>
+        <app-no-result v-else text="This address does not have any internal transfers" class="mt-4 mt-sm-6 mb-5"></app-no-result>
     </div>
     <div v-else class="p-ten-top">
         <div v-for="item in 10" :key="item" style="padding: 10px 0">
             <div class="skeleton-box rounded-xl" style="height: 40px"></div>
         </div>
     </div>
-    <template v-if="hasMore & !initialLoad">
+    <template v-if="hasMore && !initialLoad">
         <app-pagination :length="numberOfPages" :has-next="hasMore" @update:modelValue="loadMoreData" :current-page="pageNum" />
     </template>
 </template>
 
 <script setup lang="ts">
 import AppNoResult from '@core/components/AppNoResult.vue'
-import TableAllEthTransferRow from '@module/address/components/EthBalanceTabs/TableAllEthTransferRow.vue'
+import TableInternalEthTransferRow from '@module/address/components/EthBalanceTabs/TableInternalEthTransferRow.vue'
 import AppPagination from '@core/components/AppPagination.vue'
 import { computed, onMounted, ref } from 'vue'
-import { Q_ADDRESS_TRANSFERS } from '@core/router/routesNames'
 import {
     EthInternalTransactionTransfersFragment,
     useGetEthInternalTransactionTransfersQuery
 } from '@module/address/apollo/EthTransfers/internalTransfers.generated'
 import { useDisplay } from 'vuetify'
-import { useGetAllEthTransfersQuery } from '@module/address/apollo/EthTransfers/allTransfers.generated'
 import { useAppPaginate } from '@core/composables/AppPaginate/useAppPaginate.composable'
 import { ITEMS_PER_PAGE } from '@core/constants'
-import { useStore } from '@/store'
 
-const routes = Q_ADDRESS_TRANSFERS
-const MAX_ITEMS = 50
 const { smAndDown, mdAndDown } = useDisplay()
 
 const props = defineProps({
@@ -59,10 +54,10 @@ const props = defineProps({
 })
 
 const {
-    result: allTransfersData,
-    loading: loadingAllTransfersData,
-    fetchMore: fetchMoreAllTransfersData
-} = useGetAllEthTransfersQuery(
+    result: internalTransfersData,
+    loading: loadingInternalTransfersData,
+    fetchMore: fetchMoreInternalTransfersData
+} = useGetEthInternalTransactionTransfersQuery(
     () => ({
         hash: props.addressRef,
         _limit: ITEMS_PER_PAGE
@@ -73,32 +68,32 @@ const {
 )
 
 const transfers = computed<Array<EthInternalTransactionTransfersFragment | null>>(() => {
-    return allTransfersData.value?.getAllEthTransfers.transfers || []
+    return internalTransfersData.value?.getEthInternalTransactionTransfers.transfers || []
 })
 
-const { numberOfPages, pageData: currentPageData, setPageNum, pageNum } = useAppPaginate(transfers, 'allTxs')
+const { numberOfPages, pageData: currentPageData, setPageNum, pageNum } = useAppPaginate(transfers, 'internalTxs')
 
 const initialLoad = computed<boolean>(() => {
-    return !allTransfersData.value
+    return !internalTransfersData.value
 })
 
 const hasMore = computed<boolean>(() => {
-    return !!allTransfersData.value?.getAllEthTransfers.nextKey
+    return !!internalTransfersData.value?.getEthInternalTransactionTransfers.nextKey
 })
 
-const loadMoreAllEthData = (): void => {
-    fetchMoreAllTransfersData({
+const loadMoreItxData = (): void => {
+    fetchMoreInternalTransfersData({
         variables: {
             hash: props.addressRef,
             _limit: ITEMS_PER_PAGE,
-            _nextKey: allTransfersData.value?.getAllEthTransfers.nextKey
+            _nextKey: internalTransfersData.value?.getEthInternalTransactionTransfers.nextKey
         },
         updateQuery: (prev, { fetchMoreResult }) => {
             return {
-                getAllEthTransfers: {
-                    nextKey: fetchMoreResult?.getAllEthTransfers.nextKey,
-                    transfers: [...prev.getAllEthTransfers.transfers, ...(fetchMoreResult?.getAllEthTransfers.transfers || [])],
-                    __typename: fetchMoreResult?.getAllEthTransfers.__typename
+                getEthInternalTransactionTransfers: {
+                    nextKey: fetchMoreResult?.getEthInternalTransactionTransfers.nextKey,
+                    transfers: [...prev.getEthInternalTransactionTransfers.transfers, ...(fetchMoreResult?.getEthInternalTransactionTransfers.transfers || [])],
+                    __typename: fetchMoreResult?.getEthInternalTransactionTransfers.__typename
                 }
             }
         }
@@ -108,7 +103,7 @@ const loadMoreAllEthData = (): void => {
 const loadMoreData = (pageNum: number): void => {
     setPageNum(pageNum)
     if (pageNum > numberOfPages.value && hasMore.value) {
-        loadMoreAllEthData()
+        loadMoreItxData()
     }
 }
 </script>
