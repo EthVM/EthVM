@@ -12,6 +12,8 @@
         :index="state.index"
         :has-error="state.hasError"
         :transfer-type="transferType"
+        :nft-meta="nftMeta"
+        :loading-meta="loadingMeta"
         @setPage="setPage"
     />
 </template>
@@ -27,13 +29,14 @@ import {
     useGetErc1155TokenTransfersQuery,
     Erc20TokenTransfersFragment,
     Erc721TokenTransfersFragment,
-    Erc1155TokenTransfersFragment
+    Erc1155TokenTransfersFragment,
+    TokenTransferFragment,
+    Erc721TransferFragment,
+    Erc1155TokenTransferFragment
 } from '@module/tokens/apollo/TokenDetailsTransfer/tokenTransfers.generated'
 import { useGetNftsMeta } from '@core/composables/NftMeta/useGetNftsMeta.composable'
-import { NftId, generateId, generateMapId } from '@/core/composables/NftMeta/helpers'
-import { NftType, TransferType } from '@/apollo/types'
-
-const TYPES = ['ERC20', 'ERC721']
+import { NftId, generateId } from '@/core/composables/NftMeta/helpers'
+import { TransferType } from '@/apollo/types'
 
 const MAX_ITEMS = 10
 
@@ -154,17 +157,21 @@ const hasERC1155Transfers = computed<boolean>(() => {
     return !!erc1155TokenTransfers.value && erc1155TokenTransfers.value.transfers.length > 0
 })
 
-const initialLoad = computed<boolean>(() => {
-    return !erc721TokenTransferResult.value || !erc20TokenTransferResult.value || !erc1155TokenTransferResult.value
-})
-
 const hasMoreERC1155Transfers = computed<boolean>(() => {
     return erc1155TokenTransfers.value ? erc1155TokenTransfers.value.nextKey !== null : false
+})
+
+const transferType = computed<TransferType>(() => {
+    return hasNftTransfers.value ? (hasERC721Transfers.value ? TransferType.Erc721 : TransferType.Erc1155) : TransferType.Erc20
 })
 
 /**------------------------
  * NFT META
  -------------------------*/
+
+const loadingTransfers = computed<boolean>(() => {
+    return loadingErc20TokenTransfer.value || loadingErc721TokenTransfer.value || loadingErc1155TokenTransfer.value
+})
 
 const hasNftTransfers = computed<boolean>(() => {
     return hasERC1155Transfers.value || hasERC721Transfers.value
@@ -172,31 +179,49 @@ const hasNftTransfers = computed<boolean>(() => {
 /**
  * Computed Property of token ids to be fetch meta
  */
-// const tokenIDS = computed<NftId[]>(() => {
-//     const _ids: NftId[] = []
-//     if (!loading.value && resultBalance.value) {
-//         resultBalance.value?.getOwnersNFTTokens.tokens.forEach(i => {
-//             const id = {
-//                 id: generateId(i.tokenInfo.tokenId),
-//                 contract: i.tokenInfo.contract
-//             }
-//             _ids.push(id)
-//         })
-//     }
-//     return _ids
-// })
-// const { nftMeta, loadingMeta } = useGetNftsMeta(tokenIDS, loadingBalance)
+const tokenIDS = computed<NftId[]>(() => {
+    const _ids: NftId[] = []
+    if (transferType.value !== TransferType.Erc20 && hasNftTransfers.value) {
+        if (transferType.value === TransferType.Erc721) {
+            erc721TokenTransfer.value?.transfers.forEach(transfer => {
+                if (transfer) {
+                    const id = {
+                        id: generateId(transfer.tokenId),
+                        contract: transfer.contract
+                    }
+                    _ids.push(id)
+                }
+            })
+        } else if (transferType.value === TransferType.Erc1155) {
+            erc1155TokenTransfers.value?.transfers.forEach(transfer => {
+                if (transfer) {
+                    const id = {
+                        id: generateId(transfer.tokenId),
+                        contract: transfer.contract
+                    }
+                    _ids.push(id)
+                }
+            })
+        }
+    }
+    return _ids
+})
+const { nftMeta, loadingMeta } = useGetNftsMeta(tokenIDS, loadingTransfers)
 
 /**------------------------
  * Transfers
  -------------------------*/
-const transferData = computed<any[]>(() => {
+
+const initialLoad = computed<boolean>(() => {
+    return !erc721TokenTransferResult.value || !erc20TokenTransferResult.value || !erc1155TokenTransferResult.value || loadingMeta.value
+})
+const transferData = computed<TokenTransferFragment[] | Erc721TransferFragment[] | Erc1155TokenTransferFragment[]>(() => {
     if (!initialLoad.value) {
         const data = !hasNftTransfers.value
-            ? erc20TokenTransfer.value?.transfers
+            ? erc20TokenTransfer.value?.transfers.filter((x): x is TokenTransferFragment => x !== null)
             : hasERC1155Transfers.value
-            ? erc1155TokenTransfers.value?.transfers
-            : erc721TokenTransfer.value?.transfers
+            ? erc1155TokenTransfers.value?.transfers.filter((x): x is Erc1155TokenTransferFragment => x !== null)
+            : erc721TokenTransfer.value?.transfers.filter((x): x is Erc721TransferFragment => x !== null)
         if (data) {
             return data
         }
@@ -204,12 +229,8 @@ const transferData = computed<any[]>(() => {
     return []
 })
 
-const transferType = computed<TransferType>(() => {
-    return hasNftTransfers.value ? (hasERC721Transfers.value ? TransferType.Erc721 : TransferType.Erc1155) : TransferType.Erc20
-})
-
 const loading = computed<boolean>(() => {
-    return loadingErc20TokenTransfer.value || loadingErc721TokenTransfer.value || loadingErc1155TokenTransfer.value
+    return loadingErc20TokenTransfer.value || loadingErc721TokenTransfer.value || loadingErc1155TokenTransfer.value || loadingMeta.value
 })
 
 const showPagination = computed<boolean>(() => {

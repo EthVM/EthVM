@@ -49,8 +49,8 @@
             </v-col>
             <!-- End Column 5 -->
             <!-- Column 6: ERC721 Image -->
-            <v-col v-if="isNFT" md="2">
-                <v-img :src="image" align="center" justify="end" max-height="50px" max-width="50px" contain @error="onImageLoadFail" />
+            <v-col v-if="isNFT && tokenMeta" md="2">
+                <token-nft-img :loading="false" :nft="tokenMeta" height="40" width="40" class="rounded-md"></token-nft-img>
             </v-col>
             <!-- End Column 6 -->
             <!-- Column 6: Age -->
@@ -111,47 +111,53 @@ import AppAddressBlockie from '@core/components/AppAddressBlockie.vue'
 import AppTableRow from '@core/components/AppTableRow.vue'
 import BigNumber from 'bignumber.js'
 import {
-    TokenTransferFragment as Erc20TokenTransferType,
-    Erc721TransferFragment as Erc721TransferType
+    TokenTransferFragment,
+    Erc721TransferFragment,
+    Erc1155TokenTransferFragment
 } from '@module/tokens/apollo/TokenDetailsTransfer/tokenTransfers.generated'
 import BN from 'bignumber.js'
-import configs from '@/configs'
-import { reactive, computed, ref } from 'vue'
+import { computed, ref } from 'vue'
 import { formatFloatingPointValue, FormattedNumber } from '@core/helper/number-format-helper'
 import { useDisplay } from 'vuetify'
 import { eth, timeAgo } from '@core/helper'
 import { TransferType } from '@/apollo/types'
+import { NftMetaFragment } from '@core/composables/NftMeta/nftMeta.generated'
+import TokenNftImg from '@module/tokens/components/TokenNFT/TokenNftImg.vue'
+import { NFTDetails } from '@module/tokens/components/TokenNFT/propModel'
+import Web3Utils from 'web3-utils'
 
 const { lgAndUp } = useDisplay()
 
 interface PropType {
-    transfer: Erc721TransferType | Erc20TokenTransferType
+    transfer: TokenTransferFragment | Erc721TransferFragment | Erc1155TokenTransferFragment
     decimals?: number
     symbol?: string
     transferType: string
+    nftMeta?: NftMetaFragment
 }
 
 const props = defineProps<PropType>()
-
-const state = reactive({
-    imageExists: true
-})
 
 /*
 ===================================================================================
   Computed
 ===================================================================================
 */
-const image = computed<string>(() => {
-    if (props.transfer && props.transfer['contract'] && state.imageExists) {
-        return `${configs.OPENSEA}/getImage?contract=${props.transfer['contract']}&tokenId=${getTokenID.value}`
+
+const tokenMeta = computed<NFTDetails | undefined>(() => {
+    if (props.transfer.__typename === 'ERC1155Transfer' || props.transfer.__typename === 'ERC721Transfer') {
+        return {
+            type: props.transfer.transfer.type,
+            contract: props.transfer.contract,
+            id: Web3Utils.hexToNumberString(props.transfer.tokenId),
+            meta: props.nftMeta
+        }
     }
-    return require('@/assets/icon-token.png')
+    return undefined
 })
 
 const transferValue = computed<FormattedNumber>(() => {
     let n = new BigNumber(props.transfer['value']) || new BigNumber(0)
-
     // Must be a token transfer
     if (props.decimals) {
         n = n.div(new BigNumber(10).pow(props.decimals))
@@ -180,12 +186,6 @@ const getTokenID = computed<string>(() => {
      Methods
     ===================================================================================
     */
-/**
- * Sets image exists to false
- */
-const onImageLoadFail = (): void => {
-    state.imageExists = false
-}
 
 const visibleDetails = ref(new Set())
 const toggleMoreDetails = (transfer: string): void => {
