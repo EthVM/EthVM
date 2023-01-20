@@ -15,7 +15,7 @@
     </template>
     <div v-if="!initialLoad && !loadingInternalTransfersData" class="p-ten-top">
         <template v-if="transfers && transfers.length > 0">
-            <div v-for="transfer in currentPageData" :key="`${transfer.transfer.transactionHash}-${transfer.transfer.timestamp}`">
+            <div v-for="(transfer, index) in currentPageData" :key="`${transfer.transfer.transactionHash}-${index}`">
                 <table-internal-eth-transfer-row :transfer="transfer" :address-ref="props.addressRef" />
             </div>
         </template>

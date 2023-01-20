@@ -1,6 +1,7 @@
 import { ITEMS_PER_PAGE } from '@core/constants'
 import { computed, isRef, Ref, ref, watch } from 'vue'
 import { useStore } from '@/store'
+import { onBeforeRouteLeave } from 'vue-router'
 
 export function useAppPaginate(dataToPaginate: Ref<Array<unknown>>, id?: Ref<string> | string) {
     const store = useStore()
@@ -41,6 +42,12 @@ export function useAppPaginate(dataToPaginate: Ref<Array<unknown>>, id?: Ref<str
             store.paginationStateMap.set(pageId, page)
         }
     }
+
+    onBeforeRouteLeave(() => {
+        if (pageId) {
+            store.paginationStateMap.delete(pageId)
+        }
+    })
 
     return {
         numberOfPages,
