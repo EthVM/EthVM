@@ -79,3 +79,18 @@ query getNFTcontractsMeta($address: String!) {
         }
     }
 }
+
+query getOwnersNftTokens($address: String!, $limit: Int!, $nextKey: String ) {
+    getOwnersNFTTokens(address: $address, limit: $limit, nextKey: $nextKey ) {
+        tokens {
+            type
+            balance 
+            tokenInfo {
+                contract
+                tokenId
+                name
+            }
+        }
+        nextKey
+    }
+}

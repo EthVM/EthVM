@@ -2,9 +2,9 @@
     <div class="pa-4 pa-sm-6">
         <div v-if="initialLoad && initialLoadMeta" class="skeleton-box rounded-xl" :style="xs ? 'height: 66px' : 'height: 112px'"></div>
         <template v-else>
-            <div v-if="erc721Tokens.length > 0" class="ma-n4 ma-sm-n6">
-                <div v-for="token in erc721Tokens" :key="token.tokenInfo.contract">
-                    <v-lazy @update:modelValue="tokenVisible($event, token.tokenInfo.contract)" min-height="250" :options="{ threshold: 0.5 }">
+            <div v-if="erc721Tokens && erc721Tokens.length > 0" class="ma-n4 ma-sm-n6">
+                <div v-for="token in erc721Tokens" :key="token?.tokenInfo.contract">
+                    <v-lazy v-if="token" @update:modelValue="tokenVisible($event, token.tokenInfo.contract)" min-height="250" :options="{ threshold: 0.5 }">
                         <div>
                             <template v-if="visibleTokens.has(token.tokenInfo.contract)">
                                 <address-contract-nfts

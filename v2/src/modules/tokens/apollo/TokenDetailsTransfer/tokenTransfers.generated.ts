@@ -22,7 +22,7 @@ export type TokenInfoFragment = {
 export type TokenTransferFragment = {
     __typename?: 'ERC20Transfer'
     value: string
-    transfer: { __typename?: 'Transfer'; transactionHash: string; timestamp: number; from: string; to: string; txFee: string }
+    transfer: { __typename?: 'Transfer'; transactionHash: string; timestamp: number; from: string; to: string; txFee: string; type: Types.TransferType }
 }
 
 export type TokenTransfersFragment = {
@@ -31,7 +31,7 @@ export type TokenTransfersFragment = {
     transfers: Array<{
         __typename?: 'ERC20Transfer'
         value: string
-        transfer: { __typename?: 'Transfer'; transactionHash: string; timestamp: number; from: string; to: string; txFee: string }
+        transfer: { __typename?: 'Transfer'; transactionHash: string; timestamp: number; from: string; to: string; txFee: string; type: Types.TransferType }
     } | null>
 }
 
@@ -49,7 +49,7 @@ export type GetErc20TokenTransfersQuery = {
         transfers: Array<{
             __typename?: 'ERC20Transfer'
             value: string
-            transfer: { __typename?: 'Transfer'; transactionHash: string; timestamp: number; from: string; to: string; txFee: string }
+            transfer: { __typename?: 'Transfer'; transactionHash: string; timestamp: number; from: string; to: string; txFee: string; type: Types.TransferType }
         } | null>
     }
 }
@@ -58,7 +58,7 @@ export type Erc721TransferFragment = {
     __typename?: 'ERC721Transfer'
     tokenId: string
     contract: string
-    transfer: { __typename?: 'Transfer'; transactionHash: string; timestamp: number; from: string; to: string; txFee: string }
+    transfer: { __typename?: 'Transfer'; transactionHash: string; timestamp: number; from: string; to: string; txFee: string; type: Types.TransferType }
     tokenInfo: {
         __typename?: 'EthTokenInfo'
         name?: string | null
@@ -76,7 +76,7 @@ export type Erc721TransfersFragment = {
         __typename?: 'ERC721Transfer'
         tokenId: string
         contract: string
-        transfer: { __typename?: 'Transfer'; transactionHash: string; timestamp: number; from: string; to: string; txFee: string }
+        transfer: { __typename?: 'Transfer'; transactionHash: string; timestamp: number; from: string; to: string; txFee: string; type: Types.TransferType }
         tokenInfo: {
             __typename?: 'EthTokenInfo'
             name?: string | null
@@ -103,7 +103,7 @@ export type GetErc721TokenTransfersQuery = {
             __typename?: 'ERC721Transfer'
             tokenId: string
             contract: string
-            transfer: { __typename?: 'Transfer'; transactionHash: string; timestamp: number; from: string; to: string; txFee: string }
+            transfer: { __typename?: 'Transfer'; transactionHash: string; timestamp: number; from: string; to: string; txFee: string; type: Types.TransferType }
             tokenInfo: {
                 __typename?: 'EthTokenInfo'
                 name?: string | null

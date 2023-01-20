@@ -17,6 +17,7 @@
   $grid-breakpoints: settings.$grid-breakpoints,
   $container-max-widths: settings.$container-max-widths,
   $input-density: settings.$input-density,
+  $window-controls-padding: settings.$window-controls-padding,
   $tooltip-background-color: settings.$tooltip-background-color,
   $tooltip-font-size: settings.$tooltip-font-size,
   $tooltip-border-radius: settings.$tooltip-border-radius,
@@ -58,6 +59,9 @@ a {
     overflow: hidden;
     white-space: nowrap;
     max-width: 100%;
+}
+.text-break-new-line {
+    overflow-wrap: break-word;
 }
 
 .mobile-chip {

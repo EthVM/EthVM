@@ -11,7 +11,15 @@ import { TokenFragmentFragmentDoc } from '../AddressTokens/tokens.generated'
 import * as VueApolloComposable from '@vue/apollo-composable'
 import * as VueCompositionApi from 'vue'
 export type ReactiveFunction<TParam> = () => TParam
-export type TransferSummaryFragment = { __typename?: 'Transfer'; transactionHash: string; timestamp: number; from: string; to: string; txFee: string }
+export type TransferSummaryFragment = {
+    __typename?: 'Transfer'
+    transactionHash: string
+    timestamp: number
+    from: string
+    to: string
+    txFee: string
+    type: Types.TransferType
+}
 
 export type GetAddressEthTransfersQueryVariables = Types.Exact<{
     hash?: Types.InputMaybe<Types.Scalars['String']>
@@ -37,6 +45,7 @@ export type GetAddressEthTransfersQuery = {
                 from: string
                 to: string
                 txFee: string
+                type: Types.TransferType
             }
             stateDiff?: {
                 __typename?: 'StateDiffChange'
@@ -51,7 +60,7 @@ export type TransferFragmentFragment = {
     __typename?: 'ERC20Transfer'
     value: string
     contract: string
-    transfer: { __typename?: 'Transfer'; transactionHash: string; timestamp: number; from: string; to: string; txFee: string }
+    transfer: { __typename?: 'Transfer'; transactionHash: string; timestamp: number; from: string; to: string; txFee: string; type: Types.TransferType }
     stateDiff?: {
         __typename?: 'StateDiffChange'
         to: { __typename?: 'BalanceDiff'; before: string; after: string }
@@ -75,7 +84,7 @@ export type GetAddressErc20TransfersQuery = {
             __typename?: 'ERC20Transfer'
             value: string
             contract: string
-            transfer: { __typename?: 'Transfer'; transactionHash: string; timestamp: number; from: string; to: string; txFee: string }
+            transfer: { __typename?: 'Transfer'; transactionHash: string; timestamp: number; from: string; to: string; txFee: string; type: Types.TransferType }
             stateDiff?: {
                 __typename?: 'StateDiffChange'
                 to: { __typename?: 'BalanceDiff'; before: string; after: string }
@@ -86,30 +95,32 @@ export type GetAddressErc20TransfersQuery = {
     }
 }
 
-export type Erc721TransferFragmentFragment = {
-    __typename?: 'ERC721Transfer'
+export type NftTransferFragmentFragment = {
+    __typename?: 'NFTTransfer'
     tokenId: string
     contract: string
-    transfer: { __typename?: 'Transfer'; transactionHash: string; timestamp: number; from: string; to: string; txFee: string }
+    value?: string | null
+    transfer: { __typename?: 'Transfer'; transactionHash: string; timestamp: number; from: string; to: string; txFee: string; type: Types.TransferType }
     tokenInfo: { __typename?: 'EthTokenInfo'; name?: string | null }
 }
 
-export type GetAddressErc721TransfersQueryVariables = Types.Exact<{
+export type GetAddressNftTransfersQueryVariables = Types.Exact<{
     hash: Types.Scalars['String']
     _limit?: Types.InputMaybe<Types.Scalars['Int']>
     _nextKey?: Types.InputMaybe<Types.Scalars['String']>
 }>
 
-export type GetAddressErc721TransfersQuery = {
+export type GetAddressNftTransfersQuery = {
     __typename?: 'Query'
-    getERC721Transfers: {
-        __typename?: 'ERC721Transfers'
+    getNFTTransfers: {
+        __typename?: 'NFTTransfers'
         nextKey?: string | null
         transfers: Array<{
-            __typename?: 'ERC721Transfer'
+            __typename?: 'NFTTransfer'
             tokenId: string
             contract: string
-            transfer: { __typename?: 'Transfer'; transactionHash: string; timestamp: number; from: string; to: string; txFee: string }
+            value?: string | null
+            transfer: { __typename?: 'Transfer'; transactionHash: string; timestamp: number; from: string; to: string; txFee: string; type: Types.TransferType }
             tokenInfo: { __typename?: 'EthTokenInfo'; name?: string | null }
         } | null>
     }
@@ -133,6 +144,7 @@ export const TransferSummaryFragmentDoc = gql`
         from
         to
         txFee
+        type
     }
 `
 export const TransferFragmentFragmentDoc = gql`
@@ -158,13 +170,14 @@ export const TransferFragmentFragmentDoc = gql`
     ${BalanceFragmentFragmentDoc}
     ${TokenFragmentFragmentDoc}
 `
-export const Erc721TransferFragmentFragmentDoc = gql`
-    fragment Erc721TransferFragment on ERC721Transfer {
+export const NftTransferFragmentFragmentDoc = gql`
+    fragment NFTTransferFragment on NFTTransfer {
         transfer {
             ...TransferSummary
         }
         tokenId
         contract
+        value
         tokenInfo {
             name
         }
@@ -319,70 +332,66 @@ export type GetAddressErc20TransfersQueryCompositionFunctionResult = VueApolloCo
     GetAddressErc20TransfersQuery,
     GetAddressErc20TransfersQueryVariables
 >
-export const GetAddressErc721TransfersDocument = gql`
-    query getAddressERC721Transfers($hash: String!, $_limit: Int, $_nextKey: String) {
-        getERC721Transfers(owner: $hash, limit: $_limit, nextKey: $_nextKey) {
+export const GetAddressNftTransfersDocument = gql`
+    query getAddressNFTTransfers($hash: String!, $_limit: Int, $_nextKey: String) {
+        getNFTTransfers(address: $hash, limit: $_limit, nextKey: $_nextKey) {
             transfers {
-                ...Erc721TransferFragment
+                ...NFTTransferFragment
             }
             nextKey
         }
     }
-    ${Erc721TransferFragmentFragmentDoc}
+    ${NftTransferFragmentFragmentDoc}
 `
 
 /**
- * __useGetAddressErc721TransfersQuery__
+ * __useGetAddressNftTransfersQuery__
  *
- * To run a query within a Vue component, call `useGetAddressErc721TransfersQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetAddressErc721TransfersQuery` returns an object from Apollo Client that contains result, loading and error properties
+ * To run a query within a Vue component, call `useGetAddressNftTransfersQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetAddressNftTransfersQuery` returns an object from Apollo Client that contains result, loading and error properties
  * you can use to render your UI.
  *
  * @param variables that will be passed into the query
  * @param options that will be passed into the query, supported options are listed on: https://v4.apollo.vuejs.org/guide-composable/query.html#options;
  *
  * @example
- * const { result, loading, error } = useGetAddressErc721TransfersQuery({
+ * const { result, loading, error } = useGetAddressNftTransfersQuery({
  *   hash: // value for 'hash'
  *   _limit: // value for '_limit'
  *   _nextKey: // value for '_nextKey'
  * });
  */
-export function useGetAddressErc721TransfersQuery(
+export function useGetAddressNftTransfersQuery(
     variables:
-        | GetAddressErc721TransfersQueryVariables
-        | VueCompositionApi.Ref<GetAddressErc721TransfersQueryVariables>
-        | ReactiveFunction<GetAddressErc721TransfersQueryVariables>,
+        | GetAddressNftTransfersQueryVariables
+        | VueCompositionApi.Ref<GetAddressNftTransfersQueryVariables>
+        | ReactiveFunction<GetAddressNftTransfersQueryVariables>,
     options:
-        | VueApolloComposable.UseQueryOptions<GetAddressErc721TransfersQuery, GetAddressErc721TransfersQueryVariables>
-        | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<GetAddressErc721TransfersQuery, GetAddressErc721TransfersQueryVariables>>
-        | ReactiveFunction<VueApolloComposable.UseQueryOptions<GetAddressErc721TransfersQuery, GetAddressErc721TransfersQueryVariables>> = {}
+        | VueApolloComposable.UseQueryOptions<GetAddressNftTransfersQuery, GetAddressNftTransfersQueryVariables>
+        | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<GetAddressNftTransfersQuery, GetAddressNftTransfersQueryVariables>>
+        | ReactiveFunction<VueApolloComposable.UseQueryOptions<GetAddressNftTransfersQuery, GetAddressNftTransfersQueryVariables>> = {}
 ) {
-    return VueApolloComposable.useQuery<GetAddressErc721TransfersQuery, GetAddressErc721TransfersQueryVariables>(
-        GetAddressErc721TransfersDocument,
+    return VueApolloComposable.useQuery<GetAddressNftTransfersQuery, GetAddressNftTransfersQueryVariables>(GetAddressNftTransfersDocument, variables, options)
+}
+export function useGetAddressNftTransfersLazyQuery(
+    variables:
+        | GetAddressNftTransfersQueryVariables
+        | VueCompositionApi.Ref<GetAddressNftTransfersQueryVariables>
+        | ReactiveFunction<GetAddressNftTransfersQueryVariables>,
+    options:
+        | VueApolloComposable.UseQueryOptions<GetAddressNftTransfersQuery, GetAddressNftTransfersQueryVariables>
+        | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<GetAddressNftTransfersQuery, GetAddressNftTransfersQueryVariables>>
+        | ReactiveFunction<VueApolloComposable.UseQueryOptions<GetAddressNftTransfersQuery, GetAddressNftTransfersQueryVariables>> = {}
+) {
+    return VueApolloComposable.useLazyQuery<GetAddressNftTransfersQuery, GetAddressNftTransfersQueryVariables>(
+        GetAddressNftTransfersDocument,
         variables,
         options
     )
 }
-export function useGetAddressErc721TransfersLazyQuery(
-    variables:
-        | GetAddressErc721TransfersQueryVariables
-        | VueCompositionApi.Ref<GetAddressErc721TransfersQueryVariables>
-        | ReactiveFunction<GetAddressErc721TransfersQueryVariables>,
-    options:
-        | VueApolloComposable.UseQueryOptions<GetAddressErc721TransfersQuery, GetAddressErc721TransfersQueryVariables>
-        | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<GetAddressErc721TransfersQuery, GetAddressErc721TransfersQueryVariables>>
-        | ReactiveFunction<VueApolloComposable.UseQueryOptions<GetAddressErc721TransfersQuery, GetAddressErc721TransfersQueryVariables>> = {}
-) {
-    return VueApolloComposable.useLazyQuery<GetAddressErc721TransfersQuery, GetAddressErc721TransfersQueryVariables>(
-        GetAddressErc721TransfersDocument,
-        variables,
-        options
-    )
-}
-export type GetAddressErc721TransfersQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<
-    GetAddressErc721TransfersQuery,
-    GetAddressErc721TransfersQueryVariables
+export type GetAddressNftTransfersQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<
+    GetAddressNftTransfersQuery,
+    GetAddressNftTransfersQueryVariables
 >
 export const GetTransactionStateDiffDocument = gql`
     query getTransactionStateDiff($hash: String!) {

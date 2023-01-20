@@ -397,19 +397,16 @@ export type Query = {
     getERC20TokenOwners: Erc20TokenOwners
     getERC20TokenTransfers: Erc20Transfers
     getERC20Transfers: Erc20Transfers
-    getERC20TransfersV2Tmp: Erc20Transfers
     /** Get the count of ERC721 tokens of a contract that are owned by the address */
     getERC721TokenBalance: Erc721TokenBalance
     /** Get addresses owning a contract's ERC721 tokens */
     getERC721TokenOwners: Erc721TokenOwners
     getERC721TokenTransfers: Erc721Transfers
     getERC721Transfers: Erc721Transfers
-    getERC721TransfersV2Tmp: Erc721Transfers
     getERC1155TokenTransfers: Erc1155Transfers
     /** Get ERC1155 tokens owned by an address */
     getERC1155TokensByOwner: Erc1155TokenBalances
     getERC1155Transfers: Erc1155Transfers
-    getERC1155TransfersV2Tmp: Erc1155Transfers
     getEthBalance: EthOwner
     getEthInternalTransactionTransfers: EthTransfers
     getEthOwners: EthOwners
@@ -422,10 +419,8 @@ export type Query = {
     getHashType: HashType
     getLatestBlockInfo: LatestBlockData
     getLatestPrices: Array<Maybe<TokenMarketInfo>>
+    getNFTTokensMeta?: Maybe<RespTokens>
     getNFTTransfers: NftTransfers
-    getNFTTransfersByCounterparty: NftTransfers
-    getNFTTransfersByCounterpartyAndDirection: NftTransfers
-    getNFTTransfersByDirection: NftTransfers
     getNFTcontractsMeta: AddressNfTcontracts
     /** Get ERC20 tokens owned by an address */
     getOwnersERC20Tokens: Erc20TokenOwners
@@ -449,7 +444,6 @@ export type Query = {
     getTransactionsByHashes: Array<Maybe<Tx>>
     getUncleByHash: Uncle
     getUncleRewards: EthTransfers
-    getUncleRewardsPg: EthTransfers
     tmpTest: Scalars['String']
 }
 
@@ -462,7 +456,7 @@ export type QueryGetAllEthTransfersArgs = {
 export type QueryGetAllTransfersArgs = {
     limit?: InputMaybe<Scalars['Int']>
     nextKey?: InputMaybe<Scalars['String']>
-    owner: Scalars['String']
+    owner?: InputMaybe<Scalars['String']>
 }
 
 export type QueryGetBlockByHashArgs = {
@@ -476,7 +470,7 @@ export type QueryGetBlockByNumberArgs = {
 export type QueryGetBlockRewardsArgs = {
     limit?: InputMaybe<Scalars['Int']>
     nextKey?: InputMaybe<Scalars['String']>
-    owner: Scalars['String']
+    owner?: InputMaybe<Scalars['String']>
 }
 
 export type QueryGetBlockTransfersArgs = {
@@ -515,12 +509,6 @@ export type QueryGetErc20TransfersArgs = {
     owner: Scalars['String']
 }
 
-export type QueryGetErc20TransfersV2TmpArgs = {
-    limit?: InputMaybe<Scalars['Int']>
-    nextKey?: InputMaybe<Scalars['String']>
-    owner?: InputMaybe<Scalars['String']>
-}
-
 export type QueryGetErc721TokenBalanceArgs = {
     contract: Scalars['String']
     owner: Scalars['String']
@@ -544,12 +532,6 @@ export type QueryGetErc721TransfersArgs = {
     owner: Scalars['String']
 }
 
-export type QueryGetErc721TransfersV2TmpArgs = {
-    limit?: InputMaybe<Scalars['Int']>
-    nextKey?: InputMaybe<Scalars['String']>
-    owner: Scalars['String']
-}
-
 export type QueryGetErc1155TokenTransfersArgs = {
     contract: Scalars['String']
     limit?: InputMaybe<Scalars['Int']>
@@ -563,12 +545,6 @@ export type QueryGetErc1155TokensByOwnerArgs = {
 }
 
 export type QueryGetErc1155TransfersArgs = {
-    limit?: InputMaybe<Scalars['Int']>
-    nextKey?: InputMaybe<Scalars['String']>
-    owner: Scalars['String']
-}
-
-export type QueryGetErc1155TransfersV2TmpArgs = {
     limit?: InputMaybe<Scalars['Int']>
     nextKey?: InputMaybe<Scalars['String']>
     owner?: InputMaybe<Scalars['String']>
@@ -603,14 +579,14 @@ export type QueryGetEthTransactionTransfersArgs = {
 export type QueryGetEthTransfersArgs = {
     limit?: InputMaybe<Scalars['Int']>
     nextKey?: InputMaybe<Scalars['String']>
-    owner: Scalars['String']
+    owner?: InputMaybe<Scalars['String']>
 }
 
 export type QueryGetEthTransfersByHashArgs = {
     hash: Scalars['String']
     limit?: InputMaybe<Scalars['Int']>
     nextKey?: InputMaybe<Scalars['String']>
-    owner: Scalars['String']
+    owner?: InputMaybe<Scalars['String']>
 }
 
 export type QueryGetEthTransfersV2Args = {
@@ -623,37 +599,20 @@ export type QueryGetEthTransfersV2Args = {
 export type QueryGetGenesisRewardsArgs = {
     limit?: InputMaybe<Scalars['Int']>
     nextKey?: InputMaybe<Scalars['String']>
-    owner: Scalars['String']
+    owner?: InputMaybe<Scalars['String']>
 }
 
 export type QueryGetHashTypeArgs = {
     hash: Scalars['String']
 }
 
+export type QueryGetNftTokensMetaArgs = {
+    input: Scalars['String']
+}
+
 export type QueryGetNftTransfersArgs = {
     address?: InputMaybe<Scalars['String']>
-    limit?: InputMaybe<Scalars['Int']>
-    nextKey?: InputMaybe<Scalars['String']>
-}
-
-export type QueryGetNftTransfersByCounterpartyArgs = {
-    address: Scalars['String']
-    counterparty: Scalars['String']
-    limit?: InputMaybe<Scalars['Int']>
-    nextKey?: InputMaybe<Scalars['String']>
-}
-
-export type QueryGetNftTransfersByCounterpartyAndDirectionArgs = {
-    address: Scalars['String']
-    counterparty: Scalars['String']
-    direction: TransferDirection
-    limit?: InputMaybe<Scalars['Int']>
-    nextKey?: InputMaybe<Scalars['String']>
-}
-
-export type QueryGetNftTransfersByDirectionArgs = {
-    address: Scalars['String']
-    direction: TransferDirection
+    direction?: InputMaybe<TransferDirection>
     limit?: InputMaybe<Scalars['Int']>
     nextKey?: InputMaybe<Scalars['String']>
 }
@@ -674,14 +633,14 @@ export type QueryGetOwnersErc721BalancesArgs = {
 export type QueryGetOwnersErc721TokensArgs = {
     contract?: InputMaybe<Scalars['String']>
     nextKey?: InputMaybe<Scalars['String']>
-    owner: Scalars['String']
+    owner?: InputMaybe<Scalars['String']>
 }
 
 export type QueryGetOwnersErc721TokensV2Args = {
     contract?: InputMaybe<Scalars['String']>
     limit?: InputMaybe<Scalars['Int']>
     nextKey?: InputMaybe<Scalars['String']>
-    owner: Scalars['String']
+    owner?: InputMaybe<Scalars['String']>
 }
 
 export type QueryGetOwnersNftTokensArgs = {
@@ -738,13 +697,118 @@ export type QueryGetUncleByHashArgs = {
 export type QueryGetUncleRewardsArgs = {
     limit?: InputMaybe<Scalars['Int']>
     nextKey?: InputMaybe<Scalars['String']>
-    owner: Scalars['String']
+    owner?: InputMaybe<Scalars['String']>
 }
 
-export type QueryGetUncleRewardsPgArgs = {
-    limit?: InputMaybe<Scalars['Int']>
-    nextKey?: InputMaybe<Scalars['String']>
-    owner: Scalars['String']
+export type RespCollection = {
+    __typename?: 'RespCollection'
+    banner_image_url?: Maybe<Scalars['String']>
+    collection_id?: Maybe<Scalars['String']>
+    description?: Maybe<Scalars['String']>
+    discord_url?: Maybe<Scalars['String']>
+    external_url?: Maybe<Scalars['String']>
+    floor_prices: Array<RespNftFloorPrice>
+    image_url?: Maybe<Scalars['String']>
+    marketplace_pages?: Maybe<Array<RespMarketplace>>
+    metaplex_first_verified_creator?: Maybe<Scalars['String']>
+    metaplex_mint?: Maybe<Scalars['String']>
+    name?: Maybe<Scalars['String']>
+    spam_score?: Maybe<Scalars['String']>
+    twitter_username?: Maybe<Scalars['String']>
+}
+
+export type RespContract = {
+    __typename?: 'RespContract'
+    name?: Maybe<Scalars['String']>
+    symbol?: Maybe<Scalars['String']>
+    type: Scalars['String']
+}
+
+export type RespMarketplace = {
+    __typename?: 'RespMarketplace'
+    collection_url: Scalars['String']
+    marketplace_collection_id: Scalars['String']
+    marketplace_id: Scalars['String']
+    marketplace_name: Scalars['String']
+    nft_url: Scalars['String']
+    verified?: Maybe<Scalars['Boolean']>
+}
+
+export type RespNft = {
+    __typename?: 'RespNFT'
+    audio_url?: Maybe<Scalars['String']>
+    background_color?: Maybe<Scalars['String']>
+    chain: Scalars['String']
+    collection?: Maybe<RespCollection>
+    contract?: Maybe<RespContract>
+    contract_address: Scalars['String']
+    created_date?: Maybe<Scalars['String']>
+    description?: Maybe<Scalars['String']>
+    external_url?: Maybe<Scalars['String']>
+    extra_metadata?: Maybe<RespNftMeta>
+    image_url?: Maybe<Scalars['String']>
+    model_url?: Maybe<Scalars['String']>
+    name?: Maybe<Scalars['String']>
+    nft_id: Scalars['String']
+    owner_count?: Maybe<Scalars['Int']>
+    owners: Array<RespNftOwner>
+    previews: RespNftPreviews
+    status: Scalars['String']
+    token_count?: Maybe<Scalars['Int']>
+    token_id?: Maybe<Scalars['String']>
+    video_url?: Maybe<Scalars['String']>
+}
+
+export type RespNftFloorPrice = {
+    __typename?: 'RespNftFloorPrice'
+    marketplace_id?: Maybe<Scalars['String']>
+    payment_token: RespPaymentToken
+    value?: Maybe<Scalars['Int']>
+}
+
+export type RespNftMeta = {
+    __typename?: 'RespNftMeta'
+    animation_original_url?: Maybe<Scalars['String']>
+    attributes: Array<RespNftTrait>
+    image_original_url?: Maybe<Scalars['String']>
+    metadata_original_url?: Maybe<Scalars['String']>
+}
+
+export type RespNftOwner = {
+    __typename?: 'RespNftOwner'
+    first_acquired_date: Scalars['String']
+    last_acquired_date: Scalars['String']
+    owner_address: Scalars['String']
+    quantity: Scalars['Int']
+}
+
+export type RespNftPreviews = {
+    __typename?: 'RespNftPreviews'
+    blurhash?: Maybe<Scalars['String']>
+    image_large_url?: Maybe<Scalars['String']>
+    image_medium_url?: Maybe<Scalars['String']>
+    image_opengraph_url?: Maybe<Scalars['String']>
+    image_small_url?: Maybe<Scalars['String']>
+}
+
+export type RespNftTrait = {
+    __typename?: 'RespNftTrait'
+    trait_type: Scalars['String']
+    value: Scalars['String']
+}
+
+export type RespPaymentToken = {
+    __typename?: 'RespPaymentToken'
+    address?: Maybe<Scalars['String']>
+    decimals: Scalars['Int']
+    name?: Maybe<Scalars['String']>
+    payment_token_id: Scalars['String']
+    symbol?: Maybe<Scalars['String']>
+}
+
+export type RespTokens = {
+    __typename?: 'RespTokens'
+    nfts?: Maybe<Array<RespNft>>
 }
 
 export type StateDiffChange = {

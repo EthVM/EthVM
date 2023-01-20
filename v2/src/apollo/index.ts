@@ -6,6 +6,7 @@ import { createClient } from 'graphql-ws'
 import { onError } from '@apollo/client/link/error'
 import { getMainDefinition } from '@apollo/client/utilities'
 import { OpenSeaClient } from './opensea/OpenSeaClient'
+import { NftClient } from './nfts/nftClient'
 // import { FavAddrClient } from './favorite-addresses/favAddrClient'
 // import { FavTokClient } from './favorite-tokens/favTokenClient'
 // import { LocalStoreClient } from './local-store-global/localStoreClient'
@@ -89,7 +90,8 @@ const apolloClient = new ApolloClient({
 
 export default {
     default: apolloClient,
-    openSeaClient: OpenSeaClient
+    openSeaClient: OpenSeaClient,
+    nftClient: NftClient
     // FavAddrClient,
     // FavTokClient,
     // LocalStoreClient,

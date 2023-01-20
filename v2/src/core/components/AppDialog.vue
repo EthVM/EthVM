@@ -1,13 +1,15 @@
 <template>
     <v-dialog v-model="state.open" @update:model-value="changeValue" :max-width="props.width" :height="props.height" scrollable :open-on-hover="false">
         <v-card rounded="xl">
-            <v-card-actions class="px-6 pt-6 pb-5">
+            <v-card-actions v-if="props.title" class="px-6 pt-6 pb-5">
                 <p class="text-h5 font-weight-bold">{{ props.title }}</p>
                 <v-spacer />
                 <app-btn-icon icon="close" @click="closeOnClick" />
             </v-card-actions>
-            <v-card-actions v-if="$slots['no-scroll-content']" class="px-6 pt-0 pb-5"> <slot name="no-scroll-content"></slot></v-card-actions>
-            <v-card-text class="pt-0">
+            <v-card-actions v-if="$slots['no-scroll-content']" :class="{ 'px-6 pt-0 pb-5': props.title }">
+                <slot name="no-scroll-content"></slot
+            ></v-card-actions>
+            <v-card-text class="pt-0" v-if="$slots['scroll-content']">
                 <slot name="scroll-content"></slot>
             </v-card-text>
         </v-card>
@@ -22,7 +24,7 @@ interface PropType {
     modelValue: boolean
     width?: string
     height?: string
-    title: string
+    title?: string
 }
 const props = withDefaults(defineProps<PropType>(), {
     width: '530',
@@ -65,3 +67,4 @@ watch(
     }
 )
 </script>
+<style lang="scss" scoped></style>

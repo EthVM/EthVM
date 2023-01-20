@@ -100,6 +100,7 @@ $shadow-key-umbra:
 */
 $rounded:
 (
+    'md': 8px,
     'xl': 12px
 );
 
@@ -133,6 +134,10 @@ $container-padding-x: $spacer * 12;
 */
 $input-density: ('default': 0, 'comfortable': -4, 'compact': -6) !default;
 
+/**
+--- removed padding for Window, Carusel next buttons
+*/
+$window-controls-padding: 0px;
 /**
 --- Tooltip
 */

@@ -13,6 +13,9 @@
             <module-address-tokens is-overview :address-hash="props.addressRef" />
         </v-col>
         <v-col cols="12" lg="6" :class="columnPadding">
+            <module-address-recent-nfts :address-hash="props.addressRef" is-overview />
+        </v-col>
+        <v-col cols="12" lg="6" :class="columnPadding">
             <module-address-token-transfers :address-hash="props.addressRef" :new-erc20-transfer="newErc20Transfer" @resetCount="resetCount" is-overview />
         </v-col>
         <v-col cols="12" lg="6" :class="columnPadding">
@@ -31,6 +34,7 @@ import ModulePortfolioTotal from '@/modules/address/ModulePortfolioTotal.vue'
 import ModuleAddressTokens from '@module/address/ModuleAddressTokens.vue'
 import ModuleAddressMinerBlock from '@module/address/ModuleAddressMinerBlock.vue'
 import ModuleAddressTokenTransfers from '@module/address/ModuleAddressTokenTransfers.vue'
+import ModuleAddressRecentNfts from '@/modules/address/ModuleAddressRecentNfts.vue'
 import { useAddressUpdate } from '@core/composables/AddressUpdate/addressUpdate.composable'
 import { useAppViewGrid } from '@core/composables/AppViewGrid/AppViewGrid.composable'
 import ModuleAddressNftTransfers from '@module/address/ModuleAddressNftTransfers.vue'
