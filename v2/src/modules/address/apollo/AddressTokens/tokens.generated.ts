@@ -136,12 +136,15 @@ export type GetNfTcontractsMetaQuery = {
 
 export type GetOwnersNftTokensQueryVariables = Types.Exact<{
     address: Types.Scalars['String']
+    limit: Types.Scalars['Int']
+    nextKey?: Types.InputMaybe<Types.Scalars['String']>
 }>
 
 export type GetOwnersNftTokensQuery = {
     __typename?: 'Query'
     getOwnersNFTTokens: {
         __typename?: 'NFTTokenBalances'
+        nextKey?: string | null
         tokens: Array<{
             __typename?: 'NFTTokenBalance'
             type: Types.NftType
@@ -437,8 +440,8 @@ export function useGetNfTcontractsMetaLazyQuery(
 }
 export type GetNfTcontractsMetaQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<GetNfTcontractsMetaQuery, GetNfTcontractsMetaQueryVariables>
 export const GetOwnersNftTokensDocument = gql`
-    query getOwnersNftTokens($address: String!) {
-        getOwnersNFTTokens(address: $address, limit: 9) {
+    query getOwnersNftTokens($address: String!, $limit: Int!, $nextKey: String) {
+        getOwnersNFTTokens(address: $address, limit: $limit, nextKey: $nextKey) {
             tokens {
                 type
                 balance
@@ -448,6 +451,7 @@ export const GetOwnersNftTokensDocument = gql`
                     name
                 }
             }
+            nextKey
         }
     }
 `
@@ -465,6 +469,8 @@ export const GetOwnersNftTokensDocument = gql`
  * @example
  * const { result, loading, error } = useGetOwnersNftTokensQuery({
  *   address: // value for 'address'
+ *   limit: // value for 'limit'
+ *   nextKey: // value for 'nextKey'
  * });
  */
 export function useGetOwnersNftTokensQuery(

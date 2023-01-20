@@ -80,8 +80,8 @@ query getNFTcontractsMeta($address: String!) {
     }
 }
 
-query getOwnersNftTokens($address: String!) {
-    getOwnersNFTTokens(address: $address, limit: 9) {
+query getOwnersNftTokens($address: String!, $limit: Int!, $nextKey: String ) {
+    getOwnersNFTTokens(address: $address, limit: $limit, nextKey: $nextKey ) {
         tokens {
             type
             balance 
@@ -91,5 +91,6 @@ query getOwnersNftTokens($address: String!) {
                 name
             }
         }
+        nextKey
     }
 }

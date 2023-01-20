@@ -10,6 +10,8 @@
         <v-col cols="12" sm="6" order-sm="1" class="py-0">
             <p v-if="props.nft.meta?.name" class="text-h4 font-weight-bold">{{ props.nft.meta?.name }}</p>
             <p v-if="props.nft.meta?.description" class="mb-1">{{ props.nft.meta?.description }}</p>
+            <p v-if="balance" class="font-weight-bold mt-3 mb-1">Balance</p>
+            <p v-if="balance" class="text-break-new-line">{{ balance }}</p>
             <p class="font-weight-bold mt-3 mb-1">Contract</p>
             <div class="d-flex align-center">
                 <app-address-blockie :address="props.nft.contract"></app-address-blockie>
@@ -39,6 +41,8 @@ import AppTransformHash from '@core/components/AppTransformHash.vue'
 import AppAddressBlockie from '@core/components/AppAddressBlockie.vue'
 import { eth } from '@core/helper'
 import { useDisplay } from 'vuetify/lib/framework.mjs'
+import { formatFloatingPointValue } from '@core/helper/number-format-helper'
+import BigNumber from 'bignumber.js'
 
 const { xs } = useDisplay()
 
@@ -76,6 +80,10 @@ const imgLoadFail = (): void => {
 ===================================================================================
 */
 
+const balance = computed<string | undefined>(() => {
+    return props.nft.balance ? formatFloatingPointValue(new BigNumber(props.nft.balance)).value : undefined
+})
+
 const imageLarge = computed<string>(() => {
     if (state.imageExists) {
         if (props.nft.meta) {
@@ -103,9 +111,7 @@ const attributes = computed(() => {
 .border-radius-default {
     border-radius: 8px;
 }
-</style>
 
-<style lang="scss" scoped>
 .no-image {
     background-color: rgb(var(--v-theme-primary));
     color: rgba(255, 255, 255, 0.5);

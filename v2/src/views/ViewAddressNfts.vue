@@ -4,7 +4,7 @@
             <v-card elevation="1" rounded="xl" class="pt-2 pt-sm-6">
                 <app-tabs v-model="state.tab" :routes="routes" :tabs="tabs" @update:modelValue="setLastViewedTab()" class="mb-4 mb-sm-0"></app-tabs>
                 <div class="mt-6">
-                    <module-address-nfts v-show="state.tab === routes[0]" class="mb-4" :address-hash="props.addressRef" />
+                    <module-address-recent-nfts :is-overview="false" v-show="state.tab === routes[0]" class="mb-4" :address-hash="props.addressRef" />
                     <module-address-nft-transfers v-show="state.tab === routes[1]" class="mb-4" :address-hash="props.addressRef" />
                 </div>
             </v-card>
@@ -13,8 +13,8 @@
 </template>
 
 <script setup lang="ts">
-import ModuleAddressNfts from '@module/address/ModuleAddressNfts.vue'
 import ModuleAddressNftTransfers from '@module/address/ModuleAddressNftTransfers.vue'
+import ModuleAddressRecentNfts from '@module/address/ModuleAddressRecentNfts.vue'
 import AppTabs from '@/core/components/AppTabs.vue'
 import { Tab } from '@core/components/props'
 import { useAppViewGrid } from '@core/composables/AppViewGrid/AppViewGrid.composable'
