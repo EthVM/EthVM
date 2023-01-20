@@ -157,11 +157,17 @@ const tokenMeta = computed<NFTDetails | undefined>(() => {
 })
 
 const transferValue = computed<FormattedNumber>(() => {
-    let n = new BigNumber(props.transfer['value']) || new BigNumber(0)
-    // Must be a token transfer
-    if (props.decimals) {
-        n = n.div(new BigNumber(10).pow(props.decimals))
+    let n: BigNumber
+    if (props.transfer.__typename === 'ERC20Transfer') {
+        n = new BigNumber(props.transfer.value)
+        // Must be a token transfer
+        if (props.decimals) {
+            n = n.div(new BigNumber(10).pow(props.decimals))
+        }
+    } else {
+        n = new BigNumber(0)
     }
+
     return formatFloatingPointValue(n)
 })
 
@@ -178,7 +184,10 @@ const isNFT = computed<boolean>(() => {
 })
 
 const getTokenID = computed<string>(() => {
-    return new BN(props.transfer['tokenId']).toString()
+    if (props.transfer.__typename === 'ERC1155Transfer' || props.transfer.__typename === 'ERC721Transfer') {
+        return new BN(props.transfer.tokenId).toString()
+    }
+    return ''
 })
 
 /*
