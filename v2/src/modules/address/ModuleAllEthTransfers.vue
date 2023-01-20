@@ -15,7 +15,7 @@
     </template>
     <div v-if="!initialLoad && !loadingAllTransfersData" class="p-ten-top">
         <template v-if="transfers && transfers.length > 0">
-            <div v-for="transfer in currentPageData" :key="`${transfer.transfer.transactionHash}-${transfer.transfer.timestamp}`">
+            <div v-for="(transfer, index) in currentPageData" :key="`${transfer.transfer.transactionHash}-${index}`">
                 <table-all-eth-transfer-row :transfer="transfer" :address-ref="props.addressRef" />
             </div>
         </template>
@@ -35,20 +35,13 @@
 import AppNoResult from '@core/components/AppNoResult.vue'
 import TableAllEthTransferRow from '@module/address/components/EthBalanceTabs/TableAllEthTransferRow.vue'
 import AppPagination from '@core/components/AppPagination.vue'
-import { computed, onMounted, ref } from 'vue'
-import { Q_ADDRESS_TRANSFERS } from '@core/router/routesNames'
-import {
-    EthInternalTransactionTransfersFragment,
-    useGetEthInternalTransactionTransfersQuery
-} from '@module/address/apollo/EthTransfers/internalTransfers.generated'
+import { computed, watch } from 'vue'
+import { EthInternalTransactionTransfersFragment } from '@module/address/apollo/EthTransfers/internalTransfers.generated'
 import { useDisplay } from 'vuetify'
 import { useGetAllEthTransfersQuery } from '@module/address/apollo/EthTransfers/allTransfers.generated'
 import { useAppPaginate } from '@core/composables/AppPaginate/useAppPaginate.composable'
 import { ITEMS_PER_PAGE } from '@core/constants'
-import { useStore } from '@/store'
 
-const routes = Q_ADDRESS_TRANSFERS
-const MAX_ITEMS = 50
 const { smAndDown, mdAndDown } = useDisplay()
 
 const props = defineProps({
@@ -111,4 +104,11 @@ const loadMoreData = (pageNum: number): void => {
         loadMoreAllEthData()
     }
 }
+
+// watch(
+//     () => props.addressRef,
+//     () => {
+//         setPageNum(1)
+//     }
+// )
 </script>
