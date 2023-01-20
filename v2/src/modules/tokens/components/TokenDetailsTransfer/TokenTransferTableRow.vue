@@ -41,15 +41,15 @@
             </v-col>
             <!-- End Column 4 -->
             <!-- Column 5: Quantity/ID -->
-            <v-col :md="isERC721 ? 1 : 2" :lg="isERC721 ? 1 : 3">
+            <v-col :md="isNFT ? 1 : 2" :lg="isNFT ? 1 : 3">
                 <p class="text-truncate">
-                    <span v-if="isERC721">{{ getTokenID }}</span>
+                    <span v-if="isNFT">{{ getTokenID }}</span>
                     <span v-else>{{ transferValue.value }} {{ symbolFormatted }} </span>
                 </p>
             </v-col>
             <!-- End Column 5 -->
             <!-- Column 6: ERC721 Image -->
-            <v-col v-if="isERC721" md="2">
+            <v-col v-if="isNFT" md="2">
                 <v-img :src="image" align="center" justify="end" max-height="50px" max-width="50px" contain @error="onImageLoadFail" />
             </v-col>
             <!-- End Column 6 -->
@@ -120,8 +120,7 @@ import { reactive, computed, ref } from 'vue'
 import { formatFloatingPointValue, FormattedNumber } from '@core/helper/number-format-helper'
 import { useDisplay } from 'vuetify'
 import { eth, timeAgo } from '@core/helper'
-
-const TYPES = ['ERC20', 'ERC721']
+import { TransferType } from '@/apollo/types'
 
 const { lgAndUp } = useDisplay()
 
@@ -168,8 +167,8 @@ const symbolFormatted = computed<string | undefined>(() => {
     return props.symbol ? props.symbol.toUpperCase() : undefined
 })
 
-const isERC721 = computed<boolean>(() => {
-    return props.transferType === TYPES[1]
+const isNFT = computed<boolean>(() => {
+    return props.transferType !== TransferType.Erc20
 })
 
 const getTokenID = computed<string>(() => {
