@@ -104,11 +104,4 @@ const loadMoreData = (pageNum: number): void => {
         loadMoreAllEthData()
     }
 }
-
-// watch(
-//     () => props.addressRef,
-//     () => {
-//         setPageNum(1)
-//     }
-// )
 </script>
