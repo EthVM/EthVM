@@ -26,7 +26,7 @@
             <div class="skeleton-box rounded-xl" style="height: 40px"></div>
         </div>
     </div>
-    <template v-if="hasMore & !initialLoad">
+    <template v-if="!initialLoad">
         <app-pagination :length="numberOfPages" :has-next="hasMore" @update:modelValue="loadMoreData" :current-page="pageNum" />
     </template>
 </template>

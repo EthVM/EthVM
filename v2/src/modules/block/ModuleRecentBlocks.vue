@@ -16,6 +16,7 @@
             :block-data="currentPageData"
             :is-scroll-view="isHome"
             :show-intersect="showPagination"
+            :has-more="hasMore"
             :pages="numberOfPages"
             @loadMore="loadMoreData"
         />
@@ -112,7 +113,11 @@ const isHome = computed<boolean>(() => {
 const { numberOfPages, pageData: currentPageData, setPageNum, pageNum } = useAppPaginate(blocks)
 
 const showPagination = computed<boolean>(() => {
-    return !state.initialLoad && !isHome.value && state.startBlock - ITEMS_PER_PAGE > 0
+    return !state.initialLoad && !isHome.value
+})
+
+const hasMore = computed<boolean>(() => {
+    return state.startBlock - ITEMS_PER_PAGE > 0
 })
 
 /*

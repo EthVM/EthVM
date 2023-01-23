@@ -23,6 +23,7 @@
             :txs-data="currentPageData"
             :is-scroll-view="isHome"
             :show-intersect="showPagination"
+            :has-more="hasMore"
             :pages="numberOfPages"
             :is-block="isBlock"
             @loadMore="loadMoreData"
@@ -165,7 +166,7 @@ const isHome = computed<boolean>(() => {
 
 const hasMore = computed<boolean>(() => {
     if (isBlock.value) {
-        return pageNum < numberOfPages.value
+        return pageNum.value < numberOfPages.value
     }
     return !!allEthTransfers.value?.nextKey
 })
@@ -175,7 +176,11 @@ const showPagination = computed<boolean>(() => {
         return false
     }
 
-    return hasMore.value && !state.refetching
+    if (isBlock.value) {
+        return !!getAllBlockTransfersResult.value
+    }
+
+    return !state.refetching && !!allEthTransfers.value?.nextKey
 })
 
 const isLoading = computed<boolean>(() => {

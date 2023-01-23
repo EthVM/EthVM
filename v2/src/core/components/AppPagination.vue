@@ -17,7 +17,7 @@ const props = withDefaults(defineProps<ComponentProps>(), {
 
 const page = ref<number>(1)
 const pageLength = computed<number>(() => {
-    return props.hasNext ? props.length + 1 : props.length
+    return props.hasNext && props.length <= page.value ? props.length + 1 : props.length
 })
 
 watch(
