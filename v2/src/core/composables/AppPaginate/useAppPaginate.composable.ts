@@ -45,7 +45,7 @@ export function useAppPaginate(dataToPaginate: Ref<Array<unknown>>, id?: Ref<str
 
     onBeforeRouteLeave(() => {
         if (pageId) {
-            store.paginationStateMap.delete(pageId)
+            store.paginationStateMap.clear()
         }
     })
 

@@ -1,34 +1,36 @@
 <template>
-    <template v-if="!smAndDown">
-        <v-row align="center" justify="start" class="text-info mt-2 mt-sm-6">
-            <v-col :sm="mdAndDown ? 3 : 2">
-                <span style="width: 30px; height: 1px" class="d-inline-block"></span>
-                <span class="ml-4">Tx Value</span>
-            </v-col>
-            <v-spacer />
-            <v-col md="3" lg="2"> Address </v-col>
-            <v-col sm="2"> Hash </v-col>
-            <v-col sm="2"> Balance Before </v-col>
-            <v-col sm="2" lg="3"> Balance After </v-col>
-        </v-row>
-        <v-divider class="my-0 mt-md-4 mx-n4 mx-sm-n6" />
-    </template>
-    <div v-if="!initialLoad && !loadingInternalTransfersData" class="p-ten-top">
-        <template v-if="transfers && transfers.length > 0">
-            <div v-for="(transfer, index) in currentPageData" :key="`${transfer.transfer.transactionHash}-${index}`">
-                <table-internal-eth-transfer-row :transfer="transfer" :address-ref="props.addressRef" />
-            </div>
+    <div>
+        <template v-if="!smAndDown">
+            <v-row align="center" justify="start" class="text-info mt-2 mt-sm-6">
+                <v-col :sm="mdAndDown ? 3 : 2">
+                    <span style="width: 30px; height: 1px" class="d-inline-block"></span>
+                    <span class="ml-4">Tx Value</span>
+                </v-col>
+                <v-spacer />
+                <v-col md="3" lg="2"> Address </v-col>
+                <v-col sm="2"> Hash </v-col>
+                <v-col sm="2"> Balance Before </v-col>
+                <v-col sm="2" lg="3"> Balance After </v-col>
+            </v-row>
+            <v-divider class="my-0 mt-md-4 mx-n4 mx-sm-n6" />
         </template>
-        <app-no-result v-else text="This address does not have any internal transfers" class="mt-4 mt-sm-6 mb-5"></app-no-result>
-    </div>
-    <div v-else class="p-ten-top">
-        <div v-for="item in 10" :key="item" style="padding: 10px 0">
-            <div class="skeleton-box rounded-xl" style="height: 40px"></div>
+        <div v-if="!initialLoad && !loadingInternalTransfersData" class="p-ten-top">
+            <template v-if="transfers && transfers.length > 0">
+                <div v-for="(transfer, index) in currentPageData" :key="`${transfer.transfer.transactionHash}-${index}`">
+                    <table-internal-eth-transfer-row :transfer="transfer" :address-ref="props.addressRef" />
+                </div>
+            </template>
+            <app-no-result v-else text="This address does not have any internal transfers" class="mt-4 mt-sm-6 mb-5"></app-no-result>
         </div>
+        <div v-else class="p-ten-top">
+            <div v-for="item in 10" :key="item" style="padding: 10px 0">
+                <div class="skeleton-box rounded-xl" style="height: 40px"></div>
+            </div>
+        </div>
+        <template v-if="!initialLoad">
+            <app-pagination :length="numberOfPages" :has-next="hasMore" @update:modelValue="loadMoreData" :current-page="pageNum" />
+        </template>
     </div>
-    <template v-if="hasMore && !initialLoad">
-        <app-pagination :length="numberOfPages" :has-next="hasMore" @update:modelValue="loadMoreData" :current-page="pageNum" />
-    </template>
 </template>
 
 <script setup lang="ts">
