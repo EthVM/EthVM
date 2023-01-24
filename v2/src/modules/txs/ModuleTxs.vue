@@ -177,10 +177,10 @@ const showPagination = computed<boolean>(() => {
     }
 
     if (isBlock.value) {
-        return !!getAllBlockTransfersResult.value
+        return !!getAllBlockTransfersResult.value && transactions.value.length > 0
     }
 
-    return !state.refetching && !!allEthTransfers.value?.nextKey
+    return !state.refetching && !!allEthTransfers.value?.nextKey && transactions.value.length > 0
 })
 
 const isLoading = computed<boolean>(() => {

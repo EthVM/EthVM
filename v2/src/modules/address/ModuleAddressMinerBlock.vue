@@ -243,7 +243,7 @@ const hasMore = computed<boolean>(() => {
 })
 
 const showPagination = computed<boolean>(() => {
-    return !props.isOverview && hasMore.value && !initialLoad.value && !state.refetching
+    return !props.isOverview && hasMore.value && !initialLoad.value && !state.refetching && rewards.value.length > 0
 })
 
 const eventType = computed<AddressEventType>(() => {

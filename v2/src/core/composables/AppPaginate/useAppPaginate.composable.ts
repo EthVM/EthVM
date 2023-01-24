@@ -7,9 +7,8 @@ export function useAppPaginate(dataToPaginate: Ref<Array<unknown>>, id?: Ref<str
     const store = useStore()
     const pageNum = ref(1)
 
-    const pageId = isRef(id) ? id.value : id
-
-    if (pageId) {
+    if (id) {
+        const pageId = isRef(id) ? id.value : id
         if (!store.paginationStateMap.has(pageId)) {
             store.paginationStateMap.set(pageId, 1)
         }
@@ -23,6 +22,7 @@ export function useAppPaginate(dataToPaginate: Ref<Array<unknown>>, id?: Ref<str
     }
 
     const computedPageNum = computed<number>(() => {
+        const pageId = isRef(id) ? id.value : id
         return pageId ? store.paginationStateMap.get(pageId) || 1 : pageNum.value
     })
 
@@ -38,12 +38,14 @@ export function useAppPaginate(dataToPaginate: Ref<Array<unknown>>, id?: Ref<str
 
     const setPageNum = (page: number) => {
         pageNum.value = page
+        const pageId = isRef(id) ? id.value : id
         if (pageId) {
             store.paginationStateMap.set(pageId, page)
         }
     }
 
     onBeforeRouteLeave(() => {
+        const pageId = isRef(id) ? id.value : id
         if (pageId) {
             store.paginationStateMap.clear()
         }
