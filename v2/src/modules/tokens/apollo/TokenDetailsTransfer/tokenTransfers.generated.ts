@@ -25,7 +25,7 @@ export type TokenTransferFragment = {
     transfer: { __typename?: 'Transfer'; transactionHash: string; timestamp: number; from: string; to: string; txFee: string; type: Types.TransferType }
 }
 
-export type TokenTransfersFragment = {
+export type Erc20TokenTransfersFragment = {
     __typename?: 'ERC20Transfers'
     nextKey?: string | null
     transfers: Array<{
@@ -36,7 +36,7 @@ export type TokenTransfersFragment = {
 }
 
 export type GetErc20TokenTransfersQueryVariables = Types.Exact<{
-    hash: Types.Scalars['String']
+    _contract: Types.Scalars['String']
     _limit?: Types.InputMaybe<Types.Scalars['Int']>
     _nextKey?: Types.InputMaybe<Types.Scalars['String']>
 }>
@@ -69,7 +69,7 @@ export type Erc721TransferFragment = {
     }
 }
 
-export type Erc721TransfersFragment = {
+export type Erc721TokenTransfersFragment = {
     __typename?: 'ERC721Transfers'
     nextKey?: string | null
     transfers: Array<{
@@ -89,7 +89,7 @@ export type Erc721TransfersFragment = {
 }
 
 export type GetErc721TokenTransfersQueryVariables = Types.Exact<{
-    hash: Types.Scalars['String']
+    _contract: Types.Scalars['String']
     _limit?: Types.InputMaybe<Types.Scalars['Int']>
     _nextKey?: Types.InputMaybe<Types.Scalars['String']>
 }>
@@ -116,6 +116,71 @@ export type GetErc721TokenTransfersQuery = {
     }
 }
 
+export type Erc1155TokenTransferFragment = {
+    __typename?: 'ERC1155Transfer'
+    tokenId: string
+    value: string
+    contract: string
+    transfer: { __typename?: 'Transfer'; transactionHash: string; timestamp: number; from: string; to: string; txFee: string; type: Types.TransferType }
+    tokenInfo: {
+        __typename?: 'EthTokenInfo'
+        name?: string | null
+        symbol?: string | null
+        decimals?: number | null
+        totalSupply?: string | null
+        contract: string
+    }
+}
+
+export type Erc1155TokenTransfersFragment = {
+    __typename?: 'ERC1155Transfers'
+    nextKey?: string | null
+    transfers: Array<{
+        __typename?: 'ERC1155Transfer'
+        tokenId: string
+        value: string
+        contract: string
+        transfer: { __typename?: 'Transfer'; transactionHash: string; timestamp: number; from: string; to: string; txFee: string; type: Types.TransferType }
+        tokenInfo: {
+            __typename?: 'EthTokenInfo'
+            name?: string | null
+            symbol?: string | null
+            decimals?: number | null
+            totalSupply?: string | null
+            contract: string
+        }
+    } | null>
+}
+
+export type GetErc1155TokenTransfersQueryVariables = Types.Exact<{
+    _contract: Types.Scalars['String']
+    _limit?: Types.InputMaybe<Types.Scalars['Int']>
+    _nextKey?: Types.InputMaybe<Types.Scalars['String']>
+}>
+
+export type GetErc1155TokenTransfersQuery = {
+    __typename?: 'Query'
+    getERC1155TokenTransfers: {
+        __typename?: 'ERC1155Transfers'
+        nextKey?: string | null
+        transfers: Array<{
+            __typename?: 'ERC1155Transfer'
+            tokenId: string
+            value: string
+            contract: string
+            transfer: { __typename?: 'Transfer'; transactionHash: string; timestamp: number; from: string; to: string; txFee: string; type: Types.TransferType }
+            tokenInfo: {
+                __typename?: 'EthTokenInfo'
+                name?: string | null
+                symbol?: string | null
+                decimals?: number | null
+                totalSupply?: string | null
+                contract: string
+            }
+        } | null>
+    }
+}
+
 export const TokenTransferFragmentDoc = gql`
     fragment TokenTransfer on ERC20Transfer {
         transfer {
@@ -125,8 +190,8 @@ export const TokenTransferFragmentDoc = gql`
     }
     ${TransferSummaryFragmentDoc}
 `
-export const TokenTransfersFragmentDoc = gql`
-    fragment TokenTransfers on ERC20Transfers {
+export const Erc20TokenTransfersFragmentDoc = gql`
+    fragment Erc20TokenTransfers on ERC20Transfers {
         transfers {
             ...TokenTransfer
         }
@@ -157,8 +222,8 @@ export const Erc721TransferFragmentDoc = gql`
     ${TransferSummaryFragmentDoc}
     ${TokenInfoFragmentDoc}
 `
-export const Erc721TransfersFragmentDoc = gql`
-    fragment Erc721Transfers on ERC721Transfers {
+export const Erc721TokenTransfersFragmentDoc = gql`
+    fragment Erc721TokenTransfers on ERC721Transfers {
         transfers {
             ...Erc721Transfer
         }
@@ -166,13 +231,37 @@ export const Erc721TransfersFragmentDoc = gql`
     }
     ${Erc721TransferFragmentDoc}
 `
-export const GetErc20TokenTransfersDocument = gql`
-    query getERC20TokenTransfers($hash: String!, $_limit: Int, $_nextKey: String) {
-        getERC20TokenTransfers(contract: $hash, limit: $_limit, nextKey: $_nextKey) {
-            ...TokenTransfers
+export const Erc1155TokenTransferFragmentDoc = gql`
+    fragment Erc1155TokenTransfer on ERC1155Transfer {
+        transfer {
+            ...TransferSummary
+        }
+        tokenId
+        value
+        contract
+        tokenInfo {
+            ...TokenInfo
         }
     }
-    ${TokenTransfersFragmentDoc}
+    ${TransferSummaryFragmentDoc}
+    ${TokenInfoFragmentDoc}
+`
+export const Erc1155TokenTransfersFragmentDoc = gql`
+    fragment Erc1155TokenTransfers on ERC1155Transfers {
+        transfers {
+            ...Erc1155TokenTransfer
+        }
+        nextKey
+    }
+    ${Erc1155TokenTransferFragmentDoc}
+`
+export const GetErc20TokenTransfersDocument = gql`
+    query getERC20TokenTransfers($_contract: String!, $_limit: Int, $_nextKey: String) {
+        getERC20TokenTransfers(contract: $_contract, limit: $_limit, nextKey: $_nextKey) {
+            ...Erc20TokenTransfers
+        }
+    }
+    ${Erc20TokenTransfersFragmentDoc}
 `
 
 /**
@@ -187,7 +276,7 @@ export const GetErc20TokenTransfersDocument = gql`
  *
  * @example
  * const { result, loading, error } = useGetErc20TokenTransfersQuery({
- *   hash: // value for 'hash'
+ *   _contract: // value for '_contract'
  *   _limit: // value for '_limit'
  *   _nextKey: // value for '_nextKey'
  * });
@@ -225,12 +314,12 @@ export type GetErc20TokenTransfersQueryCompositionFunctionResult = VueApolloComp
     GetErc20TokenTransfersQueryVariables
 >
 export const GetErc721TokenTransfersDocument = gql`
-    query getERC721TokenTransfers($hash: String!, $_limit: Int, $_nextKey: String) {
-        getERC721TokenTransfers(contract: $hash, limit: $_limit, nextKey: $_nextKey) {
-            ...Erc721Transfers
+    query getERC721TokenTransfers($_contract: String!, $_limit: Int, $_nextKey: String) {
+        getERC721TokenTransfers(contract: $_contract, limit: $_limit, nextKey: $_nextKey) {
+            ...Erc721TokenTransfers
         }
     }
-    ${Erc721TransfersFragmentDoc}
+    ${Erc721TokenTransfersFragmentDoc}
 `
 
 /**
@@ -245,7 +334,7 @@ export const GetErc721TokenTransfersDocument = gql`
  *
  * @example
  * const { result, loading, error } = useGetErc721TokenTransfersQuery({
- *   hash: // value for 'hash'
+ *   _contract: // value for '_contract'
  *   _limit: // value for '_limit'
  *   _nextKey: // value for '_nextKey'
  * });
@@ -285,4 +374,66 @@ export function useGetErc721TokenTransfersLazyQuery(
 export type GetErc721TokenTransfersQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<
     GetErc721TokenTransfersQuery,
     GetErc721TokenTransfersQueryVariables
+>
+export const GetErc1155TokenTransfersDocument = gql`
+    query getERC1155TokenTransfers($_contract: String!, $_limit: Int, $_nextKey: String) {
+        getERC1155TokenTransfers(contract: $_contract, limit: $_limit, nextKey: $_nextKey) {
+            ...Erc1155TokenTransfers
+        }
+    }
+    ${Erc1155TokenTransfersFragmentDoc}
+`
+
+/**
+ * __useGetErc1155TokenTransfersQuery__
+ *
+ * To run a query within a Vue component, call `useGetErc1155TokenTransfersQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetErc1155TokenTransfersQuery` returns an object from Apollo Client that contains result, loading and error properties
+ * you can use to render your UI.
+ *
+ * @param variables that will be passed into the query
+ * @param options that will be passed into the query, supported options are listed on: https://v4.apollo.vuejs.org/guide-composable/query.html#options;
+ *
+ * @example
+ * const { result, loading, error } = useGetErc1155TokenTransfersQuery({
+ *   _contract: // value for '_contract'
+ *   _limit: // value for '_limit'
+ *   _nextKey: // value for '_nextKey'
+ * });
+ */
+export function useGetErc1155TokenTransfersQuery(
+    variables:
+        | GetErc1155TokenTransfersQueryVariables
+        | VueCompositionApi.Ref<GetErc1155TokenTransfersQueryVariables>
+        | ReactiveFunction<GetErc1155TokenTransfersQueryVariables>,
+    options:
+        | VueApolloComposable.UseQueryOptions<GetErc1155TokenTransfersQuery, GetErc1155TokenTransfersQueryVariables>
+        | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<GetErc1155TokenTransfersQuery, GetErc1155TokenTransfersQueryVariables>>
+        | ReactiveFunction<VueApolloComposable.UseQueryOptions<GetErc1155TokenTransfersQuery, GetErc1155TokenTransfersQueryVariables>> = {}
+) {
+    return VueApolloComposable.useQuery<GetErc1155TokenTransfersQuery, GetErc1155TokenTransfersQueryVariables>(
+        GetErc1155TokenTransfersDocument,
+        variables,
+        options
+    )
+}
+export function useGetErc1155TokenTransfersLazyQuery(
+    variables:
+        | GetErc1155TokenTransfersQueryVariables
+        | VueCompositionApi.Ref<GetErc1155TokenTransfersQueryVariables>
+        | ReactiveFunction<GetErc1155TokenTransfersQueryVariables>,
+    options:
+        | VueApolloComposable.UseQueryOptions<GetErc1155TokenTransfersQuery, GetErc1155TokenTransfersQueryVariables>
+        | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<GetErc1155TokenTransfersQuery, GetErc1155TokenTransfersQueryVariables>>
+        | ReactiveFunction<VueApolloComposable.UseQueryOptions<GetErc1155TokenTransfersQuery, GetErc1155TokenTransfersQueryVariables>> = {}
+) {
+    return VueApolloComposable.useLazyQuery<GetErc1155TokenTransfersQuery, GetErc1155TokenTransfersQueryVariables>(
+        GetErc1155TokenTransfersDocument,
+        variables,
+        options
+    )
+}
+export type GetErc1155TokenTransfersQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<
+    GetErc1155TokenTransfersQuery,
+    GetErc1155TokenTransfersQueryVariables
 >

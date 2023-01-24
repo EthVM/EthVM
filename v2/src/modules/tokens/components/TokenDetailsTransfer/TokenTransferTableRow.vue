@@ -41,16 +41,16 @@
             </v-col>
             <!-- End Column 4 -->
             <!-- Column 5: Quantity/ID -->
-            <v-col :md="isERC721 ? 1 : 2" :lg="isERC721 ? 1 : 3">
+            <v-col :md="isNFT ? 1 : 2" :lg="isNFT ? 1 : 3">
                 <p class="text-truncate">
-                    <span v-if="isERC721">{{ getTokenID }}</span>
+                    <span v-if="isNFT">{{ getTokenID }}</span>
                     <span v-else>{{ transferValue.value }} {{ symbolFormatted }} </span>
                 </p>
             </v-col>
             <!-- End Column 5 -->
             <!-- Column 6: ERC721 Image -->
-            <v-col v-if="isERC721" md="2">
-                <v-img :src="image" align="center" justify="end" max-height="50px" max-width="50px" contain @error="onImageLoadFail" />
+            <v-col v-if="isNFT && tokenMeta" md="2">
+                <token-nft-img :loading="false" :nft="tokenMeta" height="40" width="40" class="rounded-md"></token-nft-img>
             </v-col>
             <!-- End Column 6 -->
             <!-- Column 6: Age -->
@@ -111,52 +111,63 @@ import AppAddressBlockie from '@core/components/AppAddressBlockie.vue'
 import AppTableRow from '@core/components/AppTableRow.vue'
 import BigNumber from 'bignumber.js'
 import {
-    TokenTransferFragment as Erc20TokenTransferType,
-    Erc721TransferFragment as Erc721TransferType
+    TokenTransferFragment,
+    Erc721TransferFragment,
+    Erc1155TokenTransferFragment
 } from '@module/tokens/apollo/TokenDetailsTransfer/tokenTransfers.generated'
 import BN from 'bignumber.js'
-import configs from '@/configs'
-import { reactive, computed, ref } from 'vue'
+import { computed, ref } from 'vue'
 import { formatFloatingPointValue, FormattedNumber } from '@core/helper/number-format-helper'
 import { useDisplay } from 'vuetify'
 import { eth, timeAgo } from '@core/helper'
-
-const TYPES = ['ERC20', 'ERC721']
+import { TransferType } from '@/apollo/types'
+import { NftMetaFragment } from '@core/composables/NftMeta/nftMeta.generated'
+import TokenNftImg from '@module/tokens/components/TokenNFT/TokenNftImg.vue'
+import { NFTDetails } from '@module/tokens/components/TokenNFT/propModel'
+import Web3Utils from 'web3-utils'
 
 const { lgAndUp } = useDisplay()
 
 interface PropType {
-    transfer: Erc721TransferType | Erc20TokenTransferType
+    transfer: TokenTransferFragment | Erc721TransferFragment | Erc1155TokenTransferFragment
     decimals?: number
     symbol?: string
     transferType: string
+    nftMeta?: NftMetaFragment
 }
 
 const props = defineProps<PropType>()
-
-const state = reactive({
-    imageExists: true
-})
 
 /*
 ===================================================================================
   Computed
 ===================================================================================
 */
-const image = computed<string>(() => {
-    if (props.transfer && props.transfer['contract'] && state.imageExists) {
-        return `${configs.OPENSEA}/getImage?contract=${props.transfer['contract']}&tokenId=${getTokenID.value}`
+
+const tokenMeta = computed<NFTDetails | undefined>(() => {
+    if (props.transfer.__typename === 'ERC1155Transfer' || props.transfer.__typename === 'ERC721Transfer') {
+        return {
+            type: props.transfer.transfer.type,
+            contract: props.transfer.contract,
+            id: Web3Utils.hexToNumberString(props.transfer.tokenId),
+            meta: props.nftMeta
+        }
     }
-    return require('@/assets/icon-token.png')
+    return undefined
 })
 
 const transferValue = computed<FormattedNumber>(() => {
-    let n = new BigNumber(props.transfer['value']) || new BigNumber(0)
-
-    // Must be a token transfer
-    if (props.decimals) {
-        n = n.div(new BigNumber(10).pow(props.decimals))
+    let n: BigNumber
+    if (props.transfer.__typename === 'ERC20Transfer') {
+        n = new BigNumber(props.transfer.value)
+        // Must be a token transfer
+        if (props.decimals) {
+            n = n.div(new BigNumber(10).pow(props.decimals))
+        }
+    } else {
+        n = new BigNumber(0)
     }
+
     return formatFloatingPointValue(n)
 })
 
@@ -168,12 +179,15 @@ const symbolFormatted = computed<string | undefined>(() => {
     return props.symbol ? props.symbol.toUpperCase() : undefined
 })
 
-const isERC721 = computed<boolean>(() => {
-    return props.transferType === TYPES[1]
+const isNFT = computed<boolean>(() => {
+    return props.transferType !== TransferType.Erc20
 })
 
 const getTokenID = computed<string>(() => {
-    return new BN(props.transfer['tokenId']).toString()
+    if (props.transfer.__typename === 'ERC1155Transfer' || props.transfer.__typename === 'ERC721Transfer') {
+        return new BN(props.transfer.tokenId).toString()
+    }
+    return ''
 })
 
 /*
@@ -181,12 +195,6 @@ const getTokenID = computed<string>(() => {
      Methods
     ===================================================================================
     */
-/**
- * Sets image exists to false
- */
-const onImageLoadFail = (): void => {
-    state.imageExists = false
-}
 
 const visibleDetails = ref(new Set())
 const toggleMoreDetails = (transfer: string): void => {

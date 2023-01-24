@@ -650,6 +650,7 @@ export type QueryGetOwnersNftTokensArgs = {
 }
 
 export type QueryGetPendingTransactionsArgs = {
+    limit?: InputMaybe<Scalars['Int']>
     owner: Scalars['String']
 }
 
