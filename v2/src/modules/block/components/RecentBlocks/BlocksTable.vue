@@ -29,8 +29,8 @@
                     <div class="skeleton-box rounded-xl my-5" style="height: 32px"></div>
                 </div>
             </div>
-            <template v-if="!props.initialLoad && props.showIntersect">
-                <app-pagination :length="pages" :has-next="props.showIntersect" @update:modelValue="handlePageChange" />
+            <template v-if="props.showIntersect">
+                <app-pagination :length="pages" :has-next="props.hasMore" @update:modelValue="handlePageChange" />
             </template>
         </div>
     </div>
@@ -66,6 +66,10 @@ const props = defineProps({
         default: false
     },
     showIntersect: {
+        type: Boolean,
+        default: false
+    },
+    hasMore: {
         type: Boolean,
         default: false
     }
