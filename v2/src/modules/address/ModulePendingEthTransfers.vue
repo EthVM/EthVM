@@ -42,19 +42,20 @@
         </v-row>
         <v-divider class="my-0 mt-md-4 mx-n4 mx-sm-n6" />
     </template>
-    <template v-if="initialLoad">
-        <div v-for="item in 10" :key="item" class="my-2">
-            <div class="skeleton-box rounded-xl mt-1 my-4" style="height: 24px"></div>
+    <div v-if="initialLoad" class="p-ten-top">
+        <div v-for="item in 10" :key="item" style="padding: 10px 0">
+            <div class="skeleton-box rounded-xl" style="height: 40px"></div>
         </div>
-    </template>
+    </div>
     <template v-else>
-        <div v-if="pendingTxs.length < 1">
+        <div v-if="pendingTxs && pendingTxs.length < 1">
             <app-no-result text="This address does not have pending transactions" class="mt-4 mt-sm-6" />
         </div>
         <div v-else class="p-ten-top">
-            <div v-for="tx in pendingTxs" :key="tx.hash">
+            <div v-for="tx in currentPageData" :key="tx.hash">
                 <table-pending-row :tx="tx" :addressRef="props.addressRef" />
             </div>
+            <app-pagination :length="numberOfPages" :has-next="hasMore" @update:modelValue="loadMoreData" :current-page="pageNum" />
         </div>
     </template>
 </template>
@@ -62,10 +63,12 @@
 <script setup lang="ts">
 import AppNoResult from '@core/components/AppNoResult.vue'
 import TablePendingRow from '@module/address/components/EthBalanceTabs/TablePendingRow.vue'
+import AppPagination from '@core/components/AppPagination.vue'
 import { computed } from 'vue'
 import { Q_ADDRESS_TRANSFERS } from '@core/router/routesNames'
 import { PendingTxsFragmentFragment, useGetPendingTransactionsQuery } from '@module/address/apollo/EthTransfers/pendingTransfers.generated'
 import { useDisplay } from 'vuetify'
+import { useAppPaginate } from '@core/composables/AppPaginate/useAppPaginate.composable'
 
 const routes = Q_ADDRESS_TRANSFERS
 const { smAndDown, xs } = useDisplay()
@@ -89,7 +92,17 @@ const initialLoad = computed<boolean>(() => {
     return !pendingTxsData.value
 })
 
-const pendingTxs = computed<Array<PendingTxsFragmentFragment | null>>(() => {
+const pendingTxs = computed<Array<PendingTxsFragmentFragment | null> | undefined>(() => {
     return pendingTxsData.value?.getPendingTransactions
 })
+
+const hasMore = computed<boolean>(() => {
+    return !!pendingTxsData.value?.getPendingTransactions.nextKey
+})
+
+const { numberOfPages, pageData: currentPageData, setPageNum, pageNum } = useAppPaginate(pendingTxs, 'pendingTxs')
+
+const loadMoreData = (pageNum: number) => {
+    console.log(pageNum)
+}
 </script>

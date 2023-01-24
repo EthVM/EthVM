@@ -113,7 +113,7 @@ const isHome = computed<boolean>(() => {
 const { numberOfPages, pageData: currentPageData, setPageNum, pageNum } = useAppPaginate(blocks)
 
 const showPagination = computed<boolean>(() => {
-    return !state.initialLoad && !isHome.value
+    return !state.initialLoad && !isHome.value && blocks.value.length > 0
 })
 
 const hasMore = computed<boolean>(() => {

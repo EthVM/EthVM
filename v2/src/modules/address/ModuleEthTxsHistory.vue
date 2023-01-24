@@ -54,40 +54,35 @@
         </v-row>
         <v-divider class="my-0 mt-md-4 mx-n4 mx-sm-n6" />
     </template>
-    <template v-if="!initialLoad">
+    <div v-if="initialLoad || loadingTxsTransfersData" class="p-ten-top">
+        <div v-for="item in 10" :key="item" style="padding: 10px 0">
+            <div class="skeleton-box rounded-xl" style="height: 40px"></div>
+        </div>
+    </div>
+    <template v-else>
         <div v-if="transfers && transfers.length > 0" class="p-ten-top">
-            <div v-for="transfer in transfers" :key="transfer.transfer.transactionHash">
-                <table-txs-history-row :loading="initialLoad" :transfer="transfer" :address-ref="props.addressRef" />
+            <div v-for="transfer in currentPageData" :key="transfer.transfer.transactionHash">
+                <table-txs-history-row :transfer="transfer" :address-ref="props.addressRef" />
             </div>
         </div>
         <app-no-result v-else :text="noResultText" class="mt-4 mt-sm-6 mb-5"></app-no-result>
-        <app-intersect v-if="hasMore" @intersect="loadMoreData">
-            <div class="skeleton-box rounded-xl mt-1 my-4" style="height: 24px"></div>
-            <v-divider />
-        </app-intersect>
     </template>
-    <template v-else>
-        <div v-for="item in 10" :key="item" class="my-2">
-            <div class="skeleton-box rounded-xl my-5" style="height: 24px"></div>
-        </div>
+    <template v-if="showPagination">
+        <app-pagination :length="numberOfPages" :has-next="hasMore" @update:modelValue="loadMoreData" :current-page="pageNum" />
     </template>
 </template>
 
 <script setup lang="ts">
-import AppBtn from '@core/components/AppBtn.vue'
-import AppIntersect from '@core/components/AppIntersect.vue'
+import AppPagination from '@core/components/AppPagination.vue'
 import AppNoResult from '@core/components/AppNoResult.vue'
 import TableTxsHistoryRow from '@module/address/components/EthBalanceTabs/TableTxsHistoryRow.vue'
 import { computed, reactive } from 'vue'
-import { Q_ADDRESS_TRANSFERS } from '@core/router/routesNames'
 import { useDisplay } from 'vuetify'
 import { TxsTransfersFragment, useGetEthTransactionTransfersQuery } from '@module/address/apollo/EthTransfers/transfersHistory.generated'
 import { TransferDirection } from '@/apollo/types'
-import { formatVariableUnitEthValue } from '@core/helper/number-format-helper'
-import BN from 'bignumber.js'
+import { useAppPaginate } from '@core/composables/AppPaginate/useAppPaginate.composable'
+import { ITEMS_PER_PAGE } from '@core/constants'
 
-const routes = Q_ADDRESS_TRANSFERS
-const MAX_ITEMS = 50
 const { smAndDown, mdAndDown } = useDisplay()
 
 const props = defineProps({
@@ -113,7 +108,7 @@ const {
     () => ({
         ...(state.transferDirection !== null && { direction: state.transferDirection }),
         hash: props.addressRef,
-        _limit: MAX_ITEMS
+        _limit: ITEMS_PER_PAGE
     }),
     () => ({
         notifyOnNetworkStatusChange: true
@@ -123,6 +118,16 @@ const {
 const transfers = computed<Array<TxsTransfersFragment | null> | undefined | null>(() => {
     return txsTransfersData.value?.getEthTransactionTransfers.transfers
 })
+
+const showPagination = computed<boolean>(() => {
+    return !initialLoad.value && transfers.value && transfers.value.length > 0
+})
+
+const tabId = computed<string>(() => {
+    return state.transferDirection || 'tabAllEthTransfers'
+})
+
+const { numberOfPages, pageData: currentPageData, setPageNum, pageNum } = useAppPaginate(transfers, tabId)
 
 const initialLoad = computed<boolean>(() => {
     return !txsTransfersData.value
@@ -146,7 +151,7 @@ const loadMoreTxsTransfersData = (): void => {
         variables: {
             direction: state.transferDirection,
             hash: props.addressRef,
-            _limit: MAX_ITEMS,
+            _limit: ITEMS_PER_PAGE,
             _nextKey: txsTransfersData.value?.getEthTransactionTransfers.nextKey
         },
         updateQuery: (prev, { fetchMoreResult }) => {
@@ -161,10 +166,9 @@ const loadMoreTxsTransfersData = (): void => {
     })
 }
 
-const loadMoreData = (e: boolean): void => {
-    if (hasMore.value && e) {
-        loadMoreTxsTransfersData()
-    }
+const loadMoreData = (pageNum: number): void => {
+    loadMoreTxsTransfersData()
+    setPageNum(pageNum)
 }
 
 const setTransferDirection = (direction: TransferDirection): void => {

@@ -26,7 +26,7 @@
             <div class="skeleton-box rounded-xl" style="height: 40px"></div>
         </div>
     </div>
-    <template v-if="!initialLoad">
+    <template v-if="showPagination">
         <app-pagination :length="numberOfPages" :has-next="hasMore" @update:modelValue="loadMoreData" :current-page="pageNum" />
     </template>
 </template>
@@ -73,6 +73,10 @@ const { numberOfPages, pageData: currentPageData, setPageNum, pageNum } = useApp
 
 const initialLoad = computed<boolean>(() => {
     return !allTransfersData.value
+})
+
+const showPagination = computed<boolean>(() => {
+    return !initialLoad.value && transfers.value && transfers.value.length > 0
 })
 
 const hasMore = computed<boolean>(() => {
