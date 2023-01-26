@@ -360,6 +360,12 @@ export enum NftType {
     Erc1155 = 'ERC1155'
 }
 
+export type PendingTransactions = {
+    __typename?: 'PendingTransactions'
+    items: Array<Tx>
+    nextKey?: Maybe<Scalars['String']>
+}
+
 export type PendingTransfer = {
     __typename?: 'PendingTransfer'
     from: Scalars['String']
@@ -404,6 +410,8 @@ export type Query = {
     getERC721TokenTransfers: Erc721Transfers
     getERC721Transfers: Erc721Transfers
     getERC1155TokenTransfers: Erc1155Transfers
+    /** Get ERC1155 tokens belonging to a contract */
+    getERC1155TokensByContract: Erc1155TokenBalances
     /** Get ERC1155 tokens owned by an address */
     getERC1155TokensByOwner: Erc1155TokenBalances
     getERC1155Transfers: Erc1155Transfers
@@ -432,6 +440,11 @@ export type Query = {
     getOwnersERC721TokensV2: Erc721TokenContract
     getOwnersNFTTokens: NftTokenBalances
     getPendingTransactions: Array<Maybe<Tx>>
+    /**
+     * get pending transactions to or from an address
+     * supports keyset pagination with nextKey
+     */
+    getPendingTransactionsV2: PendingTransactions
     getTimeseriesData: TimeseriesResponse
     /** Returns the current server time in UTC milliseconds */
     getTimestamp: Scalars['String']
@@ -533,6 +546,12 @@ export type QueryGetErc721TransfersArgs = {
 }
 
 export type QueryGetErc1155TokenTransfersArgs = {
+    contract: Scalars['String']
+    limit?: InputMaybe<Scalars['Int']>
+    nextKey?: InputMaybe<Scalars['String']>
+}
+
+export type QueryGetErc1155TokensByContractArgs = {
     contract: Scalars['String']
     limit?: InputMaybe<Scalars['Int']>
     nextKey?: InputMaybe<Scalars['String']>
@@ -651,6 +670,13 @@ export type QueryGetOwnersNftTokensArgs = {
 
 export type QueryGetPendingTransactionsArgs = {
     limit?: InputMaybe<Scalars['Int']>
+    nextKey?: InputMaybe<Scalars['String']>
+    owner: Scalars['String']
+}
+
+export type QueryGetPendingTransactionsV2Args = {
+    limit?: InputMaybe<Scalars['Int']>
+    nextKey?: InputMaybe<Scalars['String']>
     owner: Scalars['String']
 }
 

@@ -4,6 +4,7 @@ fragment TokenDetails on EthTokenInfo {
   decimals
   totalSupply
   contract
+  tokenId
 }
 
 fragment ERC20TokenOwnerDetails on ERC20TokenBalance  {

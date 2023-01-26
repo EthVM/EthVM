@@ -5,4 +5,5 @@ export interface NFTDetails {
     id: string
     balance?: string
     meta?: NftMetaFragment
+    holder?: string
 }
