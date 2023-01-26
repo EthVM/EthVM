@@ -120,7 +120,7 @@ const transfers = computed<Array<TxsTransfersFragment | null> | undefined | null
 })
 
 const showPagination = computed<boolean>(() => {
-    return !initialLoad.value && transfers.value && transfers.value.length > 0
+    return !initialLoad.value && !!transfers.value && transfers.value.length > 0
 })
 
 const tabId = computed<string>(() => {
@@ -147,28 +147,30 @@ const noResultText = computed<string>(() => {
 })
 
 const loadMoreTxsTransfersData = (): void => {
-    fetchMoreTxsTransfersData({
-        variables: {
-            direction: state.transferDirection,
-            hash: props.addressRef,
-            _limit: ITEMS_PER_PAGE,
-            _nextKey: txsTransfersData.value?.getEthTransactionTransfers.nextKey
-        },
-        updateQuery: (prev, { fetchMoreResult }) => {
-            return {
-                getEthTransactionTransfers: {
-                    nextKey: fetchMoreResult?.getEthTransactionTransfers.nextKey,
-                    transfers: [...prev.getEthTransactionTransfers.transfers, ...(fetchMoreResult?.getEthTransactionTransfers.transfers || [])],
-                    __typename: fetchMoreResult?.getEthTransactionTransfers.__typename
+    if (pageNum.value > numberOfPages.value) {
+        fetchMoreTxsTransfersData({
+            variables: {
+                direction: state.transferDirection,
+                hash: props.addressRef,
+                _limit: ITEMS_PER_PAGE,
+                _nextKey: txsTransfersData.value?.getEthTransactionTransfers.nextKey
+            },
+            updateQuery: (prev, { fetchMoreResult }) => {
+                return {
+                    getEthTransactionTransfers: {
+                        nextKey: fetchMoreResult?.getEthTransactionTransfers.nextKey,
+                        transfers: [...prev.getEthTransactionTransfers.transfers, ...(fetchMoreResult?.getEthTransactionTransfers.transfers || [])],
+                        __typename: fetchMoreResult?.getEthTransactionTransfers.__typename
+                    }
                 }
             }
-        }
-    })
+        })
+    }
 }
 
 const loadMoreData = (pageNum: number): void => {
-    loadMoreTxsTransfersData()
     setPageNum(pageNum)
+    loadMoreTxsTransfersData()
 }
 
 const setTransferDirection = (direction: TransferDirection): void => {
