@@ -24,7 +24,6 @@ watch(
     () => props.currentPage,
     () => {
         if (props.currentPage) {
-            console.log(props.currentPage)
             page.value = props.currentPage
         }
     }
