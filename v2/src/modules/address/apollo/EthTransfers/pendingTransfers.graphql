@@ -49,8 +49,11 @@ fragment PendingTxsFragment on Tx {
     value
 }
 
-query getPendingTransactions($hash: String!) {
-    getPendingTransactions(owner: $hash) {
-        ...PendingTxsFragment
+query getPendingTransactions($hash: String!, $_limit: Int, $_nextKey: String) {
+    getPendingTransactionsV2(owner: $hash, limit: $_limit, nextKey: $_nextKey) {
+        items {
+            ...PendingTxsFragment
+        }
+        nextKey
     }
 }

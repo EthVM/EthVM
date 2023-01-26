@@ -55,53 +55,59 @@ export type PendingTxsFragmentFragment = {
 
 export type GetPendingTransactionsQueryVariables = Types.Exact<{
     hash: Types.Scalars['String']
+    _limit?: Types.InputMaybe<Types.Scalars['Int']>
+    _nextKey?: Types.InputMaybe<Types.Scalars['String']>
 }>
 
 export type GetPendingTransactionsQuery = {
     __typename?: 'Query'
-    getPendingTransactions: Array<{
-        __typename?: 'Tx'
-        baseFeePerGas?: string | null
-        blockHash?: string | null
-        blockNumber?: number | null
-        contractAddress?: string | null
-        from: string
-        gas: string
-        gasPrice: string
-        gasUsed?: string | null
-        hash: string
-        input: string
-        maxFeePerGas?: string | null
-        maxPriorityFeePerGas?: string | null
-        nonce: number
-        r?: string | null
-        replacedBy?: string | null
-        s?: string | null
-        status?: string | null
-        timestamp?: number | null
-        to?: string | null
-        transactionIndex?: number | null
-        v?: string | null
-        value: string
-        logs: Array<{ __typename?: 'Log'; address: string; data: string; logIndex: number; removed: boolean; topics: Array<string>; type?: string | null }>
-        trace?: Array<{
-            __typename?: 'Trace'
-            subtraces?: number | null
-            traceAddress?: Array<number> | null
-            transactionPosition?: number | null
-            type?: string | null
-            action?: {
-                __typename?: 'TraceAction'
-                callType?: string | null
-                from?: string | null
-                gas?: string | null
-                input?: string | null
-                to?: string | null
-                value?: string | null
-            } | null
-            result?: { __typename?: 'TraceResult'; gasUsed?: string | null; output?: string | null } | null
-        }> | null
-    } | null>
+    getPendingTransactionsV2: {
+        __typename?: 'PendingTransactions'
+        nextKey?: string | null
+        items: Array<{
+            __typename?: 'Tx'
+            baseFeePerGas?: string | null
+            blockHash?: string | null
+            blockNumber?: number | null
+            contractAddress?: string | null
+            from: string
+            gas: string
+            gasPrice: string
+            gasUsed?: string | null
+            hash: string
+            input: string
+            maxFeePerGas?: string | null
+            maxPriorityFeePerGas?: string | null
+            nonce: number
+            r?: string | null
+            replacedBy?: string | null
+            s?: string | null
+            status?: string | null
+            timestamp?: number | null
+            to?: string | null
+            transactionIndex?: number | null
+            v?: string | null
+            value: string
+            logs: Array<{ __typename?: 'Log'; address: string; data: string; logIndex: number; removed: boolean; topics: Array<string>; type?: string | null }>
+            trace?: Array<{
+                __typename?: 'Trace'
+                subtraces?: number | null
+                traceAddress?: Array<number> | null
+                transactionPosition?: number | null
+                type?: string | null
+                action?: {
+                    __typename?: 'TraceAction'
+                    callType?: string | null
+                    from?: string | null
+                    gas?: string | null
+                    input?: string | null
+                    to?: string | null
+                    value?: string | null
+                } | null
+                result?: { __typename?: 'TraceResult'; gasUsed?: string | null; output?: string | null } | null
+            }> | null
+        }>
+    }
 }
 
 export const PendingTxsFragmentFragmentDoc = gql`
@@ -157,9 +163,12 @@ export const PendingTxsFragmentFragmentDoc = gql`
     }
 `
 export const GetPendingTransactionsDocument = gql`
-    query getPendingTransactions($hash: String!) {
-        getPendingTransactions(owner: $hash) {
-            ...PendingTxsFragment
+    query getPendingTransactions($hash: String!, $_limit: Int, $_nextKey: String) {
+        getPendingTransactionsV2(owner: $hash, limit: $_limit, nextKey: $_nextKey) {
+            items {
+                ...PendingTxsFragment
+            }
+            nextKey
         }
     }
     ${PendingTxsFragmentFragmentDoc}
@@ -178,6 +187,8 @@ export const GetPendingTransactionsDocument = gql`
  * @example
  * const { result, loading, error } = useGetPendingTransactionsQuery({
  *   hash: // value for 'hash'
+ *   _limit: // value for '_limit'
+ *   _nextKey: // value for '_nextKey'
  * });
  */
 export function useGetPendingTransactionsQuery(
