@@ -139,7 +139,6 @@ const loadMoreData = (e: boolean): void => {
 }
 
 const isNft = computed<boolean>(() => {
-    console.log(props.holderType !== TransferType.Erc20)
     return props.holderType !== TransferType.Erc20
 })
 
@@ -167,7 +166,6 @@ const tokensNft = computed<NFTDetails[]>(() => {
  */
 const tokensErc20 = computed<Erc20Owner[]>(() => {
     if (!isNft.value) {
-        console.log('Hello')
         return props.holders as Erc20Owner[]
     }
     return []
