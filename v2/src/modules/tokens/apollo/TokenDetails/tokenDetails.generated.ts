@@ -16,6 +16,7 @@ export type TokenDetailsFragment = {
     decimals?: number | null
     totalSupply?: string | null
     contract: string
+    tokenId?: string | null
 }
 
 export type Erc20TokenOwnerDetailsFragment = {
@@ -29,6 +30,7 @@ export type Erc20TokenOwnerDetailsFragment = {
         decimals?: number | null
         totalSupply?: string | null
         contract: string
+        tokenId?: string | null
     }
 }
 
@@ -45,6 +47,7 @@ export type GetTokenInfoByContractQuery = {
         decimals?: number | null
         totalSupply?: string | null
         contract: string
+        tokenId?: string | null
     }
 }
 
@@ -66,6 +69,7 @@ export type GetErc20TokenBalanceQuery = {
             decimals?: number | null
             totalSupply?: string | null
             contract: string
+            tokenId?: string | null
         }
     }
 }
@@ -77,6 +81,7 @@ export const TokenDetailsFragmentDoc = gql`
         decimals
         totalSupply
         contract
+        tokenId
     }
 `
 export const Erc20TokenOwnerDetailsFragmentDoc = gql`

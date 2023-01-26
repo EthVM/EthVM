@@ -13,6 +13,8 @@
         :token-data="tokenData"
         :holder-type="holderType"
         :initial-load="initialLoad"
+        :nft-meta="nftMeta"
+        :loading-meta="loadingMeta"
         @setPage="setPage"
     />
 </template>
@@ -25,13 +27,19 @@ import { reactive, computed, defineEmits } from 'vue'
 import {
     Erc20TokenOwnersFragment as Erc20TokenOwnersType,
     Erc721TokenOwnersFragment as Erc721TokenOwnersType,
+    Erc1155TokenOwnersFragment as Erc1155TokenOwnersType,
+    Erc721TokenOwnerDetailsFragment as Erc721Owner,
+    Erc1155TokenOwnerDetailsFragment as Erc1155Owner,
     useGetErc20TokenOwnersQuery,
-    useGetErc721TokenOwnersQuery
+    useGetErc721TokenOwnersQuery,
+    useGetErc1155TokenOwnersQuery
 } from '@module/tokens/apollo/TokenDetailsHolder/tokenHolders.generated'
+import { Erc20TokenOwnerDetailsFragment as Erc20Owner } from '@module/tokens/apollo/TokenDetails/tokenDetails.generated'
 import { useCoinData } from '@core/composables/CoinData/coinData.composable'
 import { MarketDataFragment as TokenMarketData } from '@core/composables/CoinData/getLatestPrices.generated'
-
-const TYPES = ['ERC20', 'ERC721']
+import { useGetNftsMeta } from '@core/composables/NftMeta/useGetNftsMeta.composable'
+import { NftId, generateId } from '@/core/composables/NftMeta/helpers'
+import { TransferType } from '@/apollo/types'
 
 const MAX_ITEMS = 10
 
@@ -71,6 +79,9 @@ const tokenData = computed<TokenMarketData | false>(() => {
     }
     return false
 })
+/**------------------------
+ * ERC20 Holders
+ -------------------------*/
 
 const {
     result: erc20TokenHolderResult,
@@ -93,6 +104,13 @@ const erc20TokenHolders = computed<Erc20TokenOwnersType | undefined>(() => {
 onErc20TokenHoldersError(() => {
     emitErrorState(true)
 })
+const hasERC20Owners = computed<boolean>(() => {
+    return !!erc20TokenHolders.value && erc20TokenHolders.value?.owners.length > 0
+})
+
+/**------------------------
+ * ERC721 Holders
+ -------------------------*/
 
 const {
     result: erc721TokenHoldersResult,
@@ -123,54 +141,146 @@ onErc721TokenHolderLoaded(({ data }) => {
     }
 })
 
-const initialLoad = computed<boolean>(() => {
-    return !erc721TokenHoldersResult.value && !erc20TokenHolderResult.value
+const hasERC721Owners = computed<boolean>(() => {
+    return !!erc721TokenHolders.value && erc721TokenHolders.value?.owners.length > 0
 })
 
 onErc721TokenHolderError(() => {
     emitErrorState(true)
 })
 
-const hasERC721Owners = computed<boolean>(() => {
-    return !!erc721TokenHolders.value && erc721TokenHolders.value?.owners.length > 0
+/**------------------------
+ * ERC1155 Holders
+ -------------------------*/
+
+const {
+    result: erc1155TokenHoldersResult,
+    loading: loadingErc1155TokenHolders,
+    fetchMore: fetchMoreErc1155TokenHolder,
+    refetch: refetchErc1155TokenHolders,
+    onError: onErc1155TokenHolderError,
+    onResult: onErc1155TokenHolderLoaded
+} = useGetErc1155TokenOwnersQuery(
+    () => ({
+        contract: props.address,
+        _limit: MAX_ITEMS
+    }),
+    { notifyOnNetworkStatusChange: true }
+)
+
+const erc1155TokenHolders = computed<Erc1155TokenOwnersType | undefined>(() => {
+    return erc1155TokenHoldersResult.value?.getERC1155TokensByContract
 })
 
-const hasERC20Owners = computed<boolean>(() => {
-    return !!erc20TokenHolders.value && erc20TokenHolders.value?.owners.length > 0
+onErc1155TokenHolderLoaded(({ data }) => {
+    if (data?.getERC1155TokensByContract) {
+        if (!data.getERC1155TokensByContract.balances || data.getERC1155TokensByContract.balances.length < 1) {
+            emit('isNft', false)
+        } else {
+            emit('isNft', true)
+        }
+    }
+})
+onErc1155TokenHolderError(() => {
+    emitErrorState(true)
+})
+const hasERC1155Owners = computed<boolean>(() => {
+    return !!erc1155TokenHolders.value && erc1155TokenHolders.value?.balances.length > 0
 })
 
-const holders = computed<any[]>(() => {
-    if (hasERC20Owners.value || hasERC721Owners.value) {
-        const data = hasERC721Owners.value ? erc721TokenHolders.value?.owners : erc20TokenHolders.value?.owners
+/**------------------------
+ * Holder Type
+ -------------------------*/
+const loading = computed<boolean>(() => {
+    return loadingErc20TokenHolder.value || loadingErc721TokenHolders.value || loadingCoinData.value || loadingErc1155TokenHolders.value
+})
+
+const hasNftOwners = computed<boolean>(() => {
+    return hasERC1155Owners.value || hasERC721Owners.value
+})
+
+const holderType = computed<TransferType>(() => {
+    return hasNftOwners.value ? (hasERC721Owners.value ? TransferType.Erc721 : TransferType.Erc1155) : TransferType.Erc20
+})
+
+/**------------------------
+ * NFT META
+ -------------------------*/
+/**
+ * Computed Property of token ids to be fetch meta
+ */
+const tokenIDS = computed<NftId[]>(() => {
+    const _ids: NftId[] = []
+    if (holderType.value !== TransferType.Erc20 && hasNftOwners.value) {
+        if (holderType.value === TransferType.Erc721) {
+            erc721TokenHolders.value?.owners.forEach(owner => {
+                if (owner) {
+                    const id = {
+                        id: generateId(owner.tokenId),
+                        contract: owner.tokenInfo.contract
+                    }
+                    _ids.push(id)
+                }
+            })
+        } else if (holderType.value === TransferType.Erc1155) {
+            erc1155TokenHolders.value?.balances.forEach(owner => {
+                if (owner) {
+                    const id = {
+                        id: generateId(owner.tokenInfo.tokenId),
+                        contract: owner.tokenInfo.contract
+                    }
+                    _ids.push(id)
+                }
+            })
+        }
+    }
+    return _ids
+})
+const { nftMeta, loadingMeta } = useGetNftsMeta(tokenIDS, loading)
+
+/**------------------------
+ * Holders
+ -------------------------*/
+const initialLoad = computed<boolean>(() => {
+    return !erc721TokenHoldersResult.value || !erc20TokenHolderResult.value || !erc1155TokenHoldersResult.value
+})
+
+const holders = computed<Erc20Owner[] | Erc721Owner[] | Erc1155Owner[]>(() => {
+    if (!initialLoad.value) {
+        const data = hasERC20Owners.value
+            ? erc20TokenHolders.value?.owners.filter((x): x is Erc20Owner => x !== null)
+            : hasERC721Owners.value
+            ? erc721TokenHolders.value?.owners.filter((x): x is Erc721Owner => x !== undefined)
+            : erc1155TokenHolders.value?.balances.filter((x): x is Erc1155Owner => x !== undefined)
+
         if (data) {
             return data
         }
     }
     return []
 })
-
-const holderType = computed<string>(() => {
-    return hasERC721Owners.value ? TYPES[1] : TYPES[0]
+const hasItems = computed<boolean>(() => {
+    return !!(holders.value && holders.value.length)
 })
 
-const loading = computed<boolean>(() => {
-    return loadingErc20TokenHolder.value || loadingErc721TokenHolders.value || loadingCoinData.value
-})
-
-const hasMoreERC20Holders = computed<boolean>(() => {
-    return erc20TokenHolders.value ? erc20TokenHolders.value.nextKey !== null : false
-})
-
-const hasMoreERC721Holders = computed<boolean>(() => {
-    return erc721TokenHolders.value ? erc721TokenHolders.value.nextKey !== null : false
+const nextKey = computed<string | null | undefined>(() => {
+    if (holderType.value === TransferType.Erc20) {
+        return erc20TokenHolders.value?.nextKey
+    }
+    if (holderType.value === TransferType.Erc721) {
+        return erc721TokenHolders.value?.nextKey
+    }
+    if (holderType.value === TransferType.Erc1155) {
+        return erc1155TokenHolders.value?.nextKey
+    }
+    return undefined
 })
 
 const showPagination = computed<boolean>(() => {
-    return hasMoreERC721Holders.value || hasMoreERC20Holders.value
-})
-
-const hasItems = computed<boolean>(() => {
-    return !!(holders.value && holders.value.length)
+    if (hasItems.value) {
+        return holders.value.length > MAX_ITEMS ? true : nextKey.value !== undefined
+    }
+    return false
 })
 
 /**
@@ -192,93 +302,89 @@ const setPage = (page: number, reset = false): void => {
         state.isEnd = 0
         refetchErc20TokenHolders()
         refetchErc721TokenHolders()
+        refetchErc1155TokenHolders()
     } else {
-        if (page > state.isEnd && showPagination.value) {
-            hasMoreERC20Holders.value ? getERC20Holder(page) : null
-            hasMoreERC721Holders.value ? getERC721Holder(page) : null
+        if (page > state.isEnd && showPagination.value && nextKey.value) {
+            fetchMoreHolders(page)
         }
     }
     state.index = page
 }
 
 /**
- * Gets ERC20 through apollo
- * @param page {Number}
+ * Helper Functions to parse results from the fetch more queries
+ * @param prev - previous transfers results in the query
+ * @param more - more transfers results in the query
+ * @returns {T} - parsed T results
  */
-const getERC20Holder = async (page: number): Promise<boolean> => {
-    try {
-        await fetchMoreErc20TokenHolder({
-            variables: {
-                contract: props.address,
-                _limit: 10,
-                _nextKey: erc20TokenHolders.value?.nextKey
-            },
-            updateQuery: (previousResult, { fetchMoreResult }) => {
-                state.isEnd = page
-                const prevT = previousResult.getERC20TokenOwners.owners
-                if (fetchMoreResult) {
-                    const newT = fetchMoreResult.getERC20TokenOwners.owners
-                    return {
-                        getERC20TokenOwners: {
-                            nextKey: fetchMoreResult.getERC20TokenOwners.nextKey,
-                            owners: [...prevT, ...newT],
-                            __typename: fetchMoreResult.getERC20TokenOwners.__typename
-                        }
-                    }
-                }
-                return {
-                    getERC20TokenOwners: {
-                        nextKey: previousResult.getERC20TokenOwners.nextKey,
-                        owners: [...prevT],
-                        __typename: previousResult.getERC20TokenOwners.__typename
-                    }
-                }
-            }
-        })
-        return true
-    } catch (e) {
-        const newE = JSON.stringify(e)
-        if (!newE.toLowerCase().includes(excpInvariantViolation)) {
-            throw new Error(newE)
-        }
-        return false
+const updateQueryParse = <T extends Erc20TokenOwnersType | Erc721TokenOwnersType>(prev: T, more: T | undefined) => {
+    const prevHolders = prev.owners
+    const moreHolders = more ? more.owners : []
+    return {
+        nextKey: more?.nextKey,
+        owners: [...prevHolders, ...moreHolders],
+        __typename: prev.__typename
     }
 }
-
 /**
- * Gets ERC721 through apollo
- * @param page {Number}
+ * Fetched More Holders based on the curent contract type. Sets index to the last page
+ * @param page - page number that is being fetched
  */
-const getERC721Holder = async (page: number): Promise<boolean> => {
+const fetchMoreHolders = async (page: number): Promise<boolean> => {
     try {
-        await fetchMoreErc721TokenHolder({
-            variables: {
-                contract: props.address,
-                _limit: 10,
-                _nextKey: erc721TokenHolders.value?.nextKey
-            },
-            updateQuery: (previousResult, { fetchMoreResult }) => {
-                state.isEnd = page
-                const prevT = previousResult.getERC721TokenOwners.owners
-                if (fetchMoreResult) {
-                    const newT = fetchMoreResult.getERC721TokenOwners.owners
-                    return {
-                        getERC721TokenOwners: {
-                            nextKey: fetchMoreResult.getERC721TokenOwners.nextKey,
-                            owners: [...prevT, ...newT],
-                            __typename: fetchMoreResult.getERC721TokenOwners.__typename
+        const _params = {
+            _contract: props.address,
+            _limit: 10,
+            _nextKey: nextKey.value
+        }
+        switch (holderType.value) {
+            case TransferType.Erc20:
+                await fetchMoreErc20TokenHolder({
+                    variables: _params,
+                    updateQuery: (previousResult, { fetchMoreResult }) => {
+                        return {
+                            __typename: 'Query',
+                            getERC20TokenOwners: updateQueryParse(
+                                previousResult.getERC20TokenOwners,
+                                fetchMoreResult?.getERC20TokenOwners
+                            ) as Erc20TokenOwnersType
                         }
                     }
-                }
-                return {
-                    getERC721TokenOwners: {
-                        nextKey: previousResult.getERC721TokenOwners.nextKey,
-                        owners: [...prevT],
-                        __typename: previousResult.getERC721TokenOwners.__typename
+                })
+                break
+            case TransferType.Erc721:
+                await fetchMoreErc721TokenHolder({
+                    variables: _params,
+                    updateQuery: (previousResult, { fetchMoreResult }) => {
+                        return {
+                            __typename: 'Query',
+                            getERC721TokenOwners: updateQueryParse(
+                                previousResult.getERC721TokenOwners,
+                                fetchMoreResult?.getERC721TokenOwners
+                            ) as Erc721TokenOwnersType
+                        }
                     }
-                }
-            }
-        })
+                })
+                break
+            default:
+                await fetchMoreErc1155TokenHolder({
+                    variables: _params,
+                    updateQuery: (previousResult, { fetchMoreResult }) => {
+                        const prev = previousResult.getERC1155TokensByContract.balances
+                        const more = fetchMoreResult ? fetchMoreResult.getERC1155TokensByContract.balances : []
+                        return {
+                            __typename: 'Query',
+                            getERC1155TokensByContract: {
+                                nextKey: fetchMoreResult?.getERC1155TokensByContract.nextKey,
+                                balances: [...prev, ...more],
+                                __typename: previousResult.getERC1155TokensByContract.__typename
+                            }
+                        }
+                    }
+                })
+                break
+        }
+        state.isEnd = page
         return true
     } catch (e) {
         const newE = JSON.stringify(e)
