@@ -112,7 +112,7 @@
             :style="tableHeight"
         >
             <div v-if="tokens.length > 0" class="p-ten-top">
-                <div v-for="token in currentPageData" :key="token.contract" :ref="el => assignRef(token.contract, el)">
+                <div v-for="token in tokensToRender" :key="token.contract" :ref="el => assignRef(token.contract, el)">
                     <table-row-token-balance
                         :token="token"
                         :is-overview="props.isOverview"
@@ -237,6 +237,9 @@ const tokens = computed<Token[]>(() => {
 
 const { numberOfPages, pageData: currentPageData, setPageNum, pageNum } = useAppPaginate(tokens, 'tokenBalance')
 
+const tokensToRender = computed<Token[]>(() => {
+    return props.isOverview ? tokens.value : currentPageData.value
+})
 /**------------------------
  * Table Sorting
  -------------------------*/
