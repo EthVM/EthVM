@@ -1,5 +1,10 @@
 <template>
-    <app-table-row row-align="start" row-align-lg="center" :color="state.showMore ? 'pillGrey' : 'transparent'" @click="openMoreInfo()">
+    <app-table-row
+        row-align="start"
+        row-align-lg="center"
+        :color="state.showMore ? 'pillGrey' : 'transparent'"
+        v-on="{ click: !props.isOverview && marketData ? openMoreInfo : null }"
+    >
         <!--
                 Token on Overview:
                 XS: NONE
@@ -7,7 +12,7 @@
                 ------------
                 Token:
                 XS: NONE
-                SM : 4
+                SM : 4F
                 LG: 2
              -->
         <v-col cols="6" sm="4" :lg="props.isOverview ? 4 : 2" :class="['d-flex align-center']">

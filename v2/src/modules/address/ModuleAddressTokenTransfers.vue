@@ -187,7 +187,7 @@ const initialLoad = computed<boolean>(() => {
 })
 
 const showPagination = computed<boolean>(() => {
-    return !initialLoad.value && !!transfers.value && transfers.value.length > 0
+    return !initialLoad.value && !!transfers.value && transfers.value.length > 0 && !props.isOverview
 })
 
 const tokenImg = computed<Map<string, TokenMarketData> | false>(() => {
