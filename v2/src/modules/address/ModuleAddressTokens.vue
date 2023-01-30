@@ -112,7 +112,7 @@
             :style="tableHeight"
         >
             <div v-if="tokens.length > 0" class="p-ten-top">
-                <div v-for="token in tokens" :key="token.contract" :ref="el => assignRef(token.contract, el)">
+                <div v-for="token in tokensToRender" :key="token.contract" :ref="el => assignRef(token.contract, el)">
                     <table-row-token-balance
                         :token="token"
                         :is-overview="props.isOverview"
@@ -123,16 +123,20 @@
                 </div>
             </div>
             <app-no-result v-else text="This address does not hold any tokens" class="mt-3 mt-sm-1"></app-no-result>
+            <template v-if="showPagination">
+                <app-pagination :length="numberOfPages" @update:modelValue="loadMoreData" :current-page="pageNum" />
+            </template>
         </div>
     </v-card>
 </template>
 
 <script setup lang="ts">
-import { computed, reactive, onMounted, onBeforeUnmount, toRefs, watch } from 'vue'
 import AppInput from '@core/components/AppInput.vue'
 import AppBtn from '@/core/components/AppBtn.vue'
 import AppNewUpdate from '@core/components/AppNewUpdate.vue'
 import TableRowTokenBalance from './components/TableRowTokenBalance.vue'
+import AppPagination from '@core/components/AppPagination.vue'
+import { computed, reactive, onMounted, onBeforeUnmount, toRefs, watch } from 'vue'
 import { useCoinData } from '@core/composables/CoinData/coinData.composable'
 import { TOKEN_FILTER_VALUES, KEY, DIRECTION, Token, TokenSortMarket, TokenMarket } from '@module/address/models/TokenSort'
 import { useAddressToken } from '@core/composables/AddressTokens/addressTokens.composable'
@@ -146,6 +150,7 @@ import { useAppTableRowRender } from '@core/composables/AppTableRowRender/useApp
 import { searchHelper } from '@core/helper/search'
 import { useStore } from '@/store'
 import { WatchQueryFetchPolicy } from '@apollo/client/core'
+import { useAppPaginate } from '@core/composables/AppPaginate/useAppPaginate.composable'
 const { xs } = useDisplay()
 const { loading: loadingCoinData } = useCoinData()
 
@@ -225,11 +230,16 @@ const tokens = computed<Token[]>(() => {
         } else {
             tokens = tokenSorted
         }
-        return renderState.isActive ? tokens.slice(0, renderState.maxItems) : tokens
+        return tokens
     }
     return []
 })
 
+const { numberOfPages, pageData: currentPageData, setPageNum, pageNum } = useAppPaginate(tokens, 'tokenBalance')
+
+const tokensToRender = computed<Token[]>(() => {
+    return props.isOverview ? tokens.value : currentPageData.value
+})
 /**------------------------
  * Table Sorting
  -------------------------*/
@@ -255,6 +265,21 @@ const resetCount = (): void => {
     refetchTokens()
     emit('resetCount', AddressEventType.NewErc20Transfer, true)
 }
+
+/**------------------------
+ * Load new page
+ -------------------------*/
+const loadMoreData = (pageNum: number): void => {
+    setPageNum(pageNum)
+}
+
+const showPagination = computed<boolean>(() => {
+    return !loadingTokens.value && hasTokens.value && tokenSort.value && !props.isOverview
+})
+
+const hasMore = computed<boolean>(() => {
+    return pageNum.value >= numberOfPages.value
+})
 
 /**------------------------
  * Route Changes
