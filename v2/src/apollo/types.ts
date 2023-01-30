@@ -45,10 +45,26 @@ export type AllTransfer = {
     value?: Maybe<Scalars['String']>
 }
 
+export type AllTransferWithError = {
+    __typename?: 'AllTransferWithError'
+    contract?: Maybe<Scalars['String']>
+    stateDiff?: Maybe<StateDiffChange>
+    tokenId?: Maybe<Scalars['String']>
+    tokenInfo?: Maybe<EthTokenInfo>
+    transfer: TransferWithError
+    value?: Maybe<Scalars['String']>
+}
+
 export type AllTransfers = {
     __typename?: 'AllTransfers'
     nextKey?: Maybe<Scalars['String']>
     transfers: Array<Maybe<AllTransfer>>
+}
+
+export type AllTransfersWithErrors = {
+    __typename?: 'AllTransfersWithErrors'
+    nextKey?: Maybe<Scalars['String']>
+    transfers: Array<Maybe<AllTransferWithError>>
 }
 
 export type BalanceDiff = {
@@ -391,6 +407,7 @@ export type Query = {
     __typename?: 'Query'
     getAllEthTransfers: EthTransfers
     getAllTransfers: AllTransfers
+    getAllTransfersWithErrorsByAddress: AllTransfersWithErrors
     getBlockByHash: Block
     getBlockByNumber: Block
     getBlockRewards: EthTransfers
@@ -470,6 +487,12 @@ export type QueryGetAllTransfersArgs = {
     limit?: InputMaybe<Scalars['Int']>
     nextKey?: InputMaybe<Scalars['String']>
     owner?: InputMaybe<Scalars['String']>
+}
+
+export type QueryGetAllTransfersWithErrorsByAddressArgs = {
+    limit?: InputMaybe<Scalars['Int']>
+    nextKey?: InputMaybe<Scalars['String']>
+    owner: Scalars['String']
 }
 
 export type QueryGetBlockByHashArgs = {
@@ -1083,6 +1106,23 @@ export enum TransferType {
     Erc721 = 'ERC721',
     Erc1155 = 'ERC1155',
     Eth = 'ETH'
+}
+
+export type TransferWithError = {
+    __typename?: 'TransferWithError'
+    block: Scalars['Int']
+    from: Scalars['String']
+    nonce?: Maybe<Scalars['Int']>
+    status: Scalars['Boolean']
+    subtype: TransferSubtype
+    timestamp: Scalars['Int']
+    to: Scalars['String']
+    transactionError?: Maybe<Scalars['String']>
+    transactionHash: Scalars['String']
+    transactionInput?: Maybe<Scalars['String']>
+    transferError?: Maybe<Scalars['String']>
+    txFee: Scalars['String']
+    type: TransferType
 }
 
 export type Tx = {
