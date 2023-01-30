@@ -9,6 +9,16 @@ import gql from 'graphql-tag'
 import * as VueApolloComposable from '@vue/apollo-composable'
 import * as VueCompositionApi from 'vue'
 export type ReactiveFunction<TParam> = () => TParam
+export type BlockSummaryFragment = {
+    __typename?: 'BlockSummary'
+    number: number
+    miner: string
+    txCount: number
+    timestamp: number
+    txFail: number
+    rewards: { __typename?: 'BlockRewards'; total: string }
+}
+
 export type GetBlocksArrayByNumberQueryVariables = Types.Exact<{
     fromBlock?: Types.InputMaybe<Types.Scalars['Int']>
     limit?: Types.InputMaybe<Types.Scalars['Int']>
@@ -41,19 +51,25 @@ export type NewBlockTableSubscription = {
     }
 }
 
+export const BlockSummaryFragmentDoc = gql`
+    fragment BlockSummary on BlockSummary {
+        number
+        miner
+        txCount
+        timestamp
+        rewards {
+            total
+        }
+        txFail
+    }
+`
 export const GetBlocksArrayByNumberDocument = gql`
     query getBlocksArrayByNumber($fromBlock: Int, $limit: Int) {
         getBlocksArrayByNumber(fromBlock: $fromBlock, limit: $limit) {
-            number
-            miner
-            txCount
-            timestamp
-            rewards {
-                total
-            }
-            txFail
+            ...BlockSummary
         }
     }
+    ${BlockSummaryFragmentDoc}
 `
 
 /**

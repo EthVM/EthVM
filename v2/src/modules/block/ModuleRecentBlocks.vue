@@ -3,18 +3,21 @@
         <v-card-title class="px-0 mb-5 d-flex align-center justify-space-between">
             <div class="d-flex align-center">
                 <h1 class="text-h6 font-weight-bold">{{ getTitle }}</h1>
-                <notice-new-block v-if="!isHome" @reload="setPage(0, true)" />
+                <notice-new-block v-if="!isHome" @reload="setPage(1, true)" />
             </div>
             <app-btn v-if="isHome" text="More" isSmall icon="east" @click="goToBlocksPage"></app-btn>
         </v-card-title>
         <table-blocks
-            :max-items="props.maxItems"
-            :index="state.index"
-            :is-loading="state.initialLoad"
+            :max-items="ITEMS_PER_PAGE"
+            :index="pageNum"
+            :initial-load="state.initialLoad"
+            :is-loading="loading"
             :table-message="message"
-            :block-data="blocks"
+            :block-data="currentPageData"
             :is-scroll-view="isHome"
             :show-intersect="showPagination"
+            :has-more="hasMore"
+            :pages="numberOfPages"
             @loadMore="loadMoreData"
         />
     </v-card>
@@ -28,6 +31,7 @@ import BN from 'bignumber.js'
 import {
     useGetBlocksArrayByNumberQuery,
     GetBlocksArrayByNumberQuery as TypeBlocks,
+    BlockSummaryFragment,
     NewBlockTableDocument,
     GetBlocksArrayByNumberQuery,
     NewBlockTableSubscription
@@ -37,6 +41,8 @@ import { useDisplay } from 'vuetify'
 import { Q_BLOCKS_AND_TXS, ROUTE_NAME } from '@core/router/routesNames'
 import { useRouter } from 'vue-router'
 const { smAndDown } = useDisplay()
+import { ITEMS_PER_PAGE } from '@core/constants'
+import { useAppPaginate } from '@core/composables/AppPaginate/useAppPaginate.composable'
 
 interface BlockMap {
     [key: number]: TypeBlocks
@@ -46,7 +52,6 @@ interface ComponentState {
     initialLoad: boolean
     hasError: boolean
     indexedBlocks: BlockMap
-    index: number
     totalPages: number
     startBlock: number
 }
@@ -55,13 +60,11 @@ const state: ComponentState = reactive({
     initialLoad: true,
     hasError: false,
     indexedBlocks: {},
-    index: 0,
     totalPages: 0,
     startBlock: 0
 })
 
 const props = defineProps({
-    maxItems: Number,
     pageType: {
         type: String,
         default: 'home'
@@ -73,7 +76,7 @@ const props = defineProps({
  * COMPUTED
  * =======================================================
  */
-const blocks = computed<TypeBlocks | []>(() => {
+const blocks = computed<Array<BlockSummaryFragment | null> | []>(() => {
     if (blockArrays.value && !state.initialLoad) {
         return blockArrays.value.getBlocksArrayByNumber
     }
@@ -107,12 +110,14 @@ const isHome = computed<boolean>(() => {
     return props.pageType === 'home'
 })
 
-const currentPage = computed<number>(() => {
-    return state.index
-})
+const { numberOfPages, pageData: currentPageData, setPageNum, pageNum } = useAppPaginate(blocks)
 
 const showPagination = computed<boolean>(() => {
-    return !state.initialLoad && !isHome.value && state.startBlock - props.maxItems > 0
+    return !state.initialLoad && !isHome.value && blocks.value.length > 0
+})
+
+const hasMore = computed<boolean>(() => {
+    return state.startBlock - ITEMS_PER_PAGE > 0
 })
 
 /*
@@ -129,7 +134,7 @@ const {
     fetchMore
 } = useGetBlocksArrayByNumberQuery(
     () => ({
-        limit: props.maxItems
+        limit: ITEMS_PER_PAGE
     }),
     { notifyOnNetworkStatusChange: true }
 )
@@ -138,10 +143,9 @@ function subscribeToMoreHandler() {
     return {
         document: NewBlockTableDocument,
         updateQuery: (previousResult: GetBlocksArrayByNumberQuery, { subscriptionData }: { subscriptionData: NewBlockTableSubscription }) => {
-            if (previousResult && subscriptionData.data.newBlockFeed) {
+            if (previousResult && subscriptionData.newBlockFeed) {
                 const prevB = [...previousResult.getBlocksArrayByNumber.slice(0)]
-                const newB = subscriptionData.data.newBlockFeed
-                newB.txFail = 0
+                const newB = { ...subscriptionData.newBlockFeed, txFail: 0 }
                 const index = prevB.findIndex(block => block?.number === newB.number)
                 if (index != -1) {
                     prevB.splice(index, 1, newB)
@@ -165,18 +169,18 @@ function subscribeToMoreHandler() {
  * =======================================================
  */
 const setPage = async (page: number, reset = false): Promise<boolean> => {
-    state.index = page
+    setPageNum(page)
     if (reset) {
         state.indexedBlocks = {}
         state.initialLoad = true
         await refetchBlockArray()
     } else {
-        const from = state.startBlock - props.maxItems * state.index
-        if (from >= 0 && !state.indexedBlocks[state.index]) {
+        const from = state.startBlock - ITEMS_PER_PAGE * (pageNum.value - 1)
+        if (from >= 0 && !state.indexedBlocks[pageNum.value]) {
             await fetchMore({
                 variables: {
                     fromBlock: from,
-                    limit: props.maxItems
+                    limit: ITEMS_PER_PAGE
                 },
                 updateQuery: (previousResult, { fetchMoreResult }) => {
                     return {
@@ -193,22 +197,24 @@ onBlockArrayLoaded(result => {
     if (!result.loading) {
         if (state.initialLoad) {
             state.initialLoad = false
-            state.startBlock = result.data.getBlocksArrayByNumber[0].number
-            state.index = 0
-            state.totalPages = Math.ceil(new BN(state.startBlock + 1).div(props.maxItems).toNumber())
+            state.startBlock = result.data.getBlocksArrayByNumber[0]?.number || 0
+            setPageNum(1)
+            state.totalPages = Math.ceil(new BN(state.startBlock + 1).div(ITEMS_PER_PAGE).toNumber())
         }
         if (props.pageType === 'home') {
-            if (result.data.getBlocksArrayByNumber[0].number - result.data.getBlocksArrayByNumber[1].number > 1) {
-                refetchBlockArray()
+            if (result.data.getBlocksArrayByNumber.length > 1) {
+                if (result.data.getBlocksArrayByNumber[0].number - result.data.getBlocksArrayByNumber[1].number > 1) {
+                    refetchBlockArray()
+                }
             }
         }
         const newBlocks = result.data.getBlocksArrayByNumber
-        state.indexedBlocks[state.index] = props.pageType === 'home' ? newBlocks.slice(0, props.maxItems) : newBlocks
+        state.indexedBlocks[pageNum.value] = props.pageType === 'home' ? newBlocks.slice(0, ITEMS_PER_PAGE) : newBlocks
     }
 })
 
-const loadMoreData = () => {
-    setPage(state.index + 1)
+const loadMoreData = (pageNum: number) => {
+    setPage(pageNum)
 }
 
 const router = useRouter()

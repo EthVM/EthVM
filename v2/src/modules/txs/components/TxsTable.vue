@@ -21,33 +21,34 @@
               TABLE BODY
             =====================================================================================
         -->
-        <div v-if="!hasMessage" class="p-ten-top">
-            <template v-if="!props.isLoading">
+        <div v-if="!hasMessage">
+            <div v-if="!props.isLoading" class="p-ten-top">
                 <template v-if="txsData.length > 0">
-                    <div v-for="(tx, index) in displayData" :key="index">
+                    <div v-for="(tx, index) in txsData" :key="index">
                         <txs-table-row :tx="tx" :is-pending="props.pending" :is-block="props.isBlock" />
                     </div>
                 </template>
                 <app-no-result v-else text="This block does not have any transactions" class="mt-4 mt-sm-6" />
-            </template>
-            <template v-if="props.isLoading">
+            </div>
+            <div v-if="props.isLoading" style="padding-top: 6px">
                 <div v-for="i in props.maxItems" :key="i" class="my-5">
-                    <div class="skeleton-box rounded-xl my-5" style="height: 24px"></div>
+                    <div class="skeleton-box rounded-xl my-5" style="height: 40px"></div>
                 </div>
+            </div>
+            <template v-if="props.showIntersect">
+                <app-pagination :length="pages" :has-next="props.hasMore" @update:modelValue="$emit('loadMore', $event)" />
             </template>
-            <app-intersect v-if="props.showIntersect" @intersect="$emit('loadMore')">
-                <div class="skeleton-box rounded-xl mt-1 my-4" style="height: 24px"></div>
-            </app-intersect>
         </div>
     </div>
 </template>
 
 <script setup lang="ts">
-import { useDisplay } from 'vuetify/lib/framework.mjs'
-import { computed } from 'vue'
 import TxsTableRow from '@module/txs/components/TxsTableRow.vue'
 import AppIntersect from '@core/components/AppIntersect.vue'
 import AppNoResult from '@core/components/AppNoResult.vue'
+import AppPagination from '@core/components/AppPagination.vue'
+import { useDisplay } from 'vuetify/lib/framework.mjs'
+import { computed } from 'vue'
 
 const { xs, mdAndDown } = useDisplay()
 
@@ -56,6 +57,7 @@ const props = defineProps({
     isLoading: Boolean,
     maxItems: Number,
     index: Number,
+    pages: Number,
     address: {
         type: String,
         default: ''
@@ -76,7 +78,15 @@ const props = defineProps({
         type: Boolean,
         default: false
     },
+    initialLoad: {
+        type: Boolean,
+        default: false
+    },
     showIntersect: {
+        type: Boolean,
+        default: false
+    },
+    hasMore: {
         type: Boolean,
         default: false
     }
@@ -84,16 +94,6 @@ const props = defineProps({
 
 const hasMessage = computed<boolean>(() => {
     return props.tableMessage !== ''
-})
-
-const displayData = computed<any[]>(() => {
-    if (props.isBlock && props.txsData) {
-        const maxItems = props.maxItems || 10
-        const index = props.index || 0
-        const end = index * maxItems || props.maxItems
-        return props.txsData.slice(0, end)
-    }
-    return props.txsData || []
 })
 </script>
 

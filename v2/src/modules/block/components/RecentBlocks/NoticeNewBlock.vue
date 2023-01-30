@@ -59,6 +59,7 @@ const onReload = () => {
     state.countTotal = 0
     state.newTxsCount = 0
     state.newUncles = 0
+    state.valueString = 0
 }
 
 const buttonText = computed<string>(() => {

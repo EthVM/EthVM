@@ -18,36 +18,40 @@
               TABLE BODY
             =====================================================================================
         -->
-        <div v-if="!hasMessage" class="p-ten-top">
-            <template v-if="!props.isLoading">
+        <div v-if="!hasMessage">
+            <div v-if="!props.isLoading" class="p-ten-top">
                 <div v-for="(block, index) in props.blockData" :key="index">
                     <table-blocks-row :block="block" :page-type="props.pageType" />
                 </div>
-            </template>
-            <div v-if="props.isLoading">
+            </div>
+            <div v-if="props.isLoading" style="padding-top: 6px">
                 <div v-for="i in props.maxItems" :key="i">
-                    <div class="skeleton-box rounded-xl my-4" style="height: 24px"></div>
+                    <div class="skeleton-box rounded-xl my-5" style="height: 32px"></div>
                 </div>
             </div>
-            <app-intersect v-if="props.showIntersect" @intersect="$emit('loadMore')">
-                <div class="skeleton-box rounded-xl mt-1 my-4" style="height: 24px"></div>
-            </app-intersect>
+            <template v-if="props.showIntersect">
+                <app-pagination :length="pages" :has-next="props.hasMore" @update:modelValue="handlePageChange" />
+            </template>
         </div>
     </div>
 </template>
 
 <script setup lang="ts">
 import TableBlocksRow from '@/modules/block/components/RecentBlocks/BlocksTableRow.vue'
+import AppPagination from '@core/components/AppPagination.vue'
 import AppIntersect from '@core/components/AppIntersect.vue'
 import { useDisplay } from 'vuetify/lib/framework.mjs'
 import { computed } from 'vue'
+import { useAppPaginate } from '@core/composables/AppPaginate/useAppPaginate.composable'
 
 const { xs, mdAndDown } = useDisplay()
 
 const props = defineProps({
     blockData: Array,
     isLoading: Boolean,
+    initialLoad: Boolean,
     maxItems: Number,
+    pages: Number,
     index: Number,
     tableMessage: {
         type: String,
@@ -64,12 +68,24 @@ const props = defineProps({
     showIntersect: {
         type: Boolean,
         default: false
+    },
+    hasMore: {
+        type: Boolean,
+        default: false
     }
 })
 
 const hasMessage = computed<boolean>(() => {
     return props.tableMessage !== ''
 })
+
+const emit = defineEmits<{
+    (e: 'loadMore', page: number): void
+}>()
+
+const handlePageChange = (page: number) => {
+    emit('loadMore', page)
+}
 </script>
 
 <style scoped lang="css">
