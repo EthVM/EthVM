@@ -19,7 +19,7 @@
                                 height="154"
                                 class="border-radius-nft"
                                 :index="index"
-                                :tokens="tokens"
+                                :tokens="currentPageData"
                             ></token-nft-img>
                             <p v-if="!props.isOverview && token.meta && token.meta.name">{{ token.meta.name }}</p>
                             <p v-if="!props.isOverview && (!token.meta || !token.meta.name)">Unknown</p>
@@ -35,7 +35,7 @@
                 </v-row>
             </template>
             <template v-if="showPagination">
-                <app-pagination :length="numberOfPages" :has-next="hasMore" @update:modelValue="loadMoreData" :current-page="pageNum" />
+                <app-pagination :length="numberOfPages" :has-more="hasMore" @update:modelValue="loadMoreData" :current-page="pageNum" />
             </template>
         </div>
     </v-card>
@@ -133,7 +133,6 @@ const showPagination = computed<boolean>(() => {
 
 const setPage = () => {
     if (pageNum.value > numberOfPages.value && hasMore.value) {
-        console.log(`%c${pageNum.value}, ${resultBalance.value?.getOwnersNFTTokens.nextKey}`, 'color: red')
         fetchMore({
             variables: {
                 address: props.addressHash,

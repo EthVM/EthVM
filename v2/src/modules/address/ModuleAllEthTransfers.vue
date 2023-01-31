@@ -27,7 +27,7 @@
         </div>
     </div>
     <template v-if="showPagination">
-        <app-pagination :length="numberOfPages" :has-next="hasMore" @update:modelValue="loadMoreData" :current-page="pageNum" />
+        <app-pagination :length="numberOfPages" :has-more="hasMore" @update:modelValue="loadMoreData" :current-page="pageNum" />
     </template>
 </template>
 
