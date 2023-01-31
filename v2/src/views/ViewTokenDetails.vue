@@ -1,18 +1,21 @@
 <template>
-    <v-row :class="rowMargin">
+    <div>
+        <token-details
+            v-if="!hasError"
+            :address-ref="props.addressRef"
+            :is-holder="state.isHolder"
+            :holder-address="state.holderAddress"
+            @errorDetails="setError"
+            :tab="$route.query.t"
+        />
+    </div>
+    <!-- <v-row :class="rowMargin">
         <v-col cols="12" :class="columnPadding">
-            <token-details
-                v-if="!hasError"
-                :address-ref="props.addressRef"
-                :is-holder="state.isHolder"
-                :holder-address="state.holderAddress"
-                @errorDetails="setError"
-                :tab="$route.query.t"
-            />
+
             <app-error v-else :has-error="hasError" :message="state.error" />
             <app-message :messages="state.errorMessages" />
         </v-col>
-    </v-row>
+    </v-row> -->
 </template>
 
 <script setup lang="ts">
