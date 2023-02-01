@@ -73,6 +73,8 @@ const props = defineProps({
  * NFT Data
  -------------------------*/
 
+const NFT_ITEMS_PER_PAGE = 48
+
 const {
     result: resultBalance,
     loading: loadingBalance,
@@ -80,7 +82,7 @@ const {
 } = useGetOwnersNftTokensQuery(
     () => ({
         address: props.addressHash,
-        limit: props.isOverview ? 9 : ITEMS_PER_PAGE
+        limit: props.isOverview ? 9 : NFT_ITEMS_PER_PAGE
     }),
     { notifyOnNetworkStatusChange: true }
 )
@@ -121,7 +123,7 @@ const tokens = computed<NFTDetails[]>(() => {
         : []
 })
 
-const { numberOfPages, pageData: currentPageData, setPageNum, pageNum } = useAppPaginate(tokens, 'recentNfts')
+const { numberOfPages, pageData: currentPageData, setPageNum, pageNum } = useAppPaginate(tokens, 'recentNfts', NFT_ITEMS_PER_PAGE)
 
 const hasMore = computed<boolean>(() => {
     return !!resultBalance.value?.getOwnersNFTTokens.nextKey
@@ -136,7 +138,7 @@ const setPage = () => {
         fetchMore({
             variables: {
                 address: props.addressHash,
-                limit: ITEMS_PER_PAGE,
+                limit: NFT_ITEMS_PER_PAGE,
                 nextKey: resultBalance.value?.getOwnersNFTTokens.nextKey
             },
             updateQuery: (prev, { fetchMoreResult }) => {
