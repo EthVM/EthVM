@@ -25,8 +25,9 @@
                         <div v-else class="skeleton-box rounded-xl mr-10" style="height: 40px; width: 120px"></div>
                     </v-col>
                     <v-col cols="6" sm="2">
-                        <p class="font-weight-bold">{{ leftTitle }}</p>
-                        <p class="text-body">{{ leftText }}</p>
+                        <p v-if="leftText !== ''" class="font-weight-bold">{{ leftTitle }}</p>
+                        <p v-if="leftText !== ''" class="text-body">{{ leftText }}</p>
+                        <div v-else class="skeleton-box rounded-xl mr-10" style="height: 40px; width: 120px"></div>
                     </v-col>
                 </v-row>
             </v-card>
@@ -244,7 +245,10 @@ const leftText = computed<string>(() => {
         return decimals.value.toString()
     }
     if (state.standard === TransferType.Erc1155 || state.standard === TransferType.Erc721) {
-        return '50+'
+        if (!loadingNftMeta.value && nftMetaResult.value?.getNFTContractMeta) {
+            const addSign = nftMetaResult.value?.getNFTContractMeta.nextKey ? '+' : ''
+            return `${addSign}${nftMetaResult.value?.getNFTContractMeta.collections.length}`
+        }
     }
     return ''
 })
