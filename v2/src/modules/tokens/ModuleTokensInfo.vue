@@ -63,7 +63,7 @@
             <v-divider class="my-0 mt-md-4 mx-n4 mx-sm-n6" />
             <template v-if="!loadingCoinData">
                 <div v-if="tokensInPage.length > 0">
-                    <div v-for="token in tokensInPage" :key="token.contract">
+                    <div v-for="token in currentPageData" :key="token.contract">
                         <token-market-info-table-row v-if="token" :token="token" />
                     </div>
                 </div>
@@ -77,9 +77,12 @@
                 </div>
             </template>
             <template v-else>
-                <div v-for="item in 10" :key="item" class="my-2">
-                    <div class="skeleton-box rounded-xl mt-1 my-4" style="height: 24px"></div>
+                <div v-for="item in 10" :key="item" style="padding: 10px 0">
+                    <div class="skeleton-box rounded-xl" style="height: 40px"></div>
                 </div>
+            </template>
+            <template v-if="showPagination">
+                <app-pagination :length="numberOfPages" @update:modelValue="loadMoreData" :current-page="pageNum" />
             </template>
         </v-card>
     </div>
@@ -88,6 +91,7 @@
 <script setup lang="ts">
 import AppTabs from '@core/components/AppTabs.vue'
 import AppInput from '@core/components/AppInput.vue'
+import AppPagination from '@core/components/AppPagination.vue'
 import { Tab } from '@/core/components/props'
 import TokenMarketInfoTableRow from '@module/tokens/components/TokenMarketInfo/TableRowTokenMarketInfo.vue'
 import ModuleAddFavToken from './ModuleAddFavToken.vue'
@@ -100,6 +104,7 @@ import { TOKEN_FILTER_VALUES, KEY, DIRECTION, TokenSortMarket, TokenMarket } fro
 
 import { ADDRESS_ROUTE_QUERY } from '@core/router/routesNames'
 import { searchHelper } from '@core/helper/search'
+import { useAppPaginate } from '@core/composables/AppPaginate/useAppPaginate.composable'
 
 const routes = ADDRESS_ROUTE_QUERY.Q_NFTS
 
@@ -171,6 +176,16 @@ const tokensInPage = computed<TokenMarket[]>(() => {
     return []
 })
 
+const tabId = computed<string>(() => {
+    return state.activeList === 'all' ? 'tabAllTokens' : 'tabFavoriteTokens'
+})
+
+const { numberOfPages, pageData: currentPageData, setPageNum, pageNum } = useAppPaginate(tokensInPage, tabId, 50)
+
+const showPagination = computed<boolean>(() => {
+    return !store.loadingCoinData && tokensInPage.value.length > 0
+})
+
 const sortIcon = computed<string>(() => {
     return state.sortDirection === DIRECTION.HIGH ? 'south' : 'north'
 })
@@ -185,8 +200,8 @@ const SORT_KEY = KEY
  * Sets page number and reset value and emit
  * @param page {Number}
  */
-const setPage = (page: number): void => {
-    state.index = page
+const loadMoreData = (page: number): void => {
+    setPageNum(page)
 }
 
 const sortTable = (key: KEY): void => {

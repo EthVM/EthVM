@@ -115,8 +115,8 @@ const {
     })
 )
 
-const transfers = computed<Array<TxsTransfersFragment | null> | undefined | null>(() => {
-    return txsTransfersData.value?.getEthTransactionTransfers.transfers
+const transfers = computed<Array<TxsTransfersFragment | null>>(() => {
+    return txsTransfersData.value?.getEthTransactionTransfers.transfers || []
 })
 
 const showPagination = computed<boolean>(() => {
