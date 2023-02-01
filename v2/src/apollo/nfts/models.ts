@@ -19,6 +19,8 @@ export interface RespCollection {
     ]
     metaplex_mint: string | null
     metaplex_first_verified_creator: string | null
+    distinct_owner_count: number | null
+    distinct_nft_count: number | null
     spam_score: string | null
     floor_prices: [
         {
@@ -86,5 +88,12 @@ export interface RespNFT {
 export interface ResponceTokens {
     result: {
         nfts?: RespNFT[]
+    }
+}
+
+export interface ResponceCollection {
+    result: {
+        previous: string | null
+        collections: RespCollection[]
     }
 }

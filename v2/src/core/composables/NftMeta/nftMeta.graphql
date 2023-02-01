@@ -28,5 +28,3 @@ fragment NFTMeta on RespNFT {
     }
 }
 
-,
-

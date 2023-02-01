@@ -41,7 +41,7 @@
                 <div v-if="loadingTokenDetails || state.hasError || loadingCoinData" class="skeleton-box rounded-xl my-2" style="height: 280px"></div>
                 <div v-else>
                     <token-details-erc20
-                        v-if="tokenDetails"
+                        v-if="tokenDetails && state.standard === TransferType.Erc20"
                         :address-ref="props.addressRef"
                         :token-details="tokenDetails"
                         :is-loading="loadingTokenDetails || state.hasError"
@@ -90,7 +90,8 @@ import { Tab } from '@core/components/props'
 import {
     TokenDetailsFragment as TokenInfo,
     useGetTokenInfoByContractQuery,
-    GetTokenInfoByContractQuery
+    GetTokenInfoByContractQuery,
+    useGetNftContractMetaQuery
 } from '@module/tokens/apollo/TokenDetails/tokenDetails.generated'
 import { eth } from '@core/helper'
 import { ErrorMessageToken } from '@module/tokens/models/ErrorMessagesForTokens'
@@ -130,7 +131,6 @@ const props = defineProps({
 interface ComponentState {
     address: string
     hasError: boolean
-    isNft: boolean
     tab: string
     standard: string
 }
@@ -138,7 +138,6 @@ interface ComponentState {
 const state: ComponentState = reactive({
     address: '',
     hasError: false,
-    isNft: true,
     tab: props.tab,
     standard: ''
 })
@@ -181,6 +180,29 @@ const tokenDetails = computed<TokenInfo | null>(() => {
         return res.getTokenInfoByContract
     }
     return null
+})
+/*
+===================================================================================
+Collection Meta:
+===================================================================================
+*/
+const {
+    loading: loadingNftMeta,
+    onError: onNftMetaError,
+    result: nftMetaResult,
+    onResult: onErc20TokenHolderLoaded
+} = useGetNftContractMetaQuery(
+    () => ({
+        input: props.addressRef
+    }),
+    () => ({
+        clientId: 'nftClient',
+        enabled: state.standard === TransferType.Erc1155 || state.standard === TransferType.Erc721
+    })
+)
+
+onErc20TokenHolderLoaded(({ data }) => {
+    console.log(data)
 })
 
 /*

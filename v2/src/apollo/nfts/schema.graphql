@@ -59,6 +59,8 @@ type RespCollection {
     metaplex_first_verified_creator: String
     spam_score: String
     floor_prices: [ RespNftFloorPrice!]!
+    distinct_owner_count: Int
+    distinct_nft_count: Int
 }
 type RespNftMeta {
     image_original_url: String
@@ -99,8 +101,14 @@ type RespTokens {
     nfts: [RespNFT!]
 }
 
+type RespCollections {
+    nextKey: String
+    collections: [RespCollection!]!
+}
+
 extend type Query {
     getNFTTokensMeta(input: String!): RespTokens
+    getNFTContractMeta(input: String!): RespCollections
 }
 
 

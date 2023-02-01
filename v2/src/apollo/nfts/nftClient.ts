@@ -14,7 +14,7 @@ import {
 } from './schema.graphql'
 import { ApolloClient, InMemoryCache } from '@apollo/client/core'
 import { RestLink } from 'apollo-link-rest'
-import { ResponceTokens } from './models'
+import { ResponceTokens, ResponceCollection } from './models'
 
 const nftTypeDef = `${RespContract} ${RespNftOwner} ${RespNftPreviews} ${RespNftFloorPrice}  ${RespPaymentToken} ${RespMarketplace} ${RespCollection} ${RespNftMeta} ${RespNFT} ${RespNftTrait} ${RespTokens} ${Query}`
 
@@ -54,11 +54,19 @@ const transformNFTMeta = (data: ResponceTokens) => {
     }
     return data.result
 }
+
+const transformContractMeta = (data: ResponceCollection) => {
+    return {
+        nextKey: data.result.previous,
+        collections: data.result.collections
+    }
+}
+
 const nftRestLink = new RestLink({
     uri: 'https://partners.mewapi.io/nfts',
     responseTransformer: async (response, typeName) => {
         const data = await response.json()
-        return transformNFTMeta(data)
+        return typeName === 'RespTokens' ? transformNFTMeta(data) : transformContractMeta(data)
     }
 })
 
