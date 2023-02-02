@@ -68,7 +68,7 @@
         <app-no-result v-else :text="noResultText" class="mt-4 mt-sm-6 mb-5"></app-no-result>
     </template>
     <template v-if="showPagination">
-        <app-pagination :length="numberOfPages" :has-next="hasMore" @update:modelValue="loadMoreData" :current-page="pageNum" />
+        <app-pagination :length="numberOfPages" :has-more="hasMore" @update:modelValue="loadMoreData" :current-page="pageNum" />
     </template>
 </template>
 

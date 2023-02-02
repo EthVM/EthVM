@@ -7,17 +7,17 @@ import { computed, onMounted, ref, watch } from 'vue'
 
 interface ComponentProps {
     length: number
-    hasNext?: boolean
+    hasMore?: boolean
     currentPage?: number
 }
 
 const props = withDefaults(defineProps<ComponentProps>(), {
-    hasNext: false
+    hasMore: false
 })
 
 const page = ref<number>(1)
 const pageLength = computed<number>(() => {
-    return props.hasNext && props.length <= page.value ? props.length + 1 : props.length
+    return props.hasMore ? props.length + 1 : props.length
 })
 
 watch(

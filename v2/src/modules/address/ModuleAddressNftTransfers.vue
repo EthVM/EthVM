@@ -34,17 +34,17 @@
                 <v-col v-if="!props.isOverview" cols="2" class="py-0"> Timestamp </v-col>
             </v-row>
             <v-divider class="my-0 mt-md-4 mx-n4 mx-sm-n6" />
-            <template v-if="initialLoad || loadingMeta">
-                <div v-for="item in 10" :key="item" class="my-2">
-                    <div class="skeleton-box rounded-xl mt-4" style="height: 40px"></div>
+            <div v-if="initialLoad || loadingMeta || loadingTransfers" class="p-ten-top">
+                <div v-for="item in 10" :key="item" style="padding: 10px 0">
+                    <div class="skeleton-box rounded-xl" style="height: 40px"></div>
                 </div>
-            </template>
+            </div>
             <template v-else>
                 <template v-if="transfers.length < 1">
                     <app-no-result text="This address does not have any NFT transfer history" class="mt-4 mt-sm-6"></app-no-result>
                 </template>
-                <div v-else-if="transfers.length > 0 && renderState.renderTable" class="p-ten-top">
-                    <div v-for="(transfer, index) in transfers" :key="`${transfer?.transfer.transactionHash} - ${index}`">
+                <div v-else-if="transfers.length > 0" class="p-ten-top">
+                    <div v-for="(transfer, index) in currentPageData" :key="`${transfer?.transfer.transactionHash} - ${index}`">
                         <nft-transfers-table-row
                             v-if="transfer"
                             :transfer="transfer"
@@ -54,10 +54,10 @@
                             :address-hash="props.addressHash"
                         />
                     </div>
-                    <app-intersect v-if="!props.isOverview && hasMore" @intersect="loadMoreData">
-                        <div class="skeleton-box rounded-xl mb-4" style="height: 40px"></div>
-                    </app-intersect>
                 </div>
+            </template>
+            <template v-if="showPagination">
+                <app-pagination :length="numberOfPages" :has-more="hasMore" @update:modelValue="loadMoreData" :current-page="pageNum" />
             </template>
         </div>
     </v-card>
@@ -69,7 +69,7 @@ import AppNewUpdate from '@core/components/AppNewUpdate.vue'
 import AppBtn from '@core/components/AppBtn.vue'
 import AppBtnIcon from '@core/components/AppBtnIcon.vue'
 import NftTransfersTableRow from '@module/address/components/TableRowNftTransfers.vue'
-import AppIntersect from '@core/components/AppIntersect.vue'
+import AppPagination from '@core/components/AppPagination.vue'
 import AppNoResult from '@/core/components/AppNoResult.vue'
 import { MarketDataFragment as TokenMarketData } from '@core/composables/CoinData/getLatestPrices.generated'
 import { useCoinData } from '@core/composables/CoinData/coinData.composable'
@@ -83,8 +83,9 @@ import { useAppTableRowRender } from '@core/composables/AppTableRowRender/useApp
 import { useGetNftsMeta } from '@core/composables/NftMeta/useGetNftsMeta.composable'
 import { NftMetaFragment } from '@core/composables/NftMeta/nftMeta.generated'
 import { NftId, generateId, generateMapId } from '@/core/composables/NftMeta/helpers'
+import { useAppPaginate } from '@core/composables/AppPaginate/useAppPaginate.composable'
+import { ITEMS_PER_PAGE } from '@core/constants'
 
-const MAX_ITEMS = 10
 const OVERVIEW_MAX_ITEMS = 6
 const MOBILE_MAX_ITEMS = 4
 
@@ -133,7 +134,7 @@ const {
 } = useGetAddressNftTransfersQuery(
     () => ({
         hash: props.addressHash,
-        _limit: MAX_ITEMS
+        _limit: ITEMS_PER_PAGE
     }),
     { notifyOnNetworkStatusChange: true }
 )
@@ -177,19 +178,19 @@ const { renderState } = useAppTableRowRender(transfersLength.value)
 
 const transfers = computed<Array<Transfer | null>>(() => {
     if (transferHistory.value.length > 0) {
-        const start = OVERVIEW_MAX_ITEMS * state.index
-        const end = start + OVERVIEW_MAX_ITEMS > transferHistory.value?.length ? transferHistory.value?.length : start + OVERVIEW_MAX_ITEMS
         // If on mobile screen and on overview page
         if (mdAndDown.value && props.isOverview) {
-            return transferHistory.value.slice(start, MOBILE_MAX_ITEMS)
+            return transferHistory.value.slice(0, MOBILE_MAX_ITEMS)
         }
         if (props.isOverview) {
-            return transferHistory.value.slice(start, end)
+            return transferHistory.value.slice(0, OVERVIEW_MAX_ITEMS)
         }
-        return renderState.isActive ? transferHistory.value.slice(0, renderState.maxItems) : transferHistory.value
+        return transferHistory.value
     }
     return []
 })
+
+const { numberOfPages, pageData: currentPageData, setPageNum, pageNum } = useAppPaginate(transfers, 'nftTransfers')
 
 const getRowMeta = (contract: string, id: string): NftMetaFragment | undefined => {
     return nftMeta.value.get(generateMapId(contract, id))
@@ -202,16 +203,20 @@ const initialLoad = computed<boolean>(() => {
     return !result.value
 })
 
+const showPagination = computed<boolean>(() => {
+    return !initialLoad.value && !!transfers.value && transfers.value.length > 0 && !props.isOverview
+})
+
 const setPage = (page: number, reset = false) => {
     if (reset) {
         refetch()
         emit('resetCount', AddressEventType.NewErc721Transfer, true)
     } else {
-        if (page > state.index && hasMore.value) {
+        if (pageNum.value > numberOfPages.value && hasMore.value) {
             fetchMore({
                 variables: {
                     hash: props.addressHash,
-                    _limit: MAX_ITEMS,
+                    _limit: ITEMS_PER_PAGE,
                     _nextKey: result.value?.getNFTTransfers.nextKey
                 },
                 updateQuery: (prev, { fetchMoreResult }) => {
@@ -226,13 +231,11 @@ const setPage = (page: number, reset = false) => {
             })
         }
     }
-    state.index = page
 }
 
-const loadMoreData = (e: boolean): void => {
-    if (transfers.value.length && e && !props.isOverview) {
-        setPage(state.index + 1)
-    }
+const loadMoreData = (pageNum: number): void => {
+    setPageNum(pageNum)
+    setPage(pageNum)
 }
 
 const router = useRouter()

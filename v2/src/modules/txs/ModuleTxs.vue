@@ -166,7 +166,7 @@ const isHome = computed<boolean>(() => {
 
 const hasMore = computed<boolean>(() => {
     if (isBlock.value) {
-        return pageNum.value < numberOfPages.value
+        return false
     }
     return !!allEthTransfers.value?.nextKey
 })

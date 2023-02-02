@@ -36,7 +36,7 @@
                 </div>
             </div>
             <template v-if="props.showIntersect">
-                <app-pagination :length="pages" :has-next="props.hasMore" @update:modelValue="$emit('loadMore', $event)" />
+                <app-pagination :length="pages" :has-more="props.hasMore" @update:modelValue="$emit('loadMore', $event)" />
             </template>
         </div>
     </div>

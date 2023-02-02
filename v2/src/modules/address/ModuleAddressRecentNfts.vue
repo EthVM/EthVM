@@ -12,14 +12,14 @@
                 </template>
                 <template v-else>
                     <v-row :dense="xs">
-                        <v-col v-for="(token, index) in tokens" :key="index" cols="6" sm="4" :lg="props.isOverview ? '4' : '2'">
+                        <v-col v-for="(token, index) in currentPageData" :key="index" cols="6" sm="4" :lg="props.isOverview ? '4' : '2'">
                             <token-nft-img
                                 :loading="loadingMeta"
                                 :nft="token"
                                 height="154"
                                 class="border-radius-nft"
                                 :index="index"
-                                :tokens="tokens"
+                                :tokens="currentPageData"
                             ></token-nft-img>
                             <p v-if="!props.isOverview && token.meta && token.meta.name">{{ token.meta.name }}</p>
                             <p v-if="!props.isOverview && (!token.meta || !token.meta.name)">Unknown</p>
@@ -34,6 +34,9 @@
                     </v-col>
                 </v-row>
             </template>
+            <template v-if="showPagination">
+                <app-pagination :length="numberOfPages" :has-more="hasMore" @update:modelValue="loadMoreData" :current-page="pageNum" />
+            </template>
         </div>
     </v-card>
 </template>
@@ -42,6 +45,7 @@
 import { computed } from 'vue'
 import AppBtn from '@core/components/AppBtn.vue'
 import AppBtnIcon from '@core/components/AppBtnIcon.vue'
+import AppPagination from '@core/components/AppPagination.vue'
 import { useDisplay } from 'vuetify'
 import { useGetOwnersNftTokensQuery } from './apollo/AddressTokens/tokens.generated'
 import { useRouter } from 'vue-router'
@@ -51,7 +55,9 @@ import TokenNftImg from '../tokens/components/TokenNFT/TokenNftImg.vue'
 import { NFTDetails } from '../tokens/components/TokenNFT/propModel'
 import { useGetNftsMeta } from '@core/composables/NftMeta/useGetNftsMeta.composable'
 import { NftId, generateId, generateMapId } from '@/core/composables/NftMeta/helpers'
-import { NftType } from '@/apollo/types'
+import { AddressEventType, NftType } from '@/apollo/types'
+import { ITEMS_PER_PAGE } from '@core/constants'
+import { useAppPaginate } from '@core/composables/AppPaginate/useAppPaginate.composable'
 const { xs } = useDisplay()
 const props = defineProps({
     addressHash: {
@@ -67,10 +73,16 @@ const props = defineProps({
  * NFT Data
  -------------------------*/
 
-const { result: resultBalance, loading: loadingBalance } = useGetOwnersNftTokensQuery(
+const NFT_ITEMS_PER_PAGE = 48
+
+const {
+    result: resultBalance,
+    loading: loadingBalance,
+    fetchMore
+} = useGetOwnersNftTokensQuery(
     () => ({
         address: props.addressHash,
-        limit: props.isOverview ? 9 : 50
+        limit: props.isOverview ? 9 : NFT_ITEMS_PER_PAGE
     }),
     { notifyOnNetworkStatusChange: true }
 )
@@ -110,6 +122,42 @@ const tokens = computed<NFTDetails[]>(() => {
           })
         : []
 })
+
+const { numberOfPages, pageData: currentPageData, setPageNum, pageNum } = useAppPaginate(tokens, 'recentNfts', NFT_ITEMS_PER_PAGE)
+
+const hasMore = computed<boolean>(() => {
+    return !!resultBalance.value?.getOwnersNFTTokens.nextKey
+})
+
+const showPagination = computed<boolean>(() => {
+    return !!tokens.value && tokens.value.length > 0 && !props.isOverview
+})
+
+const setPage = () => {
+    if (pageNum.value > numberOfPages.value && hasMore.value) {
+        fetchMore({
+            variables: {
+                address: props.addressHash,
+                limit: NFT_ITEMS_PER_PAGE,
+                nextKey: resultBalance.value?.getOwnersNFTTokens.nextKey
+            },
+            updateQuery: (prev, { fetchMoreResult }) => {
+                return {
+                    getOwnersNFTTokens: {
+                        nextKey: fetchMoreResult?.getOwnersNFTTokens.nextKey,
+                        tokens: [...prev.getOwnersNFTTokens.tokens, ...(fetchMoreResult?.getOwnersNFTTokens.tokens || [])],
+                        __typename: fetchMoreResult?.getOwnersNFTTokens.__typename
+                    }
+                }
+            }
+        })
+    }
+}
+
+const loadMoreData = (pageNum: number): void => {
+    setPageNum(pageNum)
+    setPage()
+}
 
 /**------------------------
  * Router
