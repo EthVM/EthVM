@@ -203,6 +203,9 @@ const setFilter = (index: number) => {
     } else {
         state.filterList[index].isSelected = true
     }
+
+    // reset pagination
+    setPageNum(1)
 }
 const activeFilter = computed<string[] | undefined>(() => {
     if (state.filterList[0].isSelected) {
