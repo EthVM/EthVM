@@ -97,22 +97,26 @@
             </v-col>
         </v-row>
         <!--Token Row -->
-        <div v-else-if="renderState.renderTable" class="mx-n4 mx-sm-n6 px-4 px-sm-6 p-ten-top">
+        <div v-else class="mx-n4 mx-sm-n6 px-4 px-sm-6 p-ten-top">
             <div v-if="tokens.length > 0">
-                <div v-for="token in tokens" :key="token.contract">
+                <div v-for="token in currentPageData" :key="token.contract">
                     <table-row-token-balance :token="token" :is-overview="false" :is-active="false"> </table-row-token-balance>
                 </div>
             </div>
             <app-no-result v-else :text="messageNoTokens" class="mt-3 mt-sm-1"></app-no-result>
         </div>
+        <template v-if="showPagination">
+            <app-pagination :length="numberOfPages" @update:modelValue="loadMoreData" :current-page="pageNum" />
+        </template>
     </div>
 </template>
 
 <script setup lang="ts">
-import { computed, reactive, watch } from 'vue'
 import AppInput from '@core/components/AppInput.vue'
 import AppAddressBlockie from '@/core/components/AppAddressBlockie.vue'
 import TableRowTokenBalance from './components/TableRowTokenBalance.vue'
+import AppPagination from '@core/components/AppPagination.vue'
+import { computed, reactive, watch } from 'vue'
 import { useCoinData } from '@core/composables/CoinData/coinData.composable'
 import { TOKEN_FILTER_VALUES, KEY, DIRECTION, Token } from '@module/address/models/TokenSort'
 import AppNoResult from '@/core/components/AppNoResult.vue'
@@ -122,6 +126,7 @@ import { searchHelper } from '@core/helper/search'
 import { useStore } from '@/store'
 import { TokenSort } from '@module/address/models/TokenSort'
 import { MarketDataFragment as TokenMarketData } from '@core/composables/CoinData/getLatestPrices.generated'
+import { useAppPaginate } from '@core/composables/AppPaginate/useAppPaginate.composable'
 
 const { xs } = useDisplay()
 const { loading: loadingCoinData, getEthereumTokensMap } = useCoinData()
@@ -198,6 +203,9 @@ const setFilter = (index: number) => {
     } else {
         state.filterList[index].isSelected = true
     }
+
+    // reset pagination
+    setPageNum(1)
 }
 const activeFilter = computed<string[] | undefined>(() => {
     if (state.filterList[0].isSelected) {
@@ -279,10 +287,24 @@ const tokens = computed<Token[]>(() => {
         } else {
             _tokens = tokenSorted
         }
-        return renderState.isActive ? _tokens.slice(0, renderState.maxItems) : _tokens
     }
     return _tokens
 })
+
+/**------------------------
+ * Pagination
+ -------------------------*/
+
+const { numberOfPages, pageData: currentPageData, setPageNum, pageNum } = useAppPaginate(tokens, 'tabPortfolioBalances')
+
+const showPagination = computed<boolean>(() => {
+    return store.portfolioIsLoaded && !!tokens.value && tokens.value.length > 0
+})
+
+const loadMoreData = (pageNum: number): void => {
+    setPageNum(pageNum)
+}
+
 /**------------------------
  * Table Sorting
  -------------------------*/
