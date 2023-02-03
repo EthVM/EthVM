@@ -5,7 +5,6 @@
         <v-main class="w-100">
             <v-container :class="[isAddressView || isHomeView ? 'pa-0' : 'px-2 px-sm-6 pt-4 pt-sm-6']" :fluid="isAddressView || isHomeView">
                 <router-view />
-                <app-btn @click="toggleTheme" text="toggle theme"></app-btn>
             </v-container>
             <the-notifications />
         </v-main>
@@ -20,10 +19,11 @@ import TheAppFooter from '@core/components/TheAppFooter.vue'
 import TheAppNavigationDrawerVue from './core/components/TheAppNavigationDrawer.vue'
 import TheNotifications from './core/components/TheNotifications.vue'
 import { useStore } from '@/store'
+import { usePreferredColorScheme } from '@vueuse/core'
 import { useGetLatestPricesQuery } from '@core/composables/CoinData/getLatestPrices.generated'
 import { useSetPortfolio } from './core/composables/Portfolio/useSetPortfolioBalance'
 import { useTheme } from 'vuetify'
-import { computed, watch, reactive } from 'vue'
+import { computed, watch, reactive, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { ROUTE_NAME } from '@core/router/routesNames'
 
@@ -36,12 +36,6 @@ onCoinDataResult(() => {
     store.coinData = coinData.value
     store.loadingCoinData = false
 })
-
-const theme = useTheme()
-
-const toggleTheme = () => {
-    theme.global.name.value = theme.global.current.value.dark ? 'mainnetLightTheme' : 'mainnetDarkTheme'
-}
 
 const route = useRoute()
 /**
@@ -134,6 +128,18 @@ watch(
         }
     }
 )
+
+const theme = useTheme()
+
+onMounted(() => {
+    const preferredColor = usePreferredColorScheme()
+    if (store.appTheme) {
+        theme.global.name.value = store.appTheme
+    } else {
+        theme.global.name.value = preferredColor === 'dark' ? 'mainnetLightTheme' : 'mainnetDarkTheme'
+        store.setDarkMode(theme.global.name.value)
+    }
+})
 </script>
 <style lang="scss">
 .app-view {

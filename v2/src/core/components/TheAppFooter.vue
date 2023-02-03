@@ -75,6 +75,14 @@
                             <v-icon class="ml-2">settings</v-icon>
                         </a>
                         <p class="mb-3">Pricing from Coingecko</p>
+                        <v-switch
+                            @update:modelValue="toggleTheme"
+                            v-model="isDarkMode"
+                            label="Dark mode"
+                            hide-details
+                            color="textPrimary"
+                            class="theme-toggle"
+                        />
                         <div class="d-flex font-weight-light align-center justify-lg-end">
                             <p class="text-uppercase mb-0 mr-2 text-caption font-weight-light">Powered by</p>
                             <div class="d-flex align-center">
@@ -103,6 +111,11 @@
 </template>
 
 <script setup lang="ts">
+import AppBtn from '@core/components/AppBtn.vue'
+import { useTheme } from 'vuetify'
+import { onMounted, ref } from 'vue'
+import { useStore } from '@/store'
+
 const socialIcons = [
     {
         link: 'https://www.facebook.com/MyEtherWallet',
@@ -159,6 +172,20 @@ const socialIcons = [
         altText: 'Telegram icon'
     }
 ]
+
+const theme = useTheme()
+const isDarkMode = ref(false)
+
+const store = useStore()
+
+const toggleTheme = () => {
+    theme.global.name.value = theme.global.current.value.dark ? 'mainnetLightTheme' : 'mainnetDarkTheme'
+    store.setDarkMode(theme.global.name.value)
+}
+
+onMounted(() => {
+    isDarkMode.value = theme.global.name.value === 'mainnetLightTheme'
+})
 </script>
 
 <style lang="scss" scoped>
@@ -178,5 +205,11 @@ a {
 .footer-hero {
     max-width: 250px;
     max-height: 250px;
+}
+
+.theme-toggle {
+    :deep(.v-input__control) {
+        justify-self: flex-end;
+    }
 }
 </style>
