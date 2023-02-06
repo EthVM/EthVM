@@ -111,7 +111,6 @@
 </template>
 
 <script setup lang="ts">
-import AppBtn from '@core/components/AppBtn.vue'
 import { useTheme } from 'vuetify'
 import { onMounted, ref } from 'vue'
 import { useStore } from '@/store'
