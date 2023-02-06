@@ -39,7 +39,7 @@
         -->
         <v-col cols="12" :class="columnPadding">
             <v-card elevation="1" rounded="xl" class="h-100 pa-4 pa-sm-6">
-                <div v-if="loadingTokenDetails || state.hasError || loadingCoinData" class="skeleton-box rounded-xl my-2" style="height: 280px"></div>
+                <div v-if="showLoading" class="skeleton-box rounded-xl my-2" style="height: 280px"></div>
                 <div v-else>
                     <token-details-erc20
                         v-if="tokenDetails && state.standard === TransferType.Erc20"
@@ -166,7 +166,7 @@ const state: ComponentState = reactive({
 })
 
 /**------------------------
- * Route Handling
+ * ERC20 Tokens
  -------------------------*/
 
 const emit = defineEmits<{
@@ -314,6 +314,16 @@ const leftText = computed<string>(() => {
         }
     }
     return ''
+})
+
+const showLoading = computed<boolean>(() => {
+    if (state.standard === TransferType.Erc20) {
+        return loadingCoinData.value || tokenDetails.value === null
+    }
+    if (state.standard === TransferType.Erc1155 || state.standard === TransferType.Erc721) {
+        return loadingNftMeta.value || nftDetails.value === undefined
+    }
+    return true
 })
 /*
 ===================================================================================
