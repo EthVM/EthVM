@@ -38,7 +38,7 @@
         =====================================================================================
         -->
         <v-col cols="12" :class="columnPadding">
-            <v-card elevation="1" rounded="xl" class="pa-4 pa-sm-6 h-100">
+            <v-card elevation="1" rounded="xl" class="h-100 pa-4 pa-sm-6">
                 <div v-if="loadingTokenDetails || state.hasError || loadingCoinData" class="skeleton-box rounded-xl my-2" style="height: 280px"></div>
                 <div v-else>
                     <token-details-erc20
@@ -48,6 +48,21 @@
                         :is-loading="loadingTokenDetails || state.hasError"
                         @errorDetails="emitErrorState"
                     />
+                    <v-carousel
+                        v-if="nftDetails && (state.standard === TransferType.Erc721 || state.standard === TransferType.Erc1155)"
+                        hide-delimiters
+                        height="auto"
+                    >
+                        <template #prev="{ props }">
+                            <app-btn-icon icon="chevron_left" @click="props.onClick" size="large" />
+                        </template>
+                        <template #next="{ props }">
+                            <app-btn-icon icon="chevron_right" @click="props.onClick" size="large" />
+                        </template>
+                        <v-carousel-item v-for="(collection, index) in nftDetails" :key="index">
+                            <token-details-nft :collection="collection" :is-loading="loadingNftMeta || state.hasError" />
+                        </v-carousel-item>
+                    </v-carousel>
                 </div>
             </v-card>
         </v-col>
@@ -83,7 +98,9 @@
 
 <script setup lang="ts">
 import { reactive, computed, onMounted, watch } from 'vue'
+import AppBtnIcon from '@core/components/AppBtnIcon.vue'
 import TokenDetailsErc20 from '@module/tokens/components/TokenDetails/TokenDetailsERC20.vue'
+import TokenDetailsNft from '@module/tokens/components/TokenDetails/TokenDetailsNFT.vue'
 import TokenTransfers from '@module/tokens/components/TokenTransfers.vue'
 import TokenHolders from '@module/tokens/components/TokenHolders.vue'
 import AppTabs from '@/core/components/AppTabs.vue'
@@ -92,7 +109,8 @@ import {
     TokenDetailsFragment as TokenInfo,
     useGetTokenInfoByContractQuery,
     GetTokenInfoByContractQuery,
-    useGetNftContractMetaQuery
+    useGetNftContractMetaQuery,
+    NftCollectionFragment
 } from '@module/tokens/apollo/TokenDetails/tokenDetails.generated'
 import { eth } from '@core/helper'
 import { ErrorMessageToken } from '@module/tokens/models/ErrorMessagesForTokens'
@@ -182,6 +200,7 @@ const tokenDetails = computed<TokenInfo | null>(() => {
     }
     return null
 })
+
 /*
 ===================================================================================
 Collection Meta:
@@ -204,6 +223,15 @@ const {
 
 onErc20TokenHolderLoaded(({ data }) => {
     console.log(data)
+})
+
+const nftDetails = computed<NftCollectionFragment[] | undefined>(() => {
+    console.log(nftMetaResult.value?.getNFTContractMeta?.collections[0])
+    return nftMetaResult.value?.getNFTContractMeta?.collections
+})
+
+const hasMoreCollections = computed<boolean>(() => {
+    return !!nftMetaResult.value?.getNFTContractMeta?.nextKey
 })
 
 /*

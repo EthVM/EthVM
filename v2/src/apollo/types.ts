@@ -475,7 +475,6 @@ export type Query = {
     getTransactionsByHashes: Array<Maybe<Tx>>
     getUncleByHash: Uncle
     getUncleRewards: EthTransfers
-    tmpTest: Scalars['String']
 }
 
 export type QueryGetAllEthTransfersArgs = {

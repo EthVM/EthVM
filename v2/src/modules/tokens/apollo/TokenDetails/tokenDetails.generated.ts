@@ -102,6 +102,23 @@ export type GetNftContractMetaQuery = {
     } | null
 }
 
+export type NftCollectionFragment = {
+    __typename?: 'RespCollection'
+    name?: string | null
+    description?: string | null
+    image_url?: string | null
+    external_url?: string | null
+    twitter_username?: string | null
+    discord_url?: string | null
+    distinct_owner_count?: number | null
+    distinct_nft_count?: number | null
+    floor_prices: Array<{
+        __typename?: 'RespNftFloorPrice'
+        value?: number | null
+        payment_token: { __typename?: 'RespPaymentToken'; name?: string | null; address?: string | null }
+    }>
+}
+
 export const TokenDetailsFragmentDoc = gql`
     fragment TokenDetails on EthTokenInfo {
         name
@@ -121,6 +138,25 @@ export const Erc20TokenOwnerDetailsFragmentDoc = gql`
         balance
     }
     ${TokenDetailsFragmentDoc}
+`
+export const NftCollectionFragmentDoc = gql`
+    fragment NftCollection on RespCollection {
+        name
+        description
+        image_url
+        external_url
+        twitter_username
+        discord_url
+        distinct_owner_count
+        distinct_nft_count
+        floor_prices @type(name: "RespNftFloorPrice") {
+            value
+            payment_token {
+                name
+                address
+            }
+        }
+    }
 `
 export const GetTokenInfoByContractDocument = gql`
     query getTokenInfoByContract($contract: String!) {
@@ -236,24 +272,11 @@ export const GetNftContractMetaDocument = gql`
         getNFTContractMeta(input: $input) @rest(type: "RespCollections", path: "/collections/ethereum/{args.input}", method: "GET") {
             nextKey
             collections @type(name: "RespCollection") {
-                name
-                description
-                image_url
-                external_url
-                twitter_username
-                discord_url
-                distinct_owner_count
-                distinct_nft_count
-                floor_prices @type(name: "RespNftFloorPrice") {
-                    value
-                    payment_token {
-                        name
-                        address
-                    }
-                }
+                ...NftCollection
             }
         }
     }
+    ${NftCollectionFragmentDoc}
 `
 
 /**
