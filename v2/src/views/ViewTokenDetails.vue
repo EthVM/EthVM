@@ -9,13 +9,6 @@
             :tab="$route.query.t"
         />
     </div>
-    <!-- <v-row :class="rowMargin">
-        <v-col cols="12" :class="columnPadding">
-
-            <app-error v-else :has-error="hasError" :message="state.error" />
-            <app-message :messages="state.errorMessages" />
-        </v-col>
-    </v-row> -->
 </template>
 
 <script setup lang="ts">
