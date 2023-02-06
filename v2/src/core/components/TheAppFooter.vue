@@ -209,7 +209,13 @@ a {
 
 .theme-toggle {
     :deep(.v-input__control) {
-        justify-self: flex-end;
+        @media (min-width: 1240px) {
+            justify-self: flex-end;
+        }
+    }
+
+    :deep(.v-label) {
+        opacity: 1;
     }
 }
 </style>
