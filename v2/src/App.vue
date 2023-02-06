@@ -13,7 +13,6 @@
 </template>
 
 <script setup lang="ts">
-import AppBtn from './core/components/AppBtn.vue'
 import TheAppHeader from './core/components/TheAppHeader.vue'
 import TheAppFooter from '@core/components/TheAppFooter.vue'
 import TheAppNavigationDrawerVue from './core/components/TheAppNavigationDrawer.vue'
@@ -136,7 +135,7 @@ onMounted(() => {
     if (store.appTheme) {
         theme.global.name.value = store.appTheme
     } else {
-        theme.global.name.value = preferredColor === 'dark' ? 'mainnetLightTheme' : 'mainnetDarkTheme'
+        theme.global.name.value = preferredColor.value === 'dark' ? 'mainnetLightTheme' : 'mainnetDarkTheme'
         store.setDarkMode(theme.global.name.value)
     }
 })
