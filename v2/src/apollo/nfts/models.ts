@@ -93,7 +93,7 @@ export interface ResponceTokens {
 
 export interface ResponceCollection {
     result: {
-        previous: string | null
+        next: string | null
         collections: RespCollection[]
     }
 }

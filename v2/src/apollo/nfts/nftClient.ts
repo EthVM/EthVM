@@ -57,7 +57,7 @@ const transformNFTMeta = (data: ResponceTokens) => {
 
 const transformContractMeta = (data: ResponceCollection) => {
     return {
-        nextKey: data.result.previous,
+        nextKey: data.result.next,
         collections: data.result.collections
     }
 }

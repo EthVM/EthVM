@@ -50,8 +50,10 @@
                     />
                     <v-carousel
                         v-if="nftDetails && (state.standard === TransferType.Erc721 || state.standard === TransferType.Erc1155)"
+                        :show-arrows="showMoreBtn"
                         hide-delimiters
                         height="auto"
+                        v-model="state.activeCollection"
                     >
                         <template #prev="{ props }">
                             <app-btn-icon icon="chevron_left" @click="props.onClick" size="large" />
@@ -152,14 +154,17 @@ interface ComponentState {
     hasError: boolean
     tab: string
     standard: string
+    activeCollection: number
 }
 
 const state: ComponentState = reactive({
     address: '',
     hasError: false,
     tab: props.tab,
-    standard: ''
+    standard: '',
+    activeCollection: 1
 })
+
 /**------------------------
  * Route Handling
  -------------------------*/
@@ -210,7 +215,7 @@ const {
     loading: loadingNftMeta,
     onError: onNftMetaError,
     result: nftMetaResult,
-    onResult: onErc20TokenHolderLoaded
+    fetchMore: fetchMoreCollections
 } = useGetNftContractMetaQuery(
     () => ({
         input: props.addressRef
@@ -221,18 +226,48 @@ const {
     })
 )
 
-onErc20TokenHolderLoaded(({ data }) => {
-    console.log(data)
-})
-
 const nftDetails = computed<NftCollectionFragment[] | undefined>(() => {
-    console.log(nftMetaResult.value?.getNFTContractMeta?.collections[0])
     return nftMetaResult.value?.getNFTContractMeta?.collections
 })
 
 const hasMoreCollections = computed<boolean>(() => {
     return !!nftMetaResult.value?.getNFTContractMeta?.nextKey
 })
+
+const showMoreBtn = computed<boolean>(() => {
+    return !!nftDetails.value && nftDetails.value?.length > 1
+})
+
+/**
+ * Fetches more Collections, once user reached n-10 collections, where n is collections length
+ */
+watch(
+    () => state.activeCollection,
+    newValue => {
+        if (nftDetails.value && hasMoreCollections.value) {
+            const fetchAt = nftDetails.value.length - 10
+            if (newValue === fetchAt && !loadingNftMeta.value) {
+                const cleanNextKey = nftMetaResult.value?.getNFTContractMeta?.nextKey?.substring(53) || ''
+                fetchMoreCollections({
+                    variables: {
+                        input: cleanNextKey
+                    },
+                    updateQuery: (previousResult, { fetchMoreResult }) => {
+                        const prev = previousResult.getNFTContractMeta?.collections || []
+                        const next = fetchMoreResult?.getNFTContractMeta?.collections || []
+                        return {
+                            __typename: 'Query',
+                            getNFTContractMeta: {
+                                nextKey: fetchMoreResult?.getNFTContractMeta?.nextKey,
+                                collections: [...prev, ...next]
+                            }
+                        }
+                    }
+                })
+            }
+        }
+    }
+)
 
 /*
 ===================================================================================
@@ -275,7 +310,7 @@ const leftText = computed<string>(() => {
     if (state.standard === TransferType.Erc1155 || state.standard === TransferType.Erc721) {
         if (!loadingNftMeta.value && nftMetaResult.value?.getNFTContractMeta) {
             const addSign = nftMetaResult.value?.getNFTContractMeta.nextKey ? '+' : ''
-            return `${addSign}${nftMetaResult.value?.getNFTContractMeta.collections.length}`
+            return `${nftMetaResult.value?.getNFTContractMeta.collections.length}${addSign}`
         }
     }
     return ''
