@@ -184,7 +184,7 @@ const toggleTheme = () => {
 }
 
 onMounted(() => {
-    isDarkMode.value = theme.global.name.value === 'mainnetLightTheme'
+    isDarkMode.value = theme.global.name.value === 'mainnetDarkTheme'
 })
 </script>
 
