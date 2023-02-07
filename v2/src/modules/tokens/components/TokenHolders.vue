@@ -51,7 +51,7 @@ const props = defineProps<PropType>()
 
 const emit = defineEmits<{
     (e: 'errorDetails', value: boolean, message: string): void
-    (e: 'isNft', value: boolean): void
+    (e: 'setTokenType', value: string): void
 }>()
 
 interface ComponentState {
@@ -88,7 +88,8 @@ const {
     loading: loadingErc20TokenHolder,
     fetchMore: fetchMoreErc20TokenHolder,
     refetch: refetchErc20TokenHolders,
-    onError: onErc20TokenHoldersError
+    onError: onErc20TokenHoldersError,
+    onResult: onErc20TokenHolderLoaded
 } = useGetErc20TokenOwnersQuery(
     () => ({
         contract: props.address,
@@ -107,6 +108,23 @@ onErc20TokenHoldersError(() => {
 const hasERC20Owners = computed<boolean>(() => {
     return !!erc20TokenHolders.value && erc20TokenHolders.value?.owners.length > 0
 })
+
+/**
+ * Emit To Parent contract is ERC20
+ */
+if (erc20TokenHolderResult.value?.getERC20TokenOwners) {
+    if (erc20TokenHolderResult.value.getERC20TokenOwners.owners.length > 0) {
+        emit('setTokenType', TransferType.Erc20)
+    }
+} else {
+    onErc20TokenHolderLoaded(({ data }) => {
+        if (data?.getERC20TokenOwners) {
+            if (data.getERC20TokenOwners.owners.length > 0) {
+                emit('setTokenType', TransferType.Erc20)
+            }
+        }
+    })
+}
 
 /**------------------------
  * ERC721 Holders
@@ -131,15 +149,22 @@ const erc721TokenHolders = computed<Erc721TokenOwnersType | undefined>(() => {
     return erc721TokenHoldersResult.value?.getERC721TokenOwners
 })
 
-onErc721TokenHolderLoaded(({ data }) => {
-    if (data?.getERC721TokenOwners) {
-        if (!data.getERC721TokenOwners.owners || data.getERC721TokenOwners.owners.length < 1) {
-            emit('isNft', false)
-        } else {
-            emit('isNft', true)
-        }
+/**
+ * Emit To Parent contract is ERC725
+ */
+if (erc721TokenHoldersResult.value?.getERC721TokenOwners) {
+    if (erc721TokenHoldersResult.value.getERC721TokenOwners.owners.length > 0) {
+        emit('setTokenType', TransferType.Erc721)
     }
-})
+} else {
+    onErc721TokenHolderLoaded(({ data }) => {
+        if (data?.getERC721TokenOwners) {
+            if (data.getERC721TokenOwners.owners.length > 0) {
+                emit('setTokenType', TransferType.Erc721)
+            }
+        }
+    })
+}
 
 const hasERC721Owners = computed<boolean>(() => {
     return !!erc721TokenHolders.value && erc721TokenHolders.value?.owners.length > 0
@@ -172,18 +197,27 @@ const erc1155TokenHolders = computed<Erc1155TokenOwnersType | undefined>(() => {
     return erc1155TokenHoldersResult.value?.getERC1155TokensByContract
 })
 
-onErc1155TokenHolderLoaded(({ data }) => {
-    if (data?.getERC1155TokensByContract) {
-        if (!data.getERC1155TokensByContract.balances || data.getERC1155TokensByContract.balances.length < 1) {
-            emit('isNft', false)
-        } else {
-            emit('isNft', true)
-        }
+/**
+ * Emit To Parent contract is ERC1155
+ */
+if (erc1155TokenHoldersResult.value?.getERC1155TokensByContract) {
+    if (erc1155TokenHoldersResult.value.getERC1155TokensByContract.balances.length > 0) {
+        emit('setTokenType', TransferType.Erc1155)
     }
-})
+} else {
+    onErc1155TokenHolderLoaded(({ data }) => {
+        if (data?.getERC1155TokensByContract) {
+            if (data.getERC1155TokensByContract.balances.length > 0) {
+                emit('setTokenType', TransferType.Erc1155)
+            }
+        }
+    })
+}
+
 onErc1155TokenHolderError(() => {
     emitErrorState(true)
 })
+
 const hasERC1155Owners = computed<boolean>(() => {
     return !!erc1155TokenHolders.value && erc1155TokenHolders.value?.balances.length > 0
 })

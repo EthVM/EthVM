@@ -4,6 +4,7 @@
 @use 'vuetify/styles' with (
   $color-pack: false,
   $font-size-root: 14px,
+  $line-height-root: 20px,
   $typography: settings.$typography,
   $shadow-key-umbra-opacity: settings.$shadow-key-umbra-opacity,
   $shadow-key-penumbra-opacity: settings.$shadow-key-umbra-opacity,

@@ -1,18 +1,16 @@
 <template>
-    <v-row :class="rowMargin">
-        <v-col cols="12" :class="columnPadding">
-            <token-details
-                v-if="!hasError"
-                :address-ref="props.addressRef"
-                :is-holder="state.isHolder"
-                :holder-address="state.holderAddress"
-                @errorDetails="setError"
-                :tab="$route.query.t"
-            />
-            <app-error v-else :has-error="hasError" :message="state.error" />
-            <app-message :messages="state.errorMessages" />
-        </v-col>
-    </v-row>
+    <div>
+        <token-details
+            v-if="!hasError"
+            :address-ref="props.addressRef"
+            :is-holder="state.isHolder"
+            :holder-address="state.holderAddress"
+            @errorDetails="setError"
+            :tab="$route.query.t"
+        />
+        <app-error v-else :has-error="hasError" :message="state.error" />
+        <app-message :messages="state.errorMessages" />
+    </div>
 </template>
 
 <script setup lang="ts">
@@ -23,9 +21,6 @@ import AppMessage from '@core/components/AppMessage.vue'
 import AppError from '@core/components/AppError.vue'
 import { eth } from '@core/helper'
 import { useRoute } from 'vue-router'
-import { useAppViewGrid } from '@core/composables/AppViewGrid/AppViewGrid.composable'
-
-const { columnPadding, rowMargin } = useAppViewGrid()
 
 const props = defineProps({
     addressRef: {

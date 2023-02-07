@@ -37,6 +37,7 @@ interface StoreState {
     notification: NotificationDeleteAddress | Notification | undefined
     adrBook: RemovableRef<PortfolioItem[]>
     paginationStateMap: Map<string, number>
+    appTheme: RemovableRef<string>
 }
 
 const getKeySumBN = <T>(map: Record<string, T>, _key: keyof T): BN => {
@@ -69,7 +70,8 @@ export const useStore = defineStore('main', {
         portfolioTokenBalanceMap: {},
         notification: undefined,
         adrBook: useStorage('addressBook', [] as PortfolioItem[]),
-        paginationStateMap: new Map()
+        paginationStateMap: new Map(),
+        appTheme: useStorage('app-theme', '')
     }),
     getters: {
         /**
@@ -339,6 +341,9 @@ export const useStore = defineStore('main', {
         },
         savePaginationState(state: Map<string, number>) {
             this.paginationStateMap = state
+        },
+        setDarkMode(theme: string) {
+            this.appTheme = theme
         }
     }
 })
