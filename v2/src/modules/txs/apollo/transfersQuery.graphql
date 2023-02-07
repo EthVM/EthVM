@@ -8,32 +8,37 @@ fragment Summary on Transfer {
     status
 }
 
-fragment Transfer on EthTransfer {
+fragment Transfer on ETHTransactionTransfer  {
     transfer {
         ...Summary
     }
     value
 }
 
-fragment TxSummary on ETHTransfers {
-    transfers {
-        ...Transfer
+fragment EthTransfer on EthTransfer  {
+    transfer {
+        ...Summary
     }
+    value
 }
 
 query getBlockTransfers($_number: Int) {
     getBlockTransfers(number: $_number) {
-        ...TxSummary
+        transfers {
+            ...EthTransfer
+        }
     }
 }
 
-fragment EthTransfers on ETHTransfers {
-    ...TxSummary
+fragment EthTransfers on ETHTransactionTransfers {
+    transfers {
+        ...Transfer
+    }
     nextKey
 }
 
 query getAllTxs($_limit: Int, $_nextKey: String) {
-    getAllEthTransfers(limit: $_limit, nextKey: $_nextKey) {
+    getEthTransactionTransfers(limit: $_limit, nextKey: $_nextKey) {
         ...EthTransfers
     }
 }

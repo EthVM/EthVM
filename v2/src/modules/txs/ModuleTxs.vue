@@ -96,7 +96,7 @@ const isBlock = computed<boolean>(() => {
  * =======================================================
  */
 const {
-    result: getAllEthTransfers,
+    result: getEthTransactionTransfers,
     loading: loadingTxs,
     refetch: refetchTxArray,
     fetchMore: fetchMoreTxs
@@ -130,7 +130,7 @@ const {
 )
 
 const allEthTransfers = computed<EthTransfersFragment | undefined>(() => {
-    return getAllEthTransfers.value?.getAllEthTransfers
+    return getEthTransactionTransfers.value?.getEthTransactionTransfers
 })
 
 const allBlockTransfersResult = computed<EthTransfersFragment | undefined>(() => {
@@ -191,7 +191,7 @@ const initialLoad = computed<boolean>(() => {
     if (isBlock.value) {
         return !getAllBlockTransfersResult.value
     }
-    return !getAllEthTransfers.value
+    return !getEthTransactionTransfers.value
 })
 
 const { onResult: onNewTransferLoaded } = useNewTransfersCompleteFeedSubscription()
@@ -228,23 +228,23 @@ const setPage = async (page: number, reset = false): Promise<boolean> => {
                 },
                 updateQuery: (previousResult, { fetchMoreResult }) => {
                     state.isEnd = page
-                    const newT = fetchMoreResult?.getAllEthTransfers.transfers
-                    const prevT = previousResult.getAllEthTransfers.transfers
+                    const newT = fetchMoreResult?.getEthTransactionTransfers.transfers
+                    const prevT = previousResult.getEthTransactionTransfers.transfers
                     if (newT) {
                         return {
                             ...previousResult,
-                            getAllEthTransfers: {
-                                __typename: previousResult.getAllEthTransfers.__typename,
-                                nextKey: fetchMoreResult?.getAllEthTransfers.nextKey,
+                            getEthTransactionTransfers: {
+                                __typename: previousResult.getEthTransactionTransfers.__typename,
+                                nextKey: fetchMoreResult?.getEthTransactionTransfers.nextKey,
                                 transfers: [...prevT, ...newT]
                             }
                         }
                     }
                     return {
                         ...previousResult,
-                        getAllEthTransfers: {
-                            __typename: previousResult.getAllEthTransfers.__typename,
-                            nextKey: previousResult.getAllEthTransfers.nextKey,
+                        getEthTransactionTransfers: {
+                            __typename: previousResult.getEthTransactionTransfers.__typename,
+                            nextKey: previousResult.getEthTransactionTransfers.nextKey,
                             transfers: [...prevT]
                         }
                     }
