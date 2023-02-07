@@ -4,12 +4,20 @@
             <v-card class="pa-4 pa-sm-6" elevation="1" rounded="xl">
                 <module-address-balance :address-ref="props.addressRef" />
             </v-card>
-            <v-card class="pa-4 pa-sm-6 mt-4 mt-sm-6" elevation="1" rounded="xl">
+        </v-col>
+        <v-col cols="12" :class="columnPadding">
+            <v-card class="pa-4 pa-sm-6" elevation="1" rounded="xl">
                 <div>
-                    <app-tabs v-model="state.tab" :routes="routes" :tabs="tabs" @update:modelValue="setLastViewedTab()" class="mb-4 mb-sm-0"></app-tabs>
+                    <app-tabs
+                        v-model="state.tab"
+                        :routes="routes"
+                        :tabs="tabs"
+                        @update:modelValue="setLastViewedTab"
+                        class="mb-4 mb-sm-0 mx-n4 mx-sm-n6"
+                    ></app-tabs>
                     <module-all-eth-transfers v-if="state.tab === routes[0]" :address-ref="props.addressRef" />
-                    <module-internal-eth-transfers v-if="state.tab === routes[1]" :tab="state.tab" :address-ref="props.addressRef" />
-                    <module-eth-txs-history v-if="state.tab === routes[2]" :address-ref="props.addressRef" />
+                    <module-eth-txs-history v-if="state.tab === routes[1]" :address-ref="props.addressRef" />
+                    <module-internal-eth-transfers v-if="state.tab === routes[2]" :tab="state.tab" :address-ref="props.addressRef" />
                     <module-pending-transfers v-if="state.tab === routes[3]" :tab="state.tab" :address-ref="props.addressRef" />
                     <template v-if="props.isAddressMiner && state.tab === routes[4]">
                         <module-address-miner-block :address-hash="props.addressRef" />
@@ -21,7 +29,7 @@
 </template>
 
 <script setup lang="ts">
-import AppTabs from '@/core/components/AppTabs'
+import AppTabs from '@/core/components/AppTabs.vue'
 import ModulePendingTransfers from '@module/address/ModulePendingEthTransfers.vue'
 import ModuleInternalEthTransfers from '@module/address/ModuleInternalEthTransfers.vue'
 import ModuleAddressBalance from '@module/address/ModuleAddressBalance.vue'
@@ -33,7 +41,9 @@ import { useAppViewGrid } from '@core/composables/AppViewGrid/AppViewGrid.compos
 import { Tab } from '@core/components/props'
 import { ADDRESS_ROUTE_QUERY, Q_ADDRESS_TRANSFERS } from '@core/router/routesNames'
 import { useAddressUpdate } from '@core/composables/AddressUpdate/addressUpdate.composable'
+import { useDisplay } from 'vuetify/lib/framework.mjs'
 
+const { xs } = useDisplay()
 const routes = Q_ADDRESS_TRANSFERS
 const minerRoutes = ADDRESS_ROUTE_QUERY.Q_MINER
 
@@ -59,6 +69,7 @@ const state = reactive({
 const { columnPadding, rowMargin } = useAppViewGrid()
 
 const tabs = computed<Tab[]>(() => {
+    const txsText = xs.value ? 'Txs' : 'Transactions'
     const tabs = [
         {
             value: routes[0],
@@ -66,15 +77,15 @@ const tabs = computed<Tab[]>(() => {
         },
         {
             value: routes[1],
-            title: 'Internal'
+            title: txsText
         },
         {
             value: routes[2],
-            title: 'TX History'
+            title: 'Transfers'
         },
         {
             value: routes[3],
-            title: 'Pending TX'
+            title: 'Pending'
         }
     ]
 
