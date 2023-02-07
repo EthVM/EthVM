@@ -19,18 +19,10 @@
                 :class="[xs ? 'text-body-1' : 'text-h6', 'rounded-lg text-capitalize font-weight-light px-3']"
                 >{{ i.title }}</v-tab
             >
-            <v-btn
-                v-if="moreTabs.length > 0"
-                variant="text"
-                rounded="lg"
-                class="align-self-center font-weight-light"
-                height="100%"
-                v-bind="props"
-                id="activator-mobile"
-            >
+            <v-btn v-if="moreTabs.length > 0 && xs" variant="text" rounded="lg" class="align-self-center font-weight-light" height="100%" id="activator-mobile">
                 more
             </v-btn>
-            <app-menu min-width="180" activator="#activator-mobile">
+            <app-menu v-if="moreTabs.length > 0 && xs" min-width="180" activator="#activator-mobile">
                 <v-list-item v-for="tab in moreTabs" :title="tab.title" class="py-2" @click="changeTab(tab.value)" :key="tab.value"> </v-list-item>
             </app-menu>
         </v-tabs>
