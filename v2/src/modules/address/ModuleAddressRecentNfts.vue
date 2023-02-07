@@ -12,14 +12,14 @@
                 </template>
                 <template v-else>
                     <v-row :dense="xs">
-                        <v-col v-for="(token, index) in currentPageData" :key="index" cols="6" sm="4" :lg="props.isOverview ? '4' : '2'">
+                        <v-col v-for="(token, index) in displayTokens" :key="index" cols="6" sm="4" :lg="props.isOverview ? '4' : '2'">
                             <token-nft-img
                                 :loading="loadingMeta"
                                 :nft="token"
                                 height="154"
                                 class="border-radius-nft"
                                 :index="index"
-                                :tokens="currentPageData"
+                                :tokens="displayTokens"
                             ></token-nft-img>
                             <p v-if="!props.isOverview && token.meta && token.meta.name">{{ token.meta.name }}</p>
                             <p v-if="!props.isOverview && (!token.meta || !token.meta.name)">Unknown</p>
@@ -88,12 +88,21 @@ const {
 )
 
 /**
+ * Computed Property that returns array of tokens to be dispalyed with Meta data
+ */
+const tokens = computed(() => {
+    return resultBalance.value ? resultBalance.value?.getOwnersNFTTokens.tokens : []
+})
+
+const { numberOfPages, pageData: currentPageData, setPageNum, pageNum } = useAppPaginate(tokens, 'recentNfts', NFT_ITEMS_PER_PAGE)
+
+/**
  * Computed Property of token ids to be fetch meta
  */
 const tokenIDS = computed<NftId[]>(() => {
     const _ids: NftId[] = []
     if (!loadingBalance.value && resultBalance.value) {
-        resultBalance.value?.getOwnersNFTTokens.tokens.forEach(i => {
+        currentPageData.value.forEach(i => {
             const id = {
                 id: generateId(i.tokenInfo.tokenId),
                 contract: i.tokenInfo.contract
@@ -103,15 +112,14 @@ const tokenIDS = computed<NftId[]>(() => {
     }
     return _ids
 })
-
 const { nftMeta, loadingMeta } = useGetNftsMeta(tokenIDS, loadingBalance)
 
 /**
  * Computed Property that returns array of tokens to be dispalyed with Meta data
  */
-const tokens = computed<NFTDetails[]>(() => {
+const displayTokens = computed<NFTDetails[]>(() => {
     return resultBalance.value
-        ? resultBalance.value?.getOwnersNFTTokens.tokens.map(token => {
+        ? currentPageData.value.map(token => {
               return {
                   type: token.type,
                   balance: token.type === NftType.Erc1155 ? token.balance : undefined,
@@ -122,8 +130,6 @@ const tokens = computed<NFTDetails[]>(() => {
           })
         : []
 })
-
-const { numberOfPages, pageData: currentPageData, setPageNum, pageNum } = useAppPaginate(tokens, 'recentNfts', NFT_ITEMS_PER_PAGE)
 
 const hasMore = computed<boolean>(() => {
     return !!resultBalance.value?.getOwnersNFTTokens.nextKey
