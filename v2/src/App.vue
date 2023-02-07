@@ -21,7 +21,6 @@ import { useStore } from '@/store'
 import { usePreferredColorScheme } from '@vueuse/core'
 import { useGetLatestPricesQuery } from '@core/composables/CoinData/getLatestPrices.generated'
 import { useSetPortfolio } from './core/composables/Portfolio/useSetPortfolioBalance'
-import { useTheme } from 'vuetify'
 import { computed, watch, reactive, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { ROUTE_NAME } from '@core/router/routesNames'
@@ -127,18 +126,6 @@ watch(
         }
     }
 )
-
-const theme = useTheme()
-
-onMounted(() => {
-    const preferredColor = usePreferredColorScheme()
-    if (store.appTheme) {
-        theme.global.name.value = store.appTheme
-    } else {
-        theme.global.name.value = preferredColor.value === 'dark' ? 'mainnetLightTheme' : 'mainnetDarkTheme'
-        store.setDarkMode(theme.global.name.value)
-    }
-})
 </script>
 <style lang="scss">
 .app-view {

@@ -112,8 +112,9 @@
 
 <script setup lang="ts">
 import { useTheme } from 'vuetify'
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, watch } from 'vue'
 import { useStore } from '@/store'
+import { usePreferredColorScheme } from '@vueuse/core'
 
 const socialIcons = [
     {
@@ -183,8 +184,23 @@ const toggleTheme = () => {
 }
 
 onMounted(() => {
+    const preferredColor = usePreferredColorScheme()
+    if (store.appTheme) {
+        theme.global.name.value = store.appTheme
+    } else {
+        theme.global.name.value = preferredColor.value === 'dark' ? 'mainnetDarkTheme' : 'mainnetLightTheme'
+        store.setDarkMode(theme.global.name.value)
+    }
+
     isDarkMode.value = theme.global.name.value === 'mainnetDarkTheme'
 })
+
+watch(
+    () => store.appTheme,
+    (val: string) => {
+        theme.global.name.value = val
+    }
+)
 </script>
 
 <style lang="scss" scoped>
