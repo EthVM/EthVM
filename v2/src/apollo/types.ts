@@ -444,6 +444,7 @@ export type Query = {
     getHashType: HashType
     getLatestBlockInfo: LatestBlockData
     getLatestPrices: Array<Maybe<TokenMarketInfo>>
+    getNFTContractMeta?: Maybe<RespCollections>
     getNFTTokensMeta?: Maybe<RespTokens>
     getNFTTransfers: NftTransfers
     getNFTcontractsMeta: AddressNfTcontracts
@@ -474,7 +475,6 @@ export type Query = {
     getTransactionsByHashes: Array<Maybe<Tx>>
     getUncleByHash: Uncle
     getUncleRewards: EthTransfers
-    tmpTest: Scalars['String']
 }
 
 export type QueryGetAllEthTransfersArgs = {
@@ -648,6 +648,10 @@ export type QueryGetHashTypeArgs = {
     hash: Scalars['String']
 }
 
+export type QueryGetNftContractMetaArgs = {
+    input: Scalars['String']
+}
+
 export type QueryGetNftTokensMetaArgs = {
     input: Scalars['String']
 }
@@ -756,6 +760,8 @@ export type RespCollection = {
     collection_id?: Maybe<Scalars['String']>
     description?: Maybe<Scalars['String']>
     discord_url?: Maybe<Scalars['String']>
+    distinct_nft_count?: Maybe<Scalars['Int']>
+    distinct_owner_count?: Maybe<Scalars['Int']>
     external_url?: Maybe<Scalars['String']>
     floor_prices: Array<RespNftFloorPrice>
     image_url?: Maybe<Scalars['String']>
@@ -765,6 +771,12 @@ export type RespCollection = {
     name?: Maybe<Scalars['String']>
     spam_score?: Maybe<Scalars['String']>
     twitter_username?: Maybe<Scalars['String']>
+}
+
+export type RespCollections = {
+    __typename?: 'RespCollections'
+    collections: Array<RespCollection>
+    nextKey?: Maybe<Scalars['String']>
 }
 
 export type RespContract = {
