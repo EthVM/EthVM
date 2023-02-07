@@ -21,7 +21,7 @@ export type SummaryFragment = {
 }
 
 export type TransferFragment = {
-    __typename?: 'EthTransfer'
+    __typename?: 'ETHTransactionTransfer'
     value: string
     transfer: {
         __typename?: 'Transfer'
@@ -35,22 +35,19 @@ export type TransferFragment = {
     }
 }
 
-export type TxSummaryFragment = {
-    __typename?: 'ETHTransfers'
-    transfers: Array<{
-        __typename?: 'EthTransfer'
-        value: string
-        transfer: {
-            __typename?: 'Transfer'
-            transactionHash: string
-            to: string
-            block: number
-            timestamp: number
-            from: string
-            txFee: string
-            status?: boolean | null
-        }
-    } | null>
+export type EthTransferFragment = {
+    __typename?: 'EthTransfer'
+    value: string
+    transfer: {
+        __typename?: 'Transfer'
+        transactionHash: string
+        to: string
+        block: number
+        timestamp: number
+        from: string
+        txFee: string
+        status?: boolean | null
+    }
 }
 
 export type GetBlockTransfersQueryVariables = Types.Exact<{
@@ -79,10 +76,10 @@ export type GetBlockTransfersQuery = {
 }
 
 export type EthTransfersFragment = {
-    __typename?: 'ETHTransfers'
+    __typename?: 'ETHTransactionTransfers'
     nextKey?: string | null
     transfers: Array<{
-        __typename?: 'EthTransfer'
+        __typename?: 'ETHTransactionTransfer'
         value: string
         transfer: {
             __typename?: 'Transfer'
@@ -94,7 +91,7 @@ export type EthTransfersFragment = {
             txFee: string
             status?: boolean | null
         }
-    } | null>
+    }>
 }
 
 export type GetAllTxsQueryVariables = Types.Exact<{
@@ -104,11 +101,11 @@ export type GetAllTxsQueryVariables = Types.Exact<{
 
 export type GetAllTxsQuery = {
     __typename?: 'Query'
-    getAllEthTransfers: {
-        __typename?: 'ETHTransfers'
+    getEthTransactionTransfers: {
+        __typename?: 'ETHTransactionTransfers'
         nextKey?: string | null
         transfers: Array<{
-            __typename?: 'EthTransfer'
+            __typename?: 'ETHTransactionTransfer'
             value: string
             transfer: {
                 __typename?: 'Transfer'
@@ -120,7 +117,7 @@ export type GetAllTxsQuery = {
                 txFee: string
                 status?: boolean | null
             }
-        } | null>
+        }>
     }
 }
 
@@ -142,8 +139,8 @@ export const SummaryFragmentDoc = gql`
         status
     }
 `
-export const TransferFragmentDoc = gql`
-    fragment Transfer on EthTransfer {
+export const EthTransferFragmentDoc = gql`
+    fragment EthTransfer on EthTransfer {
         transfer {
             ...Summary
         }
@@ -151,28 +148,33 @@ export const TransferFragmentDoc = gql`
     }
     ${SummaryFragmentDoc}
 `
-export const TxSummaryFragmentDoc = gql`
-    fragment TxSummary on ETHTransfers {
+export const TransferFragmentDoc = gql`
+    fragment Transfer on ETHTransactionTransfer {
+        transfer {
+            ...Summary
+        }
+        value
+    }
+    ${SummaryFragmentDoc}
+`
+export const EthTransfersFragmentDoc = gql`
+    fragment EthTransfers on ETHTransactionTransfers {
         transfers {
             ...Transfer
         }
-    }
-    ${TransferFragmentDoc}
-`
-export const EthTransfersFragmentDoc = gql`
-    fragment EthTransfers on ETHTransfers {
-        ...TxSummary
         nextKey
     }
-    ${TxSummaryFragmentDoc}
+    ${TransferFragmentDoc}
 `
 export const GetBlockTransfersDocument = gql`
     query getBlockTransfers($_number: Int) {
         getBlockTransfers(number: $_number) {
-            ...TxSummary
+            transfers {
+                ...EthTransfer
+            }
         }
     }
-    ${TxSummaryFragmentDoc}
+    ${EthTransferFragmentDoc}
 `
 
 /**
@@ -217,7 +219,7 @@ export function useGetBlockTransfersLazyQuery(
 export type GetBlockTransfersQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<GetBlockTransfersQuery, GetBlockTransfersQueryVariables>
 export const GetAllTxsDocument = gql`
     query getAllTxs($_limit: Int, $_nextKey: String) {
-        getAllEthTransfers(limit: $_limit, nextKey: $_nextKey) {
+        getEthTransactionTransfers(limit: $_limit, nextKey: $_nextKey) {
             ...EthTransfers
         }
     }

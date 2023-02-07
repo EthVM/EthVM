@@ -474,7 +474,6 @@ export type Query = {
     getTransactionsByHashes: Array<Maybe<Tx>>
     getUncleByHash: Uncle
     getUncleRewards: EthTransfers
-    tmpTest: Scalars['String']
 }
 
 export type QueryGetAllEthTransfersArgs = {
@@ -675,14 +674,14 @@ export type QueryGetOwnersErc721BalancesArgs = {
 export type QueryGetOwnersErc721TokensArgs = {
     contract?: InputMaybe<Scalars['String']>
     nextKey?: InputMaybe<Scalars['String']>
-    owner?: InputMaybe<Scalars['String']>
+    owner: Scalars['String']
 }
 
 export type QueryGetOwnersErc721TokensV2Args = {
     contract?: InputMaybe<Scalars['String']>
     limit?: InputMaybe<Scalars['Int']>
     nextKey?: InputMaybe<Scalars['String']>
-    owner?: InputMaybe<Scalars['String']>
+    owner: Scalars['String']
 }
 
 export type QueryGetOwnersNftTokensArgs = {
