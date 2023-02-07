@@ -1,6 +1,6 @@
 <template>
     <div>
-        <app-error v-if="hasError" :has-error="hasError" :message="state.error" />
+        <app-error v-if="hasError" :has-error="hasError" :message="state.error" :routeProp="props.txRef" />
         <app-message :messages="state.errorMessages" />
         <!--
         =====================================================================================

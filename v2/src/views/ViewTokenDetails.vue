@@ -8,7 +8,7 @@
             @errorDetails="setError"
             :tab="$route.query.t"
         />
-        <app-error v-else :has-error="hasError" :message="state.error" />
+        <app-error v-else :has-error="hasError" :message="state.error" :routeProp="props.addressRef" />
         <app-message :messages="state.errorMessages" />
     </div>
 </template>

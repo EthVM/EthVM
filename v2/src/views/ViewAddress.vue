@@ -65,13 +65,12 @@
             Desktop Menu
         =========================
         -->
-        <v-tabs v-if="!smAndDown" v-model="state.tab" color="primary" hide-slider align-tabs="center">
+        <v-tabs v-if="!smAndDown" v-model="state.tab" color="primary" centered hide-slider>
             <v-tab
                 v-for="i in tabs"
                 @click="navigateTo(i.routeName, i.secondaryTab)"
                 :value="i.routeName"
                 :key="i.routeName"
-                min-width="160"
                 class="py-3 text-h5 text-capitalize rounded-b-xl font-weight-light"
                 color="primary"
                 selected-class="bg-surface"

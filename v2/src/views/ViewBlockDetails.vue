@@ -1,6 +1,6 @@
 <template>
     <div>
-        <app-error v-if="!isValid" :has-error="!isValid" message="This is not a valid block hash" />
+        <app-error v-if="!isValid" :has-error="!isValid" message="This is not a valid block" :routeProp="props.blockRef" />
         <app-message :messages="state.errorMessages" />
         <v-row :class="rowMargin">
             <!--
