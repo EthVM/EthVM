@@ -199,6 +199,7 @@ watch(
     () => store.appTheme,
     (val: string) => {
         theme.global.name.value = val
+        isDarkMode.value = theme.global.name.value === 'mainnetDarkTheme'
     }
 )
 </script>
