@@ -20,12 +20,12 @@ import TxsView from '@view/ViewTxs.vue'
 import AddressTokensView from '@view/ViewAddressTokens.vue'
 import ViewAddress from '@view/ViewAddress.vue'
 import ViewAddressOverview from '@view/ViewAddressOverview.vue'
-import ViewAddressMiners from '@view/ViewAddressMiners.vue'
 import ViewAddressEthBalance from '@view/ViewAddressEthBalance.vue'
 import ViewTokens from '@view/ViewTokens.vue'
 import ViewAddressNfts from '@view/ViewAddressNfts.vue'
 import ViewTemp from '@view/ViewTemp.vue'
 import ViewPortfolio from '@view/ViewPortfolio.vue'
+import ViewNotFound from '@view/ViewNotFound.vue'
 import configs from '@/configs'
 import { tabViewRouteGuard } from './helpers'
 const routes: Array<RouteRecordRaw> = [
@@ -152,6 +152,15 @@ const routes: Array<RouteRecordRaw> = [
         path: ROUTE_NAME.TOKENS.PATH,
         name: ROUTE_NAME.TOKENS.NAME,
         component: ViewTokens
+    },
+    {
+        path: ROUTE_NAME.NOT_FOUND.PATH,
+        component: ViewNotFound,
+        name: ROUTE_NAME.NOT_FOUND.NAME
+    },
+    {
+        path: '/:pathMatch(.*)*',
+        redirect: ROUTE_NAME.NOT_FOUND.PATH
     }
 ]
 

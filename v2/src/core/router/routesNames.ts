@@ -96,7 +96,7 @@ const ROUTE_NAME: Route = {
     },
     NOT_FOUND: {
         PATH: '/404',
-        NAME: 'notFound'
+        NAME: 'not_found'
     },
     SEARCH_NOT_FOUND: {
         PATH: `/search/not_found/:${ROUTE_PROP.SEARCH_NOT_FOUND}`,

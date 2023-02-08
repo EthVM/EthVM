@@ -54,7 +54,7 @@ const isAddressView = computed<boolean>(() => {
 })
 
 const isHomeView = computed<boolean>(() => {
-    return route.name === ROUTE_NAME.HOME.NAME
+    return route.name === ROUTE_NAME.HOME.NAME || route.name === ROUTE_NAME.NOT_FOUND.NAME
 })
 
 /*
