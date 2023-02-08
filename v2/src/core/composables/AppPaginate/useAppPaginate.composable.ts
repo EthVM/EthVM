@@ -3,7 +3,7 @@ import { computed, isRef, Ref, ref, watch } from 'vue'
 import { useStore } from '@/store'
 import { onBeforeRouteLeave } from 'vue-router'
 
-export function useAppPaginate(dataToPaginate: Ref<Array<unknown>>, id?: Ref<string> | string, itemsPerPage?: number) {
+export function useAppPaginate<T>(dataToPaginate: Ref<Array<T>>, id?: Ref<string> | string, itemsPerPage?: number) {
     const store = useStore()
     const pageNum = ref(1)
 

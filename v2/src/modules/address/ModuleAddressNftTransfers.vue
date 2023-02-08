@@ -72,14 +72,12 @@ import NftTransfersTableRow from '@module/address/components/TableRowNftTransfer
 import AppPagination from '@core/components/AppPagination.vue'
 import AppNoResult from '@/core/components/AppNoResult.vue'
 import { MarketDataFragment as TokenMarketData } from '@core/composables/CoinData/getLatestPrices.generated'
-import { useCoinData } from '@core/composables/CoinData/coinData.composable'
 import { TOKEN_FILTER_VALUES } from '@module/address/models/TokenSort'
 import { useDisplay } from 'vuetify'
 import { NftTransferFragmentFragment as Transfer, useGetAddressNftTransfersQuery } from './apollo/AddressTransfers/transfers.generated'
 import { AddressEventType } from '@/apollo/types'
 import { useRouter } from 'vue-router'
 import { ADDRESS_ROUTE_QUERY, ROUTE_NAME } from '@core/router/routesNames'
-import { useAppTableRowRender } from '@core/composables/AppTableRowRender/useAppTableRowRender.composable'
 import { useGetNftsMeta } from '@core/composables/NftMeta/useGetNftsMeta.composable'
 import { NftMetaFragment } from '@core/composables/NftMeta/nftMeta.generated'
 import { NftId, generateId, generateMapId } from '@/core/composables/NftMeta/helpers'
@@ -122,10 +120,6 @@ const state: ComponentState = reactive({
     index: 0
 })
 
-const { addressHash } = toRefs(props)
-
-const { loading: loadingMarketInfo } = useCoinData()
-
 const {
     result,
     fetchMore,
@@ -139,42 +133,11 @@ const {
     { notifyOnNetworkStatusChange: true }
 )
 
-/**
- * Computed Property of token ids to fetch meta
- */
-const tokenIDS = computed<NftId[]>(() => {
-    const _ids: NftId[] = []
-    if (!loadingTransfers.value && result.value && generateId) {
-        result.value?.getNFTTransfers.transfers.forEach(i => {
-            if (i) {
-                const id = {
-                    id: generateId(i.tokenId),
-                    contract: i.contract
-                }
-                _ids.push(id)
-            }
-        })
-    }
-    return _ids
-})
-
-const { nftMeta, loadingMeta } = useGetNftsMeta(tokenIDS, loadingTransfers)
-
 const hasMore = computed<boolean>(() => {
     return result.value?.getNFTTransfers.nextKey !== null
 })
 
 const transferHistory = computed<Array<Transfer | null>>(() => result.value?.getNFTTransfers.transfers || [])
-
-/**
- * Render State Tracking
- */
-
-const transfersLength = computed<number>(() => {
-    return transferHistory.value.length
-})
-
-const { renderState } = useAppTableRowRender(transfersLength.value)
 
 const transfers = computed<Array<Transfer | null>>(() => {
     if (transferHistory.value.length > 0) {
@@ -191,6 +154,27 @@ const transfers = computed<Array<Transfer | null>>(() => {
 })
 
 const { numberOfPages, pageData: currentPageData, setPageNum, pageNum } = useAppPaginate(transfers, 'nftTransfers')
+
+/**
+ * Computed Property of token ids to fetch meta
+ */
+const tokenIDS = computed<NftId[]>(() => {
+    const _ids: NftId[] = []
+    if (!loadingTransfers.value && result.value && generateId) {
+        currentPageData.value.forEach(i => {
+            if (i) {
+                const id = {
+                    id: generateId(i.tokenId),
+                    contract: i.contract
+                }
+                _ids.push(id)
+            }
+        })
+    }
+    return _ids
+})
+
+const { nftMeta, loadingMeta } = useGetNftsMeta(tokenIDS, loadingTransfers)
 
 const getRowMeta = (contract: string, id: string): NftMetaFragment | undefined => {
     return nftMeta.value.get(generateMapId(contract, id))
