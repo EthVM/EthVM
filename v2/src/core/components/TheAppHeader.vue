@@ -135,7 +135,6 @@ const background = computed<string>(() => {
 const onScroll = e => {
     nextTick(() => {
         offset.value = window.scrollY
-        console.log(offset.value)
     })
 }
 </script>
