@@ -1,6 +1,6 @@
 <template>
-    <v-app-bar app flat color="primary" class="py-0 px-0 py-sm-2">
-        <v-container class="mx-2 mx-sm-6 mx-md-auto mx-lg-6 mx-xl-auto pa-0">
+    <v-app-bar app flat :color="background" :class="['py-0 px-0 py-sm-2']">
+        <v-container class="mx-2 mx-sm-6 mx-md-auto mx-lg-6 mx-xl-auto pa-0 text-white">
             <v-row align="center" justify="start" class="mr-0 mx-lg-0 flex-nowrap">
                 <div class="mr-4 ml-4">
                     <v-img :src="require('@/assets/logo.svg')" height="35" :width="xs ? '80' : '100'" contain class="ml-3 ml-sm-none mr-auto" />
@@ -51,6 +51,7 @@ import { useAppNavigation } from '../composables/AppNavigation/useAppNavigation.
 import { useStore } from '@/store'
 import ModuleSearch from '@/modules/search/ModuleAppSearch.vue'
 import AppMenu from './AppMenu.vue'
+import BigNumber from 'bignumber.js'
 /* Vuetify BreakPoints */
 const { name, xs } = useDisplay()
 
@@ -58,7 +59,8 @@ const props = defineProps({
     hideSearchBar: {
         default: true,
         type: Boolean
-    }
+    },
+    isTransparent: Boolean
 })
 
 const showDrawerBtn = computed<boolean>(() => {
@@ -93,8 +95,19 @@ watch(
     }
 )
 
+watch(
+    () => props.isTransparent,
+    newVal => {
+        if (newVal) {
+            window.addEventListener('scroll', onScroll)
+        } else {
+            window.addEventListener('scroll', onScroll)
+        }
+    }
+)
+
 onMounted(() => {
-    if (props.hideSearchBar) {
+    if (props.hideSearchBar || props.isTransparent) {
         window.addEventListener('scroll', onScroll)
     }
 })
@@ -109,9 +122,25 @@ const showSearchbar = computed<boolean>(() => {
     return true
 })
 
+const background = computed<string>(() => {
+    if (props.isTransparent) {
+        if (offset.value < 120) {
+            const transparency = new BigNumber(0.00833333333).multipliedBy(offset.value)
+            return `rgba(9,30,65, ${transparency})`
+        }
+    }
+    return 'primary'
+})
+
 const onScroll = e => {
     nextTick(() => {
         offset.value = window.scrollY
+        console.log(offset.value)
     })
 }
 </script>
+<style scoped lang="scss">
+.transparent-header {
+    background: rgba(0, 0, 0, 0) !important;
+}
+</style>
