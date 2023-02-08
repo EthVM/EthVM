@@ -3,13 +3,30 @@
         <v-tabs
             v-if="!props.btnVariant"
             v-model="state.activeTab"
-            :density="xs ? 'compact' : 'default'"
-            color="tabActive"
+            density="compact"
             end
             @update:model-value="changeTab"
-            class="mr-2 mr-sm-10"
+            hide-slider
+            align-tabs="start"
+            selected-class="font-weight-bold"
+            class="px-3"
         >
-            <v-tab v-for="(i, index) in props.tabs" :key="index" :value="i.value" class="text-h6 rounded-t-xl text-uppercase">{{ i.title }}</v-tab>
+            <v-tab v-for="(i, index) in tabs" :key="index" :value="i.value" min-width="30" class="text-h6 rounded-lg text-capitalize font-weight-light px-3">{{
+                i.title
+            }}</v-tab>
+            <v-btn
+                v-if="moreTabs.length > 0 && xs"
+                variant="text"
+                rounded="lg"
+                class="align-self-center font-weight-light text-h6 text-capitalize"
+                height="100%"
+                id="activator-mobile"
+            >
+                more
+            </v-btn>
+            <app-menu v-if="moreTabs.length > 0 && xs" min-width="180" activator="#activator-mobile">
+                <v-list-item v-for="tab in moreTabs" :title="tab.title" class="py-2" @click="changeTab(tab.value)" :key="tab.value"> </v-list-item>
+            </app-menu>
         </v-tabs>
         <v-row v-else>
             <v-btn
@@ -28,10 +45,11 @@
 </template>
 
 <script setup lang="ts">
-import { defineEmits, watch, reactive } from 'vue'
+import { defineEmits, watch, reactive, computed } from 'vue'
 import { Tab } from '@core/components/props'
 import { useDisplay } from 'vuetify/lib/framework.mjs'
 import { useRouter, useRoute, onBeforeRouteUpdate } from 'vue-router'
+import AppMenu from '@core/components/AppMenu.vue'
 
 const { xs } = useDisplay()
 interface PropType {
@@ -47,8 +65,6 @@ const props = withDefaults(defineProps<PropType>(), {
 const emit = defineEmits<{
     (e: 'update:modelValue', tabId: string): void
 }>()
-
-// const activeTab = ref(props.modelValue)
 
 const state = reactive({
     activeTab: props.modelValue
@@ -75,12 +91,16 @@ const btnClick = (value: string): void => {
  *
  * @param {string} activeTab
  */
-const changeTab = (): void => {
+const changeTab = (_value: string | undefined): void => {
+    if (_value && _value !== state.activeTab) {
+        state.activeTab = _value
+    }
     if (route.query.t !== state.activeTab) {
         router.push({
             query: { t: state.activeTab }
         })
     }
+
     emit('update:modelValue', state.activeTab)
 }
 
@@ -112,5 +132,37 @@ onBeforeRouteUpdate(async to => {
             }
         }
     }
+})
+
+/**
+ * Visible tabs, reduce number of tabs to 3 on XS
+ */
+const tabs = computed<Tab[]>(() => {
+    if (!xs.value) {
+        return props.tabs
+    }
+    if (props.tabs.length < 4) {
+        return props.tabs
+    }
+    const start = props.tabs.findIndex(i => i.value === state.activeTab)
+    const newTabs = props.tabs.slice(start, start + 3)
+    if (newTabs.length < 3) {
+        let i = 0
+        while (newTabs.length < 3) {
+            newTabs.push(props.tabs[i])
+            ++i
+        }
+    }
+    return newTabs
+})
+
+/**
+ * More tabs, returns all tabs for the meny if more then 3 tabs
+ */
+const moreTabs = computed<Tab[]>(() => {
+    if (props.tabs.length > 3 && xs.value) {
+        return props.tabs
+    }
+    return []
 })
 </script>
