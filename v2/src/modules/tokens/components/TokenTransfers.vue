@@ -1,15 +1,16 @@
 <template>
     <token-transfers-table
-        :transfers="transferData"
+        :transfers="currentPageData"
         :loading="loading"
         :initial-load="initialLoad"
         :show-pagination="showPagination"
         :decimals="props.decimals"
         :symbol="props.symbol"
-        :max-items="MAX_ITEMS"
-        :has-more="showPagination"
+        :max-items="ITEMS_PER_PAGE"
+        :has-more="hasMore"
         :has-items="hasItems"
-        :index="state.index"
+        :pages="numberOfPages"
+        :current-page-num="pageNum"
         :has-error="state.hasError"
         :transfer-type="transferType"
         :nft-meta="nftMeta"
@@ -37,8 +38,8 @@ import {
 import { useGetNftsMeta } from '@core/composables/NftMeta/useGetNftsMeta.composable'
 import { NftId, generateId } from '@/core/composables/NftMeta/helpers'
 import { TransferType } from '@/apollo/types'
-
-const MAX_ITEMS = 10
+import { useAppPaginate } from '@core/composables/AppPaginate/useAppPaginate.composable'
+import { ITEMS_PER_PAGE } from '@core/constants'
 
 interface PropType {
     address: string
@@ -77,7 +78,7 @@ const {
 } = useGetErc20TokenTransfersQuery(
     () => ({
         _contract: props.address,
-        _limit: MAX_ITEMS
+        _limit: ITEMS_PER_PAGE
     }),
     { notifyOnNetworkStatusChange: true }
 )
@@ -106,7 +107,7 @@ const {
 } = useGetErc721TokenTransfersQuery(
     () => ({
         _contract: props.address,
-        _limit: MAX_ITEMS
+        _limit: ITEMS_PER_PAGE
     }),
     { notifyOnNetworkStatusChange: true }
 )
@@ -140,7 +141,7 @@ const {
 } = useGetErc1155TokenTransfersQuery(
     () => ({
         _contract: props.address,
-        _limit: MAX_ITEMS
+        _limit: ITEMS_PER_PAGE
     }),
     { notifyOnNetworkStatusChange: true }
 )
@@ -215,7 +216,7 @@ const { nftMeta, loadingMeta } = useGetNftsMeta(tokenIDS, loadingTransfers)
 const initialLoad = computed<boolean>(() => {
     return !erc721TokenTransferResult.value || !erc20TokenTransferResult.value || !erc1155TokenTransferResult.value || loadingMeta.value
 })
-const transferData = computed<TokenTransferFragment[] | Erc721TransferFragment[] | Erc1155TokenTransferFragment[]>(() => {
+const transferData = computed<TokenTransferFragment[] | Erc721TransferFragment[] | Erc1155TokenTransferFragment[] | Array<null>>(() => {
     if (!initialLoad.value) {
         const data = !hasNftTransfers.value
             ? erc20TokenTransfer.value?.transfers.filter((x): x is TokenTransferFragment => x !== null)
@@ -229,12 +230,18 @@ const transferData = computed<TokenTransferFragment[] | Erc721TransferFragment[]
     return []
 })
 
+const { numberOfPages, pageData: currentPageData, setPageNum, pageNum } = useAppPaginate(transferData, 'tokenTransfers')
+
 const loading = computed<boolean>(() => {
     return loadingErc20TokenTransfer.value || loadingErc721TokenTransfer.value || loadingErc1155TokenTransfer.value || loadingMeta.value
 })
 
-const showPagination = computed<boolean>(() => {
+const hasMore = computed<boolean>(() => {
     return hasMoreERC721Transfers.value || hasMoreERC20Transfers.value || hasMoreERC1155Transfers.value
+})
+
+const showPagination = computed<boolean>(() => {
+    return !initialLoad.value && transferData && transferData.value.length > 0
 })
 
 const hasItems = computed<boolean>(() => {
@@ -280,7 +287,7 @@ const setPage = (page: number, reset = false): void => {
             fetchMoreTransfers(page)
         }
     }
-    state.index = page
+    setPageNum(page)
 }
 /**
  * Helper Functions to parse results from the fetch more queries
@@ -310,7 +317,7 @@ const fetchMoreTransfers = async (page: number): Promise<boolean> => {
     try {
         const _params = {
             _contract: props.address,
-            _limit: 10,
+            _limit: ITEMS_PER_PAGE,
             _nextKey: nextKey.value
         }
         switch (transferType.value) {
