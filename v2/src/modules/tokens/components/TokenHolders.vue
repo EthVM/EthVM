@@ -240,41 +240,6 @@ const holderType = computed<TransferType>(() => {
 })
 
 /**------------------------
- * NFT META
- -------------------------*/
-/**
- * Computed Property of token ids to be fetch meta
- */
-const tokenIDS = computed<NftId[]>(() => {
-    const _ids: NftId[] = []
-    if (holderType.value !== TransferType.Erc20 && hasNftOwners.value) {
-        if (holderType.value === TransferType.Erc721) {
-            erc721TokenHolders.value?.owners.forEach(owner => {
-                if (owner) {
-                    const id = {
-                        id: generateId(owner.tokenId),
-                        contract: owner.tokenInfo.contract
-                    }
-                    _ids.push(id)
-                }
-            })
-        } else if (holderType.value === TransferType.Erc1155) {
-            erc1155TokenHolders.value?.balances.forEach(owner => {
-                if (owner) {
-                    const id = {
-                        id: generateId(owner.tokenInfo.tokenId),
-                        contract: owner.tokenInfo.contract
-                    }
-                    _ids.push(id)
-                }
-            })
-        }
-    }
-    return _ids
-})
-const { nftMeta, loadingMeta } = useGetNftsMeta(tokenIDS, loading)
-
-/**------------------------
  * Holders
  -------------------------*/
 const initialLoad = computed<boolean>(() => {
@@ -304,6 +269,41 @@ const queryLimit = computed<number>(() => {
 })
 
 const { numberOfPages, pageData: currentPageData, setPageNum, pageNum } = useAppPaginate(holders, 'tokenHolders', queryLimit)
+
+/**------------------------
+ * NFT META
+ -------------------------*/
+/**
+ * Computed Property of token ids to be fetch meta
+ */
+const tokenIDS = computed<NftId[]>(() => {
+    const _ids: NftId[] = []
+    if (holderType.value !== TransferType.Erc20 && hasNftOwners.value) {
+        if (holderType.value === TransferType.Erc721) {
+            currentPageData.value?.forEach(owner => {
+                if (owner) {
+                    const id = {
+                        id: generateId(owner.tokenId),
+                        contract: owner.tokenInfo.contract
+                    }
+                    _ids.push(id)
+                }
+            })
+        } else if (holderType.value === TransferType.Erc1155) {
+            currentPageData.value?.forEach(owner => {
+                if (owner) {
+                    const id = {
+                        id: generateId(owner.tokenInfo.tokenId),
+                        contract: owner.tokenInfo.contract
+                    }
+                    _ids.push(id)
+                }
+            })
+        }
+    }
+    return _ids
+})
+const { nftMeta, loadingMeta } = useGetNftsMeta(tokenIDS, loading)
 
 const hasItems = computed<boolean>(() => {
     return !!(holders.value && holders.value.length)

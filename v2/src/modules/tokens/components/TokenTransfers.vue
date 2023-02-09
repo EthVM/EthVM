@@ -177,37 +177,6 @@ const loadingTransfers = computed<boolean>(() => {
 const hasNftTransfers = computed<boolean>(() => {
     return hasERC1155Transfers.value || hasERC721Transfers.value
 })
-/**
- * Computed Property of token ids to be fetch meta
- */
-const tokenIDS = computed<NftId[]>(() => {
-    const _ids: NftId[] = []
-    if (transferType.value !== TransferType.Erc20 && hasNftTransfers.value) {
-        if (transferType.value === TransferType.Erc721) {
-            erc721TokenTransfer.value?.transfers.forEach(transfer => {
-                if (transfer) {
-                    const id = {
-                        id: generateId(transfer.tokenId),
-                        contract: transfer.contract
-                    }
-                    _ids.push(id)
-                }
-            })
-        } else if (transferType.value === TransferType.Erc1155) {
-            erc1155TokenTransfers.value?.transfers.forEach(transfer => {
-                if (transfer) {
-                    const id = {
-                        id: generateId(transfer.tokenId),
-                        contract: transfer.contract
-                    }
-                    _ids.push(id)
-                }
-            })
-        }
-    }
-    return _ids
-})
-const { nftMeta, loadingMeta } = useGetNftsMeta(tokenIDS, loadingTransfers)
 
 /**------------------------
  * Transfers
@@ -231,6 +200,38 @@ const transferData = computed<TokenTransferFragment[] | Erc721TransferFragment[]
 })
 
 const { numberOfPages, pageData: currentPageData, setPageNum, pageNum } = useAppPaginate(transferData, 'tokenTransfers')
+
+/**
+ * Computed Property of token ids to be fetch meta
+ */
+const tokenIDS = computed<NftId[]>(() => {
+    const _ids: NftId[] = []
+    if (transferType.value !== TransferType.Erc20 && hasNftTransfers.value) {
+        if (transferType.value === TransferType.Erc721) {
+            currentPageData.value?.forEach((transfer: Erc721TransferFragment) => {
+                if (transfer) {
+                    const id = {
+                        id: generateId(transfer.tokenId),
+                        contract: transfer.contract
+                    }
+                    _ids.push(id)
+                }
+            })
+        } else if (transferType.value === TransferType.Erc1155) {
+            currentPageData.value?.forEach((transfer: Erc1155TokenTransferFragment) => {
+                if (transfer) {
+                    const id = {
+                        id: generateId(transfer.tokenId),
+                        contract: transfer.contract
+                    }
+                    _ids.push(id)
+                }
+            })
+        }
+    }
+    return _ids
+})
+const { nftMeta, loadingMeta } = useGetNftsMeta(tokenIDS, loadingTransfers)
 
 const loading = computed<boolean>(() => {
     return loadingErc20TokenTransfer.value || loadingErc721TokenTransfer.value || loadingErc1155TokenTransfer.value || loadingMeta.value
