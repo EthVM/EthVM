@@ -1,16 +1,27 @@
 <template>
     <div>
-        <div class="not-found px-2 px-sm-6 mx-xl-auto mt-n16 pt-16">
-            <v-container :class="[{ 'top-card-md': md }, { 'top-card-xs': smAndDown }, 'px-7 px-lg-12 pt-0 pb-16']">
-                <v-row align="center" justify="space-between">
-                    <div class="ml-lg-16 pl-lg-14">
-                        <p class="mt-16 text-white font-weight-light text-h3 text-sm-h2 text-md-h1 text-center text-lg-left">Track, analyze and explore</p>
-                        <p class="text-white font-weight-light text-h3 text-sm-h2 text-md-h1 text-center text-lg-left">on the Ethereum blockchain.</p>
+        <div class="nebula px-2 px-sm-6 mx-xl-auto mt-n16 pt-16">
+            <v-container :class="['px-7 px-lg-12 pt-5 pt-lg-0 pb-16']">
+                <v-row align="center" justify="space-between" class="flex-column flex-lg-row">
+                    <v-img v-if="mdAndDown" :src="require('@/assets/hero/hero.png')" alt="" height="300" width="300" max-height="300" max-width="300" contain />
+
+                    <div class="ml-lg-16 pl-lg-14 pb-10 pb-sm-16 pb-lg-0">
+                        <p class="mt-lg-16 text-white font-weight-light text-h3 text-sm-h2 text-lg-h1 text-center text-lg-left">Track, analyze and explore</p>
+                        <p class="text-white font-weight-light text-h3 text-sm-h2 text-lg-h1 text-center text-lg-left">on the Ethereum blockchain.</p>
                         <div class="ml-1">
-                            <module-search class="justify-center justify-lg-start mt-5" />
+                            <module-search class="justify-center justify-lg-start mt-5 mt-lg-10" />
                         </div>
                     </div>
-                    <v-img :src="require('@/assets/hero/hero-group.png')" alt="" height="542" width="542" max-height="542" max-width="542" contain />
+                    <v-img
+                        v-if="lgAndUp"
+                        :src="require('@/assets/hero/hero-group.png')"
+                        alt=""
+                        min-height="460"
+                        min-width="460"
+                        max-height="542"
+                        max-width="542"
+                        contain
+                    />
                 </v-row>
             </v-container>
         </div>
@@ -41,7 +52,7 @@ import ModuleSearch from '@/modules/search/ModuleAppSearch.vue'
 
 import { useAppViewGrid } from '@core/composables/AppViewGrid/AppViewGrid.composable'
 import { useDisplay } from 'vuetify/lib/framework.mjs'
-const { smAndDown, lgAndUp, md } = useDisplay()
+const { smAndDown, lgAndUp, md, mdAndDown } = useDisplay()
 const { columnPadding, rowMargin } = useAppViewGrid()
 </script>
 
@@ -51,10 +62,6 @@ const { columnPadding, rowMargin } = useAppViewGrid()
 }
 .adr-core-background-mobile {
     background: linear-gradient(to bottom, rgb(var(--v-theme-primary)) 466px, rgb(var(--v-theme-background)) 466px, rgb(var(--v-theme-background)) 100%);
-}
-
-.top-card-lg {
-    margin-top: 164px;
 }
 
 .top-card-md {
@@ -67,7 +74,7 @@ const { columnPadding, rowMargin } = useAppViewGrid()
     margin-top: 205px;
 }
 
-.not-found {
+.nebula {
     background: url('/src/assets/background-nebula.png');
     background-size: cover;
     background-attachment: fixed;
