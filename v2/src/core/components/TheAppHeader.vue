@@ -117,14 +117,23 @@ onMounted(() => {
  */
 const showSearchbar = computed<boolean>(() => {
     if (props.hideSearchBar) {
-        return offset.value > 500
+        return offset.value > 578
     }
     return true
 })
+100 / 242
 
 const background = computed<string>(() => {
     if (props.isTransparent) {
-        if (offset.value < 120) {
+        if (props.hideSearchBar) {
+            if (offset.value < 580) {
+                const multiplier = offset.value - 338
+                const magic = offset.value < 338 ? 0 : 0.004132
+                const transparency = new BigNumber(magic).multipliedBy(multiplier).toFixed()
+                return `rgba(9,30,65, ${transparency})`
+            }
+        }
+        if (offset.value < 120 && !props.hideSearchBar) {
             const transparency = new BigNumber(0.00833333333).multipliedBy(offset.value)
             return `rgba(9,30,65, ${transparency})`
         }

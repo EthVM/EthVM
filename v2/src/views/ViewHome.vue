@@ -1,16 +1,19 @@
 <template>
     <div>
-        <v-card color="primary" width="100%" flat min-height="400" rounded="0" class="px-2 px-sm-6 mx-xl-auto mt-n16 pt-16">
-            <v-container :class="[{ 'top-card-lg': lgAndUp }, { 'top-card-md': md }, { 'top-card-xs': smAndDown }, 'px-7 px-lg-12 pb-0']">
-                <div class="ml-lg-16 pl-lg-14">
-                    <p class="mt-16 text-white font-weight-light text-h3 text-sm-h2 text-md-h1 text-center text-lg-left">Track, analyze and explore</p>
-                    <p class="text-white font-weight-light text-h3 text-sm-h2 text-md-h1 text-center text-lg-left">on the Ethereum blockchain.</p>
-                    <div class="ml-1">
-                        <module-search class="justify-center justify-lg-start mt-5" />
+        <div class="not-found px-2 px-sm-6 mx-xl-auto mt-n16 pt-16">
+            <v-container :class="[{ 'top-card-lg': lgAndUp }, { 'top-card-md': md }, { 'top-card-xs': smAndDown }, 'px-7 px-lg-12 pb-0 ']">
+                <v-row align="center" justify="space-between">
+                    <div class="ml-lg-16 pl-lg-14">
+                        <p class="mt-16 text-white font-weight-light text-h3 text-sm-h2 text-md-h1 text-center text-lg-left">Track, analyze and explore</p>
+                        <p class="text-white font-weight-light text-h3 text-sm-h2 text-md-h1 text-center text-lg-left">on the Ethereum blockchain.</p>
+                        <div class="ml-1">
+                            <module-search class="justify-center justify-lg-start mt-5" />
+                        </div>
                     </div>
-                </div>
+                    <v-img :src="require('@/assets/hero/hero-group.png')" alt="" height="542" width="542" max-height="542" max-width="542" contain />
+                </v-row>
             </v-container>
-        </v-card>
+        </div>
         <div class="mx-2 mx-sm-6 mx-xl-auto">
             <v-container class="pt-3 px-0">
                 <v-row :class="rowMargin">
@@ -51,7 +54,6 @@ const { columnPadding, rowMargin } = useAppViewGrid()
 }
 
 .top-card-lg {
-    margin-bottom: 228px;
     margin-top: 164px;
 }
 
@@ -63,5 +65,14 @@ const { columnPadding, rowMargin } = useAppViewGrid()
 .top-card-xs {
     margin-bottom: 84px;
     margin-top: 205px;
+}
+
+.not-found {
+    background: url('/src/assets/background-nebula.png');
+    background-size: cover;
+    background-attachment: fixed;
+    background-position: right 35% center;
+    height: 100%;
+    width: 100;
 }
 </style>
