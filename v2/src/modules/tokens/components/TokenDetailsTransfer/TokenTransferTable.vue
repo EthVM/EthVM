@@ -20,7 +20,7 @@
             <!-- Start Rows -->
             <div v-if="props.loading" class="p-ten-top">
                 <div v-for="item in props.maxItems" :key="item" style="padding: 10px 0">
-                    <div class="skeleton-box rounded-xl" style="height: 32px"></div>
+                    <div class="skeleton-box rounded-xl" :style="isNFT ? 'height: 40px' : 'height: 32px'"></div>
                 </div>
             </div>
             <div v-else class="p-ten-top">

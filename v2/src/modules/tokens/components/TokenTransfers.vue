@@ -214,7 +214,7 @@ const { nftMeta, loadingMeta } = useGetNftsMeta(tokenIDS, loadingTransfers)
  -------------------------*/
 
 const initialLoad = computed<boolean>(() => {
-    return !erc721TokenTransferResult.value || !erc20TokenTransferResult.value || !erc1155TokenTransferResult.value || loadingMeta.value
+    return !erc721TokenTransferResult.value || !erc20TokenTransferResult.value || !erc1155TokenTransferResult.value
 })
 const transferData = computed<TokenTransferFragment[] | Erc721TransferFragment[] | Erc1155TokenTransferFragment[] | Array<null>>(() => {
     if (!initialLoad.value) {
@@ -241,7 +241,7 @@ const hasMore = computed<boolean>(() => {
 })
 
 const showPagination = computed<boolean>(() => {
-    return !initialLoad.value && transferData && transferData.value.length > 0
+    return !initialLoad.value || hasItems.value || !!tokenIDS.value.length
 })
 
 const hasItems = computed<boolean>(() => {

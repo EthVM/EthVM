@@ -1,10 +1,5 @@
 <template>
     <v-card variant="flat" class="pa-4 pa-sm-6">
-        <!-- Pagination -->
-        <!--        <v-row v-if="props.showPagination" justify="center" justify-md="end" row fill-height class="pb-1 pr-2 pl-2">-->
-        <!--            <app-paginate-has-more :current-page="props.index" :has-more="props.hasMore" :loading="props.loading || props.hasError" @newPage="setPage" />-->
-        <!--        </v-row>-->
-        <!-- End Pagination -->
         <!-- Table Header ERC20 -->
         <div v-if="!props.initialLoad && !props.hasError && !isNft">
             <v-row align="center" justify="start" class="text-body-1 text-info d-none d-sm-flex">
@@ -34,9 +29,11 @@
         <!--End No results Message -->
 
         <!-- Table Row ERC20 -->
-        <div v-else-if="!props.initialLoad && tokensErc20.length > 0" class="p-ten-top">
-            <div v-if="loading">
-                <div v-for="n in 10" class="skeleton-box rounded-xl mt-1 my-4" style="height: 44px" :key="n"></div>
+        <div v-else-if="!props.initialLoad && !isNft" class="p-ten-top">
+            <div v-if="props.loading">
+                <div v-for="n in 10" :key="n" style="padding: 10px 0">
+                    <div class="skeleton-box rounded-xl" style="height: 32px"></div>
+                </div>
             </div>
             <div v-for="(holder, index) in tokensErc20" v-else :key="index">
                 <holders-table-row
@@ -47,36 +44,39 @@
                     :price="tokenPrice"
                 />
             </div>
-            <app-intersect v-if="props.hasMore" @intersect="loadMoreData">
-                <div class="skeleton-box rounded-xl mt-1 my-4" style="height: 24px"></div>
-            </app-intersect>
         </div>
         <!-- End Table Row ERC20 -->
 
         <!-- Table Row NFT -->
-        <v-row v-else-if="!props.initialLoad && tokensNft.length > 0" class="p-ten-top">
-            <v-col v-for="(holder, index) in tokensNft" :key="index" cols="6" sm="4" lg="2" class="p-ten-top">
-                <token-nft-img v-if="!loading" :loading="loadingMeta" :nft="holder" height="240" class="rounded-md"></token-nft-img>
-                <div v-if="!loading" class="d-flex align-center">
-                    <app-address-blockie :address="holder.holder || ''" :size="8" class="mr-1 mr-sm-2" />
-                    <div>
-                        <p>Owned By</p>
-                        <app-transform-hash is-blue is-short :hash="eth.toCheckSum(holder.holder || '')" :link="`/address/${holder.holder}`" />
+        <v-row v-else-if="!props.initialLoad && isNft" class="p-ten-top">
+            <template v-if="!loading && tokensNft.length > 0">
+                <v-col v-for="(holder, index) in tokensNft" :key="index" cols="6" sm="4" lg="2" class="p-ten-top">
+                    <token-nft-img v-if="!loading" :loading="loadingMeta" :nft="holder" height="240" class="rounded-md"></token-nft-img>
+                    <div v-if="!loading" class="d-flex align-center">
+                        <app-address-blockie :address="holder.holder || ''" :size="8" class="mr-1 mr-sm-2" />
+                        <div>
+                            <p>Owned By</p>
+                            <app-transform-hash is-blue is-short :hash="eth.toCheckSum(holder.holder || '')" :link="`/address/${holder.holder}`" />
+                        </div>
                     </div>
-                </div>
-                <div v-else class="skeleton-box rounded-xl" style="height: 245px"></div>
-            </v-col>
-            <app-intersect v-if="props.hasMore" @intersect="loadMoreData">
-                <div class="skeleton-box rounded-xl mt-1 my-4" style="height: 24px"></div>
-            </app-intersect>
+                </v-col>
+            </template>
+            <template v-else>
+                <v-col v-for="(holder, index) in props.maxItems" :key="index" cols="6" sm="4" lg="2" class="p-ten-top">
+                    <div class="skeleton-box rounded-xl" style="height: 281px"></div>
+                </v-col>
+            </template>
         </v-row>
         <!--End Table Row NFT -->
+        <template v-if="props.showPagination">
+            <app-pagination :length="props.pages" :has-more="props.hasMore" @update:modelValue="loadMoreData" :current-page="props.currentPageNum" />
+        </template>
     </v-card>
 </template>
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import AppIntersect from '@core/components/AppIntersect.vue'
+import AppPagination from '@core/components/AppPagination.vue'
 import AppNoResult from '@/core/components/AppNoResult.vue'
 import HoldersTableRow from './TokenHolderTableRow.vue'
 import AppAddressBlockie from '@core/components/AppAddressBlockie.vue'
@@ -105,7 +105,8 @@ interface PropType {
     decimals?: number
     hasError: boolean
     maxItems: number
-    index: number
+    pages: number
+    currentPageNum: number
     address: string
     holderType: TransferType
     tokenData: TokenMarketData | false
@@ -132,10 +133,8 @@ const setPage = (page: number, reset = false): void => {
     emit('setPage', page, reset)
 }
 
-const loadMoreData = (e: boolean): void => {
-    if (e) {
-        setPage(props.index + 1)
-    }
+const loadMoreData = (num: number): void => {
+    setPage(num)
 }
 
 const isNft = computed<boolean>(() => {

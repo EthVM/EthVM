@@ -1,13 +1,14 @@
 <template>
     <token-holders-table
-        :holders="holders"
+        :holders="currentPageData"
         :loading="loading"
         :show-pagination="showPagination"
         :decimals="props.decimals"
-        :max-items="MAX_ITEMS"
-        :has-more="showPagination"
+        :max-items="queryLimit"
+        :has-more="hasMore"
         :has-items="hasItems"
-        :index="state.index"
+        :pages="numberOfPages"
+        :current-page-num="pageNum"
         :has-error="state.hasError"
         :address="props.address"
         :token-data="tokenData"
@@ -40,8 +41,9 @@ import { MarketDataFragment as TokenMarketData } from '@core/composables/CoinDat
 import { useGetNftsMeta } from '@core/composables/NftMeta/useGetNftsMeta.composable'
 import { NftId, generateId } from '@/core/composables/NftMeta/helpers'
 import { TransferType } from '@/apollo/types'
-
-const MAX_ITEMS = 10
+import { useAppPaginate } from '@core/composables/AppPaginate/useAppPaginate.composable'
+import { ITEMS_PER_PAGE } from '@core/constants'
+import { useDisplay } from 'vuetify'
 
 interface PropType {
     address: string
@@ -93,7 +95,7 @@ const {
 } = useGetErc20TokenOwnersQuery(
     () => ({
         contract: props.address,
-        _limit: MAX_ITEMS
+        _limit: ITEMS_PER_PAGE
     }),
     { notifyOnNetworkStatusChange: true }
 )
@@ -129,7 +131,7 @@ if (erc20TokenHolderResult.value?.getERC20TokenOwners) {
 /**------------------------
  * ERC721 Holders
  -------------------------*/
-
+const { sm } = useDisplay()
 const {
     result: erc721TokenHoldersResult,
     loading: loadingErc721TokenHolders,
@@ -140,7 +142,7 @@ const {
 } = useGetErc721TokenOwnersQuery(
     () => ({
         contract: props.address,
-        _limit: MAX_ITEMS
+        _limit: sm.value ? 24 : 48
     }),
     { notifyOnNetworkStatusChange: true }
 )
@@ -188,7 +190,7 @@ const {
 } = useGetErc1155TokenOwnersQuery(
     () => ({
         contract: props.address,
-        _limit: MAX_ITEMS
+        _limit: ITEMS_PER_PAGE
     }),
     { notifyOnNetworkStatusChange: true }
 )
@@ -293,6 +295,16 @@ const holders = computed<Erc20Owner[] | Erc721Owner[] | Erc1155Owner[]>(() => {
     }
     return []
 })
+
+const queryLimit = computed<number>(() => {
+    if (holderType.value !== TransferType.Erc20) {
+        return sm.value ? 24 : 48
+    }
+    return ITEMS_PER_PAGE
+})
+
+const { numberOfPages, pageData: currentPageData, setPageNum, pageNum } = useAppPaginate(holders, 'tokenHolders', queryLimit)
+
 const hasItems = computed<boolean>(() => {
     return !!(holders.value && holders.value.length)
 })
@@ -311,10 +323,11 @@ const nextKey = computed<string | null | undefined>(() => {
 })
 
 const showPagination = computed<boolean>(() => {
-    if (hasItems.value) {
-        return holders.value.length > MAX_ITEMS ? true : nextKey.value !== undefined
-    }
-    return false
+    return !initialLoad.value && !!holders.value && holders.value.length > 0
+})
+
+const hasMore = computed<boolean>(() => {
+    return hasItems.value && nextKey.value !== undefined
 })
 
 /**
@@ -338,11 +351,11 @@ const setPage = (page: number, reset = false): void => {
         refetchErc721TokenHolders()
         refetchErc1155TokenHolders()
     } else {
-        if (page > state.isEnd && showPagination.value && nextKey.value) {
+        if (page > state.isEnd && hasMore.value) {
             fetchMoreHolders(page)
         }
     }
-    state.index = page
+    setPageNum(page)
 }
 
 /**
@@ -368,7 +381,7 @@ const fetchMoreHolders = async (page: number): Promise<boolean> => {
     try {
         const _params = {
             _contract: props.address,
-            _limit: 10,
+            _limit: queryLimit.value,
             _nextKey: nextKey.value
         }
         switch (holderType.value) {
