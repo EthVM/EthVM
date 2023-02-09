@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="not-found px-2 px-sm-6 mx-xl-auto mt-n16 pt-16">
-            <v-container :class="[{ 'top-card-md': md }, { 'top-card-xs': smAndDown }, 'px-7 px-lg-12 pt-0 pb-10']">
+            <v-container :class="[{ 'top-card-md': md }, { 'top-card-xs': smAndDown }, 'px-7 px-lg-12 pt-0 pb-16']">
                 <v-row align="center" justify="space-between">
                     <div class="ml-lg-16 pl-lg-14">
                         <p class="mt-16 text-white font-weight-light text-h3 text-sm-h2 text-md-h1 text-center text-lg-left">Track, analyze and explore</p>
