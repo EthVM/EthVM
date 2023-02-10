@@ -49,10 +49,10 @@
 
         <!-- Table Row NFT -->
         <v-row v-else-if="!props.initialLoad && isNft" class="p-ten-top">
-            <template v-if="!loading && tokensNft.length > 0">
+            <template v-if="!props.loading && !props.loadingMeta && tokensNft.length > 0">
                 <v-col v-for="(holder, index) in tokensNft" :key="index" cols="6" sm="4" lg="2" class="p-ten-top">
-                    <token-nft-img v-if="!loading" :loading="loadingMeta" :nft="holder" height="240" class="rounded-md"></token-nft-img>
-                    <div v-if="!loading" class="d-flex align-center">
+                    <token-nft-img v-if="!props.loading" :loading="props.loadingMeta" :nft="holder" height="240" class="rounded-md"></token-nft-img>
+                    <div v-if="!props.loading" class="d-flex align-center">
                         <app-address-blockie :address="holder.holder || ''" :size="8" class="mr-1 mr-sm-2" />
                         <div>
                             <p>Owned By</p>
