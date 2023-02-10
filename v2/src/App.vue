@@ -1,9 +1,9 @@
 <template>
     <v-app class="app-view">
         <the-app-navigation-drawer-vue />
-        <the-app-header :hide-search-bar="isHomeView" />
+        <the-app-header :hide-search-bar="isHomeView" :is-transparent="isLost" />
         <v-main class="w-100">
-            <v-container :class="[isAddressView || isHomeView ? 'pa-0' : 'px-2 px-sm-6 pt-4 pt-sm-6']" :fluid="isAddressView || isHomeView">
+            <v-container :class="[isAddressView || isHomeView || isLost ? 'pa-0' : 'px-2 px-sm-6 pt-4 pt-sm-6']" :fluid="isAddressView || isHomeView || isLost">
                 <router-view />
             </v-container>
             <the-notifications />
@@ -18,10 +18,9 @@ import TheAppFooter from '@core/components/TheAppFooter.vue'
 import TheAppNavigationDrawerVue from './core/components/TheAppNavigationDrawer.vue'
 import TheNotifications from './core/components/TheNotifications.vue'
 import { useStore } from '@/store'
-import { usePreferredColorScheme } from '@vueuse/core'
 import { useGetLatestPricesQuery } from '@core/composables/CoinData/getLatestPrices.generated'
 import { useSetPortfolio } from './core/composables/Portfolio/useSetPortfolioBalance'
-import { computed, watch, reactive, onMounted } from 'vue'
+import { computed, watch, reactive } from 'vue'
 import { useRoute } from 'vue-router'
 import { ROUTE_NAME } from '@core/router/routesNames'
 
@@ -55,6 +54,10 @@ const isAddressView = computed<boolean>(() => {
 
 const isHomeView = computed<boolean>(() => {
     return route.name === ROUTE_NAME.HOME.NAME
+})
+
+const isLost = computed<boolean>(() => {
+    return route.name === ROUTE_NAME.NOT_FOUND.NAME
 })
 
 /*
