@@ -3,7 +3,7 @@ import { computed, isRef, Ref, ref, watch } from 'vue'
 import { useStore } from '@/store'
 import { onBeforeRouteLeave } from 'vue-router'
 
-export function useAppPaginate<T>(dataToPaginate: Ref<Array<T>>, id?: Ref<string> | string, itemsPerPage?: number) {
+export function useAppPaginate<T>(dataToPaginate: Ref<Array<T>>, id?: Ref<string> | string, itemsPerPage?: number | Ref<number>) {
     const store = useStore()
     const pageNum = ref(1)
 
@@ -28,16 +28,21 @@ export function useAppPaginate<T>(dataToPaginate: Ref<Array<T>>, id?: Ref<string
         return pageId.value ? store.paginationStateMap.get(pageId.value) || 1 : pageNum.value
     })
 
+    const numberOfItemsPerPage = computed<number>(() => {
+        if (!itemsPerPage) {
+            return ITEMS_PER_PAGE
+        }
+        return isRef(itemsPerPage) ? itemsPerPage.value : itemsPerPage
+    })
+
     const pageData = computed(() => {
-        const numberOfItemsPerPage = itemsPerPage ? itemsPerPage : ITEMS_PER_PAGE
-        const start = (computedPageNum.value - 1) * numberOfItemsPerPage
-        const end = computedPageNum.value * numberOfItemsPerPage
+        const start = (computedPageNum.value - 1) * numberOfItemsPerPage.value
+        const end = computedPageNum.value * numberOfItemsPerPage.value
         return dataToPaginate.value.slice(start, end)
     })
 
     const numberOfPages = computed<number>(() => {
-        const numberOfItemsPerPage = itemsPerPage ? itemsPerPage : ITEMS_PER_PAGE
-        return Math.ceil(dataToPaginate.value.length / numberOfItemsPerPage)
+        return Math.ceil(dataToPaginate.value.length / numberOfItemsPerPage.value)
     })
 
     const setPageNum = (page: number) => {
