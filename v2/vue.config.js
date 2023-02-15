@@ -1,6 +1,7 @@
 const { defineConfig } = require('@vue/cli-service')
 const webpack = require('webpack')
 const path = require('path')
+const ImageMinimizerPlugin = require('image-minimizer-webpack-plugin')
 
 module.exports = defineConfig({
     transpileDependencies: ['vuetify'],
@@ -10,6 +11,7 @@ module.exports = defineConfig({
             stylesTimeout: 20000
         }
     },
+    parallel: process.env.NODE_ENV !== 'production',
     publicPath: process.env.VUE_APP_ROUTER_MODE === 'hash' ? './' : '/',
     configureWebpack: {
         module: {
@@ -19,12 +21,12 @@ module.exports = defineConfig({
                     use: 'graphql-tag/loader'
                 },
                 {
-                    test: /.ts$/,
+                    test: /\.ts$/,
                     use: [
                         {
                             loader: 'ts-loader',
                             options: {
-                                appendTsSuffixTo: [/.vue$/]
+                                appendTsSuffixTo: [/\.vue$/]
                             }
                         }
                     ]
@@ -38,6 +40,12 @@ module.exports = defineConfig({
             })
         ],
         resolve: {
+            extensions: ['.ts', '.tsx', '.js'],
+            extensionAlias: {
+                '.js': ['.js', '.ts'],
+                '.cjs': ['.cjs', '.cts'],
+                '.mjs': ['.mjs', '.mts']
+            },
             fallback: {
                 http: require.resolve('stream-http'),
                 stream: require.resolve('stream-browserify'),
@@ -50,6 +58,28 @@ module.exports = defineConfig({
                 '@core': path.resolve(__dirname, 'src/core/'),
                 '@apollo-types': path.resolve(__dirname, 'src/apollo/types/')
             }
+        },
+        optimization: {
+            minimizer: [
+                new ImageMinimizerPlugin({
+                    minimizer: {
+                        implementation: ImageMinimizerPlugin.squooshMinify,
+                        options: {
+                            encodeOptions: {
+                                mozjpeg: {
+                                    quality: 100
+                                },
+                                webp: {
+                                    lossless: 1
+                                },
+                                avif: {
+                                    cqLevel: 0
+                                }
+                            }
+                        }
+                    }
+                })
+            ]
         }
     },
     chainWebpack: config => {

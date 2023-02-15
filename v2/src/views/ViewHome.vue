@@ -5,7 +5,7 @@
                 <v-row align="center" justify="space-between" class="flex-column flex-lg-row">
                     <v-img v-if="mdAndDown" :src="require('@/assets/hero/hero.png')" alt="" height="300" width="300" max-height="300" max-width="300" contain />
 
-                    <div class="ml-lg-16 pl-lg-14 pb-10 pb-sm-16 pb-lg-0">
+                    <div class="pl-lg-14 pb-10 pb-sm-16 pb-lg-0">
                         <p class="mt-lg-16 text-white font-weight-light text-h3 text-sm-h2 text-lg-h1 text-center text-lg-left">Track, analyze and explore</p>
                         <p class="text-white font-weight-light text-h3 text-sm-h2 text-lg-h1 text-center text-lg-left">on the Ethereum blockchain.</p>
                         <div class="ml-1">
@@ -18,8 +18,8 @@
                         alt=""
                         min-height="460"
                         min-width="460"
-                        max-height="542"
-                        max-width="542"
+                        max-height="460"
+                        max-width="460"
                         contain
                     />
                 </v-row>
