@@ -3,6 +3,40 @@ const webpack = require('webpack')
 const path = require('path')
 const ImageMinimizerPlugin = require('image-minimizer-webpack-plugin')
 
+const minOptions = {
+    minimizer: {
+        implementation: ImageMinimizerPlugin.squooshMinify,
+        options: {
+            encodeOptions: {
+                mozjpeg: {
+                    quality: 100
+                },
+                webp: {
+                    lossless: 1
+                },
+                avif: {
+                    cqLevel: 0
+                }
+            }
+        }
+    },
+    generator: [
+        {
+            // You can apply generator using `?as=webp`, you can use any name and provide more options
+            preset: 'webp',
+            implementation: ImageMinimizerPlugin.squooshGenerate,
+            options: {
+                encodeOptions: {
+                    // Please specify only one codec here, multiple codecs will not work
+                    webp: {
+                        quality: 90
+                    }
+                }
+            }
+        }
+    ]
+}
+
 module.exports = defineConfig({
     transpileDependencies: ['vuetify'],
     pluginOptions: {
@@ -30,6 +64,13 @@ module.exports = defineConfig({
                             }
                         }
                     ]
+                },
+                {
+                    test: /\.(png|jpeg|jpg|gif|svg|webp)$/i,
+                    loader: ImageMinimizerPlugin.loader,
+                    enforce: 'pre',
+                    type: 'asset/resource',
+                    options: minOptions
                 }
             ]
         },
@@ -58,29 +99,10 @@ module.exports = defineConfig({
                 '@core': path.resolve(__dirname, 'src/core/'),
                 '@apollo-types': path.resolve(__dirname, 'src/apollo/types/')
             }
-        },
-        optimization: {
-            minimizer: [
-                new ImageMinimizerPlugin({
-                    minimizer: {
-                        implementation: ImageMinimizerPlugin.squooshMinify,
-                        options: {
-                            encodeOptions: {
-                                mozjpeg: {
-                                    quality: 100
-                                },
-                                webp: {
-                                    lossless: 1
-                                },
-                                avif: {
-                                    cqLevel: 0
-                                }
-                            }
-                        }
-                    }
-                })
-            ]
         }
+        // optimization: {
+        //     minimizer: [new ImageMinimizerPlugin({})]
+        // }
     },
     chainWebpack: config => {
         config.module

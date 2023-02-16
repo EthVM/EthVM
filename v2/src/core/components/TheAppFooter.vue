@@ -14,7 +14,14 @@
                                 <router-link to="/">
                                     <v-img :src="require('@/assets/logo.svg')" height="25" width="80" contain />
                                 </router-link>
-                                <v-img :src="require('@/assets/hero/hero-blocks.png')" width="225" aspect-ratio="1" cover class="footer-hero mt-4" />
+                                <v-img
+                                    :src="require('@/assets/hero/hero-blocks.png')"
+                                    width="225"
+                                    height="225"
+                                    aspect-ratio="1"
+                                    contain
+                                    class="footer-hero mt-4"
+                                />
                             </v-col>
                             <v-spacer />
                             <v-col cols="12" lg="3" class="mb-11 mb-lg-0">

@@ -81,5 +81,6 @@ const { columnPadding, rowMargin } = useAppViewGrid()
     background-position: right 35% center;
     height: 100%;
     width: 100;
+    background-color: rgb(var(--v-theme-primary)) !important;
 }
 </style>
