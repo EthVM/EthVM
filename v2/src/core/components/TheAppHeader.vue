@@ -53,7 +53,7 @@ import ModuleSearch from '@/modules/search/ModuleAppSearch.vue'
 import AppMenu from './AppMenu.vue'
 import BigNumber from 'bignumber.js'
 /* Vuetify BreakPoints */
-const { name, xs } = useDisplay()
+const { name, xs, lgAndUp } = useDisplay()
 
 const props = defineProps({
     hideSearchBar: {
@@ -117,19 +117,17 @@ onMounted(() => {
  */
 const showSearchbar = computed<boolean>(() => {
     if (props.hideSearchBar) {
-        return offset.value > 578
+        const visibleAt = lgAndUp.value ? 352 : 440
+        return offset.value > visibleAt
     }
     return true
 })
-100 / 242
 
 const background = computed<string>(() => {
     if (props.isTransparent) {
         if (props.hideSearchBar) {
-            if (offset.value < 580) {
-                const multiplier = offset.value - 338
-                const magic = offset.value < 338 ? 0 : 0.004132
-                const transparency = new BigNumber(magic).multipliedBy(multiplier).toFixed()
+            if (offset.value < 131) {
+                const transparency = new BigNumber(0.007634).multipliedBy(offset.value).toFixed()
                 return `rgba(9,30,65, ${transparency})`
             }
         }

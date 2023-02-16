@@ -20,6 +20,7 @@
                         min-width="460"
                         max-height="460"
                         max-width="460"
+                        class="mt-10"
                         contain
                     />
                 </v-row>
