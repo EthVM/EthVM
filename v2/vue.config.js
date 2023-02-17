@@ -2,6 +2,7 @@ const { defineConfig } = require('@vue/cli-service')
 const webpack = require('webpack')
 const path = require('path')
 const ImageMinimizerPlugin = require('image-minimizer-webpack-plugin')
+const { VuetifyPlugin } = require('webpack-plugin-vuetify')
 
 const minOptions = {
     minimizer: {
@@ -40,10 +41,7 @@ const minOptions = {
 module.exports = defineConfig({
     transpileDependencies: ['vuetify'],
     pluginOptions: {
-        vuetify: {
-            styles: 'expose',
-            stylesTimeout: 20000
-        }
+        vuetify: {}
     },
     parallel: process.env.NODE_ENV !== 'production',
     publicPath: process.env.VUE_APP_ROUTER_MODE === 'hash' ? './' : '/',
@@ -78,6 +76,9 @@ module.exports = defineConfig({
             new webpack.ProvidePlugin({
                 Buffer: ['buffer', 'Buffer'],
                 process: 'process/browser'
+            }),
+            new VuetifyPlugin({
+                styles: { configFile: 'src/styles/settings.scss' }
             })
         ],
         resolve: {

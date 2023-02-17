@@ -1,6 +1,6 @@
 // Styles
 import 'material-design-icons-iconfont/dist/material-design-icons.css'
-import '@/styles/main.scss'
+import 'vuetify/styles'
 import { md, aliases } from 'vuetify/iconsets/md'
 import * as components from 'vuetify/components'
 import * as directives from 'vuetify/directives'
