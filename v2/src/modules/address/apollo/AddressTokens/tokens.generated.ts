@@ -51,7 +51,7 @@ export type GetOwnersErc721BalancesQuery = {
         __typename?: 'ERC721TokenBalance'
         balance: string
         tokenInfo: { __typename?: 'EthTokenInfo'; name?: string | null; symbol?: string | null; contract: string }
-    } | null>
+    }>
 }
 
 export type TokenFragment = { __typename?: 'ERC721TokenOwner'; token: string }

@@ -103,6 +103,7 @@ export type BlockRewards = {
 
 export type BlockSummary = {
     __typename?: 'BlockSummary'
+    baseFeePerGas?: Maybe<Scalars['String']>
     miner: Scalars['String']
     number: Scalars['Int']
     rewards: BlockRewards
@@ -246,6 +247,18 @@ export type EthTransfers = {
     transfers: Array<Maybe<EthTransfer>>
 }
 
+export type EthAndErc20TokenBalances = {
+    __typename?: 'EthAndErc20TokenBalances'
+    balances: Array<EthOrErc20TokenBalance>
+}
+
+export type EthOrErc20TokenBalance = {
+    __typename?: 'EthOrErc20TokenBalance'
+    balance: Scalars['String']
+    owner: Scalars['String']
+    tokenInfo?: Maybe<EthTokenInfo>
+}
+
 export type EthOwner = {
     __typename?: 'EthOwner'
     balance: Scalars['String']
@@ -262,10 +275,14 @@ export type EthTokenInfo = {
     __typename?: 'EthTokenInfo'
     contract: Scalars['String']
     decimals?: Maybe<Scalars['Int']>
+    description?: Maybe<Scalars['String']>
+    iconPng?: Maybe<Scalars['String']>
     name?: Maybe<Scalars['String']>
     symbol?: Maybe<Scalars['String']>
     tokenId?: Maybe<Scalars['String']>
     totalSupply?: Maybe<Scalars['String']>
+    type?: Maybe<TokenType>
+    website?: Maybe<Scalars['String']>
 }
 
 export type EthTransfer = {
@@ -451,11 +468,13 @@ export type Query = {
     /** Get ERC20 tokens owned by an address */
     getOwnersERC20Tokens: Erc20TokenOwners
     /** Get ERC721 tokens owned by an address */
-    getOwnersERC721Balances: Array<Maybe<Erc721TokenBalance>>
+    getOwnersERC721Balances: Array<Erc721TokenBalance>
     /** Get ERC721 tokens of a contract owned by an address */
     getOwnersERC721Tokens: Erc721TokenContract
     /** Get ERC721 tokens of a contract owned by an address (v2) */
     getOwnersERC721TokensV2: Erc721TokenContract
+    /** Get ETH and ERC20 tokens owned by an address */
+    getOwnersETHAndERC20Tokens: EthAndErc20TokenBalances
     getOwnersNFTTokens: NftTokenBalances
     getPendingTransactions: Array<Maybe<Tx>>
     /**
@@ -467,7 +486,7 @@ export type Query = {
     /** Returns the current server time in UTC milliseconds */
     getTimestamp: Scalars['String']
     getTokenInfoByContract: EthTokenInfo
-    getTokenInfoByContracts: Array<Maybe<EthTokenInfo>>
+    getTokenInfoByContracts: Array<EthTokenInfo>
     getTokensBeginsWith: Array<Maybe<TokenSearch>>
     getTransactionByHash: Tx
     getTransactionByHashWithTraces: Tx
@@ -686,6 +705,10 @@ export type QueryGetOwnersErc721TokensV2Args = {
     contract?: InputMaybe<Scalars['String']>
     limit?: InputMaybe<Scalars['Int']>
     nextKey?: InputMaybe<Scalars['String']>
+    owner: Scalars['String']
+}
+
+export type QueryGetOwnersEthAndErc20TokensArgs = {
     owner: Scalars['String']
 }
 
@@ -1036,6 +1059,12 @@ export type TokenSearch = {
     __typename?: 'TokenSearch'
     contract: Scalars['String']
     keyword: Scalars['String']
+}
+
+export enum TokenType {
+    Erc20 = 'ERC20',
+    Erc721 = 'ERC721',
+    Erc1155 = 'ERC1155'
 }
 
 export type Trace = {

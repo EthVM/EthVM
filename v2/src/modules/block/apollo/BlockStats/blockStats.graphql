@@ -3,6 +3,7 @@ fragment blockInfo on LatestBlockData {
     avgBlockTime
     hashRate
     difficulty
+    avgGasPrice
 }
 query getLatestBlockInfo {
     getLatestBlockInfo {
