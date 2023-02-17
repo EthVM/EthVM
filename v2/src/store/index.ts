@@ -75,6 +75,13 @@ export const useStore = defineStore('main', {
     }),
     getters: {
         /**
+         * Returns if app using DarkMode
+         * @returns boolean
+         */
+        isDarkMode: state => {
+            return state.appTheme === 'mainnetDarkTheme'
+        },
+        /**
          * Returns whether or not a token is saved to local storage
          * @returns boolean
          */
