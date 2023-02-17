@@ -7,7 +7,7 @@
           TX DETAILS LIST
         =====================================================================================
         -->
-        <tx-details v-if="isValid && !hasError" :tx-ref="props.txRef" :tab="props.tab" @errorDetails="setError" />
+        <tx-details v-if="isValid && !hasError" :tx-ref="props.txRef || ''" :tab="props.tab" @errorDetails="setError" />
     </div>
 </template>
 
@@ -35,7 +35,7 @@ const props = defineProps({
 })
 
 const isValid = computed<boolean>(() => {
-    return eth.isValidHash(props.txRef)
+    return eth.isValidHash(props.txRef || '')
 })
 
 const hasError = computed<boolean>(() => {
