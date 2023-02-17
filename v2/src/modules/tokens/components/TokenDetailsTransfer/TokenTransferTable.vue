@@ -1,11 +1,5 @@
 <template>
     <v-card variant="flat" class="pa-4 pa-sm-6">
-        <!-- Pagination -->
-        <!--        <v-row v-if="props.showPagination" justify="center" justify-md="end" row fill-height class="pb-1 pr-2 pl-2">-->
-        <!--            <app-paginate-has-more :current-page="props.index" :has-more="props.hasMore" :loading="props.loading || props.hasError" @newPage="setPage" />-->
-        <!--        </v-row>-->
-        <!-- End Pagination -->
-
         <!-- Table Header -->
         <div v-if="!props.hasError">
             <v-row align="center" justify="start" class="text-body-1 text-info d-none d-sm-flex">
@@ -24,11 +18,11 @@
             <!-- End Table Header -->
 
             <!-- Start Rows -->
-            <template v-if="props.loading">
-                <div v-for="item in props.maxItems" :key="item" class="p-ten-top">
-                    <div class="skeleton-box rounded-xl mt-1 my-4" style="height: 24px"></div>
+            <div v-if="props.loading" class="p-ten-top">
+                <div v-for="item in props.maxItems" :key="item" style="padding: 10px 0">
+                    <div class="skeleton-box rounded-xl" :style="isNFT ? 'height: 40px' : 'height: 32px'"></div>
                 </div>
-            </template>
+            </div>
             <div v-else class="p-ten-top">
                 <div v-if="!props.hasItems && !props.loading">
                     <app-no-result text="No transfers available" class="mt-4 mt-sm-6"></app-no-result>
@@ -43,17 +37,17 @@
                     />
                 </div>
                 <!-- End Rows -->
-                <app-intersect v-if="props.hasMore" @intersect="loadMoreData">
-                    <div class="skeleton-box rounded-xl mt-1 my-4" style="height: 24px"></div>
-                </app-intersect>
             </div>
+            <template v-if="props.showPagination">
+                <app-pagination :length="props.pages" :has-more="props.hasMore" @update:modelValue="loadMoreData" :current-page="props.currentPageNum" />
+            </template>
         </div>
     </v-card>
 </template>
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import AppIntersect from '@core/components/AppIntersect.vue'
+import AppPagination from '@core/components/AppPagination.vue'
 import AppNoResult from '@/core/components/AppNoResult.vue'
 import TransfersTableRow from './TokenTransferTableRow.vue'
 import { useDisplay } from 'vuetify'
@@ -79,7 +73,8 @@ interface PropType {
     symbol?: string
     hasError: boolean
     maxItems: number
-    index: number
+    pages: number
+    currentPageNum: number
     transferType: string
     nftMeta?: Map<string, NftMetaFragment>
     loadingMeta: boolean
@@ -99,10 +94,8 @@ const setPage = (page: number, reset = false): void => {
     emit('setPage', page, reset)
 }
 
-const loadMoreData = (e: boolean): void => {
-    if (e) {
-        setPage(props.index + 1)
-    }
+const loadMoreData = (num: number): void => {
+    setPage(num)
 }
 
 const isNFT = computed<boolean>(() => {

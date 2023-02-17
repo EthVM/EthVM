@@ -138,14 +138,16 @@ const {
     }),
     { notifyOnNetworkStatusChange: true }
 )
-
+interface SubscriptionRes {
+    data: NewBlockTableSubscription
+}
 function subscribeToMoreHandler() {
     return {
         document: NewBlockTableDocument,
-        updateQuery: (previousResult: GetBlocksArrayByNumberQuery, { subscriptionData }: { subscriptionData: NewBlockTableSubscription }) => {
-            if (previousResult && subscriptionData.newBlockFeed) {
+        updateQuery: (previousResult: GetBlocksArrayByNumberQuery, { subscriptionData }: { subscriptionData: SubscriptionRes }) => {
+            if (previousResult && subscriptionData.data.newBlockFeed) {
                 const prevB = [...previousResult.getBlocksArrayByNumber.slice(0)]
-                const newB = { ...subscriptionData.newBlockFeed, txFail: 0 }
+                const newB = { ...subscriptionData.data.newBlockFeed, txFail: 0 }
                 const index = prevB.findIndex(block => block?.number === newB.number)
                 if (index != -1) {
                     prevB.splice(index, 1, newB)
