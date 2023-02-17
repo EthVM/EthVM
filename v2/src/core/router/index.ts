@@ -27,12 +27,13 @@ import ViewTemp from '@view/ViewTemp.vue'
 import ViewPortfolio from '@view/ViewPortfolio.vue'
 import ViewNotFound from '@view/ViewNotFound.vue'
 import configs from '@/configs'
-import { tabViewRouteGuard } from './helpers'
+import { tabViewRouteGuard, loadImages } from './helpers'
 const routes: Array<RouteRecordRaw> = [
     {
         path: ROUTE_NAME.HOME.PATH,
         name: ROUTE_NAME.HOME.NAME,
-        component: HomeView
+        component: HomeView,
+        beforeEnter: loadImages()
     },
     {
         path: ROUTE_NAME.BLOCKS.PATH,
@@ -160,7 +161,8 @@ const routes: Array<RouteRecordRaw> = [
     },
     {
         path: '/:pathMatch(.*)*',
-        redirect: ROUTE_NAME.NOT_FOUND.PATH
+        redirect: ROUTE_NAME.NOT_FOUND.PATH,
+        beforeEnter: loadImages()
     }
 ]
 

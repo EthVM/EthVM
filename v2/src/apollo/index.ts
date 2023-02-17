@@ -45,6 +45,7 @@ const onErrorLink = onError(({ graphQLErrors, networkError, operation, forward }
             } else {
                 //For Development use only console errors:
                 if (!isAPIExceptionDev(message)) {
+                    // eslint-disable-next-line
                     console.log(newError)
                 }
             }

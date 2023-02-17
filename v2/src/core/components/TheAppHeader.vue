@@ -53,7 +53,7 @@ import ModuleSearch from '@/modules/search/ModuleAppSearch.vue'
 import AppMenu from './AppMenu.vue'
 import BigNumber from 'bignumber.js'
 /* Vuetify BreakPoints */
-const { name, xs } = useDisplay()
+const { name, xs, lgAndUp } = useDisplay()
 
 const props = defineProps({
     hideSearchBar: {
@@ -117,14 +117,21 @@ onMounted(() => {
  */
 const showSearchbar = computed<boolean>(() => {
     if (props.hideSearchBar) {
-        return offset.value > 500
+        const visibleAt = lgAndUp.value ? 352 : 440
+        return offset.value > visibleAt
     }
     return true
 })
 
 const background = computed<string>(() => {
     if (props.isTransparent) {
-        if (offset.value < 120) {
+        if (props.hideSearchBar) {
+            if (offset.value < 131) {
+                const transparency = new BigNumber(0.007634).multipliedBy(offset.value).toFixed()
+                return `rgba(9,30,65, ${transparency})`
+            }
+        }
+        if (offset.value < 120 && !props.hideSearchBar) {
             const transparency = new BigNumber(0.00833333333).multipliedBy(offset.value)
             return `rgba(9,30,65, ${transparency})`
         }
@@ -135,7 +142,6 @@ const background = computed<string>(() => {
 const onScroll = e => {
     nextTick(() => {
         offset.value = window.scrollY
-        console.log(offset.value)
     })
 }
 </script>

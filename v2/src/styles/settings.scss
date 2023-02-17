@@ -1,148 +1,100 @@
-/**
---- TYPOGRAPHY
-*/
-$font-bold: 700;
-$font-medium: 500;
-$font-normal: 400;
-$typography:
-(
-  'h1': (
-    'size': 40px,
-    'weight': $font-normal,
-    'line-height': 52px,
-    'letter-spacing': 0.49px,
-    'text-transform': none
-  ),
-  'h2': (
-    'size': 28px,
-    'weight': $font-bold,
-    'line-height': 40px,
-    'letter-spacing': 0.49px,
-  ),
-  'h3': (
-    'size': 24px,
-    'weight': $font-bold,
-    'line-height': 32px,
-    'letter-spacing': 0.49px,
-  ),
-  'h4': (
-    'size': 20px,
-    'line-height': 28px,
-    'letter-spacing': 0.49px,
-  ),
-  'h5': (
-    'size': 18px,
-    'weight': $font-normal,
-    'line-height': 28px,
-    'letter-spacing': 0.49px,
-  ),
-  'h6': (
-    'size':  16px,
-    'weight': $font-normal,
-    'line-height': 24px,
-    'letter-spacing': 0.49px,
-  ),
-  'subtitle-1': (
-    'size': 16px,
-    'weight': $font-normal,
-    'line-height': 24px,
-    'letter-spacing': 0.49px,
-  ),
-  'body-1': (
-    'size': 14px,
-    'weight': $font-normal,
-    'line-height':  20px,
-    'letter-spacing': 0.49px,
-  ),
-  'button': (
-    'size': 14px,
-    'weight': $font-medium,
-    'line-height': 24px,
-    'letter-spacing': 0.49px,
-    'text-transform': capitalize
-  ),
-  'caption': (
-    'size': 12px,
-    'weight': $font-normal,
-    'line-height': 20px,
-    'letter-spacing': 0.42px,
-  ),
-  'input': (
-    'size': 12px,
-    'weight': $font-medium,
-    'line-height': 14px,
-    'letter-spacing': 0.42px,
-    'text-transform': none
-  ),
-  'subtitle-2': (
-    'size': 18px,
-    'weight': $font-medium,
-    'line-height': 28px,
-    'letter-spacing': 0.49px,
-    'text-transform': capitalize
-  )
+// src/sass/variables.scss
+@use './defaults' as settings;
+
+@forward 'vuetify/settings' with (
+  $color-pack: false,
+  $font-size-root: 14px,
+  $line-height-root: 20px,
+  $typography: settings.$typography,
+  $shadow-key-umbra-opacity: settings.$shadow-key-umbra-opacity,
+  $shadow-key-penumbra-opacity: settings.$shadow-key-umbra-opacity,
+  $shadow-key-ambient: settings.$shadow-key-ambient,
+  $shadow-key-umbra: settings.$shadow-key-umbra,
+  $rounded: settings.$rounded,
+  $spacer: settings.$spacer,
+  $grid-gutter: settings.$grid-gutter,
+  $form-grid-gutter: settings.$form-grid-gutter,
+  $container-padding-x: settings.$container-padding-x,
+  $grid-breakpoints: settings.$grid-breakpoints,
+  $container-max-widths: settings.$container-max-widths,
+  $input-density: settings.$input-density,
+  $window-controls-padding: settings.$window-controls-padding,
+  $tooltip-background-color: settings.$tooltip-background-color,
+  $tooltip-font-size: settings.$tooltip-font-size,
+  $tooltip-border-radius: settings.$tooltip-border-radius,
+  $tooltip-padding: settings.$tooltip-padding
 );
-/**
---- ELEVATION
-*/
-$shadow-key-umbra-opacity: rgba(24, 43, 75, 0.1);
-$shadow-key-penumbra-opacity: 0%;
-$shadow-key-ambient: 0%;
+a {
+    text-decoration: none;
+}
 
-$shadow-key-umbra:
-(
-    0: (0px 0px 0px 0px $shadow-key-umbra-opacity),
-    1: (0px 8px 12px 0px $shadow-key-umbra-opacity)
-);
+.skeleton-box {
+  position: relative;
+  background-color: rgb(var(--v-theme-loading));
+  overflow: hidden;
+  height: 100%;
+  width: 100%;
+  cursor: wait;
 
-/**
---- Border radius
-*/
-$rounded:
-(
-    'md': 8px,
-    'lg': 10px,
-    'xl': 12px
-);
+  &::after {
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      transform: translateX(-100%);
+      background-image: linear-gradient(90deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, var(--v-skeleton-gradient)), rgba(255, 255, 255, 0));
+      animation: loading 2s infinite;
+      content: '';
+  }
 
+  @keyframes loading {
+      100% {
+          transform: translateX(100%);
+      }
+  }
+}
 
-$grid-breakpoints:
-(
-    'xs': 0,
-    'sm': 600px,
-    'md': 905px,
-    'lg': 1240px,
-    'xl': 1439px,
-);
+.text-ellipses {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    max-width: 100%;
+}
+.text-break-new-line {
+    overflow-wrap: break-word;
+    line-break: anywhere;
+}
 
-$container-max-widths:
-  (
-    'xs': null,
-    'sm': null,
-    'md': 856px,
-    'lg': 1390px,
-    'xl': 1390px,
-    'xxl': 1390px,
-  )
-;
-$spacer: 4px;
-$grid-gutter: 12px; //24
-$form-grid-gutter: $spacer*2;
-$container-padding-x: $spacer * 12;
+.mobile-chip {
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-grow: 0;
+    &.bg-warning {
+        color: rgb(var(--v-theme-surface)) !important;
+    }
+}
 
-/**
---- Input
-*/
-$input-density: ('default': 0, 'comfortable': -4, 'compact': -6) !default;
+.row-bg {
+    top: -20px;
+    bottom: 0;
+    left: -24px;
+    right: -24px;
+    position: absolute;
+    z-index: -1;
+}
 
-/**
---- removed padding for Window, Carusel next buttons
-*/
-$window-controls-padding: 0px;
-/**
---- Tooltip
-*/
-$tooltip-background-color: 	rgba(var(--v-theme-darkSurface), 1);
-$tooltip-font-size: 14px;
-$tooltip-border-radius: 8px;
-$tooltip-padding: 12px 20px;
+.p-ten-top {
+    padding-top: 10px !important;
+}
+
+.font-mono {
+    font-family: 'Roboto Mono', monospace;
+}
+
+.tiny-text {
+    font-size: 10px !important;
+}

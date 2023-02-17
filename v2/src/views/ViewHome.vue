@@ -1,21 +1,49 @@
 <template>
     <div>
-        <v-card color="primary" width="100%" flat min-height="400" rounded="0" class="px-2 px-sm-6 mx-xl-auto mt-n16 pt-16">
-            <v-container :class="[{ 'top-card-lg': lgAndUp }, { 'top-card-md': md }, { 'top-card-xs': smAndDown }, 'px-7 px-lg-12 pb-0']">
-                <div class="ml-lg-16 pl-lg-14">
-                    <p class="mt-16 text-white font-weight-light text-h3 text-sm-h2 text-md-h1 text-center text-lg-left">Track, analyze and explore</p>
-                    <p class="text-white font-weight-light text-h3 text-sm-h2 text-md-h1 text-center text-lg-left">on the Ethereum blockchain.</p>
-                    <div class="ml-1">
-                        <module-search class="justify-center justify-lg-start mt-5" />
+        <div class="nebula px-2 px-sm-6 mx-xl-auto mt-n16 pt-16">
+            <v-container :class="['px-7 px-lg-12 pt-5 pt-lg-0 pb-16']">
+                <v-row align="center" justify="space-between" class="flex-column flex-lg-row">
+                    <v-img v-if="mdAndDown" :src="require('@/assets/hero/hero.png')" alt="" height="300" width="300" max-height="300" max-width="300" contain />
+                    <div class="pl-lg-14 pb-10 pb-sm-16 pb-lg-0">
+                        <p class="mt-lg-16 text-white font-weight-light text-h3 text-sm-h2 text-lg-h1 text-center text-lg-left">Track, analyze and explore</p>
+                        <p class="text-white font-weight-light text-h3 text-sm-h2 text-lg-h1 text-center text-lg-left">on the Ethereum blockchain.</p>
+                        <div class="ml-1">
+                            <module-search class="justify-center justify-lg-start mt-5 mt-lg-10" />
+                        </div>
                     </div>
-                </div>
+                    <v-img
+                        v-if="lgAndUp"
+                        :src="require('@/assets/hero/hero-group.png')"
+                        alt=""
+                        min-height="460"
+                        min-width="460"
+                        max-height="460"
+                        max-width="460"
+                        class="mt-10"
+                        contain
+                    />
+                </v-row>
             </v-container>
-        </v-card>
+        </div>
         <div class="mx-2 mx-sm-6 mx-xl-auto">
             <v-container class="pt-3 px-0">
                 <v-row :class="rowMargin">
                     <v-col cols="12" :class="columnPadding">
                         <block-stats-module />
+                    </v-col>
+                    <v-col v-if="showPortfolio" cols="12" :class="columnPadding">
+                        <v-card elevation="1" rounded="xl" class="pt-4 pt-sm-6">
+                            <v-card-title class="px-0 d-flex align-center justify-space-between px-4 px-sm-6 py-0 mb-2">
+                                <p class="text-h6 font-weight-bold">Your portfolio</p>
+                                <app-btn text="More" isSmall icon="east" @click="goToPortfolio"></app-btn>
+                            </v-card-title>
+                            <module-portfolio-list /> </v-card
+                    ></v-col>
+                    <v-col cols="12" lg="6" :class="columnPadding">
+                        <module-tokens-info :home-page="TOKENS_VIEW.ALL" />
+                    </v-col>
+                    <v-col cols="12" lg="6" :class="columnPadding">
+                        <module-tokens-info v-if="showFavToknes" :home-page="TOKENS_VIEW.FAV" />
                     </v-col>
                     <v-col cols="12" :class="columnPadding">
                         <recent-blocks :max-items="10" page-type="home" />
@@ -35,11 +63,32 @@ import BlockStatsModule from '@module/block/ModuleBlockStats.vue'
 import RecentBlocks from '@module/block/ModuleRecentBlocks.vue'
 import ModuleTxs from '@module/txs/ModuleTxs.vue'
 import ModuleSearch from '@/modules/search/ModuleAppSearch.vue'
-
+import ModulePortfolioList from '@module/address/ModulePortfolioList.vue'
+import ModuleTokensInfo from '@module/tokens/ModuleTokensInfo.vue'
+import { TOKENS_VIEW } from '@module/tokens/models/tokensView'
+import AppBtn from '@core/components/AppBtn.vue'
 import { useAppViewGrid } from '@core/composables/AppViewGrid/AppViewGrid.composable'
 import { useDisplay } from 'vuetify/lib/framework.mjs'
-const { smAndDown, lgAndUp, md } = useDisplay()
+import { ROUTE_NAME } from '@core/router/routesNames'
+import { useRouter } from 'vue-router'
+import { computed } from 'vue'
+import { useStore } from '@/store'
+const { lgAndUp, mdAndDown } = useDisplay()
 const { columnPadding, rowMargin } = useAppViewGrid()
+
+const router = useRouter()
+const store = useStore()
+const showPortfolio = computed<boolean>(() => {
+    return store.portfolioLength > 0
+})
+const goToPortfolio = async (): Promise<void> => {
+    await router.push({
+        name: ROUTE_NAME.PORTFOLIO.NAME
+    })
+}
+const showFavToknes = computed<boolean>(() => {
+    return store.favTokens.length > 0
+})
 </script>
 
 <style lang="scss" scoped>
@@ -50,11 +99,6 @@ const { columnPadding, rowMargin } = useAppViewGrid()
     background: linear-gradient(to bottom, rgb(var(--v-theme-primary)) 466px, rgb(var(--v-theme-background)) 466px, rgb(var(--v-theme-background)) 100%);
 }
 
-.top-card-lg {
-    margin-bottom: 228px;
-    margin-top: 164px;
-}
-
 .top-card-md {
     margin-bottom: 84px;
     margin-top: 205px;
@@ -63,5 +107,15 @@ const { columnPadding, rowMargin } = useAppViewGrid()
 .top-card-xs {
     margin-bottom: 84px;
     margin-top: 205px;
+}
+
+.nebula {
+    background: url('/src/assets/background-nebula.png');
+    background-size: cover;
+    background-attachment: fixed;
+    background-position: right 35% center;
+    height: 100%;
+    width: 100;
+    background-color: rgb(var(--v-theme-primary)) !important;
 }
 </style>

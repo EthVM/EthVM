@@ -3,8 +3,8 @@
         <v-row align="center" justify="start" class="my-1" @click="toggleMoreDetails" :dense="xs || props.isCompactView">
             <v-col :cols="colName">
                 <v-row align="center" class="ma-0 flex-nowrap">
-                    <app-btn-icon :icon="isFav ? 'star' : 'star_outline'" @click="setFavoriteToken" />
-                    <div class="mr-4 ml-5">
+                    <app-btn-icon v-if="!props.isHomeView" :icon="isFav ? 'star' : 'star_outline'" @click="setFavoriteToken" />
+                    <div :class="['mr-4', { 'ml-5': !props.isHomeView }]">
                         <v-img :src="tokenImage" width="25px" height="25px" />
                     </div>
                     <div style="display: grid">
@@ -30,7 +30,7 @@
             <v-col v-if="!props.isCompactView" sm="2" class="d-none d-sm-block">
                 <p :class="priceChangeClass">{{ props.token.getPriceChangeFormatted() }}</p>
             </v-col>
-            <v-col v-if="!props.isCompactView" lg="2" class="d-none d-lg-block">
+            <v-col v-if="!props.isCompactView && !props.isHomeView" lg="2" class="d-none d-lg-block">
                 <p>
                     {{ props.token.getVolumeFormatted() }}
                 </p>
@@ -79,10 +79,12 @@ const { smAndDown, xs, sm, lgAndUp, md, smAndUp } = useDisplay()
 interface ComponentProps {
     token: TokenMarket
     isCompactView?: boolean
+    isHomeView: boolean
 }
 
 const props = withDefaults(defineProps<ComponentProps>(), {
-    isCompactView: false
+    isCompactView: false,
+    isHomeView: false
 })
 
 interface ComponentState {
@@ -98,6 +100,9 @@ const tokenImage = computed<string>(() => {
 })
 
 const colName = computed<string>(() => {
+    if (props.isHomeView) {
+        return '6'
+    }
     if (props.isCompactView) {
         return '8'
     }

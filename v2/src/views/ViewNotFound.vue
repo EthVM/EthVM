@@ -2,7 +2,7 @@
     <div class="not-found mt-n16">
         <v-container class="core-container pt-16 pb-4 pb-md-12">
             <div class="d-flex flex-column align-center justify-center text-center mt-md-16 mb-5 mb-md-16 pt-md-16">
-                <v-img :src="require('@/assets/vm-bot/vm-bot-error.png')" alt="" height="380" width="380" contain />
+                <v-img :src="require('@/assets/hero/hero-error.png')" alt="" height="380" width="380" contain />
                 <p class="text-white mt-3 mb-5 text-h3">Oh No! This page is not found.</p>
                 <app-btn text="Go Back Home" @click="goToHome"></app-btn>
             </div>
