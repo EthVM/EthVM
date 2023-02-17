@@ -1,6 +1,6 @@
 export enum ErrorMessageTx {
     details = 'Something went wrong while retrieving transaction details.',
-    notFound = 'This transaction does not exist'
+    notFound = 'This transaction does not exist.'
 }
 
 export enum ErrorMessagePendingTx {

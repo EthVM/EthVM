@@ -65,8 +65,8 @@ fragment TxDetails on Tx {
     }
 }
 
-query getTransactionByHashWithTraces($hash: String!) {
-    getTransactionByHashWithTraces(hash: $hash) {
+query getTransactionByHash($hash: String!) {
+    getTransactionByHash(hash: $hash) {
         ...TxDetails
     }
 }

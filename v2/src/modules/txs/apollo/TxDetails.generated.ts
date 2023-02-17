@@ -93,13 +93,13 @@ export type TxDetailsFragment = {
     }> | null
 }
 
-export type GetTransactionByHashWithTracesQueryVariables = Types.Exact<{
+export type GetTransactionByHashQueryVariables = Types.Exact<{
     hash: Types.Scalars['String']
 }>
 
-export type GetTransactionByHashWithTracesQuery = {
+export type GetTransactionByHashQuery = {
     __typename?: 'Query'
-    getTransactionByHashWithTraces: {
+    getTransactionByHash: {
         __typename?: 'Tx'
         blockHash?: string | null
         blockNumber?: number | null
@@ -226,9 +226,9 @@ export const TxDetailsFragmentDoc = gql`
     ${LogFragmentFragmentDoc}
     ${TraceFragmentFragmentDoc}
 `
-export const GetTransactionByHashWithTracesDocument = gql`
-    query getTransactionByHashWithTraces($hash: String!) {
-        getTransactionByHashWithTraces(hash: $hash) {
+export const GetTransactionByHashDocument = gql`
+    query getTransactionByHash($hash: String!) {
+        getTransactionByHash(hash: $hash) {
             ...TxDetails
         }
     }
@@ -236,55 +236,47 @@ export const GetTransactionByHashWithTracesDocument = gql`
 `
 
 /**
- * __useGetTransactionByHashWithTracesQuery__
+ * __useGetTransactionByHashQuery__
  *
- * To run a query within a Vue component, call `useGetTransactionByHashWithTracesQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetTransactionByHashWithTracesQuery` returns an object from Apollo Client that contains result, loading and error properties
+ * To run a query within a Vue component, call `useGetTransactionByHashQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetTransactionByHashQuery` returns an object from Apollo Client that contains result, loading and error properties
  * you can use to render your UI.
  *
  * @param variables that will be passed into the query
  * @param options that will be passed into the query, supported options are listed on: https://v4.apollo.vuejs.org/guide-composable/query.html#options;
  *
  * @example
- * const { result, loading, error } = useGetTransactionByHashWithTracesQuery({
+ * const { result, loading, error } = useGetTransactionByHashQuery({
  *   hash: // value for 'hash'
  * });
  */
-export function useGetTransactionByHashWithTracesQuery(
+export function useGetTransactionByHashQuery(
     variables:
-        | GetTransactionByHashWithTracesQueryVariables
-        | VueCompositionApi.Ref<GetTransactionByHashWithTracesQueryVariables>
-        | ReactiveFunction<GetTransactionByHashWithTracesQueryVariables>,
+        | GetTransactionByHashQueryVariables
+        | VueCompositionApi.Ref<GetTransactionByHashQueryVariables>
+        | ReactiveFunction<GetTransactionByHashQueryVariables>,
     options:
-        | VueApolloComposable.UseQueryOptions<GetTransactionByHashWithTracesQuery, GetTransactionByHashWithTracesQueryVariables>
-        | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<GetTransactionByHashWithTracesQuery, GetTransactionByHashWithTracesQueryVariables>>
-        | ReactiveFunction<VueApolloComposable.UseQueryOptions<GetTransactionByHashWithTracesQuery, GetTransactionByHashWithTracesQueryVariables>> = {}
+        | VueApolloComposable.UseQueryOptions<GetTransactionByHashQuery, GetTransactionByHashQueryVariables>
+        | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<GetTransactionByHashQuery, GetTransactionByHashQueryVariables>>
+        | ReactiveFunction<VueApolloComposable.UseQueryOptions<GetTransactionByHashQuery, GetTransactionByHashQueryVariables>> = {}
 ) {
-    return VueApolloComposable.useQuery<GetTransactionByHashWithTracesQuery, GetTransactionByHashWithTracesQueryVariables>(
-        GetTransactionByHashWithTracesDocument,
-        variables,
-        options
-    )
+    return VueApolloComposable.useQuery<GetTransactionByHashQuery, GetTransactionByHashQueryVariables>(GetTransactionByHashDocument, variables, options)
 }
-export function useGetTransactionByHashWithTracesLazyQuery(
+export function useGetTransactionByHashLazyQuery(
     variables:
-        | GetTransactionByHashWithTracesQueryVariables
-        | VueCompositionApi.Ref<GetTransactionByHashWithTracesQueryVariables>
-        | ReactiveFunction<GetTransactionByHashWithTracesQueryVariables>,
+        | GetTransactionByHashQueryVariables
+        | VueCompositionApi.Ref<GetTransactionByHashQueryVariables>
+        | ReactiveFunction<GetTransactionByHashQueryVariables>,
     options:
-        | VueApolloComposable.UseQueryOptions<GetTransactionByHashWithTracesQuery, GetTransactionByHashWithTracesQueryVariables>
-        | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<GetTransactionByHashWithTracesQuery, GetTransactionByHashWithTracesQueryVariables>>
-        | ReactiveFunction<VueApolloComposable.UseQueryOptions<GetTransactionByHashWithTracesQuery, GetTransactionByHashWithTracesQueryVariables>> = {}
+        | VueApolloComposable.UseQueryOptions<GetTransactionByHashQuery, GetTransactionByHashQueryVariables>
+        | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<GetTransactionByHashQuery, GetTransactionByHashQueryVariables>>
+        | ReactiveFunction<VueApolloComposable.UseQueryOptions<GetTransactionByHashQuery, GetTransactionByHashQueryVariables>> = {}
 ) {
-    return VueApolloComposable.useLazyQuery<GetTransactionByHashWithTracesQuery, GetTransactionByHashWithTracesQueryVariables>(
-        GetTransactionByHashWithTracesDocument,
-        variables,
-        options
-    )
+    return VueApolloComposable.useLazyQuery<GetTransactionByHashQuery, GetTransactionByHashQueryVariables>(GetTransactionByHashDocument, variables, options)
 }
-export type GetTransactionByHashWithTracesQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<
-    GetTransactionByHashWithTracesQuery,
-    GetTransactionByHashWithTracesQueryVariables
+export type GetTransactionByHashQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<
+    GetTransactionByHashQuery,
+    GetTransactionByHashQueryVariables
 >
 export const TransactionEventDocument = gql`
     subscription transactionEvent($hash: String!) {

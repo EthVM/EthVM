@@ -6,7 +6,7 @@
                 <template v-if="loadingTransactionHash">
                     <div class="skeleton-box rounded-xl" style="height: 24px; width: 100px"></div>
                 </template>
-                <app-chip v-else :bg="titleBg" rounded="xl">
+                <app-chip v-else :bg="titleBg" rounded="xl" text="">
                     <div class="d-flex align-center">
                         <p>{{ titleStatus }}</p>
                         <v-progress-circular v-if="txStatus === TxStatus.pending" indeterminate color="white" size="15" width="3" class="ml-2" />
@@ -52,7 +52,7 @@
                     <div class="rounded-lg bg-tableGrey pa-6">
                         <div class="tx-info">
                             <p class="text-button mb-1">From</p>
-                            <template v-if="loadingTransactionHash">
+                            <template v-if="loadingTransactionHash || !transactionData">
                                 <div class="d-flex align-center">
                                     <div class="skeleton-box rounded-circle mr-1 mr-sm-2 flex-shrink-0" style="height: 32px; width: 32px"></div>
                                     <div class="skeleton-box rounded-xl" style="height: 20px"></div>
@@ -77,7 +77,7 @@
                     <div class="rounded-lg bg-tableGrey pa-6">
                         <div class="tx-info">
                             <p class="text-button mb-1">To</p>
-                            <template v-if="loadingTransactionHash">
+                            <template v-if="loadingTransactionHash || !transactionData">
                                 <div class="d-flex align-center">
                                     <div class="skeleton-box rounded-circle mr-1 mr-sm-2 flex-shrink-0" style="height: 32px; width: 32px"></div>
                                     <div class="skeleton-box rounded-xl" style="height: 20px"></div>
@@ -88,7 +88,7 @@
                                     <app-address-blockie :address="transactionData.to || ''" :size="8" class="mr-1 mr-sm-2" />
                                     <app-transform-hash
                                         is-blue
-                                        :hash="eth.toCheckSum(transactionData.to)"
+                                        :hash="eth.toCheckSum(transactionData.to || '')"
                                         :link="`/address/${transactionData.to}`"
                                         class="text-body-1"
                                     />
@@ -135,7 +135,7 @@ import TabMore from '@module/txs/components/TabMore.vue'
 import AppTabs from '@/core/components/AppTabs.vue'
 import { computed, onMounted, reactive, ref } from 'vue'
 import BN from 'bignumber.js'
-import { TxDetailsFragment as TxDetailsType, useGetTransactionByHashWithTracesQuery, useTransactionEventSubscription } from './apollo/TxDetails.generated'
+import { TxDetailsFragment as TxDetailsType, useGetTransactionByHashQuery, useTransactionEventSubscription } from './apollo/TxDetails.generated'
 import { ErrorMessageTx, TitleStatus } from '@/modules/txs/models/ErrorMessagesForTx'
 import { excpTxDoNotExists } from '@/apollo/errorExceptions'
 import { formatNonVariableGWeiValue, formatNumber, FormattedNumber, FormattedNumberUnit, formatVariableUnitEthValue } from '@/core/helper/number-format-helper'
@@ -180,7 +180,7 @@ interface ModuleState {
 const state: ModuleState = reactive({
     hasError: false,
     subscribed: false,
-    tab: props.tab
+    tab: props.tab || ''
 })
 
 const emit = defineEmits(['errorDetails'])
@@ -244,10 +244,10 @@ const titleBg = computed<string>(() => {
 })
 
 const timestamp = computed<string>(() => {
-    if (transactionData.value) {
-        const date = new Date(transactionData.value?.timestamp * 1e3).toLocaleDateString()
-        const time = new Date(transactionData.value?.timestamp * 1e3).toTimeString().split('GMT')[0]
-        const timeago = timeAgo(new Date(transactionData.value?.timestamp * 1e3))
+    if (transactionData.value && transactionData.value?.timestamp) {
+        const date = new Date(transactionData.value.timestamp * 1e3).toLocaleDateString()
+        const time = new Date(transactionData.value.timestamp * 1e3).toTimeString().split('GMT')[0]
+        const timeago = timeAgo(new Date(transactionData.value.timestamp * 1e3))
         const [month, day, year] = date.split('/')
         return `${year}-${month}-${day}, ${time}, ${timeago}`
     }
@@ -281,8 +281,8 @@ const txFee = computed<FormattedNumber>(() => {
         const fee = price.times(used)
         return formatVariableUnitEthValue(fee)
     }
-    if (!isReplaced.value && txStatus.value === TxStatus.pending) {
-        const fee = new BN(transactionData.value?.gas).multipliedBy(transactionData.value?.gasPrice)
+    if (!isReplaced.value && txStatus.value === TxStatus.pending && transactionData.value?.gas) {
+        const fee = new BN(transactionData.value.gas).multipliedBy(transactionData.value.gasPrice)
         return formatVariableUnitEthValue(fee)
     }
     return { value: '0', unit: FormattedNumberUnit.ETH }
@@ -297,10 +297,10 @@ const {
     onError: onTransactionHashError,
     loading: loadingTransactionHash,
     refetch: refetchTransactionHash
-} = useGetTransactionByHashWithTracesQuery(() => ({ hash: props.txRef }), { notifyOnNetworkStatusChange: true, fetchPolicy: 'network-only' })
+} = useGetTransactionByHashQuery(() => ({ hash: props.txRef }), { notifyOnNetworkStatusChange: true, fetchPolicy: 'network-only' })
 
 onTransactionHashLoaded(({ data }) => {
-    if (data && data.getTransactionByHashWithTraces) {
+    if (data && data.getTransactionByHash) {
         if (!isReplaced.value && txStatus.value === TxStatus.pending && !state.subscribed) {
             subscriptionEnabled.value = true
         }
@@ -309,7 +309,7 @@ onTransactionHashLoaded(({ data }) => {
 })
 
 const transactionData = computed<TxDetailsType | undefined>(() => {
-    return transactionHashResult?.value?.getTransactionByHashWithTraces
+    return transactionHashResult?.value?.getTransactionByHash
 })
 
 onTransactionHashError(error => {
