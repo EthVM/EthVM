@@ -74,7 +74,7 @@
                 :value="i.routeName"
                 :key="i.routeName"
                 min-width="160"
-                class="py-3 text-h5 text-capitalize rounded-b-xl font-weight-light"
+                class="py-3 text-h6 text-capitalize rounded-b-xl font-weight-light"
                 color="text-textPrimary"
                 selected-class="bg-surface"
                 ><p :class="activeTabText === i.text ? 'font-weight-regular' : 'text-white'">{{ i.text }}</p></v-tab

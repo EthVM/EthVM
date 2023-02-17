@@ -1,6 +1,6 @@
 <template>
     <v-footer flat color="primary" class="pa-0 flex-column">
-        <v-container class="mx-2 mx-sm-6 mx-md-auto mx-lg-6 mx-xl-auto px-4 px-sm-6">
+        <v-container class="mx-2 mx-sm-6 mx-md-auto mx-lg-6 mx-xl-auto px-4 px-sm-6 pb-2">
             <v-row justify="space-between" class="flex-wrap">
                 <v-col cols="12" lg="3" class="mb-10 mb-lg-0" order="1">
                     <router-link to="/">
@@ -99,7 +99,7 @@
                     />
                 </v-col>
                 <v-col cols="12" order="6">
-                    <div class="d-flex justify-lg-end flex-wrap py-2 px-n4">
+                    <div class="d-flex justify-lg-end flex-wrap py-2 px-n4 mb-5">
                         <a v-for="(link, index) in socialIcons" :key="index" :href="link.link" target="_blank" class="text-link">
                             <v-img :src="link.img" :alt="link.altText" width="22" height="22" class="mr-4 mb-4 mb-lg-0 mr-lg-3 text-red" />
                             <p class="d-sr-only">{{ link.srText }}</p>
@@ -110,9 +110,10 @@
         </v-container>
         <div class="copyright bg-tabActive w-100">
             <v-container class="py-2 px-0">
-                <v-row justify="end" class="mx-0">
-                    <div class="px-4 px-sm-6 py-6">ethVM 2.0 {{ new Date().getFullYear() }} MyEtherWallet Inc. All rights reserved.</div>
-                </v-row>
+                <div class="d-flex flex-column flex-wrap">
+                    <p class="px-4 px-sm-6 pt-6 text-center text-sm-right">ethVM 2.0 {{ new Date().getFullYear() }} MyEtherWallet Inc.</p>
+                    <p class="px-4 px-sm-6 pb-6 text-center text-sm-right">All rights reserved.</p>
+                </div>
             </v-container>
         </div>
     </v-footer>

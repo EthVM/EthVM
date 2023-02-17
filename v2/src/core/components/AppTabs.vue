@@ -11,13 +11,18 @@
             selected-class="font-weight-bold"
             class="px-3"
         >
-            <v-tab v-for="(i, index) in tabs" :key="index" :value="i.value" min-width="30" class="text-h6 rounded-lg text-capitalize font-weight-light px-3">{{
-                i.title
-            }}</v-tab>
+            <v-tab
+                v-for="(i, index) in tabs"
+                :key="index"
+                :value="i.value"
+                min-width="30"
+                class="text-h6 rounded-pill text-capitalize font-weight-light px-3"
+                >{{ i.title }}</v-tab
+            >
             <v-btn
                 v-if="moreTabs.length > 0 && xs"
                 variant="text"
-                rounded="lg"
+                rounded="pill"
                 class="align-self-center font-weight-light text-h6 text-capitalize"
                 height="100%"
                 id="activator-mobile"
