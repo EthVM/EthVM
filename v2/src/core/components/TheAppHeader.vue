@@ -2,8 +2,15 @@
     <v-app-bar app flat :color="background" :class="['py-0 px-0 py-sm-2']">
         <v-container class="mx-2 mx-sm-6 mx-md-auto mx-lg-6 mx-xl-auto pa-0 text-white">
             <v-row align="center" justify="start" class="mr-0 mx-lg-0 flex-nowrap">
-                <div class="mr-4 ml-4">
-                    <v-img :src="require('@/assets/logo.svg')" height="35" :width="xs ? '80' : '100'" contain class="ml-3 ml-sm-none mr-auto" />
+                <div class="mr-4 ml-4 logo-btn">
+                    <v-img
+                        :src="appStore.isDarkMode ? require('@/assets/logo-dark.svg') : require('@/assets/logo.svg')"
+                        height="35"
+                        :width="xs ? '80' : '100'"
+                        contain
+                        class="ml-3 ml-sm-none mr-auto logo-dark"
+                        @click="goToHome"
+                    />
                 </div>
                 <v-fade-transition hide-on-leave>
                     <module-search v-if="showSearchbar" class="justify-center mx-2 mx-sm-4" />
@@ -52,6 +59,9 @@ import { useStore } from '@/store'
 import ModuleSearch from '@/modules/search/ModuleAppSearch.vue'
 import AppMenu from './AppMenu.vue'
 import BigNumber from 'bignumber.js'
+import { useRouter } from 'vue-router'
+import { ROUTE_NAME } from '@core/router/routesNames'
+
 /* Vuetify BreakPoints */
 const { name, xs, lgAndUp } = useDisplay()
 
@@ -72,6 +82,13 @@ const appStore = useStore()
 /*Define Emit Events */
 defineEmits(['openDrawer'])
 const { navItems } = useAppNavigation()
+
+const router = useRouter()
+const goToHome = async (): Promise<void> => {
+    await router.push({
+        name: ROUTE_NAME.HOME.NAME
+    })
+}
 
 /*
 ===================================================================================
@@ -148,5 +165,8 @@ const onScroll = e => {
 <style scoped lang="scss">
 .transparent-header {
     background: rgba(0, 0, 0, 0) !important;
+}
+.logo-btn {
+    cursor: pointer;
 }
 </style>
