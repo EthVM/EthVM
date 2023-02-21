@@ -30,7 +30,7 @@
             <v-col v-if="!props.isCompactView" sm="2" class="d-none d-sm-block">
                 <p :class="priceChangeClass">{{ props.token.getPriceChangeFormatted() }}</p>
             </v-col>
-            <v-col v-if="!props.isCompactView && !props.isHomeView" lg="2" class="d-none d-lg-block">
+            <v-col v-if="!props.isCompactView && !props.isHomeView" md="2" class="d-none d-md-block">
                 <p>
                     {{ props.token.getVolumeFormatted() }}
                 </p>
@@ -41,7 +41,7 @@
                 </p>
             </v-col>
         </v-row>
-        <div v-if="state.showMoreDetails" class="pb-5 text-subtitle-2 font-weight-regular">
+        <div v-if="state.showMoreDetails && xs" class="pb-5 font-weight-regular">
             <v-row>
                 <v-col>
                     <div>
@@ -69,12 +69,12 @@
 import AppTransformHash from '@core/components/AppTransformHash.vue'
 import AppBtnIcon from '@core/components/AppBtnIcon.vue'
 import { TokenMarket } from '@module/address/models/TokenSort'
-import { computed, reactive, ref } from 'vue'
+import { computed, reactive } from 'vue'
 import { eth } from '@core/helper'
 import { useDisplay } from 'vuetify'
 import { useStore } from '@/store'
 
-const { smAndDown, xs, sm, lgAndUp, md, smAndUp } = useDisplay()
+const { xs, mdAndUp, smAndUp } = useDisplay()
 
 interface ComponentProps {
     token: TokenMarket
@@ -106,14 +106,14 @@ const colName = computed<string>(() => {
     if (props.isCompactView) {
         return '8'
     }
-    return lgAndUp.value ? '4' : sm.value || md.value ? '6' : '8'
+    return mdAndUp.value ? '4' : '6'
 })
 
 const colPrice = computed<string>(() => {
     if (props.isCompactView) {
         return '4'
     }
-    return smAndUp.value ? '2' : '4'
+    return smAndUp.value ? '2' : '6'
 })
 const priceChangeClass = computed<string>(() => {
     const change = props.token.price_change_percentage_24h || 0
@@ -129,7 +129,7 @@ const priceChangeClass = computed<string>(() => {
 
 const toggleMoreDetails = (): void => {
     // Only toggle details if on mobile view
-    if (smAndDown.value) {
+    if (xs.value) {
         state.showMoreDetails = !state.showMoreDetails
     }
 }

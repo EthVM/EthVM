@@ -97,11 +97,11 @@
                 MD and UP: ORDER last
             =========================
             -->
-            <v-col cols="12" :class="isSmallView ? 'mt-4' : 'mt-13'" :order="isSmallView ? 'first' : 'last'">
+            <!-- <v-col cols="12" :class="isSmallView ? 'mt-4' : 'mt-13'" :order="isSmallView ? 'first' : 'last'">
                 <div :class="[isSmallView ? 'temp-chart-balance-mobile' : 'temp-chart-balance', 'pa-4 rounded-xl']">
                     <p>Chart Area</p>
                 </div>
-            </v-col>
+            </v-col> -->
         </v-row>
         <v-row :dense="xs">
             <address-token-fiat-info
