@@ -13,33 +13,33 @@
             <v-col sm="6" :md="isHomePage ? '6' : '4'">
                 <v-row align="center" class="ma-0">
                     <v-btn variant="text" color="info" class="font-weight-regular ml-n3" rounded="pill" size="small" @click="sortTable(SORT_KEY.NAME)">
-                        Token <v-icon v-if="isActiveSort(SORT_KEY.NAME)" class="ml-1" size="x-small">{{ sortIcon }}</v-icon></v-btn
+                        Token <v-icon v-if="isActiveSort(SORT_KEY.NAME)" class="ml-1" :size="14">{{ sortIcon }}</v-icon></v-btn
                     >
                 </v-row>
             </v-col>
             <v-col sm="3" md="2">
                 <v-row align="center" class="ma-0">
                     <v-btn variant="text" color="info" class="font-weight-regular ml-n3" rounded="pill" size="small" @click="sortTable(SORT_KEY.PRICE)">
-                        Price <v-icon v-if="isActiveSort(SORT_KEY.PRICE)" class="ml-1" size="x-small">{{ sortIcon }}</v-icon></v-btn
+                        Price <v-icon v-if="isActiveSort(SORT_KEY.PRICE)" class="ml-1" :size="14">{{ sortIcon }}</v-icon></v-btn
                     >
                 </v-row>
             </v-col>
             <v-col sm="3" md="2">
                 <v-btn variant="text" color="info" class="font-weight-regular ml-n3" rounded="pill" size="small" @click="sortTable(SORT_KEY.PERCENTAGE_CHANGE)">
-                    24h<v-icon v-if="isActiveSort(SORT_KEY.PERCENTAGE_CHANGE)" class="ml-1" size="x-small">{{ sortIcon }}</v-icon></v-btn
+                    24h<v-icon v-if="isActiveSort(SORT_KEY.PERCENTAGE_CHANGE)" class="ml-1" :size="14">{{ sortIcon }}</v-icon></v-btn
                 ></v-col
             >
             <v-col v-if="!isHomePage" md="2" class="d-none d-md-block">
                 <v-row align="center" class="ma-0">
                     <v-btn variant="text" color="info" class="font-weight-regular ml-n3" rounded="pill" size="small" @click="sortTable(SORT_KEY.VOLUME)">
-                        Volume <v-icon v-if="isActiveSort(SORT_KEY.VOLUME)" class="ml-1" size="x-small">{{ sortIcon }}</v-icon></v-btn
+                        Volume <v-icon v-if="isActiveSort(SORT_KEY.VOLUME)" class="ml-1" :size="14">{{ sortIcon }}</v-icon></v-btn
                     >
                 </v-row>
             </v-col>
             <v-col :md="2" class="d-none d-md-block">
                 <v-row align="center" class="ma-0">
                     <v-btn variant="text" color="info" class="font-weight-regular ml-n3" rounded="pill" size="small" @click="sortTable(SORT_KEY.MARKET_CAP)">
-                        Market Cap <v-icon v-if="isActiveSort(SORT_KEY.MARKET_CAP)" class="ml-1" size="x-small">{{ sortIcon }}</v-icon></v-btn
+                        Market Cap <v-icon v-if="isActiveSort(SORT_KEY.MARKET_CAP)" class="ml-1" :size="14">{{ sortIcon }}</v-icon></v-btn
                     >
                 </v-row>
             </v-col>
