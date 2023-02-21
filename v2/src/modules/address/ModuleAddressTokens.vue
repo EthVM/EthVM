@@ -15,8 +15,8 @@
                 <app-btn text="More" is-small icon="east" @click="goToTokensBalancePage"></app-btn>
             </template>
         </v-card-title>
-        <div v-if="!props.isOverview" class="d-flex align-center">
-            <v-col lg="3">
+        <div v-if="!props.isOverview" class="d-flex align-center flex-wrap">
+            <v-col cols="12" sm="4" lg="3" class="pa-0">
                 <address-balance-totals
                     title="Token Balance"
                     :is-loading="loadingTokens || loadingCoinData"
@@ -26,7 +26,7 @@
                 >
                 </address-balance-totals>
             </v-col>
-            <div v-if="!props.isOverview" class="flex-grow-1">
+            <div class="flex-grow-1 my-5 my-sm-0">
                 <app-input place-holder="Search token name" v-model="state.searchParams" />
             </div>
         </div>

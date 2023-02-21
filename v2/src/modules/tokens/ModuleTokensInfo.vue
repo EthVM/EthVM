@@ -5,8 +5,8 @@
             <app-btn v-if="isHomePage" text="More" isSmall icon="east" @click="goToTokens"></app-btn>
         </v-card-title>
         <app-tabs v-if="!isHomePage" v-model="state.activeList" :routes="routes" :tabs="list" class="my-5" btn-variant></app-tabs>
-        <v-row v-if="!isHomePage" class="mb-10" align="center">
-            <app-input place-holder="Search tokens" v-model="state.tokenSearch" />
+        <v-row v-if="!isHomePage" class="mb-10 flex-nowrap" align="center">
+            <app-input place-holder="Search tokens" v-model="state.tokenSearch" class="w-100 mr-5" />
             <module-add-fav-token v-if="state.activeList === list[1].value" />
         </v-row>
         <v-row align="center" justify="start" class="text-body-1 text-info my-0 d-none d-sm-flex">
