@@ -1,49 +1,52 @@
 <template>
-    <div class="position-relative">
-        <v-row align="center" justify="start" class="my-1" @click="toggleMoreDetails" :dense="xs || props.isCompactView">
-            <v-col :cols="colName">
-                <v-row align="center" class="ma-0 flex-nowrap">
-                    <app-btn-icon v-if="!props.isHomeView" :icon="isFav ? 'star' : 'star_outline'" @click="setFavoriteToken" />
-                    <div :class="['mr-4', { 'ml-5': !props.isHomeView }]">
-                        <v-img :src="tokenImage" width="25px" height="25px" />
+    <app-table-row
+        row-align="start"
+        row-align-lg="center"
+        :color="state.showMoreDetails && xs ? 'pillGrey' : 'transparent'"
+        v-on="{ click: xs ? toggleMoreDetails : null }"
+    >
+        <v-col :cols="colName">
+            <v-row align="center" class="ma-0 flex-nowrap">
+                <app-btn-icon v-if="!props.isHomeView" :icon="isFav ? 'star' : 'star_outline'" @click="setFavoriteToken" />
+                <div :class="['mr-4', { 'ml-5': !props.isHomeView }]">
+                    <v-img :src="tokenImage" width="25px" height="25px" />
+                </div>
+                <div style="display: grid">
+                    <router-link
+                        v-if="props.token.symbol || props.token.name"
+                        :to="`/token/${props.token.contract}`"
+                        class="text-body-1 text-link text-ellipses"
+                    >
+                        <p class="text-textPrimary text-ellipses">{{ props.token.name }}</p>
+                        <span v-if="props.token.symbol" class="text-info text-uppercase text-ellipses">{{ props.token.symbol }}</span>
+                    </router-link>
+                    <div v-else>
+                        <p>Contract:</p>
+                        <app-transform-hash :hash="eth.toCheckSum(props.token.contract)" :link="`/token/${props.token.contract}`" :show-name="false" />
                     </div>
-                    <div style="display: grid">
-                        <router-link
-                            v-if="props.token.symbol || props.token.name"
-                            :to="`/token/${props.token.contract}`"
-                            class="text-body-1 text-link text-ellipses"
-                        >
-                            <p class="text-textPrimary text-ellipses">{{ props.token.name }}</p>
-                            <span v-if="props.token.symbol" class="text-info text-uppercase text-ellipses">{{ props.token.symbol }}</span>
-                        </router-link>
-                        <div v-else>
-                            <p>Contract:</p>
-                            <app-transform-hash :hash="eth.toCheckSum(props.token.contract)" :link="`/token/${props.token.contract}`" :show-name="false" />
-                        </div>
-                    </div>
-                </v-row>
-            </v-col>
-            <v-col :cols="colPrice" :class="props.isCompactView ? 'text-right' : 'text-right text-sm-left'">
-                <p>{{ props.token.getPriceFormatted() }}</p>
-                <p v-if="xs || props.isCompactView" :class="priceChangeClass">{{ props.token.getPriceChangeFormatted() }}</p>
-            </v-col>
-            <v-col v-if="!props.isCompactView" sm="2" class="d-none d-sm-block">
-                <p :class="priceChangeClass">{{ props.token.getPriceChangeFormatted() }}</p>
-            </v-col>
-            <v-col v-if="!props.isCompactView && !props.isHomeView" md="2" class="d-none d-md-block">
-                <p>
-                    {{ props.token.getVolumeFormatted() }}
-                </p>
-            </v-col>
-            <v-col v-if="!props.isCompactView" sm="2" class="d-none d-sm-block">
-                <p>
-                    {{ props.token.getMarketCapFormatted() }}
-                </p>
-            </v-col>
-        </v-row>
-        <div v-if="state.showMoreDetails && xs" class="pb-5 font-weight-regular">
+                </div>
+            </v-row>
+        </v-col>
+        <v-col :cols="colPrice" :class="props.isCompactView ? 'text-right' : 'text-right text-sm-left'">
+            <p>{{ props.token.getPriceFormatted() }}</p>
+            <p v-if="xs || props.isCompactView" :class="priceChangeClass">{{ props.token.getPriceChangeFormatted() }}</p>
+        </v-col>
+        <v-col v-if="!props.isCompactView" sm="2" class="d-none d-sm-block">
+            <p :class="priceChangeClass">{{ props.token.getPriceChangeFormatted() }}</p>
+        </v-col>
+        <v-col v-if="!props.isCompactView && !props.isHomeView" md="2" class="d-none d-md-block">
+            <p>
+                {{ props.token.getVolumeFormatted() }}
+            </p>
+        </v-col>
+        <v-col v-if="!props.isCompactView" sm="2" class="d-none d-sm-block">
+            <p>
+                {{ props.token.getMarketCapFormatted() }}
+            </p>
+        </v-col>
+        <v-col cols="12" v-if="state.showMoreDetails && xs" class="py-5 px-4 font-weight-regular">
             <v-row>
-                <v-col>
+                <v-col cols="4">
                     <div>
                         <p class="text-info">Volume</p>
                         <p class="mb-0">
@@ -51,7 +54,7 @@
                         </p>
                     </div>
                 </v-col>
-                <v-col>
+                <v-col cols="8">
                     <div>
                         <p class="text-info">Market Cap</p>
                         <p class="mb-0">
@@ -60,12 +63,12 @@
                     </div>
                 </v-col>
             </v-row>
-        </div>
-        <div v-if="state.showMoreDetails" class="row-bg bg-tableGrey"></div>
-    </div>
+        </v-col>
+    </app-table-row>
 </template>
 
 <script setup lang="ts">
+import AppTableRow from '@core/components/AppTableRow.vue'
 import AppTransformHash from '@core/components/AppTransformHash.vue'
 import AppBtnIcon from '@core/components/AppBtnIcon.vue'
 import { TokenMarket } from '@module/address/models/TokenSort'

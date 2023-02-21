@@ -1,19 +1,20 @@
 <template>
-    <div class="position-relative">
-        <v-row class="my-5 px-0" align="center" @click="toggleMoreDetails">
-            <v-col lg="2">
-                <div class="d-flex align-center">
-                    <app-address-blockie :address="props.diff.owner || ''" :size="8" class="mr-2" />
-                    <app-transform-hash is-blue is-short :hash="eth.toCheckSum(props.diff.owner)" :link="`/address/${props.diff.owner}`" />
-                </div>
-            </v-col>
-            <v-spacer />
-            <v-col v-if="!mdAndDown" md="3" class="text-uppercase"> {{ balanceBefore.tooltipText || balanceBefore.value }} {{ balanceBefore.unit }} </v-col>
-            <v-col v-if="!mdAndDown" md="3" class="text-uppercase"> {{ balanceAfter.tooltipText || balanceAfter.value }} {{ balanceAfter.unit }} </v-col>
-            <v-col lg="2" :class="`text-${balanceDiffTextColor}`"> {{ balanceDiff.tooltipText || balanceDiff.value }} </v-col>
-            <div v-if="mdAndDown && state.showMoreDetails" class="row-bg bg-tableGrey"></div>
-        </v-row>
-        <div v-if="mdAndDown && state.showMoreDetails" class="d-sm-flex justify-sm-space-between">
+    <app-table-row
+        row-align="center"
+        :color="state.showMoreDetails && mdAndDown ? 'pillGrey' : 'transparent'"
+        v-on="{ click: mdAndDown ? toggleMoreDetails : null }"
+    >
+        <v-col lg="2">
+            <div class="d-flex align-center">
+                <app-address-blockie :address="props.diff.owner || ''" :size="8" class="mr-2" />
+                <app-transform-hash is-blue is-short :hash="eth.toCheckSum(props.diff.owner)" :link="`/address/${props.diff.owner}`" />
+            </div>
+        </v-col>
+        <v-spacer />
+        <v-col v-if="!mdAndDown" md="3" class="text-uppercase"> {{ balanceBefore.tooltipText || balanceBefore.value }} {{ balanceBefore.unit }} </v-col>
+        <v-col v-if="!mdAndDown" md="3" class="text-uppercase"> {{ balanceAfter.tooltipText || balanceAfter.value }} {{ balanceAfter.unit }} </v-col>
+        <v-col lg="2" :class="`text-${balanceDiffTextColor}`"> {{ balanceDiff.tooltipText || balanceDiff.value }} </v-col>
+        <v-col cols="12" v-if="mdAndDown && state.showMoreDetails" class="d-sm-flex justify-sm-space-between">
             <div class="d-flex d-sm-block v-col-sm-6 align-center py-2">
                 <p class="text-info mr-3">Before</p>
                 <p class="text-uppercase">{{ balanceBefore.tooltipText || balanceBefore.value }} {{ balanceBefore.unit }}</p>
@@ -22,11 +23,12 @@
                 <p class="text-info mr-3">After</p>
                 <p class="text-uppercase">{{ balanceAfter.tooltipText || balanceAfter.value }} {{ balanceAfter.unit }}</p>
             </div>
-        </div>
-    </div>
+        </v-col>
+    </app-table-row>
 </template>
 
 <script setup lang="ts">
+import AppTableRow from '@core/components/AppTableRow.vue'
 import AppTransformHash from '@core/components/AppTransformHash.vue'
 import AppAddressBlockie from '@core/components/AppAddressBlockie.vue'
 import { computed, reactive } from 'vue'
