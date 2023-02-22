@@ -1,6 +1,6 @@
 <template>
     <app-no-result v-if="!props.txData && !props.loading" text="No data available for this transaction" />
-    <v-card v-else variant="flat" rounded="xl" class="pa-4 pa-sm-6">
+    <v-card v-else variant="flat" rounded="xl" class="px-4 px-sm-6 pb-4 pb-sm-6">
         <v-row class="mt-5">
             <v-col lg="2">
                 <div class="tx-info">

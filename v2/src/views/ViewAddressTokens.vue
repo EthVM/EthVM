@@ -2,7 +2,7 @@
     <v-row :class="rowMargin">
         <v-col cols="12" :class="columnPadding">
             <v-card elevation="1" rounded="xl" class="pt-4 pt-sm-6">
-                <app-tabs v-model="state.tab" :routes="routes" :tabs="tabs" @update:modelValue="setLastViewedTab()" class="mb-4 mb-sm-0"></app-tabs>
+                <app-tabs v-model="state.tab" :routes="routes" :tabs="tabs" @update:modelValue="setLastViewedTab()" class="mx-n1 mt-n2 mb-4"></app-tabs>
                 <module-address-tokens
                     v-if="state.tab === routes[0]"
                     class="mb-4"

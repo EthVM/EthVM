@@ -1,5 +1,5 @@
 <template>
-    <div class="pa-4 pa-sm-6">
+    <div class="px-4 px-sm-6 pb-4 pb-sm-6">
         <v-row justify="start" aligned="center" dense>
             <v-col v-for="(i, index) in state.filterList" :key="index" class="flex-shrink-1 flex-grow-0">
                 <v-btn

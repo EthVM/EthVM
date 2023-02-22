@@ -3,14 +3,12 @@
         :variant="!props.isOverview ? 'flat' : 'elevated'"
         :elevation="props.isOverview ? 1 : 0"
         rounded="xl"
-        class="pa-4 pa-sm-6"
-        :class="props.isOverview ? 'h-100' : null"
+        :class="[props.isOverview ? 'pt-4 pt-sm-6' : '', 'px-4 px-sm-6 pb-4 pb-sm-6 h-100']"
     >
-        <v-card-title class="card-title d-flex justify-space-between align-center mb-5 px-0">
+        <v-card-title v-if="props.isOverview" class="card-title d-flex justify-space-between align-center mb-5 px-0">
             <div>
                 <v-row align="center" class="my-0 mx-0">
-                    <div v-if="!props.isOverview && !mdAndDown" class="mr-10"></div>
-                    <span v-if="props.isOverview || mdAndDown" class="text-h6 font-weight-bold">NFT History</span>
+                    <span class="text-h6 font-weight-bold">NFT History</span>
                     <app-new-update
                         :icon-only="props.isOverview"
                         text="New ERC20 Transfers"
@@ -22,7 +20,7 @@
             <app-btn v-if="props.isOverview && !mdAndDown" text="More" isSmall icon="east" @click="goToNftTransfersPage"></app-btn>
             <app-btn-icon v-if="props.isOverview && mdAndDown" icon="more_horiz" @click="goToNftTransfersPage"></app-btn-icon>
         </v-card-title>
-        <div :class="!props.isOverview && !mdAndDown ? 'pt-13' : null">
+        <div>
             <!--            Table Header-->
 
             <v-row v-if="!mdAndDown" class="my-0 text-body-1 text-info">

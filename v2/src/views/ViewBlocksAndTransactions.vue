@@ -5,16 +5,10 @@
         </v-col>
         <v-col cols="12" :class="columnPadding">
             <v-card elevation="1" rounded="xl" class="pt-4 pt-sm-6">
-                <!-- <v-tabs v-model="state.tab" color="primary" end>
-                    <v-tab :value="routes[0]" class="py-3 text-h5 text-capitalize rounded-b-xl" @click="changeRoute">Blocks</v-tab>
-                    <v-tab :value="routes[1]" class="py-3 text-h5 text-capitalize rounded-b-xl" @click="changeRoute">Transactions</v-tab>
-                </v-tabs> -->
-                <app-tabs v-model="state.tab" :routes="routes" :tabs="tabs"></app-tabs>
+                <app-tabs v-model="state.tab" :routes="routes" :tabs="tabs" class="mx-n1 mt-n2 mb-4"></app-tabs>
 
-                <div class="mt-6">
-                    <recent-blocks v-show="state.tab === routes[0]" :max-items="10" page-type="blocks" />
-                    <module-txs v-show="state.tab === routes[1]" :max-items="10" page-type="txs" />
-                </div>
+                <recent-blocks v-show="state.tab === routes[0]" :max-items="10" page-type="blocks" />
+                <module-txs v-show="state.tab === routes[1]" :max-items="10" page-type="txs" />
             </v-card>
         </v-col>
     </v-row>

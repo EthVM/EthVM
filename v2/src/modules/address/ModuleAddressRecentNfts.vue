@@ -1,5 +1,10 @@
 <template>
-    <v-card :variant="!props.isOverview ? 'flat' : 'elevated'" :elevation="props.isOverview ? 1 : 0" rounded="xl" class="pa-4 pa-sm-6 h-100" z>
+    <v-card
+        :variant="!props.isOverview ? 'flat' : 'elevated'"
+        :elevation="props.isOverview ? 1 : 0"
+        rounded="xl"
+        :class="[props.isOverview ? 'pt-4 pt-sm-6' : '', 'px-4 px-sm-6 pb-4 pb-sm-6 h-100']"
+    >
         <v-card-title v-if="props.isOverview" class="card-title d-flex justify-space-between align-center mb-5 pa-0">
             <span class="text-h6 font-weight-bold">NFT Collection</span>
             <app-btn v-if="!xs" text="More" isSmall icon="east" @click="goToNftsPage"></app-btn>

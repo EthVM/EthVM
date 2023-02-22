@@ -1,9 +1,14 @@
 <template>
-    <v-card :variant="!props.isOverview ? 'flat' : 'elevated'" :elevation="props.isOverview ? 1 : 0" rounded="xl" class="pa-4 pa-sm-6 fill-height">
+    <v-card
+        :variant="!props.isOverview ? 'flat' : 'elevated'"
+        :elevation="props.isOverview ? 1 : 0"
+        rounded="xl"
+        :class="[props.isOverview ? 'pt-4 pt-sm-6' : '', 'px-4 px-sm-6 pb-4 pb-sm-6 fill-height']"
+    >
         <v-card-title class="d-flex justify-space-between align-center pa-0 mb-5">
             <div>
                 <v-row align="center" class="my-0 mx-0">
-                    <div v-if="!props.isOverview && !mdAndDown" class="mr-10">
+                    <div v-if="!props.isOverview" class="mr-10">
                         <address-balance-totals
                             title="Token Balance"
                             :is-loading="loadingAddressTokens || loadingMarketInfo"
@@ -11,7 +16,7 @@
                             :subtext="`${tokenCount} total tokens`"
                         />
                     </div>
-                    <span v-if="props.isOverview || mdAndDown" class="text-h6 font-weight-bold">Token History</span>
+                    <span v-if="props.isOverview" class="text-h6 font-weight-bold">Token History</span>
                     <app-new-update
                         :icon-only="props.isOverview"
                         text="New ERC20 Transfers"
