@@ -9,7 +9,7 @@
         :is-loading="isLoading"
     />
     <v-card v-if="state.blockNumber" variant="elevated" elevation="1" rounded="xl" class="pt-4 pt-sm-6 mt-5">
-        <app-tabs v-model="state.tab" :routes="routes" :tabs="tabs" class="mb-4 mb-sm-0"></app-tabs>
+        <app-tabs v-model="state.tab" :routes="routes" :tabs="tabs" class="mx-n1 mt-n2 mb-5"></app-tabs>
         <block-txs
             v-show="state.tab === routes[0]"
             :max-items="10"
