@@ -47,7 +47,7 @@
                 Mobile Menu
             =========================
             -->
-        <div v-if="smAndDown" class="d-flex justify-end">
+        <div v-if="smAndDown" class="d-flex justify-end background-mobile">
             <v-btn flat color="primary" size="small" class="no-opacity text-subtitle-1 rounded-xl mx-3 mt-3 mb-2 v-btn--mobile-menu" id="address-core-menu">
                 <p class="text-right font-weight-regular">{{ activeTabText }}</p>
                 <v-icon class="ml-3">expand_more</v-icon>
@@ -264,7 +264,7 @@ if (!isValid.value) {
     background: linear-gradient(to bottom, rgb(var(--v-theme-primary)) 316px, rgb(var(--v-theme-background)) 316px, rgb(var(--v-theme-background)) 100%);
 }
 .adr-core-background-mobile {
-    background: linear-gradient(to bottom, rgb(var(--v-theme-primary)) 150px, rgb(var(--v-theme-background)) 150px, rgb(var(--v-theme-background)) 100%);
+    background: linear-gradient(to bottom, rgb(var(--v-theme-primary)) 200px, rgb(var(--v-theme-background)) 200px, rgb(var(--v-theme-background)) 100%);
 }
 /* FADE TRANSITION */
 .fade-enter-active,
@@ -283,5 +283,9 @@ if (!isValid.value) {
 }
 div.v-overlay__content {
     // left: 0px !important;
+}
+
+.background-mobile {
+    background-color: rgb(var(--v-theme-primary));
 }
 </style>
