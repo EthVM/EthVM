@@ -47,4 +47,11 @@ const imagePreview = computed<string>(() => {
 .img-shadow {
     box-shadow: 0px 8px 20px rgba(174, 182, 202, 0.5);
 }
+
+.no-image {
+    background-color: rgb(var(--v-theme-primary));
+    color: rgba(255, 255, 255, 0.5);
+    min-height: 36px;
+    width: 100%;
+}
 </style>
