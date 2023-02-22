@@ -34,6 +34,7 @@ export type BlockDetailsFragment = {
         timestamp: number
         uncles: Array<string | null>
         txFail: number
+        baseFeePerGas?: string | null
         rewards: { __typename?: 'BlockRewards'; txFees: string; total: string; uncles: string }
     }
 }
@@ -69,6 +70,7 @@ export type GetBlockByNumberQuery = {
             timestamp: number
             uncles: Array<string | null>
             txFail: number
+            baseFeePerGas?: string | null
             rewards: { __typename?: 'BlockRewards'; txFees: string; total: string; uncles: string }
         }
     }
@@ -105,6 +107,7 @@ export type GetBlockByHashQuery = {
             timestamp: number
             uncles: Array<string | null>
             txFail: number
+            baseFeePerGas?: string | null
             rewards: { __typename?: 'BlockRewards'; txFees: string; total: string; uncles: string }
         }
     }
@@ -128,6 +131,7 @@ export const BlockDetailsFragmentDoc = gql`
                 uncles
             }
             txFail
+            baseFeePerGas
         }
         hash
         parentHash

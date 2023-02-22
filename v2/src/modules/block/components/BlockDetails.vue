@@ -67,10 +67,16 @@
                                     <p class="text-body-1">{{ props.blockDetails.gasLimit.detail }}</p>
                                 </div>
                             </v-col>
-                            <v-col cols="6" sm="4">
+                            <v-col cols="6" sm="8">
                                 <div class="block-info mb-5">
                                     <p class="text-button mb-1">Gas Used</p>
                                     <p class="text-body-1">{{ props.blockDetails.gasUsed.detail }}</p>
+                                </div>
+                            </v-col>
+                            <v-col v-if="props.blockDetails.baseFee" cols="6" sm="4">
+                                <div class="block-info mb-5">
+                                    <p class="text-button mb-1">Base Fee per Gas</p>
+                                    <p class="text-body-1">{{ props.blockDetails.baseFee.detail }}</p>
                                 </div>
                             </v-col>
                         </v-row>

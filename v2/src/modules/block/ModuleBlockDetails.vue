@@ -42,7 +42,8 @@ import { FormattedNumber, formatNumber, formatVariableUnitEthValue } from '@/cor
 import { useNewBlockFeedSubscription } from '@core/composables/NewBlock/newBlockFeed.generated'
 import { useBlockSubscription } from '@core/composables/NewBlock/newBlock.composable'
 import { useQuery } from '@vue/apollo-composable'
-import { timeAgo, eth } from '@core/helper'
+import { timeAgo } from '@core/helper'
+import { fromWei } from 'web3-utils'
 import { useRoute, useRouter } from 'vue-router'
 import { Q_BLOCK_DETAILS } from '@core/router/routesNames'
 const routes = Q_BLOCK_DETAILS
@@ -158,6 +159,12 @@ const blockDetails = computed<{ [key: string]: Detail } | null>(() => {
                 detail: blockDetailsData.value?.sha3Uncles
             }
         }
+        if (blockDetailsData.value?.summary.baseFeePerGas) {
+            details['baseFee'] = {
+                title: 'Base Fee per Gas',
+                detail: `${fromWei(blockDetailsData.value?.summary.baseFeePerGas, 'Gwei')} Gwei`
+            }
+        }
         return details
     }
     return null
@@ -185,7 +192,7 @@ const state: ModuleState = reactive({
     hasError: false,
     tab: routes[0],
     isMined: true,
-    blockNumber: !props.isHash ? props.blockRef : ''
+    blockNumber: !props.isHash && props.blockRef ? props.blockRef : ''
 })
 
 const subscriptionEnabled = ref(false)
