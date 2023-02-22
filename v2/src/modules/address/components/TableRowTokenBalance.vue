@@ -15,11 +15,11 @@
                 SM : 4F
                 LG: 2
              -->
-        <v-col cols="6" sm="4" :lg="props.isOverview ? 4 : 2" :class="['d-flex align-center']">
+        <v-col cols="6" sm="4" :lg="props.isOverview ? 4 : 3" :class="['d-flex align-center']">
             <app-token-icon :token-icon="token.image || undefined" img-size="32px" />
             <p class="text-truncate ml-4">
                 {{ token.name }}
-                <span v-if="props.isOverview || mdAndDown" class="text-info text-uppercase text-truncate d-block pt-1">{{ token.symbol }}</span>
+                <span class="text-info text-uppercase text-truncate d-block pt-1">{{ token.symbol }}</span>
             </p>
         </v-col>
         <!--
@@ -30,9 +30,9 @@
             XS: NONE
             LG: 1
          -->
-        <v-col v-if="!props.isOverview" cols="1" class="d-none d-lg-block">
+        <!-- <v-col v-if="!props.isOverview" cols="1" class="d-none d-lg-block">
             <p class="text-uppercase text-truncate text-info">{{ token.symbol }}</p>
-        </v-col>
+        </v-col> -->
         <!--
             OTHER on Overview:
             XS: NONE
@@ -77,8 +77,8 @@
         <template #expandable>
             <v-col v-if="state.showMore && marketData" cols="12">
                 <v-row :dense="xs">
-                    <v-col cols="12" md="5"></v-col>
-                    <v-col cols="12" md="7" class="pa-3 pt-md-13 pb-md-5">
+                    <v-col cols="12" md="4" lg="5"></v-col>
+                    <v-col cols="12" md="8" lg="7" class="pa-3 pt-md-10 pb-md-5 pl-lg-9">
                         <v-row :dense="xs">
                             <v-col cols="6" class="d-sm-none">
                                 <p class="mb-1 text-info font-weight-bold">Price</p>

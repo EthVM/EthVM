@@ -10,25 +10,26 @@
                 <router-link :to="`/block/number/${props.block.number}`" class="text-secondary">{{ _block.number }}</router-link>
                 <p class="text-info mb-0">{{ _block.timestamp }}</p>
             </v-col>
-            <v-col cols="6">
-                <div class="d-flex align-center justify-end">
-                    <app-address-blockie :address="_block.miner || ''" :size="6" class="mr-1 mr-sm-2" />
-                    <app-transform-hash is-short is-blue :hash="eth.toCheckSum(_block.miner)" :link="`/address/${_block.miner}`" />
-                </div>
-            </v-col>
+            <v-spacer />
+            <div class="d-flex align-center justify-start" style="width: 150px">
+                <app-address-blockie :address="_block.miner || ''" :size="6" class="mr-1 mr-sm-2" />
+                <app-transform-hash is-short is-blue :hash="eth.toCheckSum(_block.miner)" :link="`/address/${_block.miner}`" />
+            </div>
             <template #expandable>
                 <v-col cols="12" v-if="state.showMoreDetails">
-                    <v-row justify="space-between" class="my-5 mx-0">
-                        <p class="text-info mr-2">Transactions:</p>
-                        <p>
-                            {{ _block.totalTx }}
-                        </p>
-                    </v-row>
-                    <v-row justify="space-between" class="my-5 mx-0">
-                        <p class="text-info mr-2">Reward:</p>
-                        <p>
-                            {{ _block.rewards.value }}
-                        </p>
+                    <v-row justify="space-between" dense class="my-5 mx-0">
+                        <div>
+                            <p class="text-info mr-2">Transactions</p>
+                            <p>
+                                {{ _block.totalTx }}
+                            </p>
+                        </div>
+                        <div style="width: 140px">
+                            <p class="text-info mr-2">Reward</p>
+                            <p>
+                                {{ _block.rewards.value }}
+                            </p>
+                        </div>
                     </v-row>
                 </v-col>
             </template>

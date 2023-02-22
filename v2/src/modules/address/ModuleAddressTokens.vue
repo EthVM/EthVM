@@ -15,8 +15,8 @@
                 <app-btn text="More" is-small icon="east" @click="goToTokensBalancePage"></app-btn>
             </template>
         </v-card-title>
-        <div v-if="!props.isOverview" class="d-flex align-center">
-            <v-col lg="3">
+        <div v-if="!props.isOverview" class="d-flex align-center flex-wrap">
+            <v-col cols="12" sm="4" lg="3" class="pa-0">
                 <address-balance-totals
                     title="Token Balance"
                     :is-loading="loadingTokens || loadingCoinData"
@@ -26,7 +26,7 @@
                 >
                 </address-balance-totals>
             </v-col>
-            <div v-if="!props.isOverview" class="flex-grow-1">
+            <div class="flex-grow-1 my-5 my-sm-0">
                 <app-input place-holder="Search token name" v-model="state.searchParams" />
             </div>
         </div>
@@ -45,7 +45,7 @@
              -->
             <v-col sm="4" :lg="props.isOverview ? 4 : 3" class="py-0 d-none d-sm-block">
                 <v-btn variant="text" color="info" class="font-weight-regular ml-n3" rounded="pill" size="small" @click="sortTable(SORT_KEY.NAME)">
-                    Token <v-icon v-if="isActiveSort(SORT_KEY.NAME)" class="ml-1" size="x-small">{{ sortIcon }}</v-icon></v-btn
+                    Token <v-icon v-if="isActiveSort(SORT_KEY.NAME)" class="ml-1" :size="14">{{ sortIcon }}</v-icon></v-btn
                 >
             </v-col>
             <!--
@@ -63,7 +63,7 @@
                     <!--PRICE -->
                     <v-col sm="4" :lg="props.isOverview ? 4 : 3" class="py-0 text-right text-sm-left">
                         <v-btn variant="text" color="info" class="font-weight-regular ml-n3" rounded="pill" size="small" @click="sortTable(SORT_KEY.PRICE)">
-                            Price <v-icon v-if="isActiveSort(SORT_KEY.PRICE)" class="ml-1" size="x-small">{{ sortIcon }}</v-icon></v-btn
+                            Price <v-icon v-if="isActiveSort(SORT_KEY.PRICE)" class="ml-1" :size="14">{{ sortIcon }}</v-icon></v-btn
                         ></v-col
                     >
                     <v-col v-if="!props.isOverview" lg="3" class="py-0 d-none d-lg-block">
@@ -75,17 +75,17 @@
                             size="small"
                             @click="sortTable(SORT_KEY.PERCENTAGE_CHANGE)"
                         >
-                            24h<v-icon v-if="isActiveSort(SORT_KEY.PERCENTAGE_CHANGE)" class="ml-1" size="x-small">{{ sortIcon }}</v-icon></v-btn
+                            24h<v-icon v-if="isActiveSort(SORT_KEY.PERCENTAGE_CHANGE)" class="ml-1" :size="14">{{ sortIcon }}</v-icon></v-btn
                         ></v-col
                     >
                     <v-col sm="4" :lg="props.isOverview ? 4 : 3" class="py-0 d-none d-sm-block">
                         <v-btn variant="text" color="info" class="font-weight-regular ml-n3" rounded="pill" size="small" @click="sortTable(SORT_KEY.USD)">
-                            USD Value <v-icon v-if="isActiveSort(SORT_KEY.USD)" class="ml-1" size="x-small">{{ sortIcon }}</v-icon></v-btn
+                            USD Valued <v-icon v-if="isActiveSort(SORT_KEY.USD)" class="ml-1" :size="14">{{ sortIcon }}</v-icon></v-btn
                         ></v-col
                     >
                     <v-col sm="4" :lg="props.isOverview ? 4 : 3" class="py-0 d-none d-sm-flex justify-space-between">
                         <v-btn variant="text" color="info" class="font-weight-regular ml-n3" rounded="pill" size="small" @click="sortTable(SORT_KEY.BALANCE)">
-                            Balance <v-icon v-if="isActiveSort(SORT_KEY.BALANCE)" class="ml-1" size="x-small">{{ sortIcon }}</v-icon></v-btn
+                            Balance <v-icon v-if="isActiveSort(SORT_KEY.BALANCE)" class="ml-1" :size="14">{{ sortIcon }}</v-icon></v-btn
                         >
                     </v-col>
                 </v-row>
@@ -93,7 +93,7 @@
             <v-spacer class="d-flex d-sm-none" />
             <v-col class="d-flex d-sm-none justify-end">
                 <v-btn variant="text" color="info" class="font-weight-regular mr-n3" rounded="pill" size="small" @click="sortTable(SORT_KEY.USD)">
-                    USD Value <v-icon v-if="isActiveSort(SORT_KEY.USD)" class="ml-1" size="x-small">{{ sortIcon }}</v-icon></v-btn
+                    USD Value <v-icon v-if="isActiveSort(SORT_KEY.USD)" class="ml-1" :size="14">{{ sortIcon }}</v-icon></v-btn
                 >
             </v-col>
         </v-row>

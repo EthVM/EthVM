@@ -8,6 +8,7 @@
                     :has-error="hasUserError"
                     place-holder="Search token name"
                     @on-user-input="setNewTokenSearch"
+                    class="w-100"
                 ></app-input>
             </template>
             <template #scroll-content>

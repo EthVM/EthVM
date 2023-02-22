@@ -181,7 +181,7 @@ const hasAddressError = computed<boolean>(() => {
  * @param _value user input
  */
 const isValidAddress = computed<boolean>(() => {
-    return eth.isValidAddress(hashNoSpaces.value)
+    return eth.isValidAddress(hashNoSpaces.value.toLowerCase())
 })
 
 /**

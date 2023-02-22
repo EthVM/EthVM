@@ -1,15 +1,7 @@
 <template>
-    <v-navigation-drawer v-model="appStore.appDrawer" color="primary" temporary>
+    <v-navigation-drawer v-model="appStore.appDrawer" color="primary" temporary location="right">
         <v-row justify="space-between" align="center" class="mt-2">
-            <v-col cols="5">
-                <v-img
-                    :src="appStore.isDarkMode ? require('@/assets/logo-dark.svg') : require('@/assets/logo.svg')"
-                    height="35px"
-                    width="80px"
-                    contain
-                    class="ml-7"
-                />
-            </v-col>
+            <v-spacer />
             <v-col cols="2">
                 <app-btn-icon icon="close" @click="appStore.appDrawer = false" color="white" />
             </v-col>

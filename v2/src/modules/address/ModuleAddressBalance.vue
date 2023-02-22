@@ -13,9 +13,9 @@
                 <p v-else class="text-h5 font-weight-regular">{{ balanceFiatFormatted }}</p>
             </template>
         </address-balance-totals>
-        <div class="temp-chart pa-4 rounded-xl">
+        <!-- <div class="temp-chart pa-4 rounded-xl">
             <p>Chart Area</p>
-        </div>
+        </div> -->
     </v-card>
     <!--
         ========================
@@ -42,17 +42,17 @@
             MD and UP: ICON & Eth title
         =========================
         -->
-        <v-row v-else align="end" class="pt-11 mb-12">
+        <div v-else class="d-flex align-end pt-11 mb-12">
             <app-token-icon :token-icon="ethTokenIcon" img-size="40px"></app-token-icon>
             <p class="text-h3 pl-2">Ethereum <span class="text-info text-body-1 pl-3">ETH</span></p>
-        </v-row>
-        <v-row :dense="xs">
+        </div>
+        <v-row :dense="xs" class="mt-5 mt-md-0 mb-md-5">
             <!--
             ========================
                 MD and UP: ETH Balance
             =========================
             -->
-            <v-col v-if="!isSmallView" cols="3" lg="2">
+            <v-col v-if="!isSmallView" cols="4" lg="3">
                 <p class="text-info text-h6">Balance</p>
                 <div v-if="loadingBalanceData" class="skeleton-box rounded-xl" style="height: 28px"></div>
 
@@ -63,7 +63,7 @@
                 MD and UP: FIAT Balance
             =========================
             -->
-            <v-col v-if="!isSmallView" cols="3">
+            <v-col v-if="!isSmallView" cols="4" lg="3">
                 <p class="text-info text-h6">USD Value</p>
                 <div v-if="loadingMarketInfo || loadingBalanceData" class="skeleton-box rounded-xl" style="height: 28px"></div>
 
@@ -74,7 +74,7 @@
                 XS and UP: Price
             =========================
             -->
-            <v-col cols="6" md="4">
+            <v-col cols="6" md="4" lg="6">
                 <p :class="[isSmallView ? 'text-caption mb-1' : 'text-h6', 'text-info ']">Price</p>
                 <div v-if="loadingMarketInfo" class="skeleton-box rounded-xl" :style="xs || sm ? 'height: 20px' : 'height: 28px'"></div>
                 <p v-else :class="isSmallView ? 'text-body-1' : 'text-h3'">
@@ -97,11 +97,11 @@
                 MD and UP: ORDER last
             =========================
             -->
-            <v-col cols="12" :class="isSmallView ? 'mt-4' : 'mt-13'" :order="isSmallView ? 'first' : 'last'">
+            <!-- <v-col cols="12" :class="isSmallView ? 'mt-4' : 'mt-13'" :order="isSmallView ? 'first' : 'last'">
                 <div :class="[isSmallView ? 'temp-chart-balance-mobile' : 'temp-chart-balance', 'pa-4 rounded-xl']">
                     <p>Chart Area</p>
                 </div>
-            </v-col>
+            </v-col> -->
         </v-row>
         <v-row :dense="xs">
             <address-token-fiat-info
