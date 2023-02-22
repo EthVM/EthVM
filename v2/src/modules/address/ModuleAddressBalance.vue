@@ -29,7 +29,7 @@
             XS & SM: Eth Balance & USD VALUE
         =========================
         -->
-        <address-balance-totals v-if="isSmallView" title="ETH Balance" :is-loading="loadingBalanceData" :balance="`${balanceFormatted} ETH`">
+        <address-balance-totals title="ETH Balance" :is-loading="loadingBalanceData" :balance="`${balanceFormatted} ETH`">
             <template #extra>
                 <v-col v-if="loadingMarketInfo || loadingBalanceData" cols="6" sm="4" md="6" class="pa-0">
                     <div class="skeleton-box rounded-xl mt-1" style="height: 24px"></div>
@@ -42,43 +42,43 @@
             MD and UP: ICON & Eth title
         =========================
         -->
-        <div v-else class="d-flex align-end pt-11 mb-12">
+        <!-- <div v-else class="d-flex align-end pt-11 mb-12">
             <app-token-icon :token-icon="ethTokenIcon" img-size="40px"></app-token-icon>
             <p class="text-h3 pl-2">Ethereum <span class="text-info text-body-1 pl-3">ETH</span></p>
-        </div>
-        <v-row :dense="xs" class="mt-5 mt-md-0 mb-md-5">
+        </div> -->
+        <v-row :dense="xs" class="mt-1">
             <!--
             ========================
                 MD and UP: ETH Balance
             =========================
             -->
-            <v-col v-if="!isSmallView" cols="4" lg="3">
+            <!-- <v-col v-if="!isSmallView" cols="4" lg="3">
                 <p class="text-info text-h6">Balance</p>
                 <div v-if="loadingBalanceData" class="skeleton-box rounded-xl" style="height: 28px"></div>
 
-                <p v-else class="text-h3">{{ balanceFormatted }}</p>
-            </v-col>
+                <p v-else class="text-h4 font-weight-bold">{{ balanceFormatted }}</p>
+            </v-col> -->
             <!--
             ========================
                 MD and UP: FIAT Balance
             =========================
             -->
-            <v-col v-if="!isSmallView" cols="4" lg="3">
+            <!-- <v-col v-if="!isSmallView" cols="4" lg="3">
                 <p class="text-info text-h6">USD Value</p>
                 <div v-if="loadingMarketInfo || loadingBalanceData" class="skeleton-box rounded-xl" style="height: 28px"></div>
 
-                <p v-else class="text-h3">{{ balanceFiatFormatted }}</p>
-            </v-col>
+                <p v-else class="text-h4 font-weight-bold">{{ balanceFiatFormatted }}</p>
+            </v-col> -->
             <!--
             ========================
                 XS and UP: Price
             =========================
             -->
-            <v-col cols="6" md="4" lg="6">
-                <p :class="[isSmallView ? 'text-caption mb-1' : 'text-h6', 'text-info ']">Price</p>
-                <div v-if="loadingMarketInfo" class="skeleton-box rounded-xl" :style="xs || sm ? 'height: 20px' : 'height: 28px'"></div>
-                <p v-else :class="isSmallView ? 'text-body-1' : 'text-h3'">
-                    {{ priceFiatFormatted }} <span v-if="!isSmallView" :class="['pl-5', percentageClass]"> {{ percentageFormatted }}%</span>
+            <v-col cols="6" md="4" lg="3" class="mt-4">
+                <p class="'text-caption mb-1 text-info">Price</p>
+                <div v-if="loadingMarketInfo" class="skeleton-box rounded-xl" style="height: 20px"></div>
+                <p v-else :class="'text-body-1'">
+                    {{ priceFiatFormatted }}
                 </p>
             </v-col>
             <!--
@@ -86,11 +86,18 @@
                 XS and SM: Price Change
             =========================
             -->
-            <v-col v-if="isSmallView" cols="6" md="4">
-                <p :class="[isSmallView ? 'text-caption mb-1' : 'text-h6', 'text-info ']">24h Change</p>
-                <div v-if="loadingMarketInfo" class="skeleton-box rounded-xl" :style="xs || sm ? 'height: 20px' : 'height: 28px'"></div>
+            <v-col cols="6" md="4" lg="3" class="mt-4">
+                <p class="text-caption mb-1 text-info">24h Change</p>
+                <div v-if="loadingMarketInfo" class="skeleton-box rounded-xl" style="height: 20px"></div>
                 <p v-else :class="['text-body-1', percentageClass]">{{ percentageFormatted }}%</p>
             </v-col>
+            <address-token-fiat-info
+                v-for="info in fiatInfo"
+                :key="info.text"
+                :loading="loadingMarketInfo"
+                :text="info.text"
+                :fiat-value="info.fiat"
+            ></address-token-fiat-info>
             <!--
             ========================
                 XS and SM: ORDER 1st
@@ -103,15 +110,6 @@
                 </div>
             </v-col> -->
         </v-row>
-        <v-row :dense="xs">
-            <address-token-fiat-info
-                v-for="info in fiatInfo"
-                :key="info.text"
-                :loading="loadingMarketInfo"
-                :text="info.text"
-                :fiat-value="info.fiat"
-            ></address-token-fiat-info>
-        </v-row>
     </div>
 </template>
 
@@ -121,7 +119,7 @@ import { useCoinData } from '@core/composables/CoinData/coinData.composable'
 import { useAddressEthBalance } from '@core/composables/AddressEthBalance/addressEthBalance.composable'
 import BN from 'bignumber.js'
 import { formatUsdValue, formatPercentageValue } from '@/core/helper/number-format-helper'
-import AppTokenIcon from '@/core/components/AppTokenIcon.vue'
+// import AppTokenIcon from '@/core/components/AppTokenIcon.vue'
 import AddressBalanceTotals from './components/AddressBalanceTotals.vue'
 import { useDisplay } from 'vuetify/lib/framework.mjs'
 import AddressTokenFiatInfo from './components/AddressTokenFiatInfo.vue'
