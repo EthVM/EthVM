@@ -1,7 +1,7 @@
 <template>
     <div>
         <template v-if="!smAndDown">
-            <v-row align="center" justify="start" class="text-info mt-2 mt-sm-6">
+            <v-row align="center" justify="start" class="text-info mt-2 mt-sm-3">
                 <v-col :sm="mdAndDown ? 3 : 2">
                     <span style="width: 30px; height: 1px" class="d-inline-block"></span>
                     <span class="ml-4">Tx Value</span>

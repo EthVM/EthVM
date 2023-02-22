@@ -13,7 +13,7 @@
                         :routes="routes"
                         :tabs="tabs"
                         @update:modelValue="setLastViewedTab"
-                        class="mb-4 mb-sm-0 mx-n4 mx-sm-n6"
+                        class="mb-3 mb-sm-0 mx-n6 mt-n2"
                     ></app-tabs>
                     <module-all-eth-transfers v-if="state.tab === routes[0]" :address-ref="props.addressRef" />
                     <module-eth-txs-history v-if="state.tab === routes[1]" :address-ref="props.addressRef" />

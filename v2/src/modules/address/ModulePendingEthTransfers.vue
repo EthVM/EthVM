@@ -1,6 +1,6 @@
 <template>
     <template v-if="!smAndDown">
-        <v-row align="center" justify="start" class="text-info mt-2 mt-sm-6">
+        <v-row align="center" justify="start" class="text-info mt-2 mt-sm-3">
             <v-col sm="3">
                 <span>Value</span>
             </v-col>
