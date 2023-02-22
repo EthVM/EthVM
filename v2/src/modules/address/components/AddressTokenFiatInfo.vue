@@ -3,7 +3,7 @@
         <p :class="[xs || sm ? 'text-caption mb-1' : 'text-h6', 'text-info ']">{{ text }}</p>
         <div v-if="props.loading" class="skeleton-box rounded-xl" :style="xs || sm ? 'height: 20px' : 'height: 28px'"></div>
 
-        <p v-else :class="xs || sm ? 'text-body-1' : 'text-h4'">{{ valueFiatFormatted }}</p>
+        <p v-else :class="xs || sm ? 'text-body-1' : 'text-h4 font-weight-bold'">{{ valueFiatFormatted }}</p>
     </v-col>
 </template>
 
