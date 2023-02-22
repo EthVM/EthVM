@@ -1,6 +1,6 @@
 <template>
     <v-row :class="rowMargin">
-        <v-col cols="12" md="6" lg="4" :class="columnPadding">
+        <v-col cols="12" lg="4" :class="columnPadding">
             <module-portfolio-total :address-ref="props.addressRef" />
         </v-col>
         <v-col cols="12" md="6" lg="4" :class="columnPadding">
