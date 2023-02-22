@@ -28,7 +28,12 @@
             -->
             <v-list v-if="search.hashType === HASH_TYPE.AddressHash || search.hashType === HASH_TYPE.TokenHash">
                 <v-list-subheader>Address</v-list-subheader>
-                <v-list-item :title="removeSpaces(search.param)" class="overflow-hidden" @click="routeTo(search.param)" :active="tokensResult.length === 0">
+                <v-list-item
+                    :title="eth.toCheckSum(removeSpaces(search.param))"
+                    class="overflow-hidden"
+                    @click="routeTo(search.param)"
+                    :active="tokensResult.length === 0"
+                >
                     <template v-slot:prepend>
                         <app-address-blockie :address="search.param || ''" :size="6" class="mr-5" />
                     </template>
@@ -167,7 +172,7 @@ const executeSearch = (searchParam: string): void => {
     } else {
         const param = searchParam
         if (param.length > 0) {
-            if (eth.isValidAddress(removeSpaces(param)) || eth.isValidHash(removeSpaces(param))) {
+            if (eth.isValidAddress(removeSpaces(param.toLowerCase())) || eth.isValidHash(removeSpaces(param.toLowerCase()))) {
                 search.param = param
                 search.enabledHashType = true
             } else {
@@ -291,7 +296,7 @@ const tokensResult = computed(() => {
                         subtext: token.symbol ? token.symbol : token.contract,
                         price: token.current_price ? formatUsdValue(new BN(token.current_price)).value : undefined,
                         icon: token.image,
-                        contract: token.contract
+                        contract: eth.toCheckSum(token.contract)
                     }
                 ]
             }
@@ -304,16 +309,16 @@ const tokensResult = computed(() => {
                 return [
                     {
                         text: tokenInfoDetails.name,
-                        subtext: tokenInfoDetails.symbol ? tokenInfoDetails.symbol : tokenInfoDetails.contract,
-                        contract: tokenInfoDetails.contract
+                        subtext: tokenInfoDetails.symbol ? tokenInfoDetails.symbol : eth.toCheckSum(tokenInfoDetails.contract),
+                        contract: eth.toCheckSum(tokenInfoDetails.contract)
                     }
                 ]
             }
             return [
                 {
                     text: 'No Name',
-                    subtext: search.param,
-                    contract: search.param
+                    subtext: eth.toCheckSum(search.param),
+                    contract: eth.toCheckSum(search.param)
                 }
             ]
         }
@@ -323,7 +328,7 @@ const tokensResult = computed(() => {
                 const flag = i.name.toLowerCase().startsWith(search.param) || i.symbol.toLowerCase().startsWith(search.param)
                 return {
                     text: i.name,
-                    subtext: i.symbol ? i.symbol : i.contract,
+                    subtext: i.symbol ? i.symbol : eth.toCheckSum(i.contract),
                     price: i.current_price ? formatUsdValue(new BN(i.current_price)).value : undefined,
                     icon: i.image,
                     contract: i.contract,
@@ -340,7 +345,7 @@ const tokensResult = computed(() => {
                 const marketData = getEthereumTokenByContract(i.contract)
                 return {
                     text: i.text,
-                    subtext: marketData ? marketData.symbol : i.contract,
+                    subtext: marketData ? marketData.symbol : eth.toCheckSum(i.contract),
                     price: marketData && marketData.current_price ? formatUsdValue(new BN(marketData.current_price)).value : undefined,
                     icon: marketData ? marketData.image : undefined,
                     contract: i.contract,
