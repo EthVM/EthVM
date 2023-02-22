@@ -335,7 +335,7 @@ const tableHeight = computed(() => {
         const rowHeight = state.rowRefs[refId]?.offsetHeight
         const offset = xs.value ? 4 : 16
         if (rowHeight) {
-            const maxHeight = rowHeight * 6 + offset
+            const maxHeight = rowHeight * 7 + offset
             return { maxHeight: `${maxHeight}px` }
         }
     }
