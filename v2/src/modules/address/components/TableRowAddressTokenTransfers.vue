@@ -9,15 +9,19 @@
             <app-table-row row-align="center" @click="toggleMoreDetails" :color="state.showMoreDetails ? 'pillGrey' : 'transparent'">
                 <v-col :cols="props.isOverview ? 3 : 2">
                     <v-row class="ma-0 flex-nowrap" align="center">
-                        <img :src="tokenImg" alt="" height="32" width="32" class="mr-2 rounded-circle" />
+                        <app-token-icon :token-icon="tokenImg" img-size="32px" class="mr-2" />
                         <div style="display: grid">
                             <router-link
                                 v-if="props.transfer.tokenInfo.name !== '' || props.transfer.tokenInfo.symbol"
                                 :to="`/token/${props.transfer.contract}`"
                                 class="text-textPrimary text-ellipses"
                             >
-                                <p v-if="props.transfer.tokenInfo.name" class="text-ellipses">{{ props.transfer.tokenInfo.name }}</p>
-                                <p v-else class="text-uppercase caption text-ellipses">{{ props.transfer.tokenInfo.symbol }}</p>
+                                <p v-if="props.transfer.tokenInfo.name" class="text-ellipses">
+                                    {{ props.transfer.tokenInfo.name }}
+                                </p>
+                                <p v-else class="text-uppercase caption text-ellipses">
+                                    {{ props.transfer.tokenInfo.symbol }}
+                                </p>
                             </router-link>
                             <p v-if="props.isOverview" class="text-info pt-1 text-ellipses text-uppercase">
                                 {{ props.transfer.tokenInfo.symbol }}
@@ -94,12 +98,14 @@
                 </v-col>
                 <v-col cols="6" class="pb-2">
                     <div class="d-flex align-center">
-                        <img :src="tokenImg" alt="" height="24" width="24" class="mr-2 rounded-circle" />
+                        <app-token-icon :token-icon="tokenImg" img-size="26px" class="mr-2" />
+
                         <span class="text-uppercase"> {{ tokenAmount.value }} {{ props.transfer.tokenInfo.symbol }} </span>
                     </div>
                 </v-col>
                 <v-col cols="6" class="py-0 text-info">
-                    {{ timeAgo(new Date(props.transfer.transfer.timestamp * 1e3)) }} {{ transferType === 'in' ? 'from' : 'to' }}
+                    {{ timeAgo(new Date(props.transfer.transfer.timestamp * 1e3)) }}
+                    {{ transferType === 'in' ? 'from' : 'to' }}
                 </v-col>
                 <v-col cols="6" class="py-0 text-secondary">
                     <div class="d-flex align-center">
@@ -144,6 +150,7 @@ import AppAddressBlockie from '@core/components/AppAddressBlockie.vue'
 import AppTransformHash from '@core/components/AppTransformHash.vue'
 import AppBtnIcon from '@core/components/AppBtnIcon.vue'
 import AppTableRow from '@core/components/AppTableRow.vue'
+import AppTokenIcon from '@/core/components/AppTokenIcon.vue'
 import { useDisplay } from 'vuetify'
 import { computed, reactive } from 'vue'
 import { TransferFragmentFragment as Transfer } from '../apollo/AddressTransfers/transfers.generated'

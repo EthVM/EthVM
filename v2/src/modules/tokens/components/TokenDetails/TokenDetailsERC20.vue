@@ -26,13 +26,13 @@
                         <p class="text-info">{{ detail.title }}</p>
                         <p class="text-subtitle-1 font-weight-bold mb-2">{{ detail.text }}</p>
                     </v-col>
-                    <v-col cols="12">
+                    <!-- <v-col cols="12">
                         <p class="mb-5">
                             Binance Coin (BNB) is an exchange-based token created and issued by the cryptocurrency exchange Binance. Initially created on the
                             Ethereum blockchain as an ERC-20 token in July 2017, BNB was migrated over to Binance Chain in February 2019 and became the native
                             coin of the Binance Chain.
                         </p>
-                    </v-col>
+                    </v-col> -->
                 </v-row>
             </v-col>
             <v-spacer class="d-none d-lg-flex"></v-spacer>
