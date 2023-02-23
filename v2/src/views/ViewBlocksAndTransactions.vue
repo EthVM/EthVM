@@ -23,7 +23,10 @@ import { Tab } from '@core/components/props'
 import { onMounted, reactive } from 'vue'
 import { useAppViewGrid } from '@core/composables/AppViewGrid/AppViewGrid.composable'
 import { Q_BLOCKS_AND_TXS } from '@core/router/routesNames'
-import { useRoute, useRouter } from 'vue-router'
+
+onMounted(() => {
+    window.scrollTo(0, 0)
+})
 
 const { columnPadding, rowMargin } = useAppViewGrid()
 

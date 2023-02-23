@@ -21,7 +21,11 @@ import AppMessage from '@core/components/AppMessage.vue'
 import AppError from '@core/components/AppError.vue'
 import { eth } from '@core/helper'
 import { useRoute } from 'vue-router'
+import { onMounted } from 'vue'
 
+onMounted(() => {
+    window.scrollTo(0, 0)
+})
 const props = defineProps({
     addressRef: {
         type: String,

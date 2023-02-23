@@ -57,6 +57,7 @@ onMounted(() => {
     if (props.tab !== routes[0]) {
         setLastViewedTab()
     }
+    window.scrollTo(0, 0)
 })
 
 const emit = defineEmits<{

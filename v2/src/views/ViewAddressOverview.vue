@@ -52,6 +52,11 @@ import ModuleAddressNftTransfers from '@module/address/ModuleAddressNftTransfers
 import { useDisplay } from 'vuetify/lib/framework.mjs'
 import { useRouter } from 'vue-router'
 import { Q_ADDRESS_TRANSFERS, ROUTE_NAME } from '@core/router/routesNames'
+import { onMounted, watch } from 'vue'
+
+onMounted(() => {
+    window.scrollTo(0, 0)
+})
 
 const { xs } = useDisplay()
 const props = defineProps({
@@ -69,4 +74,12 @@ const goToEthPage = async (): Promise<void> => {
         query: { t: Q_ADDRESS_TRANSFERS[0] }
     })
 }
+watch(
+    () => props.addressRef,
+    (newAdr, oldAdr) => {
+        if (newAdr.toLowerCase() !== oldAdr.toLowerCase()) {
+            window.scrollTo(0, 0)
+        }
+    }
+)
 </script>

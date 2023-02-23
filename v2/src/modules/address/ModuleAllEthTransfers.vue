@@ -35,8 +35,8 @@
 import AppNoResult from '@core/components/AppNoResult.vue'
 import TableAllEthTransferRow from '@module/address/components/EthBalanceTabs/TableAllEthTransferRow.vue'
 import AppPagination from '@core/components/AppPagination.vue'
-import { computed, watch } from 'vue'
-import { EthInternalTransactionTransfersFragment } from '@module/address/apollo/EthTransfers/s.generated'
+import { computed } from 'vue'
+import { EthInternalTransactionTransfersFragment } from '@module/address/apollo/EthTransfers/internalTransfers.generated'
 import { useDisplay } from 'vuetify'
 import { useGetAllEthTransfersQuery } from '@module/address/apollo/EthTransfers/allTransfers.generated'
 import { useAppPaginate } from '@core/composables/AppPaginate/useAppPaginate.composable'
@@ -51,7 +51,6 @@ const props = defineProps({
     },
     isOverview: {
         type: Boolean,
-        required: true,
         default: false
     }
 })
