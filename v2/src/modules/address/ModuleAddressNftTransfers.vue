@@ -82,7 +82,7 @@ import { NftId, generateId, generateMapId } from '@/core/composables/NftMeta/hel
 import { useAppPaginate } from '@core/composables/AppPaginate/useAppPaginate.composable'
 import { ITEMS_PER_PAGE } from '@core/constants'
 
-const OVERVIEW_MAX_ITEMS = 6
+const OVERVIEW_MAX_ITEMS = 7
 const MOBILE_MAX_ITEMS = 4
 
 const { mdAndDown } = useDisplay()
