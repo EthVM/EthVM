@@ -9,7 +9,7 @@
                 <v-row align="center" justify="center" class="px-3 px-sm-0 px-md-16 flex-nowrap" no-gutters>
                     <app-address-blockie :address="props.addressRef || ''" :size="xs ? 9 : 10" />
                     <v-col cols="6" sm="7" :md="store.getAddressName(props.addressRef) ? '8' : 'auto'" lg="auto" class="pl-2 pl-sm-4 pr-sm-0">
-                        <div v-if="store.getAddressName(props.addressRef)" class="text-h4 font-weight-bold">
+                        <div v-if="store.getAddressName(props.addressRef)" class="text-h4 font-weight-bold text-ellipses">
                             {{ store.getAddressName(props.addressRef) }}
                         </div>
                         <div>

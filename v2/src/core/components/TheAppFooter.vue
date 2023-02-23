@@ -197,7 +197,7 @@ const toggleTheme = () => {
 }
 
 const themeSwitchLabel = computed<string>(() => {
-    return isDarkMode.value ? 'Dark Node On' : 'Dark Mode Off'
+    return isDarkMode.value ? 'Dark Mode On' : 'Dark Mode Off'
 })
 
 onMounted(() => {
