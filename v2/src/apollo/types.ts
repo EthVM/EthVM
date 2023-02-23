@@ -358,18 +358,24 @@ export type NftContract = {
     primary_asset_contracts?: Maybe<Array<PrimaryAssetContract>>
 }
 
-export type NftTokenBalance = {
-    __typename?: 'NFTTokenBalance'
+export type NftToken = {
+    __typename?: 'NFTToken'
     balance: Scalars['String']
     owner: Scalars['String']
     tokenInfo: EthTokenInfo
     type: NftType
 }
 
-export type NftTokenBalances = {
-    __typename?: 'NFTTokenBalances'
+export type NftTokenBalance = {
+    __typename?: 'NFTTokenBalance'
+    balance: Scalars['String']
+    owner: Scalars['String']
+}
+
+export type NftTokens = {
+    __typename?: 'NFTTokens'
     nextKey?: Maybe<Scalars['String']>
-    tokens: Array<NftTokenBalance>
+    tokens: Array<NftToken>
 }
 
 export type NftTransfer = {
@@ -475,7 +481,9 @@ export type Query = {
     getOwnersERC721TokensV2: Erc721TokenContract
     /** Get ETH and ERC20 tokens owned by an address */
     getOwnersETHAndERC20Tokens: EthAndErc20TokenBalances
-    getOwnersNFTTokens: NftTokenBalances
+    /** Get the total number of NFT's owned by an address */
+    getOwnersNFTBalance: NftTokenBalance
+    getOwnersNFTTokens: NftTokens
     getPendingTransactions: Array<Maybe<Tx>>
     /**
      * get pending transactions to or from an address
@@ -710,6 +718,10 @@ export type QueryGetOwnersErc721TokensV2Args = {
 
 export type QueryGetOwnersEthAndErc20TokensArgs = {
     owner: Scalars['String']
+}
+
+export type QueryGetOwnersNftBalanceArgs = {
+    address: Scalars['String']
 }
 
 export type QueryGetOwnersNftTokensArgs = {

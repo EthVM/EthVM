@@ -21,8 +21,7 @@
             <app-btn-icon v-if="props.isOverview && mdAndDown" icon="more_horiz" @click="goToNftTransfersPage"></app-btn-icon>
         </v-card-title>
         <div>
-            <!--            Table Header-->
-
+            <!-- Table Header -->
             <v-row v-if="!mdAndDown" class="my-0 text-body-1 text-info">
                 <v-col :cols="props.isOverview ? 4 : 3" class="py-0"> Name/Id </v-col>
                 <v-col :cols="props.isOverview ? 2 : 1" class="py-0"> Copies </v-col>
