@@ -113,14 +113,14 @@ export const useStore = defineStore('main', {
         addressNameIsSaved: state => {
             return (_name: string): boolean => {
                 const storeArray = [...state.portfolio, ...state.adrBook]
-                const exhists = storeArray.find(i => i.name.toLowerCase() === _name.toLowerCase())
+                const exhists = storeArray.find(i => i.name && i.name.toLowerCase() === _name.toLowerCase())
                 return exhists !== undefined
             }
         },
         getAddressName: state => {
             return (_hash: string): string | undefined => {
                 const storeArray = [...state.portfolio, ...state.adrBook]
-                const item = storeArray.find(i => i.hash.toLowerCase() === _hash.toLowerCase())
+                const item = storeArray.find(i => i.hash && i.hash.toLowerCase() === _hash.toLowerCase())
                 return item ? item.name : undefined
             }
         },
@@ -272,11 +272,6 @@ export const useStore = defineStore('main', {
             if (!isAddressBook) {
                 const item = this.portfolio.filter(i => i.hash.toLowerCase() === _hash)
                 if (item.length > 0) {
-                    //ensure name is saved in address book
-                    this.adrBook.push({
-                        hash: item[0].hash,
-                        name: item[0].name
-                    })
                     this.addNotification({
                         _type: NotificationType.DELETE_ADR,
                         hash: item[0].hash,

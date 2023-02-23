@@ -276,7 +276,6 @@ const addAddressToPortfolio = (): void => {
         state.adrInput = ''
         state.nameInput = ''
     }
-    state.openDialog = false
     closeModule()
 }
 
@@ -305,7 +304,9 @@ const isDisabled = computed<boolean>(() => {
 })
 
 const emit = defineEmits(['close-module'])
+
 const closeModule = () => {
+    state.openDialog = false
     emit('close-module')
     if (!props.address) {
         state.adrInput = ''

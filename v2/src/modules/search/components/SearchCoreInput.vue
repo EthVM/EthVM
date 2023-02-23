@@ -117,6 +117,7 @@ const resetValues = (): void => {
     clearTimeout(search.timeout)
     clearTimeout(search.timeoutEnter)
     clearTimeout(search.timeoutBlur)
+    search.value = ''
     emit('onUserInput', search.value)
 }
 
