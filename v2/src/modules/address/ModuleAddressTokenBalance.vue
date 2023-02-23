@@ -54,7 +54,6 @@ const tokenIcons = computed<string[]>(() => {
             ?.getSortedTokens(TOKEN_FILTER_VALUES[5])
             .slice(0, 10)
             .map(i => {
-                console.log(i.image)
                 return i.image
             })
             .reverse()
