@@ -3,7 +3,11 @@ const webpack = require('webpack')
 const path = require('path')
 const ImageMinimizerPlugin = require('image-minimizer-webpack-plugin')
 const { VuetifyPlugin } = require('webpack-plugin-vuetify')
+const version = require('./package.json').version
 
+const vars = {
+    VERSION: version
+}
 const minOptions = {
     minimizer: {
         implementation: ImageMinimizerPlugin.squooshMinify,
@@ -79,7 +83,8 @@ module.exports = defineConfig({
             }),
             new VuetifyPlugin({
                 styles: { configFile: 'src/styles/settings.scss' }
-            })
+            }),
+            new webpack.EnvironmentPlugin(vars)
         ],
         resolve: {
             extensions: ['.ts', '.tsx', '.js'],

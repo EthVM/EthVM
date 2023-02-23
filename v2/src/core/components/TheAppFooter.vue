@@ -111,7 +111,7 @@
         <div class="copyright bg-tabActive w-100">
             <v-container class="py-2 px-0">
                 <div class="d-flex flex-column flex-wrap">
-                    <p class="px-4 px-sm-6 pt-6 text-center text-sm-right">ethVM 2.0 {{ new Date().getFullYear() }} MyEtherWallet Inc.</p>
+                    <p class="px-4 px-sm-6 pt-6 text-center text-sm-right">ethVM v{{ version }} {{ new Date().getFullYear() }} MyEtherWallet Inc.</p>
                     <p class="px-4 px-sm-6 pb-6 text-center text-sm-right">All rights reserved.</p>
                 </div>
             </v-container>
@@ -125,8 +125,10 @@ import { onMounted, ref, watch, computed } from 'vue'
 import { useStore } from '@/store'
 import { usePreferredColorScheme } from '@vueuse/core'
 import { useDisplay } from 'vuetify/lib/framework.mjs'
+import configs from '@/configs'
 
-const { sm, md, lgAndUp, mdAndDown } = useDisplay()
+const { lgAndUp, mdAndDown } = useDisplay()
+const version = ref(configs.VERSION || '0')
 const socialIcons = [
     {
         link: 'https://www.facebook.com/MyEtherWallet',
