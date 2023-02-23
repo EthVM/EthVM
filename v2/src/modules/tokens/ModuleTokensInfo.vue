@@ -1,7 +1,9 @@
 <template>
     <v-card variant="elevated" elevation="1" rounded="xl" class="pa-4 pa-sm-6 h-100">
         <v-card-title :class="['pa-0', { 'd-flex align-center justify-space-between mb-4': isHomePage }]">
-            <h1 :class="[isHomePage ? 'text-h6' : 'text-h4 ', 'font-weight-bold']">{{ title }}</h1>
+            <h1 :class="[isHomePage ? 'text-h6' : 'text-h4 ', 'font-weight-bold']">
+                {{ title }}
+            </h1>
             <app-btn v-if="isHomePage" text="More" isSmall icon="east" @click="goToTokens"></app-btn>
         </v-card-title>
         <app-tabs v-if="!isHomePage" v-model="state.activeList" :routes="routes" :tabs="list" class="my-5" btn-variant></app-tabs>
@@ -13,14 +15,16 @@
             <v-col sm="6" :md="isHomePage ? '6' : '4'">
                 <v-row align="center" class="ma-0">
                     <v-btn variant="text" color="info" class="font-weight-regular ml-n3" rounded="pill" size="small" @click="sortTable(SORT_KEY.NAME)">
-                        Token <v-icon v-if="isActiveSort(SORT_KEY.NAME)" class="ml-1" :size="14">{{ sortIcon }}</v-icon></v-btn
+                        Token
+                        <v-icon v-if="isActiveSort(SORT_KEY.NAME)" class="ml-1" :size="14">{{ sortIcon }}</v-icon></v-btn
                     >
                 </v-row>
             </v-col>
             <v-col sm="2" md="2">
                 <v-row align="center" class="ma-0">
                     <v-btn variant="text" color="info" class="font-weight-regular ml-n3" rounded="pill" size="small" @click="sortTable(SORT_KEY.PRICE)">
-                        Price <v-icon v-if="isActiveSort(SORT_KEY.PRICE)" class="ml-1" :size="14">{{ sortIcon }}</v-icon></v-btn
+                        Price
+                        <v-icon v-if="isActiveSort(SORT_KEY.PRICE)" class="ml-1" :size="14">{{ sortIcon }}</v-icon></v-btn
                     >
                 </v-row>
             </v-col>
@@ -32,14 +36,16 @@
             <v-col v-if="!isHomePage" md="2" class="d-none d-md-block">
                 <v-row align="center" class="ma-0">
                     <v-btn variant="text" color="info" class="font-weight-regular ml-n3" rounded="pill" size="small" @click="sortTable(SORT_KEY.VOLUME)">
-                        Volume <v-icon v-if="isActiveSort(SORT_KEY.VOLUME)" class="ml-1" :size="14">{{ sortIcon }}</v-icon></v-btn
+                        Volume
+                        <v-icon v-if="isActiveSort(SORT_KEY.VOLUME)" class="ml-1" :size="14">{{ sortIcon }}</v-icon></v-btn
                     >
                 </v-row>
             </v-col>
             <v-col :sm="2" class="d-none d-sm-block">
                 <v-row align="center" class="ma-0">
                     <v-btn variant="text" color="info" class="font-weight-regular ml-n3" rounded="pill" size="small" @click="sortTable(SORT_KEY.MARKET_CAP)">
-                        Market Cap <v-icon v-if="isActiveSort(SORT_KEY.MARKET_CAP)" class="ml-1" :size="14">{{ sortIcon }}</v-icon></v-btn
+                        Market Cap
+                        <v-icon v-if="isActiveSort(SORT_KEY.MARKET_CAP)" class="ml-1" :size="14">{{ sortIcon }}</v-icon></v-btn
                     >
                 </v-row>
             </v-col>
@@ -53,12 +59,7 @@
                 </div>
             </div>
             <div v-else>
-                <v-row justify="center" class="my-0">
-                    <v-col md="10" class="bg-background rounded-lg mt-10 mb-8 py-12 text-center">
-                        <v-icon>info</v-icon>
-                        No results found. Please try again
-                    </v-col>
-                </v-row>
+                <app-no-result text="No results found. Please try again" class="mt-6"></app-no-result>
             </div>
         </template>
         <template v-else>
@@ -76,11 +77,11 @@
 import AppTabs from '@core/components/AppTabs.vue'
 import AppBtn from '@core/components/AppBtn.vue'
 import AppInput from '@core/components/AppInput.vue'
+import AppNoResult from '@core/components/AppNoResult.vue'
 import AppPagination from '@core/components/AppPagination.vue'
 import { Tab } from '@/core/components/props'
 import TokenMarketInfoTableRow from '@module/tokens/components/TokenMarketInfo/TableRowTokenMarketInfo.vue'
 import ModuleAddFavToken from './ModuleAddFavToken.vue'
-import { useDisplay } from 'vuetify'
 import { computed, reactive } from 'vue'
 import { useStore } from '@/store'
 import { useCoinData } from '@core/composables/CoinData/coinData.composable'
@@ -96,7 +97,6 @@ const routes = ADDRESS_ROUTE_QUERY.Q_NFTS
 
 // const MAX_TOKENS = 200
 const store = useStore()
-const { smAndDown } = useDisplay()
 
 interface PropType {
     homePage?: TOKENS_VIEW
@@ -149,11 +149,14 @@ const tokens = computed<TokenSortMarket | null>(() => {
 
 const favTokensSorted = computed<TokenSortMarket | null>(() => {
     if (!store.loadingCoinData) {
-        const favs: TokenMarket[] = []
+        let favs: TokenMarket[] = []
         store.favTokens.forEach(fav => {
             const market = getEthereumTokenByContract(fav) || undefined
             favs.push(new TokenMarket(market))
         })
+        if (state.tokenSearch) {
+            favs = searchHelper(favs, ['name', 'symbol', 'contract'], state.tokenSearch) as Array<TokenMarket>
+        }
         const max = isHomePage.value ? 7 : store.favTokens.length
         const favTokens = new TokenSortMarket(favs).getSortedTokens(TOKEN_FILTER_VALUES[13]).splice(0, max)
         return new TokenSortMarket(favTokens)
