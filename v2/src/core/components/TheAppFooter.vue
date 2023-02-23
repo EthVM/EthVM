@@ -25,10 +25,10 @@
                             <a href="#" class="text-link">About us</a>
                         </li>
                         <li class="mb-2">
-                            <a href="#" class="text-link">Privacy Policy</a>
+                            <a href="https://www.myetherwallet.com/privacy-policy" target="_blank" class="text-link">Privacy Policy</a>
                         </li>
-                        <li class="mb-2">
-                            <a href="#" class="text-link">Knowledge Base</a>
+                        <li class="mb-2" target="_blank">
+                            <a href="https://help.myetherwallet.com/en/" class="text-link">Help Center</a>
                         </li>
                     </ul>
                 </v-col>
@@ -37,7 +37,7 @@
                     <p class="footer-item-text">Help us keep ethVM free and open-source, your donations go a long way towards making that possible.</p>
                     <div class="mt-5">
                         <div class="mb-2">
-                            <a href="#" class="d-inline-flex align-center primary--text">
+                            <router-link :to="routeEth" target="_blank" class="d-inline-flex align-center primary--text">
                                 <v-img
                                     :src="require('@/assets/icon-ethereum.svg')"
                                     alt="Ethereum symbol in circle with purple background"
@@ -46,10 +46,14 @@
                                     class="mr-3"
                                 />
                                 <p>Ethereum Donation</p>
-                            </a>
+                            </router-link>
                         </div>
                         <div>
-                            <a href="#" class="d-inline-flex align-center primary--text">
+                            <a
+                                href="https://www.blockchain.com/explorer/addresses/btc/1DECAF2uSpFTP4L1fAHR8GCLrPqdwdLse9"
+                                target="_blank"
+                                class="d-inline-flex align-center primary--text"
+                            >
                                 <v-img
                                     :src="require('@/assets/icon-bitcoin.svg')"
                                     alt="Bitcoin symbol in circle with yellow background"
@@ -125,8 +129,15 @@ import { onMounted, ref, watch, computed } from 'vue'
 import { useStore } from '@/store'
 import { usePreferredColorScheme } from '@vueuse/core'
 import { useDisplay } from 'vuetify/lib/framework.mjs'
+import { ROUTE_NAME, ROUTE_PROP } from '@core/router/routesNames'
 import configs from '@/configs'
 
+const routeEth = {
+    name: ROUTE_NAME.ADDRESS.NAME,
+    params: {
+        [ROUTE_PROP.ADDRESS]: '0xdecaf9cd2367cdbb726e904cd6397edfcae6068d'
+    }
+}
 const { lgAndUp, mdAndDown } = useDisplay()
 const version = ref(configs.VERSION || '0')
 const socialIcons = [
