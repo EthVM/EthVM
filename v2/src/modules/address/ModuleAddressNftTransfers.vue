@@ -5,7 +5,7 @@
         rounded="xl"
         :class="[props.isOverview ? 'pt-4 pt-sm-6' : '', 'px-4 px-sm-6 pb-4 pb-sm-6 h-100']"
     >
-        <v-card-title v-if="props.isOverview" class="card-title d-flex justify-space-between align-center mb-5 px-0">
+        <v-card-title v-if="props.isOverview" class="d-flex justify-space-between align-center pa-0 mb-5">
             <div>
                 <v-row align="center" class="my-0 mx-0">
                     <span class="text-h6 font-weight-bold">NFT History</span>
@@ -31,7 +31,7 @@
                 <v-col v-if="!props.isOverview" cols="2" class="py-0"> Hash </v-col>
                 <v-col v-if="!props.isOverview" cols="2" class="py-0"> Timestamp </v-col>
             </v-row>
-            <v-divider class="my-0 mt-md-4 mx-n4 mx-sm-n6" />
+            <v-divider class="my-0 mt-md-5 mx-n4 mx-sm-n6" />
             <div v-if="initialLoad || loadingMeta || loadingTransfers" class="p-ten-top">
                 <div v-for="item in 10" :key="item" style="padding: 10px 0">
                     <div class="skeleton-box rounded-xl" style="height: 40px"></div>
