@@ -1,5 +1,5 @@
 <template>
-    <v-card variant="flat" class="pa-4 pa-sm-6">
+    <v-card variant="flat" class="px-4 px-sm-6 pb-4 pb-sm-6">
         <!-- Table Header -->
         <div v-if="!props.hasError">
             <v-row align="center" justify="start" class="text-body-1 text-info d-none d-sm-flex">

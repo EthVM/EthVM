@@ -23,6 +23,7 @@ import { useSetPortfolio } from './core/composables/Portfolio/useSetPortfolioBal
 import { computed, watch, reactive } from 'vue'
 import { useRoute } from 'vue-router'
 import { ROUTE_NAME } from '@core/router/routesNames'
+import { useStorage, RemovableRef } from '@vueuse/core'
 
 const store = useStore()
 
@@ -129,6 +130,40 @@ watch(
         }
     }
 )
+
+/** -------------------
+ * OLD STORE Migration
+ * --------------------*/
+
+interface OldToken {
+    address: string
+    symbol: string
+}
+
+const oldTokens = useStorage('favToksData', [] as OldToken[])
+if (oldTokens.value.length > 0) {
+    oldTokens.value.forEach(i => {
+        if (!store.tokenIsFav(i.address)) {
+            store.addFavToken(i.address)
+        }
+    })
+}
+oldTokens.value = null
+
+interface oldAdrBook {
+    address: string
+    name: string
+}
+
+const oldAdrs = useStorage('favAdrsData', [] as oldAdrBook[])
+if (oldAdrs.value.length > 0) {
+    oldAdrs.value.forEach(i => {
+        if (!store.addressHashIsSaved(i.address, true) && !store.addressHashIsSaved(i.address)) {
+            store.addAddress(i.address, i.name, true)
+        }
+    })
+}
+oldAdrs.value = null
 </script>
 <style lang="scss">
 .app-view {

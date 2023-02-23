@@ -35,7 +35,8 @@
                 v-if="!isLoading && portfolioValueBN.gt(0)"
                 cols="12"
                 :sm="props.addressRef ? 6 : 4"
-                :md="props.addressRef ? 7 : 4"
+                :md="props.addressRef ? 5 : 4"
+                :lg="props.addressRef ? 7 : 4"
                 align-self="center"
                 class="pt-0 pl-sm-0"
             >

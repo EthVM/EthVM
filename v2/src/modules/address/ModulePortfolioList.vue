@@ -1,7 +1,7 @@
 <template>
     <div class="px-4 px-sm-6 pb-4 pb-sm-6">
         <!--Table Header-->
-        <v-row :dense="xs" :class="'mt-sm-5 d-flex text-body-1 text-info mb-sm-3'" :justify="xs ? 'end' : 'start'">
+        <v-row :dense="xs" :class="'d-flex text-body-1 text-info mb-sm-3'" :justify="xs ? 'end' : 'start'">
             <v-col sm="6" lg="3" class="py-0 d-none d-sm-block">
                 <v-btn variant="text" color="info" class="font-weight-regular ml-n3" rounded="pill" size="small" @click="sortTable(KEY.HASH)">
                     Address <v-icon v-if="isActiveSort(KEY.HASH)" class="ml-1" :size="14">{{ sortIcon }}</v-icon></v-btn

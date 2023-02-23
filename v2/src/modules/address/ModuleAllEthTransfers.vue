@@ -1,13 +1,13 @@
 <template>
     <template v-if="!smAndDown">
-        <v-row align="center" justify="start" class="text-info mt-2 mt-sm-6">
+        <v-row align="center" justify="start" class="text-info mt-2 mt-sm-3">
             <v-col sm="3" lg="2">
                 <span style="width: 30px; height: 1px" class="d-inline-block"></span>
-                <span class="ml-4">Tx Value</span>
+                <span class="ml-4">Value</span>
             </v-col>
             <v-col v-if="!mdAndDown" sm="2"> Type </v-col>
             <v-col sm="2"> Hash/Block </v-col>
-            <v-col sm="2"> To/From </v-col>
+            <v-col sm="2" class="d-flex justify-sm-center justify-lg-start"> To/From </v-col>
             <v-col sm="3" lg="2"> Address </v-col>
             <v-col sm="2"> Tx Fee Paid </v-col>
         </v-row>
@@ -35,7 +35,7 @@
 import AppNoResult from '@core/components/AppNoResult.vue'
 import TableAllEthTransferRow from '@module/address/components/EthBalanceTabs/TableAllEthTransferRow.vue'
 import AppPagination from '@core/components/AppPagination.vue'
-import { computed, watch } from 'vue'
+import { computed } from 'vue'
 import { EthInternalTransactionTransfersFragment } from '@module/address/apollo/EthTransfers/internalTransfers.generated'
 import { useDisplay } from 'vuetify'
 import { useGetAllEthTransfersQuery } from '@module/address/apollo/EthTransfers/allTransfers.generated'
@@ -48,6 +48,10 @@ const props = defineProps({
     addressRef: {
         type: String,
         required: true
+    },
+    isOverview: {
+        type: Boolean,
+        default: false
     }
 })
 
@@ -76,7 +80,7 @@ const initialLoad = computed<boolean>(() => {
 })
 
 const showPagination = computed<boolean>(() => {
-    return !initialLoad.value && transfers.value && transfers.value.length > 0
+    return !props.isOverview && !initialLoad.value && transfers.value && transfers.value.length > 0
 })
 
 const hasMore = computed<boolean>(() => {

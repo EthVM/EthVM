@@ -3,14 +3,12 @@
         :variant="!props.isOverview ? 'flat' : 'elevated'"
         :elevation="props.isOverview ? 1 : 0"
         rounded="xl"
-        class="pa-4 pa-sm-6"
-        :class="props.isOverview ? 'h-100' : null"
+        :class="[props.isOverview ? 'pt-4 pt-sm-6' : '', 'px-4 px-sm-6 pb-4 pb-sm-6 h-100']"
     >
-        <v-card-title class="card-title d-flex justify-space-between align-center mb-5 px-0">
+        <v-card-title v-if="props.isOverview" class="d-flex justify-space-between align-center pa-0 mb-5">
             <div>
                 <v-row align="center" class="my-0 mx-0">
-                    <div v-if="!props.isOverview && !mdAndDown" class="mr-10"></div>
-                    <span v-if="props.isOverview || mdAndDown" class="text-h6 font-weight-bold">NFT History</span>
+                    <span class="text-h6 font-weight-bold">NFT History</span>
                     <app-new-update
                         :icon-only="props.isOverview"
                         text="New ERC20 Transfers"
@@ -22,9 +20,8 @@
             <app-btn v-if="props.isOverview && !mdAndDown" text="More" isSmall icon="east" @click="goToNftTransfersPage"></app-btn>
             <app-btn-icon v-if="props.isOverview && mdAndDown" icon="more_horiz" @click="goToNftTransfersPage"></app-btn-icon>
         </v-card-title>
-        <div :class="!props.isOverview && !mdAndDown ? 'pt-13' : null">
-            <!--            Table Header-->
-
+        <div>
+            <!-- Table Header -->
             <v-row v-if="!mdAndDown" class="my-0 text-body-1 text-info">
                 <v-col :cols="props.isOverview ? 4 : 3" class="py-0"> Name/Id </v-col>
                 <v-col :cols="props.isOverview ? 2 : 1" class="py-0"> Copies </v-col>
@@ -33,7 +30,7 @@
                 <v-col v-if="!props.isOverview" cols="2" class="py-0"> Hash </v-col>
                 <v-col v-if="!props.isOverview" cols="2" class="py-0"> Timestamp </v-col>
             </v-row>
-            <v-divider class="my-0 mt-md-4 mx-n4 mx-sm-n6" />
+            <v-divider class="my-0 mt-md-5 mx-n4 mx-sm-n6" />
             <div v-if="initialLoad || loadingMeta || loadingTransfers" class="p-ten-top">
                 <div v-for="item in 10" :key="item" style="padding: 10px 0">
                     <div class="skeleton-box rounded-xl" style="height: 40px"></div>
@@ -84,7 +81,7 @@ import { NftId, generateId, generateMapId } from '@/core/composables/NftMeta/hel
 import { useAppPaginate } from '@core/composables/AppPaginate/useAppPaginate.composable'
 import { ITEMS_PER_PAGE } from '@core/constants'
 
-const OVERVIEW_MAX_ITEMS = 6
+const OVERVIEW_MAX_ITEMS = 7
 const MOBILE_MAX_ITEMS = 4
 
 const { mdAndDown } = useDisplay()

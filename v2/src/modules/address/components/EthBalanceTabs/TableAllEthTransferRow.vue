@@ -28,7 +28,11 @@
                             <app-chip :bg="transferType.color" :text="transferType.text.toUpperCase()" class="text-caption" style="min-width: 120px" />
                         </span>
                         <span>
+                            <router-link v-if="isBlockReward" :to="`/block/number/${props.transfer.transfer.block}`" class="text-secondary">
+                                {{ formatNumber(props.transfer.transfer.block) }}
+                            </router-link>
                             <app-transform-hash
+                                v-else
                                 is-short
                                 is-blue
                                 :hash="eth.toCheckSum(transfer.transfer.transactionHash)"
@@ -47,16 +51,9 @@
                     </span>
                     <div class="ml-4">
                         {{ txValue.value }} ETH
-                        <div class="text-lowercase">
+                        <div class="text-lowercase text-info">
                             {{ timestamp }}
                         </div>
-                        <app-chip
-                            v-if="mdAndDown"
-                            :bg="transferType.color"
-                            :text="transferType.text.toUpperCase()"
-                            class="tiny-text"
-                            style="min-width: 120px"
-                        />
                     </div>
                 </div>
             </v-col>
@@ -64,6 +61,7 @@
                 <app-chip :bg="transferType.color" :text="transferType.text.toUpperCase()" size="x-small" class="tiny-text" style="min-width: 131px" />
             </v-col>
             <v-col sm="2">
+                <app-chip v-if="mdAndDown" :bg="transferType.color" :text="transferType.text.toUpperCase()" class="tiny-text mb-1" style="min-width: 120px" />
                 <router-link v-if="isBlockReward" :to="`/block/number/${props.transfer.transfer.block}`" class="text-secondary">
                     {{ formatNumber(props.transfer.transfer.block) }}
                 </router-link>
@@ -75,7 +73,7 @@
                     :link="`/tx/${props.transfer.transfer.transactionHash}`"
                 />
             </v-col>
-            <v-col sm="2">
+            <v-col sm="2" class="d-flex justify-sm-center justify-lg-start">
                 <app-chip
                     v-if="!isBlockReward"
                     :bg="transferDirection.color"
@@ -201,7 +199,7 @@ const transferType = computed<{ [key: string]: string }>(() => {
             }
         case TransferSubtype.InternalTransaction:
             return {
-                text: 'internal transfer',
+                text: 'internal',
                 color: 'purple'
             }
         case TransferSubtype.DaoHardFork:

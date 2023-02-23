@@ -81,6 +81,9 @@ const onUserInput = (): void => {
     // allows to use v-model on the app-input component
     clearTimeout(state.timeout)
     state.timeout = window.setTimeout(() => {
+        if (!state.value) {
+            state.value = ''
+        }
         emit('update:modelValue', state.value)
         emit('onUserInput', state.value)
         if (state.value === '') {
@@ -106,6 +109,9 @@ const message = computed(() => {
 const resetValues = (): void => {
     clearTimeout(state.timeout)
     state.checkReq = true
+    if (!state.value) {
+        state.value = ''
+    }
     emit('update:modelValue', state.value)
 }
 

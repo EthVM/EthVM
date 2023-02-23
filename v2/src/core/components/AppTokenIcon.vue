@@ -50,11 +50,12 @@ const loaderStyle = computed<string>(() => {
 .token-icon-core {
     border-radius: 50%;
     box-shadow: 0px 0px 1px rgba(24, 43, 75, 0.08);
-    background-color: white;
+    background-color: rgb(var(--v-theme-white));
 }
 .token-icon {
     border-radius: 50%;
     box-shadow: 0px 3px 5px rgba(24, 43, 75, 0.2);
-    border: 1px solid white;
+    border: 1px solid rgb(var(--v-theme-white));
+    background-color: rgb(var(--v-theme-white));
 }
 </style>

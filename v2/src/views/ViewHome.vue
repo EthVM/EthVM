@@ -73,8 +73,13 @@ import { ROUTE_NAME } from '@core/router/routesNames'
 import { useRouter } from 'vue-router'
 import { computed } from 'vue'
 import { useStore } from '@/store'
+import { onMounted } from 'vue'
+
 const { lgAndUp, mdAndDown } = useDisplay()
 const { columnPadding, rowMargin } = useAppViewGrid()
+onMounted(() => {
+    window.scrollTo(0, 0)
+})
 
 const router = useRouter()
 const store = useStore()

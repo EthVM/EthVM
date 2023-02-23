@@ -120,7 +120,7 @@
             </v-row>
         </v-card>
         <v-card variant="elevated" elevation="1" rounded="xl" class="pt-4 pt-sm-6 mt-5">
-            <app-tabs v-model="state.tab" :routes="routes" :tabs="tabs" @update:modelValue="changeRoute" class="mb-4 mb-sm-0"></app-tabs>
+            <app-tabs v-model="state.tab" :routes="routes" :tabs="tabs" @update:modelValue="changeRoute" class="mx-n1 mt-n2 mb-4"></app-tabs>
             <tab-state v-if="state.tab === routes[0]" :tx-hash="props.txRef" :tx-status="txStatus" :loading="loadingTransactionHash" />
             <tab-more v-if="state.tab === routes[1]" :tx-data="transactionData" :loading="loadingTransactionHash" />
         </v-card>

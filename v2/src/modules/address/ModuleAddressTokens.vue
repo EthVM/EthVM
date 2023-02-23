@@ -1,6 +1,11 @@
 <template>
-    <v-card :variant="!props.isOverview ? 'flat' : 'elevated'" :elevation="props.isOverview ? 1 : 0" rounded="xl" class="pa-4 pa-sm-6 fill-height">
-        <v-card-title class="d-none d-sm-flex justify-space-between align-center pa-0 mb-5">
+    <v-card
+        :variant="!props.isOverview ? 'flat' : 'elevated'"
+        :elevation="props.isOverview ? 1 : 0"
+        rounded="xl"
+        :class="[props.isOverview ? 'pt-4 pt-sm-6' : '', 'px-4 px-sm-6 pb-4 pb-sm-6 fill-height']"
+    >
+        <v-card-title v-if="props.isOverview" class="d-none d-sm-flex justify-space-between align-center pa-0 mb-5">
             <div>
                 <span v-if="props.isOverview" class="text-h6 font-weight-bold">Token Balance</span>
                 <!-- Notice new update-->
@@ -330,7 +335,7 @@ const tableHeight = computed(() => {
         const rowHeight = state.rowRefs[refId]?.offsetHeight
         const offset = xs.value ? 4 : 16
         if (rowHeight) {
-            const maxHeight = rowHeight * 6 + offset
+            const maxHeight = rowHeight * 7 + offset
             return { maxHeight: `${maxHeight}px` }
         }
     }

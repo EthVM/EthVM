@@ -75,24 +75,22 @@
         -->
         <v-col cols="12" :class="columnPadding">
             <v-card elevation="1" rounded="xl" class="pt-4 pt-sm-6">
-                <app-tabs v-model="state.tab" :routes="routes" :tabs="tabs"></app-tabs>
-                <div class="mt-6">
-                    <token-transfers
-                        v-show="state.tab === routes[0]"
-                        :address="props.addressRef"
-                        :page-type="'token'"
-                        :decimals="decimals"
-                        :symbol="symbol"
-                        @errorDetails="emitErrorState"
-                    />
-                    <token-holders
-                        v-show="state.tab === routes[1]"
-                        :address="props.addressRef"
-                        :decimals="decimals"
-                        @errorDetails="emitErrorState"
-                        @setTokenType="setTokenType"
-                    />
-                </div>
+                <app-tabs v-model="state.tab" :routes="routes" :tabs="tabs" class="mx-n1 mt-n2 mb-4"></app-tabs>
+                <token-transfers
+                    v-show="state.tab === routes[0]"
+                    :address="props.addressRef"
+                    :page-type="'token'"
+                    :decimals="decimals"
+                    :symbol="symbol"
+                    @errorDetails="emitErrorState"
+                />
+                <token-holders
+                    v-show="state.tab === routes[1]"
+                    :address="props.addressRef"
+                    :decimals="decimals"
+                    @errorDetails="emitErrorState"
+                    @setTokenType="setTokenType"
+                />
             </v-card>
         </v-col>
     </v-row>

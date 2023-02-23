@@ -1,5 +1,5 @@
 <template>
-    <v-card variant="flat" class="pa-4 pa-sm-6">
+    <v-card variant="flat" class="px-4 px-sm-6">
         <template v-if="props.isLoading || !props.blockDetails">
             <v-row class="my-2">
                 <v-col cols="12" md="6">

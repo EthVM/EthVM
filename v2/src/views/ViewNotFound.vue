@@ -14,6 +14,11 @@
 import { useRouter } from 'vue-router'
 import AppBtn from '@core/components/AppBtn.vue'
 import { ROUTE_NAME } from '@core/router/routesNames'
+import { onMounted } from 'vue'
+
+onMounted(() => {
+    window.scrollTo(0, 0)
+})
 
 const router = useRouter()
 const goToHome = async (): Promise<void> => {

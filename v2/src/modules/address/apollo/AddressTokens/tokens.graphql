@@ -94,3 +94,9 @@ query getOwnersNftTokens($address: String!, $limit: Int!, $nextKey: String ) {
         nextKey
     }
 }
+
+query getOwnersNFTBalance($address: String!) {
+    getOwnersNFTBalance(address: $address){
+        balance
+    }
+}

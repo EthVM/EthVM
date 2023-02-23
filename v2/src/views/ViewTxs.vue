@@ -4,4 +4,8 @@
 
 <script setup lang="ts">
 import ModuleTxs from '@module/txs/ModuleTxs.vue'
+import { onMounted } from 'vue'
+onMounted(() => {
+    window.scrollTo(0, 0)
+})
 </script>

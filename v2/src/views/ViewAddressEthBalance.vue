@@ -13,7 +13,7 @@
                         :routes="routes"
                         :tabs="tabs"
                         @update:modelValue="setLastViewedTab"
-                        class="mb-4 mb-sm-0 mx-n4 mx-sm-n6"
+                        class="mb-3 mb-sm-0 mx-n6 mt-n2"
                     ></app-tabs>
                     <module-all-eth-transfers v-if="state.tab === routes[0]" :address-ref="props.addressRef" />
                     <module-eth-txs-history v-if="state.tab === routes[1]" :address-ref="props.addressRef" />
@@ -36,7 +36,7 @@ import ModuleAddressBalance from '@module/address/ModuleAddressBalance.vue'
 import ModuleEthTxsHistory from '@module/address/ModuleEthTxsHistory.vue'
 import ModuleAddressMinerBlock from '@module/address/ModuleAddressMinerBlock.vue'
 import ModuleAllEthTransfers from '@module/address/ModuleAllEthTransfers.vue'
-import { reactive, computed } from 'vue'
+import { reactive, computed, onMounted } from 'vue'
 import { useAppViewGrid } from '@core/composables/AppViewGrid/AppViewGrid.composable'
 import { Tab } from '@core/components/props'
 import { ADDRESS_ROUTE_QUERY, Q_ADDRESS_TRANSFERS } from '@core/router/routesNames'
@@ -47,6 +47,9 @@ const { xs } = useDisplay()
 const routes = Q_ADDRESS_TRANSFERS
 const minerRoutes = ADDRESS_ROUTE_QUERY.Q_MINER
 
+onMounted(() => {
+    window.scrollTo(0, 0)
+})
 const props = defineProps({
     addressRef: {
         type: String,
