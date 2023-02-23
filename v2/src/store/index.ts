@@ -87,7 +87,7 @@ export const useStore = defineStore('main', {
          */
         tokenIsFav: state => {
             return (contract: string): boolean => {
-                const exhists = state.favTokens.find(i => i === contract)
+                const exhists = state.favTokens.find(i => i.toLowerCase() === contract.toLowerCase())
                 return exhists !== undefined
             }
         },
