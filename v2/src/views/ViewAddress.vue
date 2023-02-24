@@ -105,7 +105,7 @@
                 </v-container>
             </router-view>
         </div>
-        <app-dialog v-model="state.showQR" @update:modelValue="setQr" width="304" height="200">
+        <app-dialog v-model="state.showQR" @update:modelValue="setQr" width="304" height="220">
             <template #scroll-content>
                 <address-qr :address="props.addressRef" :name="store.getAddressName(props.addressRef)" />
             </template>
