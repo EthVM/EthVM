@@ -5,28 +5,31 @@
 
     <div v-if="isValid && props.addressRef" :class="[xs ? 'adr-core-background-mobile' : 'adr-core-background', 'pb-6']">
         <v-card class="px-xl-auto mx-0" flat rounded="0" :min-height="smAndDown ? '100%' : '92px'">
-            <v-container class="core-container fill-height px-3 px-sm-6 pb-4 pb-sm-6 px-md-16 pt-4 pt-sm-10">
+            <v-container class="core-container px-3 px-sm-6 pb-4 pb-sm-6 px-md-16 pt-4 pt-sm-10">
                 <v-row align="center" justify="center" class="px-3 px-sm-0 px-md-16 flex-nowrap" no-gutters>
                     <app-address-blockie :address="props.addressRef || ''" :size="xs ? 9 : 10" />
-                    <v-col cols="6" sm="8" :md="store.getAddressName(props.addressRef) ? '7' : 'auto'" lg="auto" class="pl-2 pl-sm-4 pr-sm-0">
-                        <div v-if="store.getAddressName(props.addressRef)" class="text-h4 font-weight-bold">
+                    <v-col cols="6" sm="7" :md="store.getAddressName(props.addressRef) ? '8' : 'auto'" lg="auto" class="pl-2 pl-sm-4 pr-sm-0">
+                        <div v-if="store.getAddressName(props.addressRef)" class="text-h4 font-weight-bold text-ellipses">
                             {{ store.getAddressName(props.addressRef) }}
                         </div>
                         <div>
                             <app-transform-hash
                                 v-if="(xs && store.getAddressName(props.addressRef)) || (smAndDown && !store.getAddressName(props.addressRef))"
-                                :hash="props.addressRef"
-                                :class="['font-weight-regular', { 'text-h4': !store.getAddressName(props.addressRef) }]"
+                                :hash="eth.toCheckSum(props.addressRef)"
+                                :class="['font-weight-regular font-mono', { 'text-h4': !store.getAddressName(props.addressRef) }]"
                                 :show-name="false"
                                 :is-short="xs"
                             ></app-transform-hash>
-                            <p v-else :class="[{ 'text-h4': !store.getAddressName(props.addressRef) }]">{{ props.addressRef }}</p>
+                            <p v-else :class="[{ 'text-h4 font-mono': !store.getAddressName(props.addressRef) }]">
+                                {{ eth.toCheckSum(props.addressRef) }}
+                            </p>
                         </div>
                     </v-col>
-                    <v-col cols="6" sm="auto" md="6" lg="auto" class="d-flex flex-grow-0 flex-shrink-1 ml-auto ml-md-6 ml-lg-16 justify-end">
+
+                    <v-col cols="6" sm="auto" md="6" lg="auto" class="d-flex flex-grow-0 flex-shrink-1 ml-sm-6 ml-lg-16 justify-end">
                         <app-copy-to-clip :value-to-copy="props.addressRef || ''" />
                         <module-add-adress-to-porfolio :address="props.addressRef" :name="store.getAddressName(props.addressRef)" />
-                        <app-btn-icon icon="qr_code"></app-btn-icon>
+                        <app-btn-icon icon="qr_code" @click="setQr(true)"></app-btn-icon>
                         <app-btn-icon icon="edit" @click="openEditDialog(true)"></app-btn-icon>
                     </v-col>
                     <!-- <v-divider :vertical="!smAndDown" class="my-1 my-sm-3 mx-n1 mx-sm-n3 mx-md-none"></v-divider>
@@ -77,7 +80,9 @@
                 class="py-3 text-h6 text-capitalize rounded-b-xl font-weight-light"
                 color="text-textPrimary"
                 selected-class="bg-surface"
-                ><p :class="activeTabText === i.text ? 'font-weight-regular' : 'text-white'">{{ i.text }}</p></v-tab
+                ><p :class="activeTabText === i.text ? 'font-weight-regular' : 'text-white'">
+                    {{ i.text }}
+                </p></v-tab
             >
         </v-tabs>
         <!--
@@ -100,12 +105,19 @@
                 </v-container>
             </router-view>
         </div>
+        <app-dialog v-model="state.showQR" @update:modelValue="setQr" width="304" height="200">
+            <template #scroll-content>
+                <address-qr :address="props.addressRef" :name="store.getAddressName(props.addressRef)" />
+            </template>
+        </app-dialog>
     </div>
 </template>
 
 <script setup lang="ts">
 import { reactive, computed, onMounted } from 'vue'
 import AppError from '@/core/components/AppError.vue'
+import AddressQr from '@/modules/address/components/AddressQr.vue'
+import AppDialog from '@core/components/AppDialog.vue'
 import { eth } from '@/core/helper'
 import { ErrorMessage } from '@module/address/models/ErrorMessageAddress'
 import { ROUTE_NAME, ADDRESS_ROUTE_QUERY } from '@core/router/routesNames'
@@ -161,19 +173,25 @@ interface ComponentState {
     error: string
     tab: string
     showEdit: boolean
+    showQR: boolean
 }
 
 const state: ComponentState = reactive({
     errorMessages: [],
     error: '',
     tab: ROUTE_NAME.ADDRESS.NAME,
-    showEdit: false
+    showEdit: false,
+    showQR: false
 })
 
 const { isAddressMiner } = useIsAddressMiner(props.addressRef)
 
 const openEditDialog = (_value: boolean) => {
     state.showEdit = _value
+}
+
+const setQr = (_value: boolean) => {
+    state.showQR = _value
 }
 /**------------------------
  * Tab Handling

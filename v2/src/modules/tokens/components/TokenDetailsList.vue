@@ -16,9 +16,13 @@
                 </div>
                 <div class="mb-5 mb-md-4 d-flex d-md-block justify-space-between">
                     <div>
-                        <p class="text-info text-subtitle-2 font-weight-regular text-md-body-1">{{ priceDetail.title }}</p>
+                        <p class="text-info text-subtitle-2 font-weight-regular text-md-body-1">
+                            {{ priceDetail.title }}
+                        </p>
                         <div v-if="!loadingTokenData" class="d-flex align-center">
-                            <p class="text-subtitle-1 text-md-h4 mt-1 mr-md-3">{{ priceDetail.detail }}</p>
+                            <p class="text-subtitle-1 text-md-h4 mt-1 mr-md-3">
+                                {{ priceDetail.detail }}
+                            </p>
                             <span
                                 v-if="priceDetail.priceChange && priceDetail.priceChange"
                                 class="d-none d-md-flex align-center text-subtitle-1 mt-1"
@@ -31,7 +35,9 @@
                         <div v-else class="skeleton-box rounded-xl mt-2" style="height: 20px; width: 200px"></div>
                     </div>
                     <div class="d-md-none v-col-6 py-0">
-                        <p class="text-info text-subtitle-2 font-weight-regular text-md-body-1">{{ priceChange.title }}</p>
+                        <p class="text-info text-subtitle-2 font-weight-regular text-md-body-1">
+                            {{ priceChange.title }}
+                        </p>
                         <p v-if="!props.isLoading && priceDetail.priceChange" class="text-subtitle-1 text-md-h4 mt-1" :class="`text-${priceChange.color}`">
                             {{ priceDetail.priceChange.value }} {{ priceDetail.priceChange.unit }}
                         </p>
@@ -40,25 +46,41 @@
                 </div>
                 <v-row class="mb-5 mb-md-4">
                     <v-col cols="6">
-                        <p class="text-info text-subtitle-2 font-weight-regular text-md-body-1">{{ marketCapDetail.title }}</p>
-                        <p v-if="!loadingTokenData" class="text-subtitle-1 text-md-h4 mt-1">{{ marketCapDetail.detail }}</p>
+                        <p class="text-info text-subtitle-2 font-weight-regular text-md-body-1">
+                            {{ marketCapDetail.title }}
+                        </p>
+                        <p v-if="!loadingTokenData" class="text-subtitle-1 text-md-h4 mt-1">
+                            {{ marketCapDetail.detail }}
+                        </p>
                         <div v-else class="skeleton-box rounded-xl mt-2" style="height: 20px"></div>
                     </v-col>
                     <v-col cols="6">
-                        <p class="text-info text-subtitle-2 font-weight-regular text-md-body-1">{{ circulatingSupplyDetail.title }}</p>
-                        <p v-if="!loadingTokenData" class="text-subtitle-1 text-md-h4 mt-1">{{ circulatingSupplyDetail.detail }}</p>
+                        <p class="text-info text-subtitle-2 font-weight-regular text-md-body-1">
+                            {{ circulatingSupplyDetail.title }}
+                        </p>
+                        <p v-if="!loadingTokenData" class="text-subtitle-1 text-md-h4 mt-1">
+                            {{ circulatingSupplyDetail.detail }}
+                        </p>
                         <div v-else class="skeleton-box rounded-xl mt-2" style="height: 20px"></div>
                     </v-col>
                 </v-row>
                 <v-row>
                     <v-col cols="6">
-                        <p class="text-info text-subtitle-2 font-weight-regular text-md-body-1">{{ volumeDetail.title }}</p>
-                        <p v-if="!loadingTokenData" class="text-subtitle-1 text-md-h4 mt-1">{{ volumeDetail.detail }}</p>
+                        <p class="text-info text-subtitle-2 font-weight-regular text-md-body-1">
+                            {{ volumeDetail.title }}
+                        </p>
+                        <p v-if="!loadingTokenData" class="text-subtitle-1 text-md-h4 mt-1">
+                            {{ volumeDetail.detail }}
+                        </p>
                         <div v-else class="skeleton-box rounded-xl mt-2" style="height: 20px"></div>
                     </v-col>
                     <v-col cols="6">
-                        <p class="text-info text-subtitle-2 font-weight-regular text-md-body-1">{{ supplyDetail.title }}</p>
-                        <p v-if="!loadingTokenData" class="text-subtitle-1 text-md-h4 mt-1">{{ supplyDetail.detail }}</p>
+                        <p class="text-info text-subtitle-2 font-weight-regular text-md-body-1">
+                            {{ supplyDetail.title }}
+                        </p>
+                        <p v-if="!loadingTokenData" class="text-subtitle-1 text-md-h4 mt-1">
+                            {{ supplyDetail.detail }}
+                        </p>
                         <div v-else class="skeleton-box rounded-xl my-2" style="height: 20px"></div>
                     </v-col>
                 </v-row>
@@ -364,10 +386,11 @@ const balanceUsd = computed<string | undefined>(() => {
 })
 
 const tokenHistory = computed<string>(() => {
-    return (
-        'Binance Coin (BNB) is an exchange-based token created and issued by the cryptocurrency exchange Binance. Initially created on the Ethereum blockchain as an ERC-20 token in July 2017, BNB was migrated over to Binance Chain in February 2019 and became the native coin of the Binance Chain.\n' +
-        'Binance Coin has seen massive growth in interest throughout the years. Several rounds of token burn events have appreciated BNB price and pushed it up as one of the top-10 cryptocurrencies by market capitalization. BNB can be traded in over 300 trading pairs across 120 exchanges tracked. '
-    )
+    return ''
+    // return (
+    //     'Binance Coin (BNB) is an exchange-based token created and issued by the cryptocurrency exchange Binance. Initially created on the Ethereum blockchain as an ERC-20 token in July 2017, BNB was migrated over to Binance Chain in February 2019 and became the native coin of the Binance Chain.\n' +
+    //     'Binance Coin has seen massive growth in interest throughout the years. Several rounds of token burn events have appreciated BNB price and pushed it up as one of the top-10 cryptocurrencies by market capitalization. BNB can be traded in over 300 trading pairs across 120 exchanges tracked. '
+    // )
 })
 
 const balance = computed<FormattedNumber>(() => {

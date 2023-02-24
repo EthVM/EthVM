@@ -1,5 +1,5 @@
 <template lang="html">
-    <img :src="identicon" contain style="border-radius: 50%" />
+    <img :src="identicon" contain style="border-radius: 50%" class="blockie" />
 </template>
 
 <script setup lang="ts">
@@ -39,4 +39,10 @@ watch(
 )
 </script>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.blockie {
+    border-radius: 50%;
+    box-shadow: 0px 3px 5px rgba(24, 43, 75, 0.2);
+    border: 1px solid rgba(255, 255, 255, 1);
+}
+</style>

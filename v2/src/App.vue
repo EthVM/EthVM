@@ -23,7 +23,7 @@ import { useSetPortfolio } from './core/composables/Portfolio/useSetPortfolioBal
 import { computed, watch, reactive } from 'vue'
 import { useRoute } from 'vue-router'
 import { ROUTE_NAME } from '@core/router/routesNames'
-import { useStorage, RemovableRef } from '@vueuse/core'
+import { useStorage } from '@vueuse/core'
 
 const store = useStore()
 

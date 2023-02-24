@@ -9,7 +9,7 @@
             <v-row align="center" class="ma-0 flex-nowrap">
                 <app-btn-icon v-if="!props.isHomeView" :icon="isFav ? 'star' : 'star_outline'" @click="setFavoriteToken" />
                 <div :class="['mr-4', { 'ml-5': !props.isHomeView }]">
-                    <v-img :src="tokenImage" width="25px" height="25px" />
+                    <app-token-icon :token-icon="tokenImage" img-size="32px" class="mr-2" />
                 </div>
                 <div style="display: grid">
                     <router-link
@@ -29,7 +29,9 @@
         </v-col>
         <v-col :cols="colPrice" :class="props.isCompactView ? 'text-right' : 'text-right text-sm-left'">
             <p>{{ props.token.getPriceFormatted() }}</p>
-            <p v-if="xs || props.isCompactView" :class="priceChangeClass">{{ props.token.getPriceChangeFormatted() }}</p>
+            <p v-if="xs || props.isCompactView" :class="priceChangeClass">
+                {{ props.token.getPriceChangeFormatted() }}
+            </p>
         </v-col>
         <v-col v-if="!props.isCompactView" sm="2" class="d-none d-sm-block">
             <p :class="priceChangeClass">{{ props.token.getPriceChangeFormatted() }}</p>
@@ -71,6 +73,7 @@
 import AppTableRow from '@core/components/AppTableRow.vue'
 import AppTransformHash from '@core/components/AppTransformHash.vue'
 import AppBtnIcon from '@core/components/AppBtnIcon.vue'
+import AppTokenIcon from '@/core/components/AppTokenIcon.vue'
 import { TokenMarket } from '@module/address/models/TokenSort'
 import { computed, reactive } from 'vue'
 import { eth } from '@core/helper'

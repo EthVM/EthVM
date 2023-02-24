@@ -4,7 +4,7 @@
             <app-address-blockie :address="props.adr.hash" class="mr-4" />
             <div class="overflow-hidden">
                 <p v-if="mdAndDown" :style="!xs ? 'width: 120px;' : ''" :class="{ 'text-ellipses pr-5': xs }">
-                    {{ props.adr.name }}
+                    {{ shortName }}
                 </p>
                 <app-transform-hash
                     v-if="!xs"
@@ -87,12 +87,12 @@ import AppBtnIcon from '@core/components/AppBtnIcon.vue'
 import ModulePorfolioHandleAdr from '../ModulePorfolioHandleAdr.vue'
 import AppMenu from '@core/components/AppMenu.vue'
 import AppTableRow from '@core/components/AppTableRow.vue'
-import { reactive } from 'vue'
+import { reactive, computed } from 'vue'
 import { useDisplay } from 'vuetify/lib/framework.mjs'
 import BN from 'bignumber.js'
 import { useStore } from '@/store'
 import { eth } from '@core/helper/eth'
-import { Q_PORTFOLIO } from '@core/router/routesNames'
+import { Q_PORTFOLIO, ROUTE_NAME } from '@core/router/routesNames'
 import { useRouter } from 'vue-router'
 
 const store = useStore()
@@ -135,6 +135,14 @@ const deleteAddress = () => {
 const router = useRouter()
 
 const viewTokens = () => {
-    router.push({ params: { addressRef: props.adr.hash }, query: { t: Q_PORTFOLIO[1] } })
+    router.push({
+        name: ROUTE_NAME.PORTFOLIO.NAME,
+        params: { addressRef: props.adr.hash },
+        query: { t: Q_PORTFOLIO[1] }
+    })
 }
+
+const shortName = computed<string>(() => {
+    return smAndUp.value && props.adr.name.length > 30 ? `${props.adr.name.substring(0, 27)}...` : props.adr.name
+})
 </script>

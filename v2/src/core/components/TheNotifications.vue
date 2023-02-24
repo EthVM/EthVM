@@ -10,7 +10,7 @@
         mode="in-out"
         rounded="lg"
     >
-        <div v-if="state.notification" class="text-body-1">
+        <div v-if="state.notification" class="text-body-1 text-break-new-line">
             <!-- TYPE: DELETE ADDRESS -->
             <p v-if="state.notification._type === TYPES.DELETE_ADR">"{{ state.notification.name }}" was deleted from portfolio</p>
             <!-- TYPE: PLAIN -->
