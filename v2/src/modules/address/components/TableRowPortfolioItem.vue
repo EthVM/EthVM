@@ -92,7 +92,7 @@ import { useDisplay } from 'vuetify/lib/framework.mjs'
 import BN from 'bignumber.js'
 import { useStore } from '@/store'
 import { eth } from '@core/helper/eth'
-import { Q_PORTFOLIO } from '@core/router/routesNames'
+import { Q_PORTFOLIO, ROUTE_NAME } from '@core/router/routesNames'
 import { useRouter } from 'vue-router'
 
 const store = useStore()
@@ -135,7 +135,11 @@ const deleteAddress = () => {
 const router = useRouter()
 
 const viewTokens = () => {
-    router.push({ params: { addressRef: props.adr.hash }, query: { t: Q_PORTFOLIO[1] } })
+    router.push({
+        name: ROUTE_NAME.PORTFOLIO.NAME,
+        params: { addressRef: props.adr.hash },
+        query: { t: Q_PORTFOLIO[1] }
+    })
 }
 
 const shortName = computed<string>(() => {
