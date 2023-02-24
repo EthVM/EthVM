@@ -26,6 +26,7 @@ import ViewAddressNfts from '@view/ViewAddressNfts.vue'
 import ViewTemp from '@view/ViewTemp.vue'
 import ViewPortfolio from '@view/ViewPortfolio.vue'
 import ViewNotFound from '@view/ViewNotFound.vue'
+import ViewAbout from '@view/ViewAbout.vue'
 import configs from '@/configs'
 import { tabViewRouteGuard, loadImages } from './helpers'
 const routes: Array<RouteRecordRaw> = [
@@ -159,6 +160,12 @@ const routes: Array<RouteRecordRaw> = [
         component: ViewNotFound,
         name: ROUTE_NAME.NOT_FOUND.NAME
     },
+    {
+        path: ROUTE_NAME.ABOUT.PATH,
+        component: ViewAbout,
+        name: ROUTE_NAME.ABOUT.NAME
+    },
+
     {
         path: '/:pathMatch(.*)*',
         redirect: ROUTE_NAME.NOT_FOUND.PATH,
