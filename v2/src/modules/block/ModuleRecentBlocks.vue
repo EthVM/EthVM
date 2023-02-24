@@ -222,8 +222,7 @@ const loadMoreData = (pageNum: number) => {
 const router = useRouter()
 const goToBlocksPage = async (): Promise<void> => {
     await router.push({
-        name: ROUTE_NAME.ALL_BLOCKS_AND_TXS.NAME,
-        query: { t: Q_BLOCKS_AND_TXS[0] }
+        name: ROUTE_NAME.BLOCKS.NAME
     })
 }
 
