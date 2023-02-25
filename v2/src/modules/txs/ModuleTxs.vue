@@ -1,8 +1,10 @@
 <template>
     <v-card :variant="isHome ? 'elevated' : 'flat'" :elevation="isHome ? 1 : 0" rounded="xl" :class="[isHome ? 'py-4 py-sm-6' : '', 'px-4 px-sm-6']">
         <v-card-title v-if="(isHome || state.newMinedTransfers || tableTitle) && !isBlock" class="px-0 mb-5 d-flex align-center justify-space-between">
-            <div class="d-flex align-center">
-                <h1 v-if="tableTitle" class="text-h6 font-weight-bold">{{ tableTitle }}</h1>
+            <div class="d-flex align-center mt-4 mt-sm-6">
+                <h1 v-if="tableTitle" class="text-h6 font-weight-bold">
+                    {{ tableTitle }}
+                </h1>
                 <app-new-update
                     v-if="!isHome && !isBlock"
                     icon-only
@@ -260,8 +262,7 @@ const setPage = async (page: number, reset = false): Promise<boolean> => {
 const router = useRouter()
 const goToTransactionsPage = async (): Promise<void> => {
     await router.push({
-        name: ROUTE_NAME.ALL_BLOCKS_AND_TXS.NAME,
-        query: { t: Q_BLOCKS_AND_TXS[1] }
+        name: ROUTE_NAME.TXS.NAME
     })
 }
 

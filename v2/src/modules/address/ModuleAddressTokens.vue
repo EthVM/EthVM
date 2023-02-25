@@ -20,7 +20,7 @@
                 <app-btn text="More" is-small icon="east" @click="goToTokensBalancePage"></app-btn>
             </template>
         </v-card-title>
-        <div v-if="!props.isOverview" class="d-flex align-center flex-wrap">
+        <div v-if="!props.isOverview || (props.isOverview && xs)" class="d-flex align-center flex-wrap">
             <v-col cols="12" sm="4" lg="3" class="pa-0">
                 <address-balance-totals
                     title="Token Balance"

@@ -22,7 +22,7 @@
                     <p class="footer-item-title text-h5 font-weight-bold mb-2">Discover</p>
                     <ul class="footer-item-lists pa-0 surf">
                         <li class="mb-2">
-                            <a href="#" class="text-link">About us</a>
+                            <router-link :to="routeAbout" class="text-link">About us</router-link>
                         </li>
                         <li class="mb-2">
                             <a href="https://www.myetherwallet.com/privacy-policy" target="_blank" class="text-link">Privacy Policy</a>
@@ -137,6 +137,10 @@ const routeEth = {
     params: {
         [ROUTE_PROP.ADDRESS]: '0xdecaf9cd2367cdbb726e904cd6397edfcae6068d'
     }
+}
+
+const routeAbout = {
+    name: ROUTE_NAME.ABOUT.NAME
 }
 const { lgAndUp, mdAndDown } = useDisplay()
 const version = ref(configs.VERSION || '0')

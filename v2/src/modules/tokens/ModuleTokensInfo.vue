@@ -63,7 +63,7 @@
             </div>
         </template>
         <template v-else>
-            <div v-for="item in 10" :key="item" style="padding: 10px 0">
+            <div v-for="item in showLoadingRows" :key="item" style="padding: 10px 0">
                 <div class="skeleton-box rounded-xl" style="height: 40px"></div>
             </div>
         </template>
@@ -211,6 +211,9 @@ const sortTable = (key: KEY): void => {
  ---------------------*/
 const isHomePage = computed<boolean>(() => {
     return !!props.homePage
+})
+const showLoadingRows = computed<boolean>(() => {
+    return isHomePage.value ? 7 : 10
 })
 
 const title = computed<string>(() => {

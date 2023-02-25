@@ -22,10 +22,10 @@ const ROUTE_NAME: Route = {
         PATH: '/blocks',
         NAME: 'blocks'
     },
-    ALL_BLOCKS_AND_TXS: {
-        PATH: '/eth',
-        NAME: 'allBlocks'
-    },
+    // ALL_BLOCKS_AND_TXS: {
+    //     PATH: '/eth',
+    //     NAME: 'allBlocks'
+    // },
     BLOCK_NUMBER: {
         PATH: `/block/number/:${ROUTE_PROP.BLOCK}`,
         NAME: 'block'
@@ -66,14 +66,7 @@ const ROUTE_NAME: Route = {
         PATH: 'adr-nfts',
         NAME: 'address-nfts'
     },
-    ADDRESS_CONTRACT: {
-        PATH: 'adr-contract-info',
-        NAME: 'address-contract-info'
-    },
-    ADDRESS_MINER: {
-        PATH: 'adr-miner-info',
-        NAME: 'address-miner-info'
-    },
+
     CHARTS: {
         PATH: '/charts',
         NAME: 'charts'
@@ -98,17 +91,9 @@ const ROUTE_NAME: Route = {
         PATH: '/404',
         NAME: 'not_found'
     },
-    SEARCH_NOT_FOUND: {
-        PATH: `/search/not_found/:${ROUTE_PROP.SEARCH_NOT_FOUND}`,
-        NAME: 'search-not-found'
-    },
     PORTFOLIO: {
         PATH: '/portfolio',
         NAME: 'portfolio'
-    },
-    FAV_TOKENS: {
-        PATH: '/tokens/favorites',
-        NAME: 'fav_tokens'
     }
 }
 

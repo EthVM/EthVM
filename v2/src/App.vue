@@ -47,9 +47,7 @@ const isAddressView = computed<boolean>(() => {
         route.name === ROUTE_NAME.ADDRESS.NAME ||
         route.name === ROUTE_NAME.ADDRESS_BALANCE.NAME ||
         route.name === ROUTE_NAME.ADDRESS_NFTS.NAME ||
-        route.name === ROUTE_NAME.ADDRESS_TOKENS.NAME ||
-        route.name === ROUTE_NAME.ADDRESS_CONTRACT.NAME ||
-        route.name === ROUTE_NAME.ADDRESS_MINER.NAME
+        route.name === ROUTE_NAME.ADDRESS_TOKENS.NAME
     )
 })
 
