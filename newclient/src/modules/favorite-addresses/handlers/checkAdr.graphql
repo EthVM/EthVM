@@ -1,6 +1,0 @@
-query checkAddress($address: String!) {
-    checkAddress(address: $address) @client {
-        name
-        address
-    }
-}
