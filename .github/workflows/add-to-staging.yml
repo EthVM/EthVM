@@ -5,7 +5,7 @@ on:
     branches:
       - main
 jobs:
-  add-to-v2-develop:
+  add-to-staging:
     runs-on: ubuntu-latest
     steps:
       #Checkout the repository to the GitHub Actions runner
