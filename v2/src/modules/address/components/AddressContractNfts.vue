@@ -1,35 +1,38 @@
 <template>
     <div class="nft-container">
         <app-expansion-panel v-if="!loading && tokens.tokens.length > 0" :title="props.name" class="pt-3" @expand="showMoreTokens">
+            <template #title-content>
+                <v-img :src="image" contain @error="imgLoadFail" max-height="60" max-width="60" :class="[{ 'mr-4': !hasMore }, 'rounded-md']"></v-img>
+            </template>
             <template #visible-content>
-                <v-row class="tokens-list">
-                    <v-col cols="4" md="2" v-for="token in visibleTokens.slice(0, 6)" :key="token.token">
+                <v-row class="tokens-list mt-3" :dense="xs">
+                    <v-col cols="6" sm="4" md="3" lg="2" v-for="token in visibleTokens.slice(0, endIndex)" :key="token.token">
                         <div>
-                            <v-img :src="getImage(token.token)" max-height="150" />
-                            <p class="text-caption">{{ props.name }} #{{ getTokenId(token.token) }}</p>
+                            <v-img :src="getImage(token.token)" cover />
+                            <p class="mt-2">{{ props.name }} #{{ getTokenId(token.token) }}</p>
                         </div>
                     </v-col>
                 </v-row>
             </template>
             <template v-if="hasMore" #expand-content>
-                <v-row class="tokens-list">
-                    <v-col cols="4" md="2" v-for="token in visibleTokens.slice(6, state.end)" :key="token.token">
+                <v-row class="tokens-list" :dense="xs">
+                    <v-col cols="6" sm="4" md="3" lg="2" v-for="token in visibleTokens.slice(endIndex, state.end)" :key="token.token">
                         <div>
-                            <v-img :src="getImage(token.token)" max-height="150" />
-                            <p class="text-caption">{{ props.name }} #{{ getTokenId(token.token) }}</p>
+                            <v-img :src="getImage(token.token)" cover />
+                            <p class="mt-2">{{ props.name }} #{{ getTokenId(token.token) }}</p>
                         </div>
                     </v-col>
                     <template v-if="visibleTokens.length > 6">
                         <app-intersect @intersect="onIntersect">
                             <v-row class="ma-0">
-                                <v-col cols="4" md="2">
-                                    <v-img :src="getImage()" height="150" />
+                                <v-col c cols="6" sm="4" md="3" lg="2">
+                                    <v-img :src="getImage()" cover />
                                 </v-col>
-                                <v-col cols="4" md="2">
-                                    <v-img :src="getImage()" height="150" />
+                                <v-col cols="6" sm="4" md="3" lg="2">
+                                    <v-img :src="getImage()" cover />
                                 </v-col>
-                                <v-col cols="4" md="2">
-                                    <v-img :src="getImage()" height="150" />
+                                <v-col cols="6" sm="4" md="3" lg="2">
+                                    <v-img :src="getImage()" cover />
                                 </v-col>
                             </v-row>
                         </app-intersect>
@@ -38,16 +41,15 @@
             </template>
         </app-expansion-panel>
         <template v-else>
-            <v-row>
-                <v-col cols="4" md="2">
+            <v-row :dense="xs">
+                <v-col cols="6" sm="4" md="3" lg="2">
                     <div>
                         <v-img :src="getImage()" max-height="150" />
-                        <p class="text-caption">{{ props.name }}</p>
+                        <p class="mt-2">{{ props.name }}</p>
                     </div>
                 </v-col>
             </v-row>
         </template>
-        <v-divider class="my-3" />
     </div>
 </template>
 
@@ -58,16 +60,20 @@ import BigNumber from 'bignumber.js'
 import AppExpansionPanel from '@core/components/AppExpansionPanel.vue'
 import AppIntersect from '@core/components/AppIntersect.vue'
 import configs from '@/configs'
+import { useDisplay } from 'vuetify/lib/framework.mjs'
 
+const { xs, sm, md } = useDisplay()
 const props = defineProps({
     contract: { type: String, required: true },
     addressHash: { type: String, required: true },
-    name: { type: String, required: true }
+    name: { type: String, required: true },
+    img: { type: String, required: true }
 })
 
 const state = reactive({
     showMore: false,
-    end: 6
+    end: 24,
+    imageExhist: true
 })
 
 const { result, loading } = useGetOwnersErc721TokensQuery(
@@ -80,6 +86,18 @@ const { result, loading } = useGetOwnersErc721TokensQuery(
     }
 )
 
+const endIndex = computed<number>(() => {
+    if (xs) {
+        return 2
+    }
+    if (sm) {
+        return 3
+    }
+    if (md) {
+        return 4
+    }
+    return 6
+})
 const tokens = computed<OwnerErc721Fragment | undefined>(() => {
     return result.value?.getOwnersERC721Tokens
 })
@@ -89,7 +107,7 @@ const visibleTokens = computed<TokenFragment[] | undefined>(() => {
 })
 
 const hasMore = computed<boolean>(() => {
-    return tokens.value?.tokens.length > 6
+    return tokens.value?.tokens.length > endIndex.value
 })
 
 const showMoreTokens = () => {
@@ -111,11 +129,24 @@ const getImage = (token: string): string => {
     }
     return require('@/assets/icon-token.png')
 }
-const onIntersect = (e: boolean): false => {
+const onIntersect = (e: boolean): void => {
     if (e) {
         state.end += 24
     }
 }
+/**
+ * Image loading failed catcher
+ */
+const imgLoadFail = (): void => {
+    state.imageExhist = false
+}
+
+const image = computed<string>(() => {
+    if (props.img !== '') {
+        return props.img
+    }
+    return require('@/assets/icon-token.png')
+})
 </script>
 
 <style lang="scss" scoped>

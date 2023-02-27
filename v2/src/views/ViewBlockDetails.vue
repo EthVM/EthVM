@@ -1,40 +1,16 @@
 <template>
     <div>
-        <app-error v-if="!isValid" :has-error="!isValid" message="This is not a valid block hash" />
+        <app-error v-if="!isValid" :has-error="!isValid" message="This is not a valid block" :routeProp="props.blockRef" />
         <app-message :messages="state.errorMessages" />
         <v-row :class="rowMargin">
             <!--
-        =====================================================================================
-          Block DETAILS LIST
-        =====================================================================================
-        -->
-            <v-col cols="12" :class="columnPadding">
-                <block-details
-                    v-if="isValid"
-                    :block-ref="props.blockRef"
-                    :is-hash="isHash"
-                    @errorDetails="setError"
-                    @isMined="setIsMined"
-                    @setBlockNumber="setBlockNumber"
-                />
-            </v-col>
-
-            <!--
-        =====================================================================================
-          TX TABLE
-        =====================================================================================
-        -->
+                =====================================================================================
+                  TX TABLE
+                =====================================================================================
+            -->
             <!-- TODO: Implement get block transfers by hash -->
             <v-col cols="12" :class="columnPadding">
-                <block-txs
-                    v-if="showBlockTxs"
-                    :max-items="10"
-                    :block-ref="state.blockNumber"
-                    :is-hash="isHash"
-                    :is-mined="state.isMined"
-                    page-type="blockDetails"
-                    @errorTxs="setError"
-                />
+                <module-block-details v-if="isValid" :block-ref="props.blockRef" :is-hash="isHash" :tab="props.tab" />
             </v-col>
         </v-row>
     </div>
@@ -44,12 +20,10 @@
 import { reactive, computed, onMounted, watch } from 'vue'
 import AppMessage from '@core/components/AppMessage.vue'
 import AppError from '@core/components/AppError.vue'
-import BlockTxs from '@module/txs/ModuleTxs.vue'
-import BlockDetails from '@module/block/ModuleBlockDetails.vue'
+import ModuleBlockDetails from '@module/block/ModuleBlockDetails.vue'
 import { eth } from '@core/helper'
 import { ErrorMessageBlock } from '@module/block/models/ErrorMessagesForBlock'
 import { useAppViewGrid } from '@core/composables/AppViewGrid/AppViewGrid.composable'
-
 const { columnPadding, rowMargin } = useAppViewGrid()
 
 interface ComponentState {
@@ -65,7 +39,8 @@ const state: ComponentState = reactive({
 })
 
 const props = defineProps({
-    blockRef: String
+    blockRef: String,
+    tab: String
 })
 
 const isValid = computed<boolean>(() => {
@@ -76,28 +51,9 @@ const isHash = computed<boolean>(() => {
     return eth.isValidHash(props.blockRef)
 })
 
-const showBlockTxs = computed<boolean>(() => {
-    return isValid.value && state.blockNumber !== ''
-})
-
 onMounted(() => {
     window.scrollTo(0, 0)
 })
-
-/**
- * Sets isMined to true
- */
-const setIsMined = (): void => {
-    state.isMined = true
-}
-
-/**
- * Set block Number
- * @param value {String}
- */
-const setBlockNumber = (value: string): void => {
-    state.blockNumber = value
-}
 
 /**
  * Sets error if any

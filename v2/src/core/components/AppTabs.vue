@@ -1,147 +1,173 @@
 <template>
-    <v-card color="white" flat>
-        <v-row class="ma-0">
-            <!--
-            =====================================================================================
-              Mobile
-            =====================================================================================
-            -->
-            <v-col v-if="!mdAndUp" class="pt-0 pb-0">
-                <v-menu v-model="showMobile" offset-y>
-                    <template #activator="{ on }">
-                        <v-toolbar color="menuDark" class="toolbar-menu" flat v-on="on">
-                            <v-row row align-center justify-space-between pa-2>
-                                <v-col grow>
-                                    <p class="white--text">{{ mobileText }}</p>
-                                </v-col>
-                                <v-col shrink>
-                                    <v-btn icon size="small" class="ma-0">
-                                        <v-icon class="white--text small-global-icon-font asset-icon">{{ mobileIcon }}</v-icon>
-                                    </v-btn>
-                                </v-col>
-                            </v-row>
-                        </v-toolbar>
-                    </template>
-                    <v-list>
-                        <v-list-item v-for="tab in props.tabs" :key="tab.id" @click="setTab(tab.id)">
-                            <v-list-item-subtitle>
-                                <p :class="[tab.isActive ? 'primary--text' : '', 'body-1 pl-2']">{{ tab.title }}</p>
-                            </v-list-item-subtitle>
-                        </v-list-item>
-                    </v-list>
-                </v-menu>
-            </v-col>
-            <!--
-            =====================================================================================
-              Desktop
-            =====================================================================================
-            -->
-            <v-col v-if="!smAndDown" class="pa-0">
-                <v-tabs v-model="state.activeTab" color="primary" @change="$emit('change-tab', $event)">
-                    <v-tab
-                        v-for="item in props.tabs"
-                        :key="item.id"
-                        :value="`tab-${item.id}`"
-                        class="text-capitalize pb-1"
-                        :ripple="false"
-                        slider-color="primary"
-                    >
-                        {{ item.title }}
-                    </v-tab>
-                </v-tabs>
-            </v-col>
+    <div>
+        <v-tabs
+            v-if="!props.btnVariant"
+            v-model="state.activeTab"
+            density="compact"
+            end
+            @update:model-value="changeTab"
+            hide-slider
+            align-tabs="start"
+            selected-class="font-weight-bold"
+            class="px-3"
+        >
+            <v-tab
+                v-for="(i, index) in tabs"
+                :key="index"
+                :value="i.value"
+                min-width="30"
+                class="text-h6 rounded-pill text-capitalize font-weight-light px-3"
+                >{{ i.title }}</v-tab
+            >
+            <v-btn
+                v-if="moreTabs.length > 0 && xs"
+                variant="text"
+                rounded="pill"
+                class="align-self-center font-weight-light text-h6 text-capitalize"
+                height="100%"
+                id="activator-mobile"
+            >
+                more
+            </v-btn>
+            <app-menu v-if="moreTabs.length > 0 && xs" min-width="180" activator="#activator-mobile">
+                <v-list-item v-for="tab in moreTabs" :title="tab.title" class="py-2" @click="changeTab(tab.value)" :key="tab.value"> </v-list-item>
+            </app-menu>
+        </v-tabs>
+        <v-row v-else>
+            <v-btn
+                v-for="(i, index) in props.tabs"
+                :key="index"
+                class="mx-1"
+                color="textPrimary"
+                :variant="i.value === state.activeTab ? 'flat' : 'outlined'"
+                rounded="pill"
+                height="24"
+                @click="btnClick(i.value)"
+                >{{ i.title }}</v-btn
+            >
         </v-row>
-        <v-window v-model="state.activeTab" class="tabs-items">
-            <v-container :class="tabContainerClass" grid-list-xs>
-                <slot />
-            </v-container>
-        </v-window>
-    </v-card>
+    </div>
 </template>
 
 <script setup lang="ts">
-import { defineEmits, reactive, computed, watch } from 'vue'
-import { useDisplay } from 'vuetify'
+import { defineEmits, watch, reactive, computed } from 'vue'
 import { Tab } from '@core/components/props'
+import { useDisplay } from 'vuetify/lib/framework.mjs'
+import { useRouter, useRoute, onBeforeRouteUpdate } from 'vue-router'
+import AppMenu from '@core/components/AppMenu.vue'
 
+const { xs } = useDisplay()
 interface PropType {
+    modelValue: string
     tabs: Tab[]
+    routes: string[]
+    btnVariant?: boolean
 }
-const props = defineProps<PropType>()
+const props = withDefaults(defineProps<PropType>(), {
+    btnVariant: false
+})
 
 const emit = defineEmits<{
-    (e: 'changeTab', tabId: string): void
+    (e: 'update:modelValue', tabId: string): void
 }>()
 
-interface ComponentState {
-    activeTab: string
-    activeTabId: number
-    showMobile: boolean
-}
-const state: ComponentState = reactive({
-    activeTab: 'tab-0',
-    activeTabId: 0,
-    showMobile: false
+const state = reactive({
+    activeTab: props.modelValue
 })
+
+const router = useRouter()
+const route = useRoute()
 
 /**
  * Sets active tab id to param
  * and update active tab and
  * emit tab id to parent
  *
- * @param id {Number}
- * @param tabChange {Boolean} default false
+ * @param {string} activeTab
  */
-const setTab = (id: number, tabChange = false): void => {
-    state.activeTabId = id >= props.tabs.length ? 0 : id
-    props.tabs.forEach(tab => {
-        if (state.activeTabId === tab.id) {
-            tab.isActive = true
-            if (!tabChange) {
-                state.activeTab = `tab-${state.activeTabId}`
-                emit('changeTab', `tab-${tab.id}`) // Notify parent of tab change
-            }
-        } else {
-            tab.isActive = false
-        }
-    })
+const btnClick = (value: string): void => {
+    state.activeTab = value
+    emit('update:modelValue', state.activeTab)
+}
+/**
+ * Sets active tab id to param
+ * and update active tab and
+ * emit tab id to parent
+ *
+ * @param {string} activeTab
+ */
+const changeTab = (_value: string | undefined): void => {
+    if (_value && _value !== state.activeTab) {
+        state.activeTab = _value
+    }
+    if (route.query.t !== state.activeTab) {
+        router.push({
+            query: { t: state.activeTab }
+        })
+    }
+
+    emit('update:modelValue', state.activeTab)
 }
 
-const { xs, sm, mdAndUp, smAndDown } = useDisplay()
-const tabContainerClass = computed<string>(() => {
-    return xs.value || sm.value ? 'pa-0' : 'pa-2'
-})
-
-const mobileText = computed<string>(() => {
-    return props.tabs[state.activeTabId].title.toString()
-})
-const mobileIcon = computed<string>(() => {
-    return state.showMobile ? 'chevron_up' : 'chevron_down'
-})
+/**
+ * Watching changes from the parent
+ * Used for manual router history manupulation
+ */
 watch(
-    () => state.activeTab,
-    (newVal: string, oldVal: string) => {
-        if (newVal !== oldVal) {
-            const id = parseInt(newVal.split('-')[1])
-            setTab(id, true)
+    () => props.modelValue,
+    newVal => {
+        if (newVal !== state.activeTab) {
+            state.activeTab = newVal
         }
     }
 )
+
+/**
+ * Watches for changes in the router
+ * in case user manipulates history
+ * and updates tab accordingly
+ */
+onBeforeRouteUpdate(async to => {
+    if (to.query.t && to.query.t !== state.activeTab) {
+        if (typeof to.query.t === 'string') {
+            const exhists = props.routes.find(i => i === to.query.t)
+            if (exhists) {
+                state.activeTab = to.query.t
+                emit('update:modelValue', state.activeTab)
+            }
+        }
+    }
+})
+
+/**
+ * Visible tabs, reduce number of tabs to 3 on XS
+ */
+const tabs = computed<Tab[]>(() => {
+    if (!xs.value) {
+        return props.tabs
+    }
+    if (props.tabs.length < 4) {
+        return props.tabs
+    }
+    const start = props.tabs.findIndex(i => i.value === state.activeTab)
+    const newTabs = props.tabs.slice(start, start + 3)
+    if (newTabs.length < 3) {
+        let i = 0
+        while (newTabs.length < 3) {
+            newTabs.push(props.tabs[i])
+            ++i
+        }
+    }
+    return newTabs
+})
+
+/**
+ * More tabs, returns all tabs for the meny if more then 3 tabs
+ */
+const moreTabs = computed<Tab[]>(() => {
+    if (props.tabs.length > 3 && xs.value) {
+        return props.tabs
+    }
+    return []
+})
 </script>
-
-<style lang="css">
-.tabs-slider {
-    height: 4px;
-}
-
-.tabs-items {
-    border-top: 1px solid #efefef;
-}
-.toolbar-menu {
-    cursor: pointer;
-}
-.toolbar-menu:hover {
-    background-color: #34475c !important;
-    border-color: #34475c !important;
-}
-</style>

@@ -40,6 +40,14 @@ export function useCoinData() {
         }
         return []
     })
+    const tokensWithMarketCap = computed(() => {
+        if (ethereumTokens.value.length > 0) {
+            const nonEmpty = ethereumTokens.value.filter((x): x is TokenMarketData => x !== null)
+            const filteredRes = nonEmpty.filter(token => token && token.market_cap && token.market_cap > 0)
+            return filteredRes
+        }
+        return []
+    })
 
     const tokensMarketInfo = computed<Map<string, TokenMarketData>>(() => {
         const marketInfo = new Map()
@@ -89,5 +97,13 @@ export function useCoinData() {
         return false
     }
 
-    return { ethMarketInfo, ethereumTokens, filteredLatestPrice, getEthereumTokenByContract, getEthereumTokensMap, loading: loadingCoinData }
+    return {
+        ethMarketInfo,
+        ethereumTokens,
+        filteredLatestPrice,
+        getEthereumTokenByContract,
+        getEthereumTokensMap,
+        loading: loadingCoinData,
+        tokensWithMarketCap
+    }
 }

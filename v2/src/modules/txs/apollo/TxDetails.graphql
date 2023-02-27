@@ -1,19 +1,68 @@
+fragment LogFragment on Log {
+    address
+    data
+    logIndex
+    removed
+    topics
+    type
+}
+
+fragment TraceAction on TraceAction {
+    callType
+    from
+    gas
+    input
+    to
+    value
+}
+
+fragment TraceResult on TraceResult {
+    gasUsed
+    output
+}
+
+fragment TraceFragment on Trace {
+    action {
+        ...TraceAction
+    }
+    result {
+        ...TraceResult
+    }
+    subtraces
+    traceAddress
+    transactionPosition
+    type
+}
+
 fragment TxDetails on Tx {
+    blockHash
     blockNumber
     from
     gas
     gasPrice
-    gasUsed
+    maxFeePerGas
+    maxPriorityFeePerGas
+    baseFeePerGas
     timestamp
+    gasUsed
     hash
-    input
     status
+    input
     nonce
     to
     transactionIndex
     value
     replacedBy
+    v
+    r
+    s
     contractAddress
+    logs {
+        ...LogFragment
+    }
+    trace {
+        ...TraceFragment
+    }
 }
 
 query getTransactionByHash($hash: String!) {

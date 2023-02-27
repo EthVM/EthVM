@@ -1,7 +1,8 @@
 overwrite: true
 schema:
-    - "https://api.ethvm.com"
+    - "https://api-v2.ethvm.dev"
     - "src/apollo/opensea/schema.graphql"
+    - "src/apollo/nfts/schema.graphql"
 documents: "src/**/*.graphql"
 generates:
   src/apollo/types.ts:

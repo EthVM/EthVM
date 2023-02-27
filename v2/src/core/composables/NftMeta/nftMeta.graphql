@@ -1,0 +1,30 @@
+query  getNFTTokensMeta($input: String!) {
+  getNFTTokensMeta(input: $input) @rest(type: "RespTokens", path: "/assets?nft_ids={args.input}", method: "GET") {
+    nfts @type(name: "RespNFT"){
+      ...NFTMeta
+    }
+  }
+}
+fragment NFTMeta on RespNFT {
+    nft_id
+    chain
+    contract_address
+    token_id
+    name
+    description
+    image_url
+    video_url
+    audio_url
+    model_url
+    previews {
+      image_small_url
+      image_large_url
+    }
+    extra_metadata{
+      attributes {
+        trait_type
+        value
+      }
+    }
+}
+

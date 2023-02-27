@@ -1,20 +1,26 @@
 <template>
-    <div class="hash-container font-mono">
-        <div v-if="!hasLink" :class="props.isBlue ? `secondary--text` : `black--text`">
-            <div class="firstPart">{{ start }}</div>
+    <div v-if="!displayName" class="hash-container font-mono">
+        <div v-if="!hasLink" :class="{ 'text-secondary': props.isBlue }">
+            <div v-if="start" class="firstPart">{{ start }}</div>
             <span v-if="props.isShort">...</span>
             <div class="lastPart">{{ end }}</div>
         </div>
-        <router-link v-else :to="props.link || ''" :class="props.isBlue ? `text-secondary` : `black--text`">
+        <router-link v-else :to="props.link || ''" :class="{ 'text-secondary': props.isBlue }">
             <div class="firstPart">{{ start }}</div>
             <span v-if="props.isShort">...</span>
             <div class="lastPart">{{ end }}</div>
         </router-link>
     </div>
+    <div v-else class="text-ellipses">
+        <div v-if="!hasLink" :class="{ 'text-secondary': props.isBlue }">{{ displayName }}</div>
+        <router-link v-else :to="props.link || ''" class="text-secondary">{{ displayName }}</router-link>
+    </div>
 </template>
 
 <script setup lang="ts">
 import { computed } from 'vue'
+import { useStore } from '@/store'
+import { RouterLink } from 'vue-router'
 
 const props = defineProps({
     hash: {
@@ -33,6 +39,10 @@ const props = defineProps({
     isShort: {
         type: Boolean,
         default: false
+    },
+    showName: {
+        type: Boolean,
+        default: true
     }
 })
 
@@ -44,7 +54,8 @@ const start = computed<string>(() => {
     if (props.isShort) {
         return props.hash?.slice(0, firstPartCount)
     }
-    return props.hash?.slice(0, n - 4)
+    const sliceStop = n - 4 > 4 ? n - 4 : 4
+    return props.hash?.slice(0, sliceStop)
 })
 
 const end = computed<string>(() => {
@@ -52,11 +63,18 @@ const end = computed<string>(() => {
     if (props.isShort) {
         return props.hash?.slice(n - lastPartCount, n)
     }
-    return props.hash?.slice(n - 4, n)
+    const sliceStart = n - 4 > 4 ? n - 4 : 4
+    return props.hash?.slice(sliceStart, n)
 })
 
 const hasLink = computed<boolean>(() => {
     return !!props.link && props.link !== ''
+})
+
+const store = useStore()
+
+const displayName = computed<string | undefined>(() => {
+    return props.showName ? store.getAddressName(props.hash) : undefined
 })
 </script>
 
@@ -89,5 +107,10 @@ $endWidth: 1em * $fontFaceScaleFactor * $endFixedChars;
 .hash-container {
     white-space: nowrap;
     overflow: hidden;
+}
+
+.text-overflow-ellipsis {
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 </style>

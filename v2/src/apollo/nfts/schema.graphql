@@ -1,0 +1,114 @@
+type RespContract {
+    type: String!
+    name: String
+    symbol: String
+}
+
+type RespNftOwner  {
+    owner_address: String!
+    quantity: Int!
+    first_acquired_date: String!
+    last_acquired_date: String!
+}
+
+type RespNftPreviews {
+    image_small_url: String
+    image_medium_url: String
+    image_large_url: String
+    image_opengraph_url: String
+    blurhash: String
+}
+
+type RespPaymentToken {
+    payment_token_id: String!
+    name: String
+    symbol: String
+    address: String
+    decimals: Int!
+}
+
+type RespNftFloorPrice {
+    marketplace_id: String!
+    value: Int!
+    payment_token:  RespPaymentToken!
+    marketplace_id: String
+    value: Int
+    payment_token:  RespPaymentToken!
+}
+
+type RespMarketplace   {
+    marketplace_id: String!
+    marketplace_name: String!
+    marketplace_collection_id: String!
+    nft_url: String!
+    collection_url: String!
+    verified: Boolean
+}
+
+type RespCollection {
+    collection_id: String
+    name: String 
+    description: String 
+    image_url: String
+    banner_image_url: String
+    external_url: String
+    twitter_username: String
+    discord_url: String
+    marketplace_pages: [RespMarketplace!]
+    metaplex_mint: String
+    metaplex_first_verified_creator: String
+    spam_score: String
+    floor_prices: [ RespNftFloorPrice!]!
+    distinct_owner_count: Int
+    distinct_nft_count: Int
+}
+type RespNftMeta {
+    image_original_url: String
+    animation_original_url:  String
+    metadata_original_url:  String
+    attributes: [RespNftTrait!]!
+}
+type RespNftTrait {
+    trait_type: String!
+    value:  String! 
+}
+
+type RespNFT {
+    nft_id: String!
+    chain: String!
+    contract_address: String!
+    token_id: String
+    name: String
+    description: String
+    image_url: String
+    video_url: String
+    audio_url: String
+    model_url: String
+    previews: RespNftPreviews!
+    background_color: String
+    external_url: String
+    created_date: String
+    status: String!
+    token_count: Int
+    owner_count: Int
+    owners: [RespNftOwner!]!
+    contract: RespContract
+    collection: RespCollection
+    extra_metadata: RespNftMeta
+}
+
+type RespTokens {
+    nfts: [RespNFT!]
+}
+
+type RespCollections {
+    nextKey: String
+    collections: [RespCollection!]!
+}
+
+extend type Query {
+    getNFTTokensMeta(input: String!): RespTokens
+    getNFTContractMeta(input: String!): RespCollections
+}
+
+

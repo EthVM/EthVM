@@ -4,7 +4,9 @@ fragment TransferSummary on Transfer {
     from
     to
     txFee
+    type
 }
+
 fragment TokenFragment on EthTokenInfo {
     name
     symbol
@@ -16,8 +18,8 @@ fragment BalanceFragment on BalanceDiff {
     after
 }
 
-query getAddressEthTransfers($hash: String, $filter: TransferFilter, $_limit: Int, $_nextKey: String) {
-    getEthTransfersV2(owner: $hash, filter: $filter, limit: $_limit, nextKey: $_nextKey) {
+query getAddressEthTransfers($hash: String, $filter: TransferDirection, $_limit: Int, $_nextKey: String) {
+    getEthTransfersV2(owner: $hash, direction: $filter, limit: $_limit, nextKey: $_nextKey) {
         transfers {
             transfer {
                 ...TransferSummary
@@ -66,10 +68,36 @@ query getAddressERC20Transfers($hash: String!, $_limit: Int, $_nextKey: String) 
     }
 }
 
+fragment NFTTransferFragment on NFTTransfer {
+    transfer {
+        ...TransferSummary
+    }
+    tokenId
+    contract
+    value
+    tokenInfo {
+        name
+    }
+}
+
+
+query getAddressNFTTransfers($hash: String!, $_limit: Int, $_nextKey: String) {
+    getNFTTransfers(address: $hash, limit: $_limit, nextKey: $_nextKey) {
+        transfers {
+            ...NFTTransferFragment
+        }
+        nextKey
+    }
+}
+
+fragment StateDiffFragment on TxStateDiff {
+    owner
+    from
+    to
+}
+
 query getTransactionStateDiff($hash: String!){
     getTransactionStateDiff(hash: $hash) {
-        owner
-        from
-        to
+        ...StateDiffFragment
     }
 }

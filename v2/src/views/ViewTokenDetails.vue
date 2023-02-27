@@ -6,8 +6,9 @@
             :is-holder="state.isHolder"
             :holder-address="state.holderAddress"
             @errorDetails="setError"
+            :tab="$route.query.t"
         />
-        <app-error v-else :has-error="hasError" :message="state.error" />
+        <app-error v-else :has-error="hasError" :message="state.error" :routeProp="props.addressRef" />
         <app-message :messages="state.errorMessages" />
     </div>
 </template>
@@ -20,7 +21,11 @@ import AppMessage from '@core/components/AppMessage.vue'
 import AppError from '@core/components/AppError.vue'
 import { eth } from '@core/helper'
 import { useRoute } from 'vue-router'
+import { onMounted } from 'vue'
 
+onMounted(() => {
+    window.scrollTo(0, 0)
+})
 const props = defineProps({
     addressRef: {
         type: String,
@@ -70,9 +75,8 @@ watch(route, () => {
         state.holderAddress = query.holder as string
     } else {
         state.isHolder = false
-        state.holderAddress = undefined
+        state.holderAddress = ''
     }
-    window.scrollTo(0, 0)
 })
 
 /*

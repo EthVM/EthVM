@@ -24,6 +24,7 @@ export type Erc20TokenOwnersFragment = {
             decimals?: number | null
             totalSupply?: string | null
             contract: string
+            tokenId?: string | null
         }
     } | null>
 }
@@ -31,7 +32,7 @@ export type Erc20TokenOwnersFragment = {
 export type Erc721TokenOwnerDetailsFragment = {
     __typename?: 'ERC721TokenOwner'
     owner: string
-    token: string
+    tokenId: string
     tokenInfo: {
         __typename?: 'EthTokenInfo'
         name?: string | null
@@ -39,6 +40,7 @@ export type Erc721TokenOwnerDetailsFragment = {
         decimals?: number | null
         totalSupply?: string | null
         contract: string
+        tokenId?: string | null
     }
 }
 
@@ -48,7 +50,7 @@ export type Erc721TokenOwnersFragment = {
     owners: Array<{
         __typename?: 'ERC721TokenOwner'
         owner: string
-        token: string
+        tokenId: string
         tokenInfo: {
             __typename?: 'EthTokenInfo'
             name?: string | null
@@ -56,8 +58,43 @@ export type Erc721TokenOwnersFragment = {
             decimals?: number | null
             totalSupply?: string | null
             contract: string
+            tokenId?: string | null
         }
     } | null>
+}
+
+export type Erc1155TokenOwnerDetailsFragment = {
+    __typename?: 'ERC1155TokenBalance'
+    owner: string
+    balance: string
+    tokenInfo: {
+        __typename?: 'EthTokenInfo'
+        name?: string | null
+        symbol?: string | null
+        decimals?: number | null
+        totalSupply?: string | null
+        contract: string
+        tokenId?: string | null
+    }
+}
+
+export type Erc1155TokenOwnersFragment = {
+    __typename?: 'ERC1155TokenBalances'
+    nextKey?: string | null
+    balances: Array<{
+        __typename?: 'ERC1155TokenBalance'
+        owner: string
+        balance: string
+        tokenInfo: {
+            __typename?: 'EthTokenInfo'
+            name?: string | null
+            symbol?: string | null
+            decimals?: number | null
+            totalSupply?: string | null
+            contract: string
+            tokenId?: string | null
+        }
+    }>
 }
 
 export type GetErc20TokenOwnersQueryVariables = Types.Exact<{
@@ -82,6 +119,7 @@ export type GetErc20TokenOwnersQuery = {
                 decimals?: number | null
                 totalSupply?: string | null
                 contract: string
+                tokenId?: string | null
             }
         } | null>
     }
@@ -101,7 +139,7 @@ export type GetErc721TokenOwnersQuery = {
         owners: Array<{
             __typename?: 'ERC721TokenOwner'
             owner: string
-            token: string
+            tokenId: string
             tokenInfo: {
                 __typename?: 'EthTokenInfo'
                 name?: string | null
@@ -109,8 +147,37 @@ export type GetErc721TokenOwnersQuery = {
                 decimals?: number | null
                 totalSupply?: string | null
                 contract: string
+                tokenId?: string | null
             }
         } | null>
+    }
+}
+
+export type GetErc1155TokenOwnersQueryVariables = Types.Exact<{
+    contract: Types.Scalars['String']
+    _limit?: Types.InputMaybe<Types.Scalars['Int']>
+    _nextKey?: Types.InputMaybe<Types.Scalars['String']>
+}>
+
+export type GetErc1155TokenOwnersQuery = {
+    __typename?: 'Query'
+    getERC1155TokensByContract: {
+        __typename?: 'ERC1155TokenBalances'
+        nextKey?: string | null
+        balances: Array<{
+            __typename?: 'ERC1155TokenBalance'
+            owner: string
+            balance: string
+            tokenInfo: {
+                __typename?: 'EthTokenInfo'
+                name?: string | null
+                symbol?: string | null
+                decimals?: number | null
+                totalSupply?: string | null
+                contract: string
+                tokenId?: string | null
+            }
+        }>
     }
 }
 
@@ -129,7 +196,7 @@ export const Erc721TokenOwnerDetailsFragmentDoc = gql`
             ...TokenDetails
         }
         owner
-        token
+        tokenId
     }
     ${TokenDetailsFragmentDoc}
 `
@@ -141,6 +208,25 @@ export const Erc721TokenOwnersFragmentDoc = gql`
         nextKey
     }
     ${Erc721TokenOwnerDetailsFragmentDoc}
+`
+export const Erc1155TokenOwnerDetailsFragmentDoc = gql`
+    fragment ERC1155TokenOwnerDetails on ERC1155TokenBalance {
+        tokenInfo {
+            ...TokenDetails
+        }
+        owner
+        balance
+    }
+    ${TokenDetailsFragmentDoc}
+`
+export const Erc1155TokenOwnersFragmentDoc = gql`
+    fragment ERC1155TokenOwners on ERC1155TokenBalances {
+        balances {
+            ...ERC1155TokenOwnerDetails
+        }
+        nextKey
+    }
+    ${Erc1155TokenOwnerDetailsFragmentDoc}
 `
 export const GetErc20TokenOwnersDocument = gql`
     query getERC20TokenOwners($contract: String!, $_limit: Int, $_nextKey: String) {
@@ -246,4 +332,58 @@ export function useGetErc721TokenOwnersLazyQuery(
 export type GetErc721TokenOwnersQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<
     GetErc721TokenOwnersQuery,
     GetErc721TokenOwnersQueryVariables
+>
+export const GetErc1155TokenOwnersDocument = gql`
+    query getERC1155TokenOwners($contract: String!, $_limit: Int, $_nextKey: String) {
+        getERC1155TokensByContract(contract: $contract, limit: $_limit, nextKey: $_nextKey) {
+            ...ERC1155TokenOwners
+        }
+    }
+    ${Erc1155TokenOwnersFragmentDoc}
+`
+
+/**
+ * __useGetErc1155TokenOwnersQuery__
+ *
+ * To run a query within a Vue component, call `useGetErc1155TokenOwnersQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetErc1155TokenOwnersQuery` returns an object from Apollo Client that contains result, loading and error properties
+ * you can use to render your UI.
+ *
+ * @param variables that will be passed into the query
+ * @param options that will be passed into the query, supported options are listed on: https://v4.apollo.vuejs.org/guide-composable/query.html#options;
+ *
+ * @example
+ * const { result, loading, error } = useGetErc1155TokenOwnersQuery({
+ *   contract: // value for 'contract'
+ *   _limit: // value for '_limit'
+ *   _nextKey: // value for '_nextKey'
+ * });
+ */
+export function useGetErc1155TokenOwnersQuery(
+    variables:
+        | GetErc1155TokenOwnersQueryVariables
+        | VueCompositionApi.Ref<GetErc1155TokenOwnersQueryVariables>
+        | ReactiveFunction<GetErc1155TokenOwnersQueryVariables>,
+    options:
+        | VueApolloComposable.UseQueryOptions<GetErc1155TokenOwnersQuery, GetErc1155TokenOwnersQueryVariables>
+        | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<GetErc1155TokenOwnersQuery, GetErc1155TokenOwnersQueryVariables>>
+        | ReactiveFunction<VueApolloComposable.UseQueryOptions<GetErc1155TokenOwnersQuery, GetErc1155TokenOwnersQueryVariables>> = {}
+) {
+    return VueApolloComposable.useQuery<GetErc1155TokenOwnersQuery, GetErc1155TokenOwnersQueryVariables>(GetErc1155TokenOwnersDocument, variables, options)
+}
+export function useGetErc1155TokenOwnersLazyQuery(
+    variables:
+        | GetErc1155TokenOwnersQueryVariables
+        | VueCompositionApi.Ref<GetErc1155TokenOwnersQueryVariables>
+        | ReactiveFunction<GetErc1155TokenOwnersQueryVariables>,
+    options:
+        | VueApolloComposable.UseQueryOptions<GetErc1155TokenOwnersQuery, GetErc1155TokenOwnersQueryVariables>
+        | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<GetErc1155TokenOwnersQuery, GetErc1155TokenOwnersQueryVariables>>
+        | ReactiveFunction<VueApolloComposable.UseQueryOptions<GetErc1155TokenOwnersQuery, GetErc1155TokenOwnersQueryVariables>> = {}
+) {
+    return VueApolloComposable.useLazyQuery<GetErc1155TokenOwnersQuery, GetErc1155TokenOwnersQueryVariables>(GetErc1155TokenOwnersDocument, variables, options)
+}
+export type GetErc1155TokenOwnersQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<
+    GetErc1155TokenOwnersQuery,
+    GetErc1155TokenOwnersQueryVariables
 >

@@ -4,6 +4,7 @@ fragment TokenDetails on EthTokenInfo {
   decimals
   totalSupply
   contract
+  tokenId
 }
 
 fragment ERC20TokenOwnerDetails on ERC20TokenBalance  {
@@ -23,5 +24,32 @@ query getTokenInfoByContract($contract: String!) {
 query getERC20TokenBalance($contract: String!, $owner: String!) {
   getERC20TokenBalance(contract: $contract, owner: $owner) {
     ...ERC20TokenOwnerDetails
+  }
+}
+
+query  getNFTContractMeta($input: String!) {
+  getNFTContractMeta(input: $input) @rest(type: "RespCollections", path: "/collections/ethereum/{args.input}", method: "GET") {
+    nextKey
+    collections @type(name: "RespCollection") {
+      ...NftCollection
+    }
+  }
+}
+
+fragment NftCollection on RespCollection  {
+  name
+  description
+  image_url
+  external_url
+  twitter_username
+  discord_url
+  distinct_owner_count
+  distinct_nft_count
+  floor_prices @type(name: "RespNftFloorPrice") {
+    value 
+    payment_token {
+      name
+      address
+    }
   }
 }

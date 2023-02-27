@@ -11,6 +11,7 @@ fragment BlockDetails on Block {
             uncles
         }
         txFail
+        baseFeePerGas
     }
     hash
     parentHash

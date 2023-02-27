@@ -16,6 +16,7 @@ export type TokenDetailsFragment = {
     decimals?: number | null
     totalSupply?: string | null
     contract: string
+    tokenId?: string | null
 }
 
 export type Erc20TokenOwnerDetailsFragment = {
@@ -29,6 +30,7 @@ export type Erc20TokenOwnerDetailsFragment = {
         decimals?: number | null
         totalSupply?: string | null
         contract: string
+        tokenId?: string | null
     }
 }
 
@@ -45,6 +47,7 @@ export type GetTokenInfoByContractQuery = {
         decimals?: number | null
         totalSupply?: string | null
         contract: string
+        tokenId?: string | null
     }
 }
 
@@ -66,8 +69,54 @@ export type GetErc20TokenBalanceQuery = {
             decimals?: number | null
             totalSupply?: string | null
             contract: string
+            tokenId?: string | null
         }
     }
+}
+
+export type GetNftContractMetaQueryVariables = Types.Exact<{
+    input: Types.Scalars['String']
+}>
+
+export type GetNftContractMetaQuery = {
+    __typename?: 'Query'
+    getNFTContractMeta?: {
+        __typename?: 'RespCollections'
+        nextKey?: string | null
+        collections: Array<{
+            __typename?: 'RespCollection'
+            name?: string | null
+            description?: string | null
+            image_url?: string | null
+            external_url?: string | null
+            twitter_username?: string | null
+            discord_url?: string | null
+            distinct_owner_count?: number | null
+            distinct_nft_count?: number | null
+            floor_prices: Array<{
+                __typename?: 'RespNftFloorPrice'
+                value?: number | null
+                payment_token: { __typename?: 'RespPaymentToken'; name?: string | null; address?: string | null }
+            }>
+        }>
+    } | null
+}
+
+export type NftCollectionFragment = {
+    __typename?: 'RespCollection'
+    name?: string | null
+    description?: string | null
+    image_url?: string | null
+    external_url?: string | null
+    twitter_username?: string | null
+    discord_url?: string | null
+    distinct_owner_count?: number | null
+    distinct_nft_count?: number | null
+    floor_prices: Array<{
+        __typename?: 'RespNftFloorPrice'
+        value?: number | null
+        payment_token: { __typename?: 'RespPaymentToken'; name?: string | null; address?: string | null }
+    }>
 }
 
 export const TokenDetailsFragmentDoc = gql`
@@ -77,6 +126,7 @@ export const TokenDetailsFragmentDoc = gql`
         decimals
         totalSupply
         contract
+        tokenId
     }
 `
 export const Erc20TokenOwnerDetailsFragmentDoc = gql`
@@ -88,6 +138,25 @@ export const Erc20TokenOwnerDetailsFragmentDoc = gql`
         balance
     }
     ${TokenDetailsFragmentDoc}
+`
+export const NftCollectionFragmentDoc = gql`
+    fragment NftCollection on RespCollection {
+        name
+        description
+        image_url
+        external_url
+        twitter_username
+        discord_url
+        distinct_owner_count
+        distinct_nft_count
+        floor_prices @type(name: "RespNftFloorPrice") {
+            value
+            payment_token {
+                name
+                address
+            }
+        }
+    }
 `
 export const GetTokenInfoByContractDocument = gql`
     query getTokenInfoByContract($contract: String!) {
@@ -198,3 +267,49 @@ export type GetErc20TokenBalanceQueryCompositionFunctionResult = VueApolloCompos
     GetErc20TokenBalanceQuery,
     GetErc20TokenBalanceQueryVariables
 >
+export const GetNftContractMetaDocument = gql`
+    query getNFTContractMeta($input: String!) {
+        getNFTContractMeta(input: $input) @rest(type: "RespCollections", path: "/collections/ethereum/{args.input}", method: "GET") {
+            nextKey
+            collections @type(name: "RespCollection") {
+                ...NftCollection
+            }
+        }
+    }
+    ${NftCollectionFragmentDoc}
+`
+
+/**
+ * __useGetNftContractMetaQuery__
+ *
+ * To run a query within a Vue component, call `useGetNftContractMetaQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetNftContractMetaQuery` returns an object from Apollo Client that contains result, loading and error properties
+ * you can use to render your UI.
+ *
+ * @param variables that will be passed into the query
+ * @param options that will be passed into the query, supported options are listed on: https://v4.apollo.vuejs.org/guide-composable/query.html#options;
+ *
+ * @example
+ * const { result, loading, error } = useGetNftContractMetaQuery({
+ *   input: // value for 'input'
+ * });
+ */
+export function useGetNftContractMetaQuery(
+    variables: GetNftContractMetaQueryVariables | VueCompositionApi.Ref<GetNftContractMetaQueryVariables> | ReactiveFunction<GetNftContractMetaQueryVariables>,
+    options:
+        | VueApolloComposable.UseQueryOptions<GetNftContractMetaQuery, GetNftContractMetaQueryVariables>
+        | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<GetNftContractMetaQuery, GetNftContractMetaQueryVariables>>
+        | ReactiveFunction<VueApolloComposable.UseQueryOptions<GetNftContractMetaQuery, GetNftContractMetaQueryVariables>> = {}
+) {
+    return VueApolloComposable.useQuery<GetNftContractMetaQuery, GetNftContractMetaQueryVariables>(GetNftContractMetaDocument, variables, options)
+}
+export function useGetNftContractMetaLazyQuery(
+    variables: GetNftContractMetaQueryVariables | VueCompositionApi.Ref<GetNftContractMetaQueryVariables> | ReactiveFunction<GetNftContractMetaQueryVariables>,
+    options:
+        | VueApolloComposable.UseQueryOptions<GetNftContractMetaQuery, GetNftContractMetaQueryVariables>
+        | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<GetNftContractMetaQuery, GetNftContractMetaQueryVariables>>
+        | ReactiveFunction<VueApolloComposable.UseQueryOptions<GetNftContractMetaQuery, GetNftContractMetaQueryVariables>> = {}
+) {
+    return VueApolloComposable.useLazyQuery<GetNftContractMetaQuery, GetNftContractMetaQueryVariables>(GetNftContractMetaDocument, variables, options)
+}
+export type GetNftContractMetaQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<GetNftContractMetaQuery, GetNftContractMetaQueryVariables>

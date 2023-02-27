@@ -14,7 +14,7 @@ const props = defineProps({
     },
     size: {
         type: String,
-        default: 'small'
+        default: 'x-small'
     },
     bg: {
         type: String,
@@ -31,12 +31,23 @@ const props = defineProps({
 })
 
 const chipClass = computed<string>(() => {
-    return `bg-${props.bg} ${props.color} chip-${props.size} rounded`
+    return `bg-${props.bg} ${props.color} chip-${props.size} rounded-${props.rounded}`
 })
 </script>
 
 <style lang="scss" scoped>
 .chip {
     min-width: 56px;
+    font-size: 10px !important;
+    text-transform: uppercase !important;
+    &.text-surface {
+        color: rgb(var(--v-theme-surface)) !important;
+    }
+    &.v-chip.v-chip--size-x-small {
+        --v-chip-height: 22px;
+    }
+    &.rounded-sm {
+        border-radius: 4px !important;
+    }
 }
 </style>

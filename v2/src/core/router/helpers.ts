@@ -1,6 +1,6 @@
 import { RouteLocationNormalized, NavigationGuardNext } from 'vue-router'
 
-export const addressRouteGuard = (tab: string) => {
+export const tabViewRouteGuard = (tab: string) => {
     return async (to: RouteLocationNormalized, from: RouteLocationNormalized, next: NavigationGuardNext) => {
         // check if TO query exhists and valid
         if (!to.query.t) {
@@ -10,5 +10,21 @@ export const addressRouteGuard = (tab: string) => {
         } else {
             next()
         }
+    }
+}
+
+export const loadImages = () => {
+    return async (to: RouteLocationNormalized, from: RouteLocationNormalized, next: NavigationGuardNext) => {
+        const images = [
+            require('@/assets/background-nebula.png'),
+            require('@/assets/hero/hero.png'),
+            require('@/assets/hero/hero.png'),
+            require('@/assets/hero/hero-group.png')
+        ]
+        images.map(i => {
+            const img = new Image()
+            img.src = i
+        })
+        next()
     }
 }

@@ -21,9 +21,9 @@ const excpUncleNotFound = 'uncle not found'
 
 /**
  *  @event - This error is recieved, a user inputs a valid eth tx hash, but transaction does not exhist.
- *           Happens on Txs Details Page, tx is no longer in db. Was most likely was dropped and exceeded limit in db
+ *           Happens on Txs Details Page, tx is no longer in db. Was most likely dropped and exceeded limit in db
  **/
-const excpTxDoNotExists = 'cannot return null for non-nullable field query.gettransactionbyhash'
+const excpTxDoNotExists = 'transaction not found'
 
 /**
  *  @event - This error is recieved, when an Address is a not contract.

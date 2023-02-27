@@ -1,4 +1,4 @@
-export const timeAgo = (date: string | Date, isShort: boolean) => {
+export const timeAgo = (date: string | Date, isShort = false) => {
     const prevDate = new Date(date)
 
     const seconds = Math.floor((new Date().getTime() - prevDate.getTime()) / 1000)
@@ -29,8 +29,6 @@ export const timeAgo = (date: string | Date, isShort: boolean) => {
     for (const interval of intervals) {
         const res = seconds / interval.interval
         if (res > 1) {
-            // Check if the remainder is closer to 1. i.e 1.75 year would return 2 years
-            const remainder = (seconds % interval.interval) / interval.interval > 0.75
             const isPlural = Math.floor(res) > 1
             return `${Math.floor(res)} ${interval.name}${isPlural ? 's' : ''} ago`
         }

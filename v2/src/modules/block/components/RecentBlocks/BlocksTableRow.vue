@@ -1,117 +1,96 @@
 <template>
-    <v-container fluid class="pa-0 text-body-2">
-        <v-row d-block>
-            <!--
-      =====================================================================================
-        Mobile (XS-SM)
-      =====================================================================================
-      -->
-            <v-col xs="12" v-if="!mdAndUp">
-                <div class="table-row-mobile">
-                    <v-row grid-list-xs row wrap align="center" justify-start fill-height class="pt-3 pb-3 pr-4 pl-4">
-                        <v-col cols="6" class="pa-1">
-                            <router-link :to="`/block/number/${props.block.number}`" class="black--text font-weight-medium pb-1">
-                                Block # {{ _block.number }}
-                            </router-link>
-                        </v-col>
-                        <v-col cols="6" pr-44>
-                            <v-row justify="end">
-                                <p class="black--text align-center pl-2">
-                                    {{ _block.totalTx }} Txs
-                                    <app-tooltip v-if="_block.txFail > 0" :text="txTooltipText" />
-                                </p>
-                            </v-row>
-                        </v-col>
-                        <v-col cols="2" class="pa-1">
-                            <p class="info--text psmall">Age:</p>
-                        </v-col>
-                        <v-col cols="10" class="pa-1 pl-6">
-                            {{ _block.timestamp }}
-                        </v-col>
-                        <v-col cols="2" class="pa-1">
-                            <p class="info--text psmall pr-1">Miner:</p>
-                        </v-col>
-                        <v-col cols="10" class="pa-1">
-                            <app-transform-hash :hash="eth.toCheckSum(_block.miner)" :italic="true" :link="`/address/${_block.miner}`" class="pl-6" />
-                        </v-col>
-                        <v-col cols="2" class="pa-1">
-                            <p class="info--text psmall">Reward:</p>
-                        </v-col>
-                        <v-col cols="10" class="pa-1">
-                            <p class="black--text align-center pl-6">
-                                {{ _block.rewards.value }}
-                                <app-tooltip v-if="_block.rewards.tooltipText" :text="`${_block.rewards.tooltipText} ETH`" />
+    <div>
+        <!--
+              =====================================================================================
+                Mobile (XS-SM)
+              =====================================================================================
+        -->
+        <app-table-row v-if="xs" @click="toggleMoreDetails" :color="state.showMoreDetails ? 'pillGrey' : 'transparent'">
+            <v-col cols="6">
+                <router-link :to="`/block/number/${props.block.number}`" class="text-secondary">{{ _block.number }}</router-link>
+                <p class="text-info mb-0">{{ _block.timestamp }}</p>
+            </v-col>
+            <v-spacer />
+            <div class="d-flex align-center justify-start" style="width: 150px">
+                <app-address-blockie :address="_block.miner || ''" :size="6" class="mr-1 mr-sm-2" />
+                <app-transform-hash is-short is-blue :hash="eth.toCheckSum(_block.miner)" :link="`/address/${_block.miner}`" />
+            </div>
+            <template #expandable>
+                <v-col cols="12" v-if="state.showMoreDetails">
+                    <v-row justify="space-between" dense class="my-5 mx-0">
+                        <div>
+                            <p class="text-info mr-2">Transactions</p>
+                            <p>
+                                {{ _block.totalTx }}
                             </p>
-                        </v-col>
+                        </div>
+                        <div style="width: 140px">
+                            <p class="text-info mr-2">Reward</p>
+                            <p>
+                                {{ _block.rewards.value }}
+                            </p>
+                        </div>
                     </v-row>
+                </v-col>
+            </template>
+        </app-table-row>
+
+        <!--
+              =====================================================================================
+                Tablet/ Desktop (SM - XL)
+              =====================================================================================
+        -->
+        <app-table-row v-else row-align="center">
+            <v-col sm="2">
+                <router-link :to="`/block/number/${props.block.number}`" class="text-secondary">{{ _block.number }}</router-link>
+                <p v-if="mdAndDown" class="text-info mb-0">
+                    {{ _block.timestamp }}
+                </p>
+            </v-col>
+            <v-col v-if="!mdAndDown" sm="2">
+                {{ _block.timestamp }}
+            </v-col>
+            <v-col sm="3" lg="2">
+                {{ _block.totalTx }}
+            </v-col>
+            <v-col sm="4" lg="3">
+                <div class="d-flex align-center">
+                    <app-address-blockie :address="_block.miner || ''" :size="8" class="mr-2 mr-sm-2" />
+                    <app-transform-hash is-short is-blue :hash="eth.toCheckSum(_block.miner)" :link="`/address/${_block.miner}`" />
                 </div>
             </v-col>
-            <!--
-      =====================================================================================
-        Tablet/ Desktop (SM - XL)
-      =====================================================================================
-      -->
-            <v-col v-else sm="12" class="pt-2">
-                <!--
-        =====================================================================================
-          Block Info
-        =====================================================================================
-        -->
-                <v-row grid-list-xs row wrap align="center" justify="start" class="fill-height">
-                    <v-col sm="2">
-                        <router-link :to="`/block/number/${props.block.number}`" class="black--text pb-1">{{ _block.number }}</router-link>
-                    </v-col>
-                    <v-col sm="5">
-                        <v-row>
-                            <v-col sm="12" class="pb-2">
-                                <v-row align="center" class="flex-nowrap ma-0">
-                                    <p class="info--text pr-1">Miner:</p>
-                                    <app-transform-hash :hash="eth.toCheckSum(_block.miner)" :italic="true" :link="`/address/${_block.miner}`" />
-                                </v-row>
-                            </v-col>
-                            <v-col sm="12" class="pt-0">
-                                <v-row align="center" class="flex-nowrap ma-0">
-                                    <p class="info--text psmall pr-2">Age:</p>
-                                    {{ _block.timestamp }}
-                                </v-row>
-                            </v-col>
-                        </v-row>
-                    </v-col>
-                    <v-spacer v-if="!xl" />
-                    <v-col sm="2">
-                        <p class="pr-1">
-                            {{ _block.totalTx }}
-                            <app-tooltip v-if="_block.txFail > 0" :text="txTooltipText" />
-                        </p>
-                    </v-col>
-                    <v-col sm="2">
-                        <p class="black--text align-center mb-0">
-                            {{ _block.rewards.value }}
-                            <app-tooltip v-if="_block.rewards.tooltipText" :text="`${_block.rewards.tooltipText} ETH`" />
-                        </p>
-                    </v-col>
-                </v-row>
-                <v-col sm="12">
-                    <v-divider class="mb-2 mt-2" />
-                </v-col>
+            <v-col sm="3">
+                {{ _block.rewards.value }}
             </v-col>
-        </v-row>
-    </v-container>
+        </app-table-row>
+        <!--        <v-row v-else align="center" justify="start" class="my-5 px-0">-->
+        <!--        </v-row>-->
+    </div>
 </template>
 
 <script setup lang="ts">
+import AppAddressBlockie from '@core/components/AppAddressBlockie.vue'
 import AppTransformHash from '@core/components/AppTransformHash.vue'
 import { eth, timeAgo } from '@core/helper'
 import BN from 'bignumber.js'
 import AppTooltip from '@core/components/AppTooltip.vue'
-import { computed } from 'vue'
-import { useDisplay } from 'vuetify/lib/framework.mjs'
+import { computed, reactive } from 'vue'
+import { useDisplay } from 'vuetify'
 import { formatNonVariableEthValue, formatNumber } from '@core/helper/number-format-helper'
+import AppTableRow from '@core/components/AppTableRow.vue'
 
-const { mdAndUp, xl } = useDisplay()
+const { xs, mdAndDown } = useDisplay()
 
 const props = defineProps({
     block: Object
+})
+
+interface ComponentState {
+    showMoreDetails: boolean
+}
+
+const state: ComponentState = reactive({
+    showMoreDetails: false
 })
 
 const _block = computed(() => {
@@ -125,6 +104,12 @@ const _block = computed(() => {
         txSuccess: formatNumber(props.block.txCount - props.block.txFail)
     }
 })
+
+const toggleMoreDetails = (): void => {
+    if (xs.value) {
+        state.showMoreDetails = !state.showMoreDetails
+    }
+}
 </script>
 
 <style scoped lang="css">

@@ -1,31 +1,125 @@
 <template>
     <v-row row wrap justify="start" class="mb-4">
-        <v-col xs="12">
-            <app-details-list :title="title" :details="details" :is-loading="props.isLoading || state.hasError" :max-items="10" class="mb-4">
-                <template #title>
-                    <v-row grid-list-xs row align="center" justify="space-between" class="fill-height pl-4 pr-2 my-0">
-                        <v-col>
-                            <v-row grid-list-xs row align="center" justify="start" class="token-header">
-                                <div class="token-header-image">
-                                    <v-img :src="image" contain @error="imgLoadFail" />
-                                </div>
-                                <v-card-title class="title font-weight-bold pl-3">{{ title }}</v-card-title>
-                            </v-row>
-                        </v-col>
+        <v-col xs="12" md="6">
+            <v-card elevation="1" rounded="xl" variant="flat" class="pa-4 pa-sm-6 h-100">
+                <div class="mb-6">
+                    <v-row align="center">
+                        <div class="mr-3">
+                            <v-img :src="image" contain width="30" height="30" />
+                        </div>
+                        <div>
+                            <p class="text-h4">{{ tokenName }}</p>
+                            <p class="text-body-1">{{ tokenSymbol.toUpperCase() }}</p>
+                        </div>
                     </v-row>
-                    <v-divider class="lineGrey" />
-                </template>
-            </app-details-list>
+                    <div class="skeleton-box rounded-xl my-6 d-md-none" style="height: 200px"></div>
+                </div>
+                <div class="mb-5 mb-md-4 d-flex d-md-block justify-space-between">
+                    <div>
+                        <p class="text-info text-subtitle-2 font-weight-regular text-md-body-1">
+                            {{ priceDetail.title }}
+                        </p>
+                        <div v-if="!loadingTokenData" class="d-flex align-center">
+                            <p class="text-subtitle-1 text-md-h4 mt-1 mr-md-3">
+                                {{ priceDetail.detail }}
+                            </p>
+                            <span
+                                v-if="priceDetail.priceChange && priceDetail.priceChange"
+                                class="d-none d-md-flex align-center text-subtitle-1 mt-1"
+                                :class="`text-${priceChange.color}`"
+                            >
+                                <span> {{ priceDetail.priceChange.value }} {{ priceDetail.priceChange.unit }} </span>
+                                <v-icon v-if="priceChange.icon" size="14">{{ priceChange.icon }}</v-icon>
+                            </span>
+                        </div>
+                        <div v-else class="skeleton-box rounded-xl mt-2" style="height: 20px; width: 200px"></div>
+                    </div>
+                    <div class="d-md-none v-col-6 py-0">
+                        <p class="text-info text-subtitle-2 font-weight-regular text-md-body-1">
+                            {{ priceChange.title }}
+                        </p>
+                        <p v-if="!props.isLoading && priceDetail.priceChange" class="text-subtitle-1 text-md-h4 mt-1" :class="`text-${priceChange.color}`">
+                            {{ priceDetail.priceChange.value }} {{ priceDetail.priceChange.unit }}
+                        </p>
+                        <div v-else class="skeleton-box rounded-xl mt-2" style="height: 20px"></div>
+                    </div>
+                </div>
+                <v-row class="mb-5 mb-md-4">
+                    <v-col cols="6">
+                        <p class="text-info text-subtitle-2 font-weight-regular text-md-body-1">
+                            {{ marketCapDetail.title }}
+                        </p>
+                        <p v-if="!loadingTokenData" class="text-subtitle-1 text-md-h4 mt-1">
+                            {{ marketCapDetail.detail }}
+                        </p>
+                        <div v-else class="skeleton-box rounded-xl mt-2" style="height: 20px"></div>
+                    </v-col>
+                    <v-col cols="6">
+                        <p class="text-info text-subtitle-2 font-weight-regular text-md-body-1">
+                            {{ circulatingSupplyDetail.title }}
+                        </p>
+                        <p v-if="!loadingTokenData" class="text-subtitle-1 text-md-h4 mt-1">
+                            {{ circulatingSupplyDetail.detail }}
+                        </p>
+                        <div v-else class="skeleton-box rounded-xl mt-2" style="height: 20px"></div>
+                    </v-col>
+                </v-row>
+                <v-row>
+                    <v-col cols="6">
+                        <p class="text-info text-subtitle-2 font-weight-regular text-md-body-1">
+                            {{ volumeDetail.title }}
+                        </p>
+                        <p v-if="!loadingTokenData" class="text-subtitle-1 text-md-h4 mt-1">
+                            {{ volumeDetail.detail }}
+                        </p>
+                        <div v-else class="skeleton-box rounded-xl mt-2" style="height: 20px"></div>
+                    </v-col>
+                    <v-col cols="6">
+                        <p class="text-info text-subtitle-2 font-weight-regular text-md-body-1">
+                            {{ supplyDetail.title }}
+                        </p>
+                        <p v-if="!loadingTokenData" class="text-subtitle-1 text-md-h4 mt-1">
+                            {{ supplyDetail.detail }}
+                        </p>
+                        <div v-else class="skeleton-box rounded-xl my-2" style="height: 20px"></div>
+                    </v-col>
+                </v-row>
+                <div class="d-md-none">
+                    <token-details-socials :token-details="tokenDetails" :is-nft="props.isNft" class="my-5" :is-loading="props.isLoading" />
+                    <token-details-history :token-history="tokenHistory" class="my-5" />
+                </div>
+            </v-card>
+        </v-col>
+        <v-col md="6" class="d-none d-md-block">
+            <v-card elevation="1" rounded="xl" variant="flat" class="pa-4 pa-sm-6 h-100">
+                <token-details-socials :token-details="tokenDetails" :is-loading="props.isLoading" :is-nft="props.isNft" />
+            </v-card>
+        </v-col>
+        <v-col cols="12" class="d-none d-md-block">
+            <v-card elevation="1" rounded="xl" variant="flat" class="pa-4 pa-sm-6 h-100">
+                <v-card-title>Price History</v-card-title>
+                <div class="skeleton-box rounded-xl mt-1" style="height: 200px"></div>
+            </v-card>
+        </v-col>
+        <v-col cols="7" class="d-none d-md-block">
+            <v-card elevation="1" rounded="xl" variant="flat" class="pa-4 pa-sm-6 h-100">
+                <token-details-history :token-history="tokenHistory" />
+            </v-card>
+        </v-col>
+        <v-col cols="5" class="d-none d-md-block">
+            <v-card elevation="1" rounded="xl" variant="flat" class="pa-4 pa-sm-6 h-100">
+                <div class="skeleton-box rounded-xl mt-1" style="height: 200px"></div>
+            </v-card>
         </v-col>
     </v-row>
 </template>
 
 <script setup lang="ts">
 import { Detail } from '@core/components/props'
-import AppDetailsList from '@core/components/AppDetailsList.vue'
+import TokenDetailsSocials from '@module/tokens/components/TokenDetailsSocials.vue'
 import { Hex } from '@core/models'
 import BN from 'bignumber.js'
-import { formatFloatingPointValue, formatNumber, FormattedNumber, formatUsdValue } from '@core/helper/number-format-helper'
+import { formatFloatingPointValue, formatNumber, formatPercentageValue, FormattedNumber, formatUsdValue } from '@core/helper/number-format-helper'
 import { useCoinData } from '@core/composables/CoinData/coinData.composable'
 import {
     GetErc20TokenBalanceQuery as TokenOwnerInfo,
@@ -34,10 +128,12 @@ import {
 import { ErrorMessageToken } from '@module/tokens/models/ErrorMessagesForTokens'
 import { computed } from 'vue'
 import { MarketDataFragment as TokenMarketData } from '@/core/composables/CoinData/getLatestPrices.generated'
+import TokenDetailsHistory from '@module/tokens/components/TokenDetailsHistory.vue'
 
 interface PropType {
     addressRef: string
     isLoading: boolean
+    isNft: boolean
     tokenDetails: TokenInfo
     holderDetails: TokenOwnerInfo
 }
@@ -72,19 +168,12 @@ const emitErrorState = (val: boolean): void => {
     emit('errorDetails', val, ErrorMessageToken.details)
 }
 
-/**
- * Image loading failed catcher
- */
-const imgLoadFail = (): void => {
-    state.imageExists = false
-}
-
 /*
 ===================================================================================
   Computed Values
 ===================================================================================
 */
-const { getEthereumTokenByContract } = useCoinData()
+const { getEthereumTokenByContract, loading: loadingCoinData } = useCoinData()
 const tokenData = computed<TokenMarketData | false>(() => {
     if (props.addressRef) {
         try {
@@ -97,35 +186,20 @@ const tokenData = computed<TokenMarketData | false>(() => {
     return false
 })
 
-/**
- * Create properly-formatted title from tokenDetails
- *
- * @return {String} - Title for details list
- */
-const title = computed<string>(() => {
-    let name = 'Token'
-    let symbol = ''
-    let holder = ''
-    if (props.tokenDetails && !props.isLoading) {
-        name = props.tokenDetails.name === null ? name : props.tokenDetails.name
-        symbol = props.tokenDetails.symbol === null || !props.tokenDetails.symbol ? symbol : `(${props.tokenDetails.symbol.toUpperCase()}) `
-    }
-    if (props.holderDetails && props.holderDetails.owner) {
-        holder = `- Filtered by Holder`
-    }
-    return `${name} ${symbol} ${holder}`
+const tokenName = computed<string>(() => {
+    return props.tokenDetails?.name || ''
+})
+
+const tokenSymbol = computed<string>(() => {
+    return props.tokenDetails?.symbol.toUpperCase() || ''
 })
 
 const image = computed<string>(() => {
     return !(tokenData.value && tokenData.value.image && state.imageExists) ? require('@/assets/icon-token.png') : tokenData.value.image
 })
 
-/**
- * Properly format the Details[] array for the details table.
- * If the data hasn't been loaded yet, then only include the titles in the details.
- */
-const details = computed<Detail[]>(() => {
-    return props.holderDetails ? holderDetailsList.value : tokenDetailsList.value
+const loadingTokenData = computed<boolean>(() => {
+    return loadingCoinData.value || props.isLoading
 })
 
 /**
@@ -160,7 +234,7 @@ const holderDetailsList = computed<Detail[]>(() => {
     return details.concat(tokenDetailsList.value)
 })
 
-const contractDetail = computed<Detail[]>(() => {
+const contractDetail = computed<Detail>(() => {
     const detail: Detail = { title: 'Contract' }
     if (!props.isLoading && props.tokenDetails) {
         detail.detail = new Hex(props.tokenDetails.contract).toString()
@@ -171,7 +245,7 @@ const contractDetail = computed<Detail[]>(() => {
     return detail
 })
 
-const contractOwnerDetail = computed<Detail[]>(() => {
+const contractOwnerDetail = computed<Detail>(() => {
     const detail: Detail = { title: 'Owner' }
     if (!props.isLoading && props.holderDetails && props.holderDetails.owner) {
         detail.detail = props.holderDetails.owner
@@ -182,19 +256,19 @@ const contractOwnerDetail = computed<Detail[]>(() => {
     return detail
 })
 
-const contractDecimalsDetail = computed<Detail[]>(() => {
+const contractDecimalsDetail = computed<Detail>(() => {
     return {
         title: 'Decimals',
         detail: !props.isLoading && props.tokenDetails && props.tokenDetails.decimals != null ? props.tokenDetails.decimals : undefined
     }
 })
 
-const priceDetail = computed<Detail[]>(() => {
+const priceDetail = computed<Detail>(() => {
     const detail: Detail = { title: 'Price' }
     if (!props.isLoading && tokenData.value) {
         const priceFormatted = formatUsdValue(new BN(tokenData.value.current_price || 0))
         detail.detail = priceFormatted.value
-        detail.priceChange = tokenData.value.price_change_percentage_24h
+        detail.priceChange = formatPercentageValue(new BN(tokenData.value.price_change_percentage_24h || 0))
         if (priceFormatted.tooltipText) {
             detail.tooltip = priceFormatted.tooltipText
         }
@@ -202,32 +276,71 @@ const priceDetail = computed<Detail[]>(() => {
     return detail
 })
 
-const supplyDetail = computed<Detail[]>(() => {
+interface PriceChange {
+    title: string
+    symbol: string
+    icon: string
+    color: string
+}
+const priceChange = computed<PriceChange>(() => {
+    const change = priceDetail.value?.priceChange?.value || 0
+    if (change > 0) {
+        return {
+            title: 'Price Change',
+            symbol: '+',
+            icon: 'arrow_upward',
+            color: 'success'
+        }
+    }
+    if (change < 0) {
+        return {
+            title: 'Price Change',
+            symbol: '-',
+            icon: 'arrow_downward',
+            color: 'error'
+        }
+    }
+    return {
+        title: 'Price Change',
+        symbol: '',
+        icon: 'arrow_downward',
+        color: 'error'
+    }
+})
+
+const supplyDetail = computed<Detail>(() => {
     let supply: number | undefined = undefined
     if (tokenData.value && tokenData.value.total_supply) {
         supply = new BN(tokenData.value.total_supply).toNumber()
     }
     return {
-        title: 'Total supply',
+        title: 'Max supply',
         detail: !props.isLoading && supply ? formatNumber(supply) : undefined
     }
 })
 
-const marketCapDetail = computed<Detail[]>(() => {
+const marketCapDetail = computed<Detail>(() => {
     return {
         title: 'Market Cap',
         detail: !props.isLoading && tokenData.value && tokenData.value.market_cap ? formatNumber(tokenData.value.market_cap) : undefined
     }
 })
 
-const volumeDetail = computed<Detail[]>(() => {
+const circulatingSupplyDetail = computed<Detail>(() => {
     return {
-        title: 'Volume',
+        title: 'Circulating Supply',
+        detail: !props.isLoading && tokenData.value && tokenData.value.circulating_supply ? formatNumber(tokenData.value.circulating_supply) : undefined
+    }
+})
+
+const volumeDetail = computed<Detail>(() => {
+    return {
+        title: '24 hour trading volume',
         detail: !props.isLoading && tokenData.value && tokenData.value.total_volume ? formatNumber(tokenData.value.total_volume) : undefined
     }
 })
 
-const holderDetail = computed<Detail[]>(() => {
+const holderDetail = computed<Detail>(() => {
     const detail: Detail = { title: 'Holder' }
     if (!props.isLoading && props.holderDetails && props.holderDetails.owner) {
         detail.detail = props.holderDetails.owner
@@ -238,7 +351,7 @@ const holderDetail = computed<Detail[]>(() => {
     return detail
 })
 
-const holderBalanceDetail = computed<Detail[]>(() => {
+const holderBalanceDetail = computed<Detail>(() => {
     const detail: Detail = { title: 'Balance' }
     if (!props.isLoading && props.tokenDetails && props.holderDetails) {
         const symbol = props.tokenDetails.symbol === null || !props.tokenDetails.symbol ? '' : ` ${props.tokenDetails.symbol.toUpperCase()}`
@@ -248,7 +361,7 @@ const holderBalanceDetail = computed<Detail[]>(() => {
     return detail
 })
 
-const holderUsdDetail = computed<Detail[]>(() => {
+const holderUsdDetail = computed<Detail>(() => {
     return {
         title: 'Total USD Value',
         detail: !props.isLoading && props.tokenDetails ? balanceUsd.value : undefined
@@ -270,6 +383,14 @@ const balanceUsd = computed<string | undefined>(() => {
     return props.holderDetails.balance && tokenData.value && tokenData.value.current_price
         ? formatUsdValue(n.multipliedBy(tokenData.value.current_price)).value
         : undefined
+})
+
+const tokenHistory = computed<string>(() => {
+    return ''
+    // return (
+    //     'Binance Coin (BNB) is an exchange-based token created and issued by the cryptocurrency exchange Binance. Initially created on the Ethereum blockchain as an ERC-20 token in July 2017, BNB was migrated over to Binance Chain in February 2019 and became the native coin of the Binance Chain.\n' +
+    //     'Binance Coin has seen massive growth in interest throughout the years. Several rounds of token burn events have appreciated BNB price and pushed it up as one of the top-10 cryptocurrencies by market capitalization. BNB can be traded in over 300 trading pairs across 120 exchanges tracked. '
+    // )
 })
 
 const balance = computed<FormattedNumber>(() => {

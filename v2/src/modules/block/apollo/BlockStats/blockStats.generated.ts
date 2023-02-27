@@ -9,13 +9,20 @@ import gql from 'graphql-tag'
 import * as VueApolloComposable from '@vue/apollo-composable'
 import * as VueCompositionApi from 'vue'
 export type ReactiveFunction<TParam> = () => TParam
-export type BlockInfoFragment = { __typename?: 'LatestBlockData'; number: number; avgBlockTime: number; hashRate: string; difficulty: string }
+export type BlockInfoFragment = {
+    __typename?: 'LatestBlockData'
+    number: number
+    avgBlockTime: number
+    hashRate: string
+    difficulty: string
+    avgGasPrice: string
+}
 
 export type GetLatestBlockInfoQueryVariables = Types.Exact<{ [key: string]: never }>
 
 export type GetLatestBlockInfoQuery = {
     __typename?: 'Query'
-    getLatestBlockInfo: { __typename?: 'LatestBlockData'; number: number; avgBlockTime: number; hashRate: string; difficulty: string }
+    getLatestBlockInfo: { __typename?: 'LatestBlockData'; number: number; avgBlockTime: number; hashRate: string; difficulty: string; avgGasPrice: string }
 }
 
 export const BlockInfoFragmentDoc = gql`
@@ -24,6 +31,7 @@ export const BlockInfoFragmentDoc = gql`
         avgBlockTime
         hashRate
         difficulty
+        avgGasPrice
     }
 `
 export const GetLatestBlockInfoDocument = gql`

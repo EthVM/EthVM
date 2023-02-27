@@ -22,6 +22,10 @@ const ROUTE_NAME: Route = {
         PATH: '/blocks',
         NAME: 'blocks'
     },
+    // ALL_BLOCKS_AND_TXS: {
+    //     PATH: '/eth',
+    //     NAME: 'allBlocks'
+    // },
     BLOCK_NUMBER: {
         PATH: `/block/number/:${ROUTE_PROP.BLOCK}`,
         NAME: 'block'
@@ -62,14 +66,7 @@ const ROUTE_NAME: Route = {
         PATH: 'adr-nfts',
         NAME: 'address-nfts'
     },
-    ADDRESS_CONTRACT: {
-        PATH: 'adr-contract-info',
-        NAME: 'address-contract-info'
-    },
-    ADDRESS_MINER: {
-        PATH: 'adr-miner-info',
-        NAME: 'address-miner-info'
-    },
+
     CHARTS: {
         PATH: '/charts',
         NAME: 'charts'
@@ -92,19 +89,11 @@ const ROUTE_NAME: Route = {
     },
     NOT_FOUND: {
         PATH: '/404',
-        NAME: 'notFound'
+        NAME: 'not_found'
     },
-    SEARCH_NOT_FOUND: {
-        PATH: `/search/not_found/:${ROUTE_PROP.SEARCH_NOT_FOUND}`,
-        NAME: 'search-not-found'
-    },
-    FAV_ADDRESS: {
-        PATH: '/fav_addresses',
-        NAME: 'fav_addresses'
-    },
-    FAV_TOKENS: {
-        PATH: '/tokens/favorites',
-        NAME: 'fav_tokens'
+    PORTFOLIO: {
+        PATH: '/portfolio',
+        NAME: 'portfolio'
     }
 }
 
@@ -113,5 +102,11 @@ const ADDRESS_ROUTE_QUERY = {
     Q_TOKENS: ['balance', 'transfers'],
     Q_MINER: ['blocks', 'uncles']
 }
+const Q_PORTFOLIO = ['address-list', 'balances']
+const Q_TOKEN_DETAILS = ['transfers', 'holders']
+const Q_BLOCKS_AND_TXS = ['blocks', 'transactions']
+const Q_BLOCK_DETAILS = ['transaction', 'more']
+const Q_ADDRESS_TRANSFERS = ['all', 'internal', 'tx-history', 'pending', 'rewards']
+const Q_TXS_DETAILS = ['state', 'more']
 
-export { ROUTE_NAME, ROUTE_PROP, ADDRESS_ROUTE_QUERY }
+export { ROUTE_NAME, ROUTE_PROP, ADDRESS_ROUTE_QUERY, Q_TOKEN_DETAILS, Q_BLOCKS_AND_TXS, Q_BLOCK_DETAILS, Q_TXS_DETAILS, Q_ADDRESS_TRANSFERS, Q_PORTFOLIO }

@@ -1,13 +1,13 @@
 <template>
     <div>
-        <app-error v-if="hasError" :has-error="hasError" :message="state.error" />
+        <app-error v-if="hasError" :has-error="hasError" :message="state.error" :routeProp="props.txRef" />
         <app-message :messages="state.errorMessages" />
         <!--
         =====================================================================================
           TX DETAILS LIST
         =====================================================================================
         -->
-        <tx-details v-if="isValid && !hasError" :tx-ref="props.txRef" @errorDetails="setError" />
+        <tx-details v-if="isValid && !hasError" :tx-ref="props.txRef || ''" :tab="props.tab" @errorDetails="setError" />
     </div>
 </template>
 
@@ -18,6 +18,11 @@ import AppError from '@/core/components/AppError.vue'
 import { eth } from '@/core/helper'
 import TxDetails from '@/modules/txs/ModuleTxDetails.vue'
 import { ErrorMessageTx } from '@/modules/txs/models/ErrorMessagesForTx'
+import { onMounted } from 'vue'
+
+onMounted(() => {
+    window.scrollTo(0, 0)
+})
 
 interface ComponentState {
     errorMessages: ErrorMessageTx[]
@@ -30,11 +35,12 @@ const state: ComponentState = reactive({
 })
 
 const props = defineProps({
-    txRef: String
+    txRef: String,
+    tab: String
 })
 
 const isValid = computed<boolean>(() => {
-    return eth.isValidHash(props.txRef)
+    return eth.isValidHash(props.txRef || '')
 })
 
 const hasError = computed<boolean>(() => {

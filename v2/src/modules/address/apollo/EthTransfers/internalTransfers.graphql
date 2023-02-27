@@ -1,0 +1,40 @@
+fragment InternalTransactionTransfer on Transfer {
+    type
+    subtype
+    transactionHash
+    block
+    timestamp
+    from
+    to
+    txFee
+    status
+}
+
+fragment BalanceFragment on BalanceDiff {
+    before
+    after
+}
+
+fragment EthInternalTransactionTransfers on EthTransfer {
+    transfer {
+        ...InternalTransactionTransfer
+    }
+    stateDiff {
+        to {
+            ...BalanceFragment
+        }
+        from {
+            ...BalanceFragment
+        }
+    }
+    value
+}
+
+query getEthInternalTransactionTransfers($hash: String!, $_limit: Int, $_nextKey: String) {
+    getEthInternalTransactionTransfers(owner: $hash, limit: $_limit, nextKey: $_nextKey) {
+        transfers {
+            ...EthInternalTransactionTransfers
+        }
+        nextKey
+    }
+}

@@ -1,3 +1,5 @@
+import { FormattedNumber } from '@core/helper/number-format-helper'
+
 export interface NavMenuEntry {
     header: NavHeader
     links?: NavLink[]
@@ -22,9 +24,8 @@ export interface Footnote {
 }
 
 export interface Tab {
-    id: number
+    value: string
     title: string
-    isActive: boolean
 }
 
 export interface Detail {
@@ -34,7 +35,7 @@ export interface Detail {
     copy?: boolean
     txInput?: string[] | string
     mono?: boolean
-    priceChange?: number | null
+    priceChange?: number | null | FormattedNumber
     tooltip?: string
     toChecksum?: boolean
 }

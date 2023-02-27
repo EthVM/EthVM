@@ -1,13 +1,17 @@
+fragment BlockSummary on BlockSummary {
+    number
+    miner
+    txCount
+    timestamp
+    rewards {
+        total
+    }
+    txFail
+}
+
 query getBlocksArrayByNumber($fromBlock: Int, $limit: Int) {
     getBlocksArrayByNumber(fromBlock: $fromBlock, limit: $limit) {
-        number
-        miner
-        txCount
-        timestamp
-        rewards {
-            total
-        }
-        txFail
+        ...BlockSummary
     }
 }
 

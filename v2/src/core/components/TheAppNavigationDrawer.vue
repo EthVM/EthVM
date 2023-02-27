@@ -1,29 +1,44 @@
 <template>
-    <v-navigation-drawer v-model="appStore.appDrawer" color="primary" temporary>
-        <v-row dense justify="space-between" align="center" class="mt-2">
-            <v-col cols="3">
-                <v-img :src="require('@/assets/logo-compact.png')" height="30px" width="30px" contain class="mx-auto" />
-            </v-col>
+    <v-navigation-drawer v-model="appStore.appDrawer" color="primary" temporary location="right">
+        <v-row justify="space-between" align="center" class="mt-2">
+            <v-spacer />
             <v-col cols="2">
                 <app-btn-icon icon="close" @click="appStore.appDrawer = false" color="white" />
             </v-col>
         </v-row>
-        <v-list bg-color="primary" lines="two">
-            <template v-for="(item, index) in navItems" :key="index">
+
+        <v-list bg-color="primary" lines="one">
+            <template v-for="item in navItems" :key="item.header.text">
                 <v-list-item
                     v-if="!item.links"
-                    :prepend-icon="item.header.icon"
                     :title="item.header.text"
                     :value="item.header.routerLink"
-                    class=""
-                    @click="navigateTo(item.header.routerLink || '')"
+                    :to="item.header.routerLink"
+                    :active="item.header.routerLink === activeRoute"
+                    :append-icon="item.header.icon"
+                    class="py-3"
                 ></v-list-item>
-                <v-list-group v-else>
+                <v-list-group v-else fluid eager>
                     <template v-slot:activator="{ props }">
-                        <v-list-item v-bind="props" :prepend-icon="item.header.icon" :title="item.header.text"></v-list-item>
+                        <v-list-item v-bind="props" :title="item.header.text" class="py-3"></v-list-item>
                     </template>
+                    <v-divider class="mb-1" color="white" thickness="0.5px" />
+
                     <template v-for="(link, j) in item.links" :key="j">
-                        <v-list-item @click="navigateTo(link.routerLink)" :value="link.routerLink" :title="link.text"> </v-list-item>
+                        <v-list-item
+                            :to="link.isExternal ? undefined : link.routerLink"
+                            :href="link.isExternal ? link.routerLink : undefined"
+                            :target="link.isExternal ? '_blank' : '_self'"
+                            :value="link.routerLink"
+                            :title="link.text"
+                            :active="link.routerLink === activeRoute"
+                            class="pl-5"
+                        >
+                            <template v-if="link.img" v-slot:prepend>
+                                <v-avatar rounded="lg" color="whiteLogo" :class="link.imgClass"><v-img :src="link.img"></v-img></v-avatar>
+                            </template>
+                            <p v-if="link.subtext" class="text-caption font-weight-light">{{ link.subtext }}</p>
+                        </v-list-item>
                     </template>
                 </v-list-group>
             </template>
@@ -35,11 +50,18 @@
 import { useAppNavigation } from '../composables/AppNavigation/useAppNavigation.composable'
 import { useStore } from '@/store'
 import AppBtnIcon from './AppBtnIcon.vue'
+import { computed } from 'vue'
+import { useRoute } from 'vue-router'
 /*
   ===================================================================================
     Initial Data
   ===================================================================================
   */
 const appStore = useStore()
-const { navItems, navigateTo } = useAppNavigation()
+const { navItems } = useAppNavigation()
+const route = useRoute()
+const activeRoute = computed(() => {
+    return route.path
+})
 </script>
+<style lang="scss" scoped></style>

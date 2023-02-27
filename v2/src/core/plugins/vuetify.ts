@@ -1,10 +1,12 @@
 // Styles
 import 'material-design-icons-iconfont/dist/material-design-icons.css'
-import '@/styles/main.scss'
+import 'vuetify/styles'
 import { md, aliases } from 'vuetify/iconsets/md'
 import * as components from 'vuetify/components'
 import * as directives from 'vuetify/directives'
 import { createVuetify, ThemeDefinition } from 'vuetify'
+// import type { IconAliases } from 'vuetify'
+
 type ThemeDefinition = typeof ThemeDefinition
 
 const COLORS = {
@@ -26,12 +28,14 @@ const COLORS = {
     greyBackgroundLM: '#C2C7CE',
     greyLoading: '#dedbdd',
     greyLight: '#F4F6FD',
-    greyTableBGLight: '#F3F5F9'
+    greyTableBGLight: '#F3F5F9',
+    greyCardLM: '#F2F3F6',
+    greyInputText: '#5A678A'
 }
 const mainnetLightTheme: ThemeDefinition = {
     dark: false,
     colors: {
-        primary: COLORS.blue,
+        primary: COLORS.navy,
         secondary: COLORS.brightBlue,
         warning: COLORS.orange,
         error: COLORS.red,
@@ -44,13 +48,19 @@ const mainnetLightTheme: ThemeDefinition = {
         surface: COLORS.surfaceLM,
         background: COLORS.greyBackgroundLM,
         white: COLORS.white,
+        whiteLogo: COLORS.white,
         'on-background': COLORS.navy,
         'on-surface': COLORS.navy,
         'on-primary': COLORS.white,
         'on-success': COLORS.surfaceLM,
-        'on-surface-tabs': COLORS.blue,
+        'on-surface-tabs': COLORS.navy,
         pillGrey: COLORS.greyLight,
-        tableGrey: COLORS.greyTableBGLight
+        tableGrey: COLORS.greyTableBGLight,
+        greyCard: COLORS.greyCardLM,
+        tabActive: COLORS.blue,
+        greyInputText: COLORS.greyInputText,
+        snackbar: COLORS.navy,
+        darkSurface: COLORS.greyBackdroundDM
     },
     variables: {
         'skeleton-gradient': 0.3
@@ -60,7 +70,7 @@ const mainnetLightTheme: ThemeDefinition = {
 const mainnetDarkTheme: ThemeDefinition = {
     dark: true,
     colors: {
-        primary: COLORS.blue,
+        primary: COLORS.navy,
         secondary: COLORS.brightBlue,
         warning: COLORS.orange,
         error: COLORS.red,
@@ -80,12 +90,19 @@ const mainnetDarkTheme: ThemeDefinition = {
         'on-success': COLORS.surfaceDM,
         'on-surface-tabs': COLORS.lightBlue,
         pillGrey: COLORS.greyBackdroundDM,
-        tableGrey: COLORS.greyBackdroundDM
+        tableGrey: COLORS.greyBackdroundDM,
+        whiteLogo: COLORS.white,
+        greyCard: COLORS.greyBackdroundDM,
+        tabActive: COLORS.blue,
+        greyInputText: COLORS.greyInputText,
+        snackbar: COLORS.lightBlue,
+        darkSurface: COLORS.greyBackgroundLM
     },
     variables: {
         'skeleton-gradient': 0.03
     }
 }
+aliases.clear = 'close'
 
 export default createVuetify({
     components,

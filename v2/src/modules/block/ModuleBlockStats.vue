@@ -1,25 +1,37 @@
 <template>
     <v-container fluid class="pa-0">
-        <v-row class="fill-height" align-content="center" justify="center">
-            <v-col cols="12" sm="6" md="3">
-                <BlockStatsCard :is-loading="loading" title="Last Block #" :value="blockNumber" color-type="primary" back-type="last-block" />
-            </v-col>
-            <v-col cols="12" sm="6" md="3">
+        <v-row :class="[rowMargin, 'fill-height']" align-content="center" justify="center">
+            <v-col cols="6" md="3" :class="[columnPadding, 'py-2']">
                 <BlockStatsCard
-                    title="Since last update"
+                    :is-loading="loading"
+                    title="Last Block"
+                    :value="blockNumber.toString()"
+                    :img="require('@/assets/block-stats-icons/block.svg')"
+                />
+            </v-col>
+            <v-col cols="6" md="3" :class="[columnPadding, 'py-2']">
+                <BlockStatsCard
+                    title="Last update"
                     :value="timestamp"
-                    :is-date="!loading"
+                    is-date
                     :is-loading="loading"
                     metrics="sec"
                     color-type="success"
                     back-type="time-since"
+                    :img="require('@/assets/block-stats-icons/time.svg')"
                 />
             </v-col>
-            <v-col cols="12" sm="6" md="3">
-                <BlockStatsCard title="Hash Rate" :value="latestHashRate" :is-loading="loading" metrics="Th/s" color-type="warning" back-type="hash-rate" />
+            <v-col cols="6" md="3" :class="[columnPadding, 'py-2']">
+                <BlockStatsCard
+                    title="Gas Price"
+                    :value="gasPrice"
+                    mertrics="Gwei"
+                    :is-loading="loading"
+                    :img="require('@/assets/block-stats-icons/gas.svg')"
+                />
             </v-col>
-            <v-col cols="12" sm="6" md="3">
-                <BlockStatsCard title="Difficulty" :value="latestDifficulty" :is-loading="loading" color-type="error" back-type="difficulty" />
+            <v-col cols="6" md="3" :class="[columnPadding, 'py-2']">
+                <BlockStatsCard title="Eth Price" :value="ethPrice" :is-loading="loadingMarketInfo" :img="require('@/assets/block-stats-icons/eth.svg')" />
             </v-col>
         </v-row>
     </v-container>
@@ -29,17 +41,22 @@
 //Vue
 import { ref, computed } from 'vue'
 //Apollo
-import { BlockInfoFragment, useGetLatestBlockInfoQuery } from './apollo/BlockStats/blockStats.generated'
+import { useGetLatestBlockInfoQuery } from './apollo/BlockStats/blockStats.generated'
 import { useBlockSubscription } from '@core/composables/NewBlock/newBlock.composable'
-
-import BN from 'bignumber.js'
-
 // Component imports
 import BlockStatsCard from './components/BlockStatsCard.vue'
+// Helpers
+import { useCoinData } from '@/core/composables/CoinData/coinData.composable'
+import { useAppViewGrid } from '@core/composables/AppViewGrid/AppViewGrid.composable'
+import { formatUsdValue, formatFloatingPointValue } from '@core/helper/number-format-helper'
+import BN from 'bignumber.js'
+import Web3Utils from 'web3-utils'
 
 const { result: blockInfo, loading, refetch } = useGetLatestBlockInfoQuery()
 const { onNewBlockLoaded } = useBlockSubscription()
+const { columnPadding, rowMargin } = useAppViewGrid()
 
+const { loading: loadingMarketInfo, ethMarketInfo } = useCoinData()
 const blockNumber = computed<number | string>(() => {
     if (blockInfo.value) {
         return new BN(blockInfo.value?.getLatestBlockInfo.number).toFormat()
@@ -47,25 +64,22 @@ const blockNumber = computed<number | string>(() => {
     return 0
 })
 
-const latestBlockInfo = computed<BlockInfoFragment | undefined>(() => {
-    return blockInfo.value?.getLatestBlockInfo
-})
-
 const timestamp = ref(new Date().toString())
 
 // Computed properties
-const latestHashRate = computed<string>(() => {
-    if (latestBlockInfo.value) {
-        return new BN(latestBlockInfo.value.hashRate).div('1e12').decimalPlaces(2).toFormat()
+const ethPrice = computed<string>(() => {
+    if (ethMarketInfo.value) {
+        return formatUsdValue(new BN(ethMarketInfo.value.current_price || 0)).value
     }
     return ''
 })
 
-const latestDifficulty = computed<string>(() => {
-    if (latestBlockInfo.value) {
-        return new BN(latestBlockInfo.value.difficulty).div('1e12').decimalPlaces(2).toFormat()
+const gasPrice = computed<string>(() => {
+    if (blockInfo.value) {
+        const gwei = Web3Utils.fromWei(blockInfo.value?.getLatestBlockInfo.avgGasPrice, 'Gwei')
+        return formatFloatingPointValue(new BN(gwei)).value
     }
-    return ''
+    return '0'
 })
 
 onNewBlockLoaded(res => {

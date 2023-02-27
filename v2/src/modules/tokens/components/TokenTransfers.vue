@@ -1,16 +1,20 @@
 <template>
     <token-transfers-table
-        :transfers="transferData"
+        :transfers="currentPageData"
         :loading="loading"
+        :initial-load="initialLoad"
         :show-pagination="showPagination"
         :decimals="props.decimals"
         :symbol="props.symbol"
-        :max-items="MAX_ITEMS"
-        :has-more="showPagination"
+        :max-items="ITEMS_PER_PAGE"
+        :has-more="hasMore"
         :has-items="hasItems"
-        :index="state.index"
+        :pages="numberOfPages"
+        :current-page-num="pageNum"
         :has-error="state.hasError"
         :transfer-type="transferType"
+        :nft-meta="nftMeta"
+        :loading-meta="loadingMeta"
         @setPage="setPage"
     />
 </template>
@@ -21,14 +25,21 @@ import { ErrorMessageToken } from '@module/tokens/models/ErrorMessagesForTokens'
 import { excpInvariantViolation } from '@/apollo/errorExceptions'
 import { reactive, computed, defineEmits } from 'vue'
 import {
-    TokenTransfersFragment as Erc20TokenTransfersType,
     useGetErc20TokenTransfersQuery,
-    useGetErc721TokenTransfersQuery
+    useGetErc721TokenTransfersQuery,
+    useGetErc1155TokenTransfersQuery,
+    Erc20TokenTransfersFragment,
+    Erc721TokenTransfersFragment,
+    Erc1155TokenTransfersFragment,
+    TokenTransferFragment,
+    Erc721TransferFragment,
+    Erc1155TokenTransferFragment
 } from '@module/tokens/apollo/TokenDetailsTransfer/tokenTransfers.generated'
-
-const TYPES = ['ERC20', 'ERC721']
-
-const MAX_ITEMS = 10
+import { useGetNftsMeta } from '@core/composables/NftMeta/useGetNftsMeta.composable'
+import { NftId, generateId } from '@/core/composables/NftMeta/helpers'
+import { TransferType } from '@/apollo/types'
+import { useAppPaginate } from '@core/composables/AppPaginate/useAppPaginate.composable'
+import { ITEMS_PER_PAGE } from '@core/constants'
 
 interface PropType {
     address: string
@@ -46,17 +57,18 @@ interface ComponentState {
     page: number
     index: number
     isEnd: number
-    initialLoad: boolean
     hasError: boolean
 }
 const state: ComponentState = reactive({
     page: 0,
     index: 0,
     isEnd: 0,
-    initialLoad: true,
     hasError: false
 })
 
+/**------------------------
+ * ERC20 TRANSFERS
+ -------------------------*/
 const {
     result: erc20TokenTransferResult,
     loading: loadingErc20TokenTransfer,
@@ -65,16 +77,27 @@ const {
     onError: onErc20TokenTransferError
 } = useGetErc20TokenTransfersQuery(
     () => ({
-        hash: props.address,
-        _limit: MAX_ITEMS
+        _contract: props.address,
+        _limit: ITEMS_PER_PAGE
     }),
     { notifyOnNetworkStatusChange: true }
 )
 
-const erc20TokenTransfer = computed<Erc20TokenTransfersType | undefined>(() => {
+const erc20TokenTransfer = computed<Erc20TokenTransfersFragment | undefined>(() => {
     return erc20TokenTransferResult.value?.getERC20TokenTransfers
 })
 
+onErc20TokenTransferError(() => {
+    emitErrorState(true, true)
+})
+
+const hasMoreERC20Transfers = computed<boolean>(() => {
+    return erc20TokenTransfer.value ? erc20TokenTransfer.value.nextKey !== null : false
+})
+
+/**------------------------
+ * ERC721 TRANSFERS
+ -------------------------*/
 const {
     result: erc721TokenTransferResult,
     loading: loadingErc721TokenTransfer,
@@ -83,18 +106,14 @@ const {
     onError: onErc721TokenTransferError
 } = useGetErc721TokenTransfersQuery(
     () => ({
-        hash: props.address,
-        _limit: MAX_ITEMS
+        _contract: props.address,
+        _limit: ITEMS_PER_PAGE
     }),
     { notifyOnNetworkStatusChange: true }
 )
 
-const erc721TokenTransfer = computed(() => {
+const erc721TokenTransfer = computed<Erc721TokenTransfersFragment | undefined>(() => {
     return erc721TokenTransferResult.value?.getERC721TokenTransfers
-})
-
-onErc20TokenTransferError(() => {
-    emitErrorState(true, true)
 })
 
 onErc721TokenTransferError(() => {
@@ -105,40 +124,143 @@ const hasERC721Transfers = computed<boolean>(() => {
     return !!erc721TokenTransfer.value && erc721TokenTransfer.value.transfers.length > 0
 })
 
-const transferData = computed<any[]>(() => {
-    if (erc20TokenTransfer.value && erc721TokenTransfer.value) {
-        const data = hasERC721Transfers.value ? erc721TokenTransfer.value.transfers : erc20TokenTransfer.value.transfers
-        const start = state.index * MAX_ITEMS
-        const end = start + MAX_ITEMS > data.length ? data.length : start + MAX_ITEMS
-        return data.slice(start, end)
-    }
-    return []
-})
-
-const transferType = computed<string>(() => {
-    return hasERC721Transfers.value ? TYPES[1] : TYPES[0]
-})
-
-const loading = computed<boolean>(() => {
-    return loadingErc20TokenTransfer.value || loadingErc721TokenTransfer.value
-})
-
-const hasMoreERC20Transfers = computed<boolean>(() => {
-    return erc20TokenTransfer.value ? erc20TokenTransfer.value.nextKey !== null : false
-})
-
 const hasMoreERC721Transfers = computed<boolean>(() => {
     return erc721TokenTransfer.value ? erc721TokenTransfer.value.nextKey !== null : false
 })
 
+/**------------------------
+ * ERC1155 TRANSFERS
+ -------------------------*/
+
+const {
+    result: erc1155TokenTransferResult,
+    loading: loadingErc1155TokenTransfer,
+    fetchMore: fetchMoreErc1155TokenTransfer,
+    refetch: refetchErc1155TokenTransfer,
+    onError: onErc1155TokenTransferError
+} = useGetErc1155TokenTransfersQuery(
+    () => ({
+        _contract: props.address,
+        _limit: ITEMS_PER_PAGE
+    }),
+    { notifyOnNetworkStatusChange: true }
+)
+
+const erc1155TokenTransfers = computed<Erc1155TokenTransfersFragment | undefined>(() => {
+    return erc1155TokenTransferResult.value?.getERC1155TokenTransfers
+})
+
+onErc1155TokenTransferError(() => {
+    emitErrorState(true, true)
+})
+
+const hasERC1155Transfers = computed<boolean>(() => {
+    return !!erc1155TokenTransfers.value && erc1155TokenTransfers.value.transfers.length > 0
+})
+
+const hasMoreERC1155Transfers = computed<boolean>(() => {
+    return erc1155TokenTransfers.value ? erc1155TokenTransfers.value.nextKey !== null : false
+})
+
+const transferType = computed<TransferType>(() => {
+    return hasNftTransfers.value ? (hasERC721Transfers.value ? TransferType.Erc721 : TransferType.Erc1155) : TransferType.Erc20
+})
+
+/**------------------------
+ * NFT META
+ -------------------------*/
+
+const loadingTransfers = computed<boolean>(() => {
+    return loadingErc20TokenTransfer.value || loadingErc721TokenTransfer.value || loadingErc1155TokenTransfer.value
+})
+
+const hasNftTransfers = computed<boolean>(() => {
+    return hasERC1155Transfers.value || hasERC721Transfers.value
+})
+
+/**------------------------
+ * Transfers
+ -------------------------*/
+
+const initialLoad = computed<boolean>(() => {
+    return !erc721TokenTransferResult.value || !erc20TokenTransferResult.value || !erc1155TokenTransferResult.value
+})
+const transferData = computed<TokenTransferFragment[] | Erc721TransferFragment[] | Erc1155TokenTransferFragment[] | Array<null>>(() => {
+    if (!initialLoad.value) {
+        const data = !hasNftTransfers.value
+            ? erc20TokenTransfer.value?.transfers.filter((x): x is TokenTransferFragment => x !== null)
+            : hasERC1155Transfers.value
+            ? erc1155TokenTransfers.value?.transfers.filter((x): x is Erc1155TokenTransferFragment => x !== null)
+            : erc721TokenTransfer.value?.transfers.filter((x): x is Erc721TransferFragment => x !== null)
+        if (data) {
+            return data
+        }
+    }
+    return []
+})
+
+const { numberOfPages, pageData: currentPageData, setPageNum, pageNum } = useAppPaginate(transferData, 'tokenTransfers')
+
+/**
+ * Computed Property of token ids to be fetch meta
+ */
+const tokenIDS = computed<NftId[]>(() => {
+    const _ids: NftId[] = []
+    if (transferType.value !== TransferType.Erc20 && hasNftTransfers.value) {
+        if (transferType.value === TransferType.Erc721) {
+            currentPageData.value?.forEach((transfer: Erc721TransferFragment) => {
+                if (transfer) {
+                    const id = {
+                        id: generateId(transfer.tokenId),
+                        contract: transfer.contract
+                    }
+                    _ids.push(id)
+                }
+            })
+        } else if (transferType.value === TransferType.Erc1155) {
+            currentPageData.value?.forEach((transfer: Erc1155TokenTransferFragment) => {
+                if (transfer) {
+                    const id = {
+                        id: generateId(transfer.tokenId),
+                        contract: transfer.contract
+                    }
+                    _ids.push(id)
+                }
+            })
+        }
+    }
+    return _ids
+})
+const { nftMeta, loadingMeta } = useGetNftsMeta(tokenIDS, loadingTransfers)
+
+const loading = computed<boolean>(() => {
+    return loadingErc20TokenTransfer.value || loadingErc721TokenTransfer.value || loadingErc1155TokenTransfer.value || loadingMeta.value
+})
+
+const hasMore = computed<boolean>(() => {
+    return hasMoreERC721Transfers.value || hasMoreERC20Transfers.value || hasMoreERC1155Transfers.value
+})
+
 const showPagination = computed<boolean>(() => {
-    return hasMoreERC721Transfers.value || hasMoreERC20Transfers.value
+    return !initialLoad.value || hasItems.value || !!tokenIDS.value.length
 })
 
 const hasItems = computed<boolean>(() => {
     return !!(transferData.value && transferData.value.length)
 })
 
+const nextKey = computed<string | null | undefined>(() => {
+    if (transferType.value === TransferType.Erc20) {
+        return erc20TokenTransfer.value?.nextKey
+    }
+    if (transferType.value === TransferType.Erc721) {
+        return erc721TokenTransfer.value?.nextKey
+    }
+    if (transferType.value === TransferType.Erc1155) {
+        return erc1155TokenTransfers.value?.nextKey
+    }
+    return undefined
+})
 /**
  * Emit error to Sentry
  * @param val {Boolean}
@@ -160,93 +282,90 @@ const setPage = (page: number, reset = false): void => {
         state.isEnd = 0
         refetchErc20TokenTransfer()
         refetchErc721TokenTransfer()
+        refetchErc1155TokenTransfer()
     } else {
         if (page > state.isEnd) {
-            hasMoreERC20Transfers.value ? getERC20Transfer(page) : null
-            hasMoreERC721Transfers.value ? getERC721Transfer(page) : null
+            fetchMoreTransfers(page)
         }
     }
-    state.index = page
+    setPageNum(page)
 }
-
 /**
- * Gets ERC20 through apollo
- * @param page {Number}
+ * Helper Functions to parse results from the fetch more queries
+ * @param prev - previous transfers results in the query
+ * @param more - more transfers results in the query
+ * @returns {T} - parsed T results
  */
-const getERC20Transfer = async (page: number): Promise<boolean> => {
-    try {
-        await fetchMoreErc20TokenTransfer({
-            variables: {
-                hash: props.address,
-                _limit: 10,
-                _nextKey: erc20TokenTransfer.value?.nextKey
-            },
-            updateQuery: (previousResult, { fetchMoreResult }) => {
-                state.isEnd = page
-                const prevT = previousResult.getERC20TokenTransfers.transfers
-                if (fetchMoreResult) {
-                    const newT = fetchMoreResult.getERC20TokenTransfers.transfers
-                    return {
-                        getERC20TokenTransfers: {
-                            nextKey: fetchMoreResult.getERC20TokenTransfers.nextKey,
-                            transfers: [...prevT, ...newT],
-                            __typename: fetchMoreResult.getERC20TokenTransfers.__typename
-                        }
-                    }
-                }
-                return {
-                    getERC20TokenTransfers: {
-                        nextKey: previousResult.getERC20TokenTransfers.nextKey,
-                        transfers: [...prevT],
-                        __typename: previousResult.getERC20TokenTransfers.__typename
-                    }
-                }
-            }
-        })
-        return true
-    } catch (e) {
-        const newE = JSON.stringify(e)
-        if (!newE.toLowerCase().includes(excpInvariantViolation)) {
-            throw new Error(newE)
-        }
-        return false
+const updateQueryParse = <T extends Erc20TokenTransfersFragment | Erc721TokenTransfersFragment | Erc1155TokenTransfersFragment>(
+    prev: T,
+    more: T | undefined
+) => {
+    const prevTransfers = prev.transfers
+    const moreTransfers = more ? more.transfers : []
+    const nextKey = more ? more.nextKey : undefined
+    return {
+        nextKey: nextKey,
+        transfers: [...prevTransfers, ...moreTransfers],
+        __typename: prev.__typename
     }
 }
 
 /**
- * Gets ERC721 through apollo
- * @param page {Number}
+ * Fetched More Transfers based on the curent contract type. Sets index to the last page
+ * @param page - page number that is being fetched
  */
-const getERC721Transfer = async (page: number): Promise<boolean> => {
+const fetchMoreTransfers = async (page: number): Promise<boolean> => {
     try {
-        await fetchMoreErc721TokenTransfer({
-            variables: {
-                hash: props.address,
-                _limit: 10,
-                _nextKey: erc721TokenTransfer.value?.nextKey
-            },
-            updateQuery: (previousResult, { fetchMoreResult }) => {
-                state.isEnd = page
-                const prevT = previousResult.getERC721TokenTransfers.transfers
-                if (fetchMoreResult) {
-                    const newT = fetchMoreResult.getERC721TokenTransfers.transfers
-                    return {
-                        getERC721TokenTransfers: {
-                            nextKey: fetchMoreResult.getERC721TokenTransfers.nextKey,
-                            transfers: [...prevT, ...newT],
-                            __typename: fetchMoreResult.getERC721TokenTransfers.__typename
+        const _params = {
+            _contract: props.address,
+            _limit: ITEMS_PER_PAGE,
+            _nextKey: nextKey.value
+        }
+        switch (transferType.value) {
+            case TransferType.Erc20:
+                await fetchMoreErc20TokenTransfer({
+                    variables: _params,
+                    updateQuery: (previousResult, { fetchMoreResult }) => {
+                        return {
+                            __typename: 'Query',
+                            getERC20TokenTransfers: updateQueryParse(
+                                previousResult.getERC20TokenTransfers,
+                                fetchMoreResult?.getERC20TokenTransfers
+                            ) as Erc20TokenTransfersFragment
                         }
                     }
-                }
-                return {
-                    getERC721TokenTransfers: {
-                        nextKey: previousResult.getERC721TokenTransfers.nextKey,
-                        transfers: [...prevT],
-                        __typename: previousResult.getERC721TokenTransfers.__typename
+                })
+                break
+            case TransferType.Erc721:
+                await fetchMoreErc721TokenTransfer({
+                    variables: _params,
+                    updateQuery: (previousResult, { fetchMoreResult }) => {
+                        return {
+                            __typename: 'Query',
+                            getERC721TokenTransfers: updateQueryParse(
+                                previousResult.getERC721TokenTransfers,
+                                fetchMoreResult?.getERC721TokenTransfers
+                            ) as Erc721TokenTransfersFragment
+                        }
                     }
-                }
-            }
-        })
+                })
+                break
+            default:
+                await fetchMoreErc1155TokenTransfer({
+                    variables: _params,
+                    updateQuery: (previousResult, { fetchMoreResult }) => {
+                        return {
+                            __typename: 'Query',
+                            getERC1155TokenTransfers: updateQueryParse(
+                                previousResult.getERC1155TokenTransfers,
+                                fetchMoreResult?.getERC1155TokenTransfers
+                            ) as Erc1155TokenTransfersFragment
+                        }
+                    }
+                })
+                break
+        }
+        state.isEnd = page
         return true
     } catch (e) {
         const newE = JSON.stringify(e)

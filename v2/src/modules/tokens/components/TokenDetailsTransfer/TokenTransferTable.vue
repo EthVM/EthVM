@@ -1,82 +1,83 @@
 <template>
-    <v-card color="white" flat class="pr-2 pl-2 pt-3">
-        <!-- Pagination -->
-        <v-row v-if="props.showPagination" justify="center" justify-md="end" row fill-height class="pb-1 pr-2 pl-2">
-            <app-paginate-has-more :current-page="props.index" :has-more="props.hasMore" :loading="props.loading || props.hasError" @newPage="setPage" />
-        </v-row>
-        <!-- End Pagination -->
-
+    <v-card variant="flat" class="px-4 px-sm-6 pb-4 pb-sm-6">
         <!-- Table Header -->
         <div v-if="!props.hasError">
-            <v-card color="info" flat class="white--text pl-3 pr-1 mt-2 mb-2 hidden-sm-and-down" height="40px">
-                <v-row align="center" justify="start" class="fill-height pr-2">
-                    <v-col :class="[sm || xs ? 'pr-3' : 'pr-5']" sm="6" :md="isERC721 ? 6 : 7">
-                        <h5>Tx #</h5>
-                    </v-col>
-                    <v-col sm="2">
-                        <h5>Age</h5>
-                    </v-col>
-                    <v-col sm="2">
-                        <h5 v-if="!isERC721">Quantity</h5>
-                        <h5 v-else>ID</h5>
-                    </v-col>
-                    <v-col v-if="isERC721" sm="2">
-                        <h5>Image</h5>
-                    </v-col>
-                </v-row>
-            </v-card>
+            <v-row align="center" justify="start" class="text-body-1 text-info d-none d-sm-flex">
+                <v-col sm="3" md="2"> Hash </v-col>
+                <v-col sm="3" lg="2" class="d-none d-sm-block"> From </v-col>
+                <v-spacer v-if="lgAndUp" />
+                <v-col sm="3" lg="2" class="d-none d-sm-block"> To </v-col>
+                <v-col sm="3" :md="isNFT ? 1 : 2" :lg="isNFT ? 1 : 3">
+                    <template v-if="!isNFT">Amount</template>
+                    <template v-else>ID</template>
+                </v-col>
+                <v-col v-if="isNFT" sm="2"> Image </v-col>
+                <v-col md="2" class="d-none d-lg-block"> Timestamp </v-col>
+            </v-row>
+            <v-divider class="my-0 mt-md-4 mx-n4 mx-sm-n6" />
             <!-- End Table Header -->
 
             <!-- Start Rows -->
-            <div v-if="props.loading || props.hasError">
-                <v-col sm="12">
-                    <div v-for="i in props.maxItems" :key="i" :class="[sm || xs ? 'table-row-mobile mb-2' : '']">
-                        <v-progress-linear color="lineGrey" value="40" indeterminate height="15" class="ma-2" />
-                    </div>
-                </v-col>
+            <div v-if="props.loading" class="p-ten-top">
+                <div v-for="item in props.maxItems" :key="item" style="padding: 10px 0">
+                    <div class="skeleton-box rounded-xl" :style="isNFT ? 'height: 40px' : 'height: 32px'"></div>
+                </div>
             </div>
-            <div v-else>
-                <v-card v-if="!props.hasItems" flat>
-                    <v-card-text class="text-xs-center secondary--text">No transfers</v-card-text>
-                </v-card>
-                <v-card v-for="(transfer, index) in props.transfers" v-else :key="index" color="white" class="transparent" flat>
-                    <transfers-table-row :transfer="transfer" :decimals="props.decimals" :symbol="props.symbol" :transfer-type="props.transferType" />
-                </v-card>
-                <!-- End Rows -->
-                <v-row v-if="props.showPagination" justify="center" justify-md="end" row class="pb-1 pr-2 pl-2">
-                    <app-paginate-has-more
-                        :current-page="props.index"
-                        :has-more="props.hasMore"
-                        :loading="props.loading || props.hasError"
-                        @newPage="setPage"
+            <div v-else class="p-ten-top">
+                <div v-if="!props.hasItems && !props.loading">
+                    <app-no-result text="No transfers available" class="mt-4 mt-sm-6"></app-no-result>
+                </div>
+                <div v-for="(transfer, index) in props.transfers" v-else :key="index" color="white" class="transparent" flat>
+                    <transfers-table-row
+                        :transfer="transfer"
+                        :decimals="props.decimals"
+                        :symbol="props.symbol"
+                        :transfer-type="props.transferType"
+                        :nft-meta="getRowMeta(transfer)"
                     />
-                </v-row>
+                </div>
+                <!-- End Rows -->
             </div>
+            <template v-if="props.showPagination">
+                <app-pagination :length="props.pages" :has-more="props.hasMore" @update:modelValue="loadMoreData" :current-page="props.currentPageNum" />
+            </template>
         </div>
     </v-card>
 </template>
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import AppPaginateHasMore from '@core/components/AppPaginateHasMore.vue'
+import AppPagination from '@core/components/AppPagination.vue'
+import AppNoResult from '@/core/components/AppNoResult.vue'
 import TransfersTableRow from './TokenTransferTableRow.vue'
 import { useDisplay } from 'vuetify'
+import { TransferType } from '@/apollo/types'
+import { NftMetaFragment } from '@/core/composables/NftMeta/nftMeta.generated'
+import {
+    TokenTransferFragment,
+    Erc721TransferFragment,
+    Erc1155TokenTransferFragment
+} from '@module/tokens/apollo/TokenDetailsTransfer/tokenTransfers.generated'
+import { generateMapId } from '@/core/composables/NftMeta/helpers'
 
-const { xs, sm } = useDisplay()
-const TYPES = ['ERC20', 'ERC721']
+const { lgAndUp } = useDisplay()
 
 interface PropType {
-    transfers: any[]
+    transfers: TokenTransferFragment[] | Erc721TransferFragment[] | Erc1155TokenTransferFragment[]
     hasItems: boolean
     hasMore: boolean
     showPagination: boolean
     loading: boolean
+    initialLoad: boolean
     decimals?: number
     symbol?: string
     hasError: boolean
     maxItems: number
-    index: number
+    pages: number
+    currentPageNum: number
     transferType: string
+    nftMeta?: Map<string, NftMetaFragment>
+    loadingMeta: boolean
 }
 const props = defineProps<PropType>()
 
@@ -93,9 +94,20 @@ const setPage = (page: number, reset = false): void => {
     emit('setPage', page, reset)
 }
 
-const isERC721 = computed<boolean>(() => {
-    return props.transferType === TYPES[1]
+const loadMoreData = (num: number): void => {
+    setPage(num)
+}
+
+const isNFT = computed<boolean>(() => {
+    return props.transferType !== TransferType.Erc20
 })
+
+const getRowMeta = (transfer: TokenTransferFragment | Erc721TransferFragment | Erc1155TokenTransferFragment): NftMetaFragment | undefined => {
+    if (transfer.__typename === 'ERC1155Transfer' || transfer.__typename === 'ERC721Transfer') {
+        return props.nftMeta?.get(generateMapId(transfer.contract, transfer.tokenId))
+    }
+    return undefined
+}
 </script>
 
 <style scoped lang="css">
