@@ -16,7 +16,7 @@ export const tabViewRouteGuard = (tab: string) => {
 export const loadImages = () => {
     return async (to: RouteLocationNormalized, from: RouteLocationNormalized, next: NavigationGuardNext) => {
         const images = [
-            require('@/assets/background-nebula.png'),
+            require('@/assets/nebula/nebula-bg-lg.png'),
             require('@/assets/hero/hero.png'),
             require('@/assets/hero/hero.png'),
             require('@/assets/hero/hero-group.png')
