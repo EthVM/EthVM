@@ -4,6 +4,8 @@ import App from './App.vue'
 import router from './core/router'
 import vuetify from './core/plugins/vuetify'
 import { loadFonts } from './core/plugins/webfontloader'
+import 'core-js/features/array/at'
+
 loadFonts()
 
 import { ApolloClients } from '@vue/apollo-composable'
