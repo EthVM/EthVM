@@ -1,3 +1,23 @@
+### Release v2.0.0
+This release includes:
+- Full refactor of the codebase
+- Upgrade to Vue 3
+- Upgrade to Vuetify Titan
+- New UI theme update
+- Full Package updates
+- New core api update
+- NFT contract support 
+
+### NEW Features
+- Address Page Overview, Eth History, Tokens and NFT
+- NFT Contract Page
+- Portfolio View
+- Address Label History 
+- Detailed NFT info
+
+### Included [Pull Requests](https://github.com/EthVM/EthVM/pulls?page=3&q=is%3Apr+is%3Aclosed+is%3Amerged+base%3Av2%2Fdevelop)
+
+======================================================================
 
 ### Release v1.2.0
 
