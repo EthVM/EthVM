@@ -42,6 +42,9 @@ jobs:
       #Generate code from most recent GraphQL schema
       - name: pnpm generate schema
         run: cd ./v2 && pnpm codegen-generate
+      # Build
+      - name: build
+        run: cd ./v2 && pnpm build
         env:
           VUE_APP_SENTRY_SECURITY_TOKEN: ${{ secrets.VUE_APP_SENTRY_SECURITY_TOKEN }}
           VUE_APP_SENTRY_SECURITY_DSN: ${{ secrets.VUE_APP_SENTRY_SECURITY_DSN }}
