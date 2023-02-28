@@ -29,11 +29,32 @@ const goToHome = async (): Promise<void> => {
 </script>
 <style lang="scss" scoped>
 .not-found {
-    background: url('/src/assets/background-nebula.png');
-    background-size: cover;
+    @media (max-width: 599px) {
+        background: url('/src/assets/nebula/nebula-bg-xs.png');
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-position: center center;
+    }
+    @media only screen and (min-width: 600px) and (max-width: 904px) {
+        background: url('/src/assets/nebula/nebula-bg-sm.png');
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-position: right 15% center;
+    }
+    @media only screen and (min-width: 905px) and (max-width: 1239px) {
+        background: url('/src/assets/nebula/nebula-bg-md.png');
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-position: right 35% center;
+    }
+    @media (min-width: 1240px) {
+        background: url('/src/assets/nebula/nebula-bg-lg.png');
+        background-position: right 35% center;
+        background-repeat: no-repeat;
+        background-size: cover;
+    }
     background-attachment: fixed;
-    background-position: right 35% center;
     min-height: 600px;
-    width: 100;
+    width: 100%;
 }
 </style>
