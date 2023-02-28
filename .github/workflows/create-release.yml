@@ -9,35 +9,39 @@ jobs:
   gh-pages:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      #Checkout the repository to the GitHub Actions runner at main branch 
+      - name: Checkout
+        uses: actions/checkout@v3
         with:
-          ref: master
-
+          ref: main
+      # Verify Tag
       - name: verify tag
         run: |
           echo $GITHUB_SHA
           git branch --contains $GITHUB_SHA
-          git branch --contains $GITHUB_SHA | sed -e 's/^[ \t *]*//' | grep '^master$'
+          git branch --contains $GITHUB_SHA | sed -e 's/^[ \t *]*//' | grep '^main$'
           git checkout $GITHUB_SHA
-
-      - name: Cache node modules
-        uses: actions/cache@v1
-        env:
-          cache-name: cache-node-modules
+      # Use pnpm
+      - name: Use pnpm
+        uses: pnpm/action-setup@v2
         with:
-          path: node_modules
-          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{env.NODE_VERSION}}-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-build-${{ env.cache-name }}-${{env.NODE_VERSION}}-
-
-      - name: yarn install
-        run: cd ./newclient && yarn install
-
-      - name: yarn lint
-        run: cd ./newclient && yarn install && yarn lint
-
-      - name: build
-        run: cd ./newclient && yarn install && yarn apollo:codegen && yarn build
+          version: 6.32.10
+      # Use node in .nvmrc and cache dependencies
+      - name: Set up
+        uses: actions/setup-node@v3
+        with:
+          node-version-file: 'v2/.nvmrc'
+          cache: pnpm
+          cache-dependency-path: v2/pnpm-lock.yaml
+      #Install
+      - name: pnpm Install
+        run:  cd ./v2 && pnpm install
+      # Lint Code
+      - name: pnpm Lint
+        run: cd ./v2 && pnpm lint
+      #Generate code from most recent GraphQL schema
+      - name: pnpm generate schema
+        run: cd ./v2 && pnpm codegen-generate
         env:
           VUE_APP_SENTRY_SECURITY_TOKEN: ${{ secrets.VUE_APP_SENTRY_SECURITY_TOKEN }}
           VUE_APP_SENTRY_SECURITY_DSN: ${{ secrets.VUE_APP_SENTRY_SECURITY_DSN }}
@@ -46,8 +50,8 @@ jobs:
           VUE_APP_HTTP_LINK: ${{ secrets.VUE_APP_HTTP_LINK }}
           VUE_APP_WS_CLIENT: ${{ secrets.VUE_APP_WS_CLIENT }}
           VUE_APP_OPENSEA_API: ${{ secrets.VUE_APP_OPENSEA_API }}
-
-      - name: post build
+      # Deploy to S3        
+      - name: Deploy to S3
         if: github.base_ref == ''
         env:
           AWS_DEFAULT_REGION: ${{secrets.AWS_DEFAULT_REGION}}
@@ -56,7 +60,7 @@ jobs:
           VIRUS_TOTAL_API_KEY: ${{secrets.VIRUS_TOTAL_API_KEY}}
           GITHUB_TOKEN: ${{secrets.MEW_BOT_API_KEY}}
         run: |
-          cd ./newclient
+          cd ./v2
           pip install --user awscli
           aws s3 sync --delete --acl public-read dist/ s3://ethvm-mainnet-web/live
           aws s3 cp s3://ethvm-mainnet-web/live/index.html s3://ethvm-mainnet-web/live/index.html \
@@ -65,30 +69,29 @@ jobs:
           cd dist && zip -r ../ethVM-$GITHUB_SHA.zip * && cd ..
           VIRUS_TOTAL_URL=`curl -s -F "file=@ethVM-$GITHUB_SHA.zip" -F apikey=${VIRUS_TOTAL_API_KEY} https://www.virustotal.com/vtapi/v2/file/scan | jq --raw-output '.permalink'`
           curl -H "Authorization: token ${GITHUB_TOKEN}" -X POST \
-            -d "{\"body\": \"Copy of this build can be found at <br/>https://www.ethvm.dev<br/> \
+            -d "{\"body\": \"Copy of this build can be found at <br/>https://www.ethvm.com<br/> \
                             Virus Total analysis <br/> \
                             $VIRUS_TOTAL_URL\"}" \
                             "https://api.github.com/repos/${GITHUB_REPOSITORY}/commits/${GITHUB_SHA}/comments"
-
-
+      #Get Release Tag
       - name: Get release tag
         id: get_release_tag
         run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
 
-      - name: deploy to sentry
-        env:
-          SENTRY_AUTH_TOKEN: ${{secrets.VUE_APP_SENTRY_SECURITY_TOKEN}}
-          SENTRY_ORG: myetherwallet-inc
-        run: |
-          curl -sL https://sentry.io/get-cli/ | bash
-          TAG=${{ steps.get_release_tag.outputs.VERSION }}
-          RELEASE=${TAG//v/}
-          sentry-cli releases new -p ethvm-web $RELEASE
-          sentry-cli releases -p ethvm-web files $RELEASE upload-sourcemaps ./newclient/dist/sourcemaps --url-prefix 'https://www.ethvm.com/sourcemaps' --rewrite --validate
-          sentry-cli releases set-commits $RELEASE --auto
-          sentry-cli releases finalize $RELEASE
-
-      - name: create release
+      #- name: deploy to sentry
+        #env:
+          #SENTRY_AUTH_TOKEN: ${{secrets.VUE_APP_SENTRY_SECURITY_TOKEN}}
+          #SENTRY_ORG: myetherwallet-inc
+        #run: |
+          #curl -sL https://sentry.io/get-cli/ | bash
+          #TAG=${{ steps.get_release_tag.outputs.VERSION }}
+          #RELEASE=${TAG//v/}
+          #sentry-cli releases new -p ethvm-web $RELEASE
+          #sentry-cli releases -p ethvm-web files $RELEASE upload-sourcemaps ./newclient/dist/sourcemaps --url-prefix 'https://www.ethvm.com/sourcemaps' --rewrite --validate
+          #sentry-cli releases set-commits $RELEASE --auto
+          #sentry-cli releases finalize $RELEASE
+      #Create Release
+      - name: Create release
         env:
           GITHUB_TOKEN: ${{secrets.MEW_BOT_API_KEY}}
         run: |
