@@ -4,7 +4,7 @@ GITHUB_TOKEN="$2"
 REPO="$3"
 CHANGELOG=`awk -v version="$RELEASE" '/### Release / {printit = $3 == version}; printit;' 'CHANGELOG.md'`
 mkdir release
-cd newclient/dist; zip -r ../../release/EthVM-Web-$RELEASE.zip *; cd ../../
+cd v2/dist; zip -r ../../release/EthVM-Web-$RELEASE.zip *; cd ../../
 
 # if [ -n "$4" ]; then
 #     for f in release/*; do
