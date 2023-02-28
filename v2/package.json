@@ -11,7 +11,7 @@
         "build": "vue-cli-service build",
         "lint": "vue-cli-service lint",
         "codegen-generate": "graphql-codegen --config codegen.yml",
-        "build:hash": "VUE_APP_ROUTER_MODE=hash vue-cli-service build",
+        "build:hash": "VUE_APP_ROUTER_MODE=hash vue-cli-service build"
     },
     "dependencies": {
         "@apollo/client": "^3.5.10",
