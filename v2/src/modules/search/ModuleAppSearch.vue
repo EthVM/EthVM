@@ -99,12 +99,10 @@ import { Q_TOKEN_DETAILS, ROUTE_NAME, ROUTE_PROP } from '@core/router/routesName
 import { useRouter } from 'vue-router'
 import { Buffer } from 'buffer'
 import { useCoinData } from '@core/composables/CoinData/coinData.composable'
-import { MarketDataFragment } from '@/core/composables/CoinData/getLatestPrices.generated'
 import { formatUsdValue } from '@/core/helper/number-format-helper'
 import BN from 'bignumber.js'
 import { useGetTokenInfoByContractQuery } from '@module/tokens/apollo/TokenDetails/tokenDetails.generated'
-import BigNumber from 'bignumber.js'
-import configs from '@/configs'
+
 /*
   ===================================================================================
     Initial Data
@@ -422,7 +420,10 @@ const routeTo = (_param: string, isBlock = false): void => {
     const param = removeSpaces(_param)
     if (isBlock) {
         if (search.isBlockNumber) {
-            router.push({ name: ROUTE_NAME.BLOCK_NUMBER.NAME, params: { [ROUTE_PROP.BLOCK]: param } })
+            router.push({
+                name: ROUTE_NAME.BLOCK_NUMBER.NAME,
+                params: { [ROUTE_PROP.BLOCK]: param }
+            })
         } else {
             const routeName = search.hashType === HASH_TYPE.BlockHash ? ROUTE_NAME.BLOCK_HASH.NAME : ROUTE_NAME.UNCLE_HASH.NAME
             const routeProp = search.hashType === HASH_TYPE.BlockHash ? ROUTE_PROP.BLOCK : ROUTE_PROP.UNCLE

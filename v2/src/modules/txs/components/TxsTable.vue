@@ -44,7 +44,6 @@
 
 <script setup lang="ts">
 import TxsTableRow from '@module/txs/components/TxsTableRow.vue'
-import AppIntersect from '@core/components/AppIntersect.vue'
 import AppNoResult from '@core/components/AppNoResult.vue'
 import AppPagination from '@core/components/AppPagination.vue'
 import { useDisplay } from 'vuetify/lib/framework.mjs'

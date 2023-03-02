@@ -81,11 +81,10 @@ import MinorBlocksTableRow from '@module/address/components/TableRowMinerRewards
 import AppNewUpdate from '@core/components/AppNewUpdate.vue'
 import AppBtn from '@core/components/AppBtn.vue'
 import AppBtnIcon from '@core/components/AppBtnIcon.vue'
-import AppIntersect from '@core/components/AppIntersect.vue'
 import AppNoResult from '@/core/components/AppNoResult.vue'
 import AppPagination from '@core/components/AppPagination.vue'
 
-import { computed, reactive, ref } from 'vue'
+import { computed, reactive } from 'vue'
 
 import {
     RewardSummaryFragment,
@@ -98,7 +97,6 @@ import { AddressEventType } from '@/apollo/types'
 import { useRouter } from 'vue-router'
 import { useDisplay } from 'vuetify'
 import { ROUTE_NAME, ADDRESS_ROUTE_QUERY, Q_ADDRESS_TRANSFERS } from '@core/router/routesNames'
-import { useAppTableRowRender } from '@core/composables/AppTableRowRender/useAppTableRowRender.composable'
 import { useAddressUpdate } from '@core/composables/AddressUpdate/addressUpdate.composable'
 import { useAppPaginate } from '@core/composables/AppPaginate/useAppPaginate.composable'
 import { ITEMS_PER_PAGE } from '@core/constants'
@@ -232,7 +230,7 @@ const rewards = computed<Array<RewardTransferFragment | null>>(() => {
     return []
 })
 
-const { numberOfPages, pageData: currentPageData, setPageNum, pageNum } = useAppPaginate(rewards)
+const { numberOfPages, pageData: currentPageData, setPageNum } = useAppPaginate(rewards)
 
 const isLoadingRewards = computed<boolean>(() => {
     return loadingAddressRewardsBlock.value || loadingAddressRewardsUncle.value

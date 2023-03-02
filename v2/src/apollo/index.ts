@@ -1,5 +1,5 @@
 import { isAPIExceptionProduction, isAPIExceptionDev } from './errorExceptions'
-import { ApolloClient, HttpLink, InMemoryCache, split } from '@apollo/client/core'
+import { ApolloClient, HttpLink, InMemoryCache } from '@apollo/client/core'
 import { RetryLink } from '@apollo/client/link/retry'
 import { WebSocketLink } from '@apollo/client/link/ws'
 import { onError } from '@apollo/client/link/error'

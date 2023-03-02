@@ -47,8 +47,12 @@
             <v-row :dense="xs" class="align-start align-lg-center">
                 <!-- Price-->
                 <v-col cols="4" :lg="props.isOverview ? 4 : 3" class="pb-0 d-none d-sm-block">
-                    <p v-if="token.current_price">{{ formatUsdValue(new BN(token.current_price)).value }}</p>
-                    <p :class="[priceChangeClass, 'd-lg-none mt-1']">{{ token.getPriceChangeFormatted() }}</p>
+                    <p v-if="token.current_price">
+                        {{ formatUsdValue(new BN(token.current_price)).value }}
+                    </p>
+                    <p :class="[priceChangeClass, 'd-lg-none mt-1']">
+                        {{ token.getPriceChangeFormatted() }}
+                    </p>
                 </v-col>
                 <!-- Price Change-->
                 <v-col v-if="!props.isOverview" lg="3" class="d-none d-lg-block">
@@ -62,7 +66,9 @@
                 <!-- Balance -->
                 <v-col cols="12" sm="4" :lg="props.isOverview ? 4 : 3" class="pb-0 d-block d-sm-flex justify-sm-space-between align-start align-lg-center">
                     <p class="text-right text-sm-left">{{ token.getBalanceFormatted() }}</p>
-                    <p class="d-sm-none text-right text-sm-left text-info mt-1">{{ token.getUSDValueFormatted() }}</p>
+                    <p class="d-sm-none text-right text-sm-left text-info mt-1">
+                        {{ token.getUSDValueFormatted() }}
+                    </p>
                     <div v-if="!props.isOverview && marketData" class="mt-n2 mt-lg-0">
                         <app-btn-icon
                             :icon="state.showMore ? 'expand_less' : 'expand_more'"
@@ -82,12 +88,16 @@
                         <v-row :dense="xs">
                             <v-col cols="6" class="d-sm-none">
                                 <p class="mb-1 text-info font-weight-bold">Price</p>
-                                <p class="mb-4">{{ formatUsdValue(new BN(token.current_price || 0)).value }}</p></v-col
+                                <p class="mb-4">
+                                    {{ formatUsdValue(new BN(token.current_price || 0)).value }}
+                                </p></v-col
                             >
 
                             <v-col cols="6" class="d-sm-none">
                                 <p class="mb-1 text-info font-weight-bold">Price Change</p>
-                                <p :class="[priceChangeClass, 'mb-4']">{{ token.getPriceChangeFormatted() }}</p>
+                                <p :class="[priceChangeClass, 'mb-4']">
+                                    {{ token.getPriceChangeFormatted() }}
+                                </p>
                             </v-col>
                             <v-col cols="6" md="4">
                                 <p class="mb-1 mb-md-3 text-info font-weight-bold">Market Cap</p>
@@ -133,7 +143,7 @@ import { useDisplay } from 'vuetify/lib/framework.mjs'
 import { formatUsdValue } from '@/core/helper/number-format-helper'
 import BN from 'bignumber.js'
 
-const { xs, mdAndDown } = useDisplay()
+const { xs } = useDisplay()
 const { getEthereumTokenByContract } = useCoinData()
 
 const props = defineProps({

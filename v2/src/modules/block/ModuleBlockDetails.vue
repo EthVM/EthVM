@@ -44,7 +44,6 @@ import { useBlockSubscription } from '@core/composables/NewBlock/newBlock.compos
 import { useQuery } from '@vue/apollo-composable'
 import { timeAgo } from '@core/helper'
 import { fromWei } from 'web3-utils'
-import { useRoute, useRouter } from 'vue-router'
 import { Q_BLOCK_DETAILS } from '@core/router/routesNames'
 const routes = Q_BLOCK_DETAILS
 
@@ -215,7 +214,11 @@ const {
     () => ({
         blockRef: blockDetailsQueryVariable.value
     }),
-    { notifyOnNetworkStatusChange: true, fetchPolicy: 'network-only', enabled: !subscriptionEnabled.value }
+    {
+        notifyOnNetworkStatusChange: true,
+        fetchPolicy: 'network-only',
+        enabled: !subscriptionEnabled.value
+    }
 )
 
 onBlockDetailsLoaded(() => {
@@ -321,19 +324,6 @@ const blockNumber = computed<string | number>(() => {
 const emitErrorState = (val: boolean): void => {
     state.hasError = val
     emit('errorDetails', state.hasError, ErrorMessageBlock.details)
-}
-
-const router = useRouter()
-const route = useRoute()
-/**
- * Sets route query if new tab is selected
- */
-const changeRoute = () => {
-    if (route.query.t !== state.tab) {
-        router.push({
-            query: { t: state.tab }
-        })
-    }
 }
 
 onMounted(() => {

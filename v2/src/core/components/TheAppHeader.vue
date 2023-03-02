@@ -156,7 +156,7 @@ const background = computed<string>(() => {
     return 'primary'
 })
 
-const onScroll = e => {
+const onScroll = () => {
     nextTick(() => {
         offset.value = window.scrollY
     })

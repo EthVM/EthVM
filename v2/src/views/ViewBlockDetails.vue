@@ -55,26 +55,6 @@ onMounted(() => {
     window.scrollTo(0, 0)
 })
 
-/**
- * Sets error if any
- * @param hasError {Boolean}
- * @param message {ErrorMessageToken}
- */
-const setError = (hasError: boolean, message: ErrorMessageBlock): void => {
-    if (hasError) {
-        if (!state.errorMessages.includes(message)) {
-            state.errorMessages.push(message)
-        }
-    } else {
-        if (state.errorMessages.length > 0) {
-            const index = state.errorMessages.indexOf(message)
-            if (index > -1) {
-                state.errorMessages.splice(index, 1)
-            }
-        }
-    }
-}
-
 watch(
     () => props.blockRef,
     () => {

@@ -71,7 +71,7 @@ import AppTokenIcon from '@/core/components/AppTokenIcon.vue'
 import { useStore } from '@/store'
 import { TokenSort } from '@module/address/models/TokenSort'
 
-const { xs, lgAndUp } = useDisplay()
+const { xs } = useDisplay()
 const store = useStore()
 
 interface PropType {

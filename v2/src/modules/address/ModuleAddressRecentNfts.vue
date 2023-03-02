@@ -26,7 +26,9 @@
                                 :index="index"
                                 :tokens="displayTokens"
                             ></token-nft-img>
-                            <p v-if="!props.isOverview && token.meta && token.meta.name">{{ token.meta.name }}</p>
+                            <p v-if="!props.isOverview && token.meta && token.meta.name">
+                                {{ token.meta.name }}
+                            </p>
                             <p v-if="!props.isOverview && (!token.meta || !token.meta.name)">Unknown</p>
                         </v-col>
                     </v-row>
@@ -60,8 +62,7 @@ import TokenNftImg from '../tokens/components/TokenNFT/TokenNftImg.vue'
 import { NFTDetails } from '../tokens/components/TokenNFT/propModel'
 import { useGetNftsMeta } from '@core/composables/NftMeta/useGetNftsMeta.composable'
 import { NftId, generateId, generateMapId } from '@/core/composables/NftMeta/helpers'
-import { AddressEventType, NftType } from '@/apollo/types'
-import { ITEMS_PER_PAGE } from '@core/constants'
+import { NftType } from '@/apollo/types'
 import { useAppPaginate } from '@core/composables/AppPaginate/useAppPaginate.composable'
 const { xs } = useDisplay()
 const props = defineProps({

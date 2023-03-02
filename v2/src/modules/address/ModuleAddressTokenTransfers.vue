@@ -69,7 +69,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, reactive, toRefs } from 'vue'
+import { computed, toRefs } from 'vue'
 import AppNewUpdate from '@core/components/AppNewUpdate.vue'
 import AppBtn from '@core/components/AppBtn.vue'
 import AppBtnIcon from '@core/components/AppBtnIcon.vue'
@@ -78,7 +78,6 @@ import AppPagination from '@core/components/AppPagination.vue'
 import AddressTokenTransfersRow from './components/TableRowAddressTokenTransfers.vue'
 import { MarketDataFragment as TokenMarketData } from '@core/composables/CoinData/getLatestPrices.generated'
 import { useCoinData } from '@core/composables/CoinData/coinData.composable'
-import { TOKEN_FILTER_VALUES } from '@module/address/models/TokenSort'
 import { useDisplay } from 'vuetify'
 import { TransferFragmentFragment as Transfer, useGetAddressErc20TransfersQuery } from './apollo/AddressTransfers/transfers.generated'
 import { AddressEventType } from '@/apollo/types'
@@ -94,7 +93,6 @@ import { ITEMS_PER_PAGE } from '@core/constants'
 
 const { getEthereumTokensMap } = useCoinData()
 
-const MAX_ITEMS = 10
 const OVERVIEW_MAX_ITEMS = 7
 const MOBILE_MAX_ITEMS = 4
 
@@ -114,22 +112,6 @@ const props = defineProps({
 const emit = defineEmits<{
     (e: 'resetCount', eventType: AddressEventType, isReset: boolean): void
 }>()
-
-interface ComponentState {
-    showMoreTokenDetails: boolean
-    activeToken: false | TokenMarketData
-    sortKey: string
-    sortDirection: string
-    index: number
-}
-
-const state: ComponentState = reactive({
-    showMoreTokenDetails: false,
-    activeToken: false,
-    sortKey: TOKEN_FILTER_VALUES[1],
-    sortDirection: 'high',
-    index: 0
-})
 
 const store = useStore()
 const queryPolicy = computed<WatchQueryFetchPolicy>(() => {

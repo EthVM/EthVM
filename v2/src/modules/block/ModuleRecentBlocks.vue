@@ -37,10 +37,8 @@ import {
     NewBlockTableSubscription
 } from './apollo/RecentBlocks/recentBlocks.generated'
 import { computed, reactive, onMounted } from 'vue'
-import { useDisplay } from 'vuetify'
-import { Q_BLOCKS_AND_TXS, ROUTE_NAME } from '@core/router/routesNames'
+import { ROUTE_NAME } from '@core/router/routesNames'
 import { useRouter } from 'vue-router'
-const { smAndDown } = useDisplay()
 import { ITEMS_PER_PAGE } from '@core/constants'
 import { useAppPaginate } from '@core/composables/AppPaginate/useAppPaginate.composable'
 
