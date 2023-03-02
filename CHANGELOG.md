@@ -1,3 +1,9 @@
+### Release v2.0.1
+
+### Devop
+- Sentry Integration [$1128](https://github.com/EthVM/EthVM/pull/1128)
+======================================================================
+
 ### Release v2.0.0
 This release includes:
 - Full refactor of the codebase
