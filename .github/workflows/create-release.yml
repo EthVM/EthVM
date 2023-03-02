@@ -74,7 +74,7 @@ jobs:
           curl -H "Authorization: token ${GITHUB_TOKEN}" -X POST \
             -d "{\"body\": \"Copy of this build can be found at <br/>https://www.ethvm.com<br/> \
                             Virus Total analysis <br/> \
-                            $VIRUS_TOTAL_URL\"}" \VUE_APP_SENTRY_SECURITY_DSN
+                            $VIRUS_TOTAL_URL\"}" \
                             "https://api.github.com/repos/${GITHUB_REPOSITORY}/commits/${GITHUB_SHA}/comments"
       #Get Release Tag
       - name: Get release tag
