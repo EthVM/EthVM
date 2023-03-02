@@ -19,7 +19,6 @@ const app = createApp({
     render: () => h(App)
 })
 
-console.log(Configs.SENTRY)
 Sentry.init({
     app,
     dsn: Configs.SENTRY,
