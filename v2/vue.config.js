@@ -106,9 +106,6 @@ module.exports = defineConfig({
                 '@apollo-types': path.resolve(__dirname, 'src/apollo/types/')
             }
         }
-        // optimization: {
-        //     minimizer: [new ImageMinimizerPlugin({})]
-        // }
     },
     chainWebpack: config => {
         config.module

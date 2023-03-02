@@ -81,18 +81,18 @@ jobs:
         id: get_release_tag
         run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
 
-      #- name: deploy to sentry
-        #env:
-          #SENTRY_AUTH_TOKEN: ${{secrets.VUE_APP_SENTRY_SECURITY_TOKEN}}
-          #SENTRY_ORG: myetherwallet-inc
-        #run: |
-          #curl -sL https://sentry.io/get-cli/ | bash
-          #TAG=${{ steps.get_release_tag.outputs.VERSION }}
-          #RELEASE=${TAG//v/}
-          #sentry-cli releases new -p ethvm-web $RELEASE
-          #sentry-cli releases -p ethvm-web files $RELEASE upload-sourcemaps ./newclient/dist/sourcemaps --url-prefix 'https://www.ethvm.com/sourcemaps' --rewrite --validate
-          #sentry-cli releases set-commits $RELEASE --auto
-          #sentry-cli releases finalize $RELEASE
+      - name: deploy to sentry
+        env:
+          SENTRY_AUTH_TOKEN: ${{secrets.VUE_APP_SENTRY_SECURITY_TOKEN}}
+          SENTRY_ORG: myetherwallet-inc
+        run: |
+          curl -sL https://sentry.io/get-cli/ | bash
+          TAG=${{ steps.get_release_tag.outputs.VERSION }}
+          RELEASE=${TAG//v/}
+          sentry-cli releases new -p ethvm-web $RELEASE
+          sentry-cli releases -p ethvm-web files $RELEASE upload-sourcemaps ./v2/dist/sourcemaps --url-prefix 'https://www.ethvm.com/sourcemaps' --rewrite --validate
+          sentry-cli releases set-commits $RELEASE --auto
+          sentry-cli releases finalize $RELEASE
       #Create Release
       - name: Create release
         env:
