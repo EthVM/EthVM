@@ -43,8 +43,9 @@ const TOKEN_FILTER_VALUES = [
 ===================================================================================
 */
 
-const instanceOfERC20 = (object: any): object is ERC20TokensType => {
-    return object.__typename === 'ERC20TokenBalance'
+const instanceOfERC20 = (obj: object): obj is ERC20TokensType => {
+    // eslint-disable-next-line
+    return (obj as any).__typename === 'ERC20TokenBalance'
 }
 
 interface TokensMarketInterface {
@@ -214,13 +215,13 @@ class Token extends TokenMarket implements TokenInterface {
 ===================================================================================
 */
 
-interface SortedInterface {
+interface SortedInterface<T> {
     key: KEY
-    ascend: any[]
-    desend: any[]
+    ascend: T[]
+    desend: T[]
 }
 
-class Sorted<T extends TokenMarket | Token> implements SortedInterface {
+class Sorted<T extends TokenMarket | Token> implements SortedInterface<T> {
     /* Properties: */
     key: KEY
     ascend: T[] = []
@@ -291,7 +292,25 @@ class Sorted<T extends TokenMarket | Token> implements SortedInterface {
                     return 0
                 })
             }
-            return data.sort((x, y) => (y[key]! < x[key]! ? -1 : y[key]! > x[key]! ? 1 : 0))
+            return data.sort((x, y) => {
+                const xval = x[key]
+                const yval = y[key]
+                if (xval === null || xval === undefined) {
+                    return 1
+                } // nulls last
+                if (yval === null || yval === undefined) {
+                    return -1
+                } // nulls last
+                if (yval < xval) {
+                    return -1
+                }
+                if (yval > xval) {
+                    return 1
+                }
+                return 0
+
+                // y[key] < x[key] ? -1 : y[key] > x[key] ? 1 : 0
+            })
         }
         return []
     }

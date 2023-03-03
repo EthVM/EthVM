@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { AddressNFTcontracts, NFTContract, Query, rest, type } from './schema.graphql'
 import { ApolloClient, InMemoryCache } from '@apollo/client/core'
 import { RestLink } from 'apollo-link-rest'

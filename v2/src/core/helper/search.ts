@@ -1,3 +1,4 @@
+// eslint-disable-next-line
 const _getItemToSearch = (obj: any, key: string): string => {
     const searchKeyArr = key.split('.')
     // This would be for nested strings like tokenInfo.name
