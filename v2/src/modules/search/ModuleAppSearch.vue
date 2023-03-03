@@ -8,15 +8,15 @@
                 <v-list-subheader>Tokens</v-list-subheader>
                 <v-list-item
                     v-for="(item, index) in tokensResult"
-                    :key="item.contract"
-                    :title="item.text"
-                    :subtitle="item.subtext"
+                    :key="`${item.contract}+${index}`"
+                    :title="item.text || ''"
+                    :subtitle="item.subtext || ''"
                     class="overflow-hidden"
                     :active="index === 0"
-                    @click="routeToToken(item.contract)"
+                    @click="routeToToken(item.contract || '')"
                 >
                     <template #prepend>
-                        <app-token-icon :token-icon="item.icon" class="mr-2"></app-token-icon>
+                        <app-token-icon :token-icon="item.icon || undefined" class="mr-2"></app-token-icon>
                     </template>
                     <template #append v-if="item.price">
                         <p class="pl-6">{{ item.price }}</p></template
@@ -294,7 +294,7 @@ const tokensResult = computed(() => {
                         subtext: token.symbol ? token.symbol : token.contract,
                         price: token.current_price ? formatUsdValue(new BN(token.current_price)).value : undefined,
                         icon: token.image,
-                        contract: eth.toCheckSum(token.contract)
+                        contract: eth.toCheckSum(token.contract || '')
                     }
                 ]
             }
@@ -304,19 +304,23 @@ const tokensResult = computed(() => {
                 }))
 
                 const tokenInfoDetails = tokenInfo.value?.getTokenInfoByContract
-                return [
-                    {
-                        text: tokenInfoDetails.name,
-                        subtext: tokenInfoDetails.symbol ? tokenInfoDetails.symbol : eth.toCheckSum(tokenInfoDetails.contract),
-                        contract: eth.toCheckSum(tokenInfoDetails.contract)
-                    }
-                ]
+                if (tokenInfoDetails) {
+                    return [
+                        {
+                            text: tokenInfoDetails.name,
+                            subtext: tokenInfoDetails.symbol ? tokenInfoDetails.symbol : eth.toCheckSum(tokenInfoDetails.contract),
+                            contract: eth.toCheckSum(tokenInfoDetails.contract || ''),
+                            icon: undefined
+                        }
+                    ]
+                }
             }
             return [
                 {
                     text: 'No Name',
                     subtext: eth.toCheckSum(search.param),
-                    contract: eth.toCheckSum(search.param)
+                    contract: eth.toCheckSum(search.param),
+                    icon: undefined
                 }
             ]
         }
@@ -326,7 +330,7 @@ const tokensResult = computed(() => {
                 const flag = i.name.toLowerCase().startsWith(search.param) || i.symbol.toLowerCase().startsWith(search.param)
                 return {
                     text: i.name,
-                    subtext: i.symbol ? i.symbol : eth.toCheckSum(i.contract),
+                    subtext: i.symbol ? i.symbol : eth.toCheckSum(i.contract || ''),
                     price: i.current_price ? formatUsdValue(new BN(i.current_price)).value : undefined,
                     icon: i.image,
                     contract: i.contract,
@@ -367,7 +371,7 @@ const tokensResult = computed(() => {
  * Returns true if search results are empty
  */
 const hasError = computed(() => {
-    return search.hasErrorTokenSearch && search.hasErrorHahType && !search.isBlockNumber
+    return search.hasErrorTokenSearch && search.hasErrorHahType && !search.isBlockNumber && tokensResult.value.length === 0
 })
 /**
  * Returns true if search is loading

@@ -24,6 +24,8 @@
 
 <script setup lang="ts">
 import AppTabs from '@/core/components/AppTabs.vue'
+// Weird ESLINT error that  'BlockDetails' is defined but never used  even though it is used.
+// eslint-disable-next-line
 import BlockDetails from '@module/block/components/BlockDetails.vue'
 import MoreBlockDetails from '@module/block/components/MoreBlockDetails.vue'
 import BlockTxs from '@module/txs/ModuleTxs.vue'

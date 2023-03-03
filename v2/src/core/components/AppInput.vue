@@ -25,7 +25,9 @@
         </v-card>
         <div v-if="props.showErrorMessage || props.isRequired" class="input-error-messages">
             <v-scroll-x-transition>
-                <p v-if="(hasError && props.errorMessage) || showRequired" class="ml-11 text-error" key="error">{{ message }}</p>
+                <p v-if="(hasError && props.errorMessage) || showRequired" class="ml-11 text-error" key="error">
+                    {{ message }}
+                </p>
             </v-scroll-x-transition>
         </div>
     </v-card>
@@ -43,7 +45,7 @@ interface ComponentProps {
     hasPreppendInner?: boolean
     errorMessage?: string
     showErrorMessage?: boolean
-    isRequired: boolean
+    isRequired?: boolean
 }
 const props = withDefaults(defineProps<ComponentProps>(), {
     isLoading: false,
@@ -72,7 +74,11 @@ interface InputSate {
     checkReq: boolean
 }
 
-const state: InputSate = reactive({ timeout: 0, value: props.modelValue, checkReq: false })
+const state: InputSate = reactive({
+    timeout: 0,
+    value: props.modelValue,
+    checkReq: false
+})
 
 /**
  * Emits user input to parent with the timeout of 600
