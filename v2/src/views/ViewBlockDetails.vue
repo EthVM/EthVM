@@ -1,7 +1,6 @@
 <template>
     <div>
         <app-error v-if="!isValid" :has-error="!isValid" message="This is not a valid block" :routeProp="props.blockRef" />
-        <app-message :messages="state.errorMessages" />
         <v-row :class="rowMargin">
             <!--
                 =====================================================================================
@@ -18,7 +17,6 @@
 
 <script setup lang="ts">
 import { reactive, computed, onMounted, watch } from 'vue'
-import AppMessage from '@core/components/AppMessage.vue'
 import AppError from '@core/components/AppError.vue'
 import ModuleBlockDetails from '@module/block/ModuleBlockDetails.vue'
 import { eth } from '@core/helper'

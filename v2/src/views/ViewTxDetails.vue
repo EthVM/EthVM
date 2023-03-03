@@ -1,7 +1,6 @@
 <template>
     <div>
         <app-error v-if="hasError" :has-error="hasError" :message="state.error" :routeProp="props.txRef" />
-        <app-message :messages="state.errorMessages" />
         <!--
         =====================================================================================
           TX DETAILS LIST
@@ -13,7 +12,6 @@
 
 <script setup lang="ts">
 import { reactive, computed } from 'vue'
-import AppMessage from '@/core/components/AppMessage.vue'
 import AppError from '@/core/components/AppError.vue'
 import { eth } from '@/core/helper'
 import TxDetails from '@/modules/txs/ModuleTxDetails.vue'

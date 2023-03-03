@@ -1,7 +1,6 @@
 <template>
     <div>
         <app-error v-if="hasError" :has-error="hasError" :message="state.error" :routeProp="props.uncleRef" />
-        <app-message :messages="state.errorMessages" />
         <!--
         =====================================================================================
           UNCLE DETAILS LIST
