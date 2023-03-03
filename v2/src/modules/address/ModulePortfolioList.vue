@@ -163,11 +163,11 @@ const sortTable = (key: KEY) => {
 
 interface SortedInterface {
     key: KEY
-    ascend: any[]
-    desend: any[]
+    ascend: DisplayItem[]
+    desend: DisplayItem[]
 }
 
-class Sorted<DisplayItem> implements SortedInterface {
+class Sorted implements SortedInterface {
     /* Properties: */
     key: KEY
     ascend: DisplayItem[] = []

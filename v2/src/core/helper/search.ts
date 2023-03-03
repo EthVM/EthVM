@@ -7,9 +7,9 @@ const _getItemToSearch = (obj: any, key: string): string => {
     return obj[key]
 }
 
-export const searchHelper = (items: any[], keysToSearch: string[], searchParams: string) => {
-    const startsWith: unknown[] = []
-    const notStartsWith: unknown[] = []
+export const searchHelper = <T>(items: T[], keysToSearch: string[], searchParams: string) => {
+    const startsWith: T[] = []
+    const notStartsWith: T[] = []
     const includes = items.filter(item => {
         return keysToSearch.some(el => {
             const searchValue = _getItemToSearch(item, el)
