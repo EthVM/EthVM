@@ -9,25 +9,25 @@ import {
     Q_ADDRESS_TRANSFERS,
     Q_PORTFOLIO
 } from './routesNames'
-import ViewHome from '@view/ViewHome.vue'
-import ViewBlocks from '@view/ViewBlocks.vue'
-// import BlocksAndTxsView from '@view/ViewBlocksAndTransactions.vue'
-import ViewTxDetails from '@view/ViewTxDetails.vue'
-import ViewBlockDetails from '@view/ViewBlockDetails.vue'
-import ViewUncleDetails from '@view/ViewUncleDetails.vue'
-import ViewTokenDetail from '@view/ViewTokenDetails.vue'
-import ViewTxs from '@view/ViewTxs.vue'
-import ViewAddressTokens from '@view/ViewAddressTokens.vue'
-import ViewAddress from '@view/ViewAddress.vue'
-import ViewAddressOverview from '@view/ViewAddressOverview.vue'
-import ViewAddressEthBalance from '@view/ViewAddressEthBalance.vue'
-import ViewTokens from '@view/ViewTokens.vue'
-import ViewAddressNfts from '@view/ViewAddressNfts.vue'
-import ViewPortfolio from '@view/ViewPortfolio.vue'
-import ViewNotFound from '@view/ViewNotFound.vue'
-import ViewAbout from '@view/ViewAbout.vue'
 import configs from '@/configs'
 import { tabViewRouteGuard, loadImages } from './helpers'
+const ViewHome = () => import('@view/ViewHome.vue')
+const ViewBlocks = () => import('@view/ViewBlocks.vue')
+const ViewTxDetails = () => import('@view/ViewTxDetails.vue')
+const ViewBlockDetails = () => import('@view/ViewBlockDetails.vue')
+const ViewUncleDetails = () => import('@view/ViewUncleDetails.vue')
+const ViewTokenDetail = () => import('@view/ViewTokenDetails.vue')
+const ViewTxs = () => import('@view/ViewTxs.vue')
+const ViewAddressTokens = () => import('@view/ViewAddressTokens.vue')
+const ViewAddress = () => import('@view/ViewAddress.vue')
+const ViewAddressOverview = () => import('@view/ViewAddressOverview.vue')
+const ViewAddressEthBalance = () => import('@view/ViewAddressEthBalance.vue')
+const ViewTokens = () => import('@view/ViewTokens.vue')
+const ViewAddressNfts = () => import('@view/ViewAddressNfts.vue')
+const ViewPortfolio = () => import('@view/ViewPortfolio.vue')
+const ViewNotFound = () => import('@view/ViewNotFound.vue')
+const ViewAbout = () => import('@view/ViewAbout.vue')
+
 const routes: Array<RouteRecordRaw> = [
     {
         path: ROUTE_NAME.HOME.PATH,
