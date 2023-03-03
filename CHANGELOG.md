@@ -1,7 +1,13 @@
 ### Release v2.0.1
 
 ### Devop
-- Sentry Integration [$1128](https://github.com/EthVM/EthVM/pull/1128)
+- Sentry Integration [#1128](https://github.com/EthVM/EthVM/pull/1128)
+- Clean u build warnings [#1129](https://github.com/EthVM/EthVM/pull/1129)
+- Add basic site meta [#1129](https://github.com/EthVM/EthVM/pull/1129)
+
+### BUG
+- Fix Search Tokens responce when no results found [#1129](https://github.com/EthVM/EthVM/pull/1129)
+
 ======================================================================
 
 ### Release v2.0.0
