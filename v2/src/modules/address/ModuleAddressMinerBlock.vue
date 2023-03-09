@@ -46,13 +46,13 @@
             </v-card-title>
             <div>
                 <!--Table Header-->
-                <v-row class="d-none d-sm-flex text-body-1 text-info mt-2 mt-sm-5">
+                <v-row class="d-none d-sm-flex text-body-1 text-info mt-2 mt-sm-5 mb-1">
                     <v-col md="3" class="py-0"> Block # </v-col>
                     <v-col md="3" class="py-0"> Reward </v-col>
                     <v-col md="3" class="py-0"> Balance Before </v-col>
                     <v-col md="3" class="py-0"> Balance After </v-col>
                 </v-row>
-                <v-divider class="my-0 mt-sm-4 mx-n4 mx-sm-n6" />
+                <v-divider class="my-0 mt-4 mx-n4 mx-sm-n6" />
                 <div v-if="!initialLoad && !isLoadingRewards" class="p-ten-top">
                     <template v-if="rewards.length > 0">
                         <div v-for="(reward, index) in currentPageData" :key="index">

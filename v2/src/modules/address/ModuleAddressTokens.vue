@@ -37,7 +37,7 @@
         </div>
 
         <!--Table Header-->
-        <v-row :dense="xs" :class="[isOverview ? 'mt-0' : 'mt-sm-4', 'd-flex text-body-1 text-info mb-sm-3']" :justify="xs ? 'end' : 'start'">
+        <v-row :dense="xs" :class="[isOverview ? 'mt-n1' : 'mt-sm-4', 'd-flex text-body-1 text-info mb-0']" :justify="xs ? 'end' : 'start'">
             <!--
                 Token on Overview:
                 XS: NONE
@@ -108,7 +108,7 @@
             </v-col>
         </v-row>
 
-        <v-divider class="mx-n4 mx-sm-n6" />
+        <v-divider :class="['my-0 mt-sm-3 mx-n4 mx-sm-n6', { ' mb-1': props.isOverview }]" />
         <!--Loading -->
         <v-row v-if="loadingTokens || loadingCoinData" class="mt-5">
             <v-col v-for="col in 7" :key="col" cols="12" class="pb-5 pt-0">
@@ -118,10 +118,10 @@
         <!--Token Row -->
         <div
             v-else-if="renderState.renderTable"
-            :class="['mx-n4 mx-sm-n6 px-4 px-sm-6', { 'module-body mt-n1 mt-sm-n5 pt-1 pt-sm-5': props.isOverview }]"
+            :class="['mx-n4 mx-sm-n6 px-sm-6', { 'mx-n6 module-body mt-n1 ': props.isOverview }, { 'px-4': !props.isOverview }]"
             :style="tableHeight"
         >
-            <div v-if="tokens.length > 0" class="p-ten-top">
+            <div v-if="tokens.length > 0" :class="[props.isOverview && !xs ? 'tokens-balance-container' : 'p-ten-top', { 'mx-6': props.isOverview && xs }]">
                 <div v-for="token in tokensToRender" :key="token.contract" :ref="el => assignRef(token.contract, el)">
                     <table-row-token-balance
                         :token="token"
@@ -362,5 +362,9 @@ const tableHeight = computed(() => {
     right: -20rem;
     top: -50rem;
     background: transparent;
+}
+
+.tokens-balance-container {
+    padding-top: 6px;
 }
 </style>
