@@ -1,8 +1,9 @@
 ### Release v2.0.2
 
 ### UI
-- Consistent table header [#1128][#1131](https://github.com/EthVM/EthVM/pull/1131)
-- Replaces more_horiz with east icon for buttons on mobile [#1128][#1131](https://github.com/EthVM/EthVM/pull/1131)
+- Consistent table header [#1131](https://github.com/EthVM/EthVM/pull/1131)
+- Replaces more_horiz with east icon for buttons on mobile [#1131](https://github.com/EthVM/EthVM/pull/1131)
+- Adds color badge to the token on portfolio overview  [#1131](https://github.com/EthVM/EthVM/pull/1131)
 
 ### BUG
 - expand address transfers table on mobile [#1131](https://github.com/EthVM/EthVM/pull/1131)
