@@ -61,15 +61,13 @@
 </template>
 
 <script setup lang="ts">
-import { computed, reactive, toRefs } from 'vue'
+import { computed } from 'vue'
 import AppNewUpdate from '@core/components/AppNewUpdate.vue'
 import AppBtn from '@core/components/AppBtn.vue'
 import AppBtnIcon from '@core/components/AppBtnIcon.vue'
 import NftTransfersTableRow from '@module/address/components/TableRowNftTransfers.vue'
 import AppPagination from '@core/components/AppPagination.vue'
 import AppNoResult from '@/core/components/AppNoResult.vue'
-import { MarketDataFragment as TokenMarketData } from '@core/composables/CoinData/getLatestPrices.generated'
-import { TOKEN_FILTER_VALUES } from '@module/address/models/TokenSort'
 import { useDisplay } from 'vuetify'
 import { NftTransferFragmentFragment as Transfer, useGetAddressNftTransfersQuery } from './apollo/AddressTransfers/transfers.generated'
 import { AddressEventType } from '@/apollo/types'
@@ -100,22 +98,6 @@ const props = defineProps({
 const emit = defineEmits<{
     (e: 'resetCount', eventType: AddressEventType, isReset: boolean): void
 }>()
-
-interface ComponentState {
-    showMoreTokenDetails: boolean
-    activeToken: false | TokenMarketData
-    sortKey: string
-    sortDirection: string
-    index: number
-}
-
-const state: ComponentState = reactive({
-    showMoreTokenDetails: false,
-    activeToken: false,
-    sortKey: TOKEN_FILTER_VALUES[1],
-    sortDirection: 'high',
-    index: 0
-})
 
 const {
     result,

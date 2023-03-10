@@ -41,7 +41,9 @@
                     <v-col cols="12" lg="2">
                         <div class="tx-info">
                             <p class="text-button mb-1">Confirmations</p>
-                            <p v-if="!loadingBlockInfo" class="text-body-1 text-secondary mt-1">{{ confirmations }}</p>
+                            <p v-if="!loadingBlockInfo" class="text-body-1 text-secondary mt-1">
+                                {{ confirmations }}
+                            </p>
                             <div v-else class="skeleton-box rounded-xl mt-1" style="height: 24px"></div>
                         </div>
                     </v-col>
@@ -138,7 +140,7 @@ import BN from 'bignumber.js'
 import { TxDetailsFragment as TxDetailsType, useGetTransactionByHashQuery, useTransactionEventSubscription } from './apollo/TxDetails.generated'
 import { ErrorMessageTx, TitleStatus } from '@/modules/txs/models/ErrorMessagesForTx'
 import { excpTxDoNotExists } from '@/apollo/errorExceptions'
-import { formatNonVariableGWeiValue, formatNumber, FormattedNumber, FormattedNumberUnit, formatVariableUnitEthValue } from '@/core/helper/number-format-helper'
+import { formatNumber, FormattedNumber, FormattedNumberUnit, formatVariableUnitEthValue } from '@/core/helper/number-format-helper'
 import { eth, timeAgo } from '@core/helper'
 import { useGetLatestBlockInfoQuery } from '@module/block/apollo/BlockStats/blockStats.generated'
 import { useBlockSubscription } from '@core/composables/NewBlock/newBlock.composable'
@@ -297,7 +299,10 @@ const {
     onError: onTransactionHashError,
     loading: loadingTransactionHash,
     refetch: refetchTransactionHash
-} = useGetTransactionByHashQuery(() => ({ hash: props.txRef }), { notifyOnNetworkStatusChange: true, fetchPolicy: 'network-only' })
+} = useGetTransactionByHashQuery(() => ({ hash: props.txRef }), {
+    notifyOnNetworkStatusChange: true,
+    fetchPolicy: 'network-only'
+})
 
 onTransactionHashLoaded(({ data }) => {
     if (data && data.getTransactionByHash) {

@@ -218,24 +218,24 @@ const fiatInfo = computed<FiatInfo[]>(() => {
 /**
  * Returns formatted ETH balance in FIAT
  */
-const ethTokenIcon = computed<string | undefined>(() => {
-    if (ethMarketInfo.value) {
-        return ethMarketInfo.value.image
-    }
-    return undefined
-})
+// const ethTokenIcon = computed<string | undefined>(() => {
+//     if (ethMarketInfo.value) {
+//         return ethMarketInfo.value.image
+//     }
+//     return undefined
+// })
 
 /**------------------------
  * Display Helpers
  -------------------------*/
-const { xs, sm } = useDisplay()
+const { xs } = useDisplay()
 
 /**
  * Return true if on mobile size screen
  */
-const isSmallView = computed<boolean>(() => {
-    return xs.value || sm.value
-})
+// const isSmallView = computed<boolean>(() => {
+//     return xs.value || sm.value
+// })
 </script>
 <style lang="scss" scoped>
 .temp-chart {

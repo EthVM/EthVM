@@ -1,7 +1,6 @@
 <template>
     <div>
         <app-error v-if="!isValid" :has-error="!isValid" message="This is not a valid block" :routeProp="props.blockRef" />
-        <app-message :messages="state.errorMessages" />
         <v-row :class="rowMargin">
             <!--
                 =====================================================================================
@@ -18,7 +17,6 @@
 
 <script setup lang="ts">
 import { reactive, computed, onMounted, watch } from 'vue'
-import AppMessage from '@core/components/AppMessage.vue'
 import AppError from '@core/components/AppError.vue'
 import ModuleBlockDetails from '@module/block/ModuleBlockDetails.vue'
 import { eth } from '@core/helper'
@@ -54,26 +52,6 @@ const isHash = computed<boolean>(() => {
 onMounted(() => {
     window.scrollTo(0, 0)
 })
-
-/**
- * Sets error if any
- * @param hasError {Boolean}
- * @param message {ErrorMessageToken}
- */
-const setError = (hasError: boolean, message: ErrorMessageBlock): void => {
-    if (hasError) {
-        if (!state.errorMessages.includes(message)) {
-            state.errorMessages.push(message)
-        }
-    } else {
-        if (state.errorMessages.length > 0) {
-            const index = state.errorMessages.indexOf(message)
-            if (index > -1) {
-                state.errorMessages.splice(index, 1)
-            }
-        }
-    }
-}
 
 watch(
     () => props.blockRef,

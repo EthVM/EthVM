@@ -8,8 +8,12 @@
             >
         </v-col>
         <v-col cols="12" sm="6" order-sm="1" class="py-0">
-            <p v-if="props.nft.meta?.name" class="text-h4 font-weight-bold">{{ props.nft.meta?.name }}</p>
-            <p v-if="props.nft.meta?.description" class="mb-1">{{ props.nft.meta?.description }}</p>
+            <p v-if="props.nft.meta?.name" class="text-h4 font-weight-bold">
+                {{ props.nft.meta?.name }}
+            </p>
+            <p v-if="props.nft.meta?.description" class="mb-1">
+                {{ props.nft.meta?.description }}
+            </p>
             <p v-if="balance" class="font-weight-bold mt-3 mb-1">Balance</p>
             <p v-if="balance" class="text-break-new-line">{{ balance }}</p>
             <p class="font-weight-bold mt-3 mb-1">Contract</p>
@@ -35,7 +39,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, reactive, ref } from 'vue'
+import { computed, reactive } from 'vue'
 import { NFTDetails } from './propModel'
 import AppTransformHash from '@core/components/AppTransformHash.vue'
 import AppAddressBlockie from '@core/components/AppAddressBlockie.vue'

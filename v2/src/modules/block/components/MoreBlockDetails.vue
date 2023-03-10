@@ -78,7 +78,7 @@
 
 <script setup lang="ts">
 import AppTransformHash from '@core/components/AppTransformHash.vue'
-import { timeAgo, eth } from '@core/helper'
+import { eth } from '@core/helper'
 import { Detail } from '@core/components/props'
 
 interface ComponentProps {

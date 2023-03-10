@@ -4,7 +4,8 @@
         <v-row :dense="xs" :class="'d-flex text-body-1 text-info mb-sm-3'" :justify="xs ? 'end' : 'start'">
             <v-col sm="6" lg="3" class="py-0 d-none d-sm-block">
                 <v-btn variant="text" color="info" class="font-weight-regular ml-n3" rounded="pill" size="small" @click="sortTable(KEY.HASH)">
-                    Address <v-icon v-if="isActiveSort(KEY.HASH)" class="ml-1" :size="14">{{ sortIcon }}</v-icon></v-btn
+                    Address
+                    <v-icon v-if="isActiveSort(KEY.HASH)" class="ml-1" :size="14">{{ sortIcon }}</v-icon></v-btn
                 >
             </v-col>
             <!--
@@ -13,7 +14,8 @@
                     -->
             <v-col lg="3" class="py-0 d-none d-lg-block">
                 <v-btn variant="text" color="info" class="font-weight-regular ml-n3" rounded="pill" size="small" @click="sortTable(KEY.NAME)">
-                    Name <v-icon v-if="isActiveSort(KEY.NAME)" class="ml-1" :size="14">{{ sortIcon }}</v-icon></v-btn
+                    Name
+                    <v-icon v-if="isActiveSort(KEY.NAME)" class="ml-1" :size="14">{{ sortIcon }}</v-icon></v-btn
                 >
             </v-col>
             <!--
@@ -22,7 +24,8 @@
                     -->
             <v-col sm="3" lg="2" class="py-0 d-none d-sm-block">
                 <v-btn variant="text" color="info" class="font-weight-regular ml-n3" rounded="pill" size="small" @click="sortTable(KEY.ETH)">
-                    ETH Balance <v-icon v-if="isActiveSort(KEY.ETH)" class="ml-1" :size="14">{{ sortIcon }}</v-icon></v-btn
+                    ETH Balance
+                    <v-icon v-if="isActiveSort(KEY.ETH)" class="ml-1" :size="14">{{ sortIcon }}</v-icon></v-btn
                 >
             </v-col>
             <!--
@@ -31,7 +34,8 @@
                     -->
             <v-col lg="2" class="py-0 d-none d-lg-block">
                 <v-btn variant="text" color="info" class="font-weight-regular ml-n3" rounded="pill" size="small" @click="sortTable(KEY.ETH_USD)">
-                    ETH Value <v-icon v-if="isActiveSort(KEY.ETH_USD)" class="ml-1" :size="14">{{ sortIcon }}</v-icon></v-btn
+                    ETH Value
+                    <v-icon v-if="isActiveSort(KEY.ETH_USD)" class="ml-1" :size="14">{{ sortIcon }}</v-icon></v-btn
                 >
             </v-col>
             <!--
@@ -40,7 +44,8 @@
                     -->
             <v-col sm="3" lg="2" class="py-0 d-none d-sm-block">
                 <v-btn variant="text" color="info" class="font-weight-regular ml-n3" rounded="pill" size="small" @click="sortTable(KEY.TOTAL)">
-                    Total <v-icon v-if="isActiveSort(KEY.TOTAL)" class="ml-1" :size="14">{{ sortIcon }}</v-icon></v-btn
+                    Total
+                    <v-icon v-if="isActiveSort(KEY.TOTAL)" class="ml-1" :size="14">{{ sortIcon }}</v-icon></v-btn
                 >
             </v-col>
         </v-row>
@@ -58,7 +63,6 @@
 </template>
 
 <script setup lang="ts">
-import ModuleAddAdressToPorfolio from './ModulePorfolioHandleAdr.vue'
 import AppNoResult from '@core/components/AppNoResult.vue'
 import TableRowPortfolioItem from './components/TableRowPortfolioItem.vue'
 import { computed, reactive } from 'vue'
@@ -159,11 +163,11 @@ const sortTable = (key: KEY) => {
 
 interface SortedInterface {
     key: KEY
-    ascend: any[]
-    desend: any[]
+    ascend: DisplayItem[]
+    desend: DisplayItem[]
 }
 
-class Sorted<DisplayItem> implements SortedInterface {
+class Sorted implements SortedInterface {
     /* Properties: */
     key: KEY
     ascend: DisplayItem[] = []

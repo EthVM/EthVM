@@ -82,7 +82,7 @@ import { useDisplay } from 'vuetify/lib/framework.mjs'
 import { eth } from '@core/helper/eth'
 import { MAX_PORTFOLIO_ITEMS } from '@/store/helpers'
 const store = useStore()
-const { xs, smAndDown } = useDisplay()
+const { smAndDown } = useDisplay()
 
 interface PropType {
     address?: string

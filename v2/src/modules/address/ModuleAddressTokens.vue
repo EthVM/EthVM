@@ -146,9 +146,9 @@ import AppBtn from '@/core/components/AppBtn.vue'
 import AppNewUpdate from '@core/components/AppNewUpdate.vue'
 import TableRowTokenBalance from './components/TableRowTokenBalance.vue'
 import AppPagination from '@core/components/AppPagination.vue'
-import { computed, reactive, onMounted, onBeforeUnmount, toRefs, watch } from 'vue'
+import { computed, reactive, onMounted, onBeforeUnmount, toRefs } from 'vue'
 import { useCoinData } from '@core/composables/CoinData/coinData.composable'
-import { TOKEN_FILTER_VALUES, KEY, DIRECTION, Token, TokenSortMarket, TokenMarket } from '@module/address/models/TokenSort'
+import { TOKEN_FILTER_VALUES, KEY, DIRECTION, Token } from '@module/address/models/TokenSort'
 import { useAddressToken } from '@core/composables/AddressTokens/addressTokens.composable'
 import { AddressEventType } from '@/apollo/types'
 import { useRouter } from 'vue-router'
@@ -285,10 +285,6 @@ const loadMoreData = (pageNum: number): void => {
 
 const showPagination = computed<boolean>(() => {
     return !loadingTokens.value && hasTokens.value && tokenSort.value && !props.isOverview
-})
-
-const hasMore = computed<boolean>(() => {
-    return pageNum.value >= numberOfPages.value
 })
 
 /**------------------------

@@ -88,7 +88,6 @@
 </template>
 
 <script setup lang="ts">
-import AppBtnIcon from '@core/components/AppBtnIcon.vue'
 import AppAddressBlockie from '@/core/components/AppAddressBlockie.vue'
 import AppTransformHash from '@/core/components/AppTransformHash.vue'
 import AppChip from '@core/components/AppChip.vue'

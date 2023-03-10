@@ -1,17 +1,13 @@
 import { isAPIExceptionProduction, isAPIExceptionDev } from './errorExceptions'
-import { ApolloClient, HttpLink, InMemoryCache, split } from '@apollo/client/core'
+import { ApolloClient, HttpLink, InMemoryCache } from '@apollo/client/core'
 import { RetryLink } from '@apollo/client/link/retry'
 import { WebSocketLink } from '@apollo/client/link/ws'
-import { createClient } from 'graphql-ws'
 import { onError } from '@apollo/client/link/error'
 import { getMainDefinition } from '@apollo/client/utilities'
 import { OpenSeaClient } from './opensea/OpenSeaClient'
 import { NftClient } from './nfts/nftClient'
-// import { FavAddrClient } from './favorite-addresses/favAddrClient'
-// import { FavTokClient } from './favorite-tokens/favTokenClient'
-// import { LocalStoreClient } from './local-store-global/localStoreClient'
-// import { EthBlocksClient } from './eth-blocks/ethBlocksClient'
-// import { ContractsClient } from './contract-verify/contractsClient'
+import * as Sentry from '@sentry/vue'
+
 import configs from '../configs'
 
 /*
@@ -31,6 +27,7 @@ const wsLink = new WebSocketLink({
     }
 })
 
+// eslint-disable-next-line
 const onErrorLink = onError(({ graphQLErrors, networkError, operation, forward }) => {
     if (graphQLErrors) {
         graphQLErrors.map(({ message, locations, path }) => {
@@ -40,7 +37,7 @@ const onErrorLink = onError(({ graphQLErrors, networkError, operation, forward }
             //For production and staging emit to Sentry:
             if (process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'staging') {
                 if (!isAPIExceptionProduction(message)) {
-                    // Sentry.captureException(newError)
+                    Sentry.captureException(newError)
                 }
             } else {
                 //For Development use only console errors:
@@ -63,15 +60,14 @@ const retry = new RetryLink({
         retryIf: error => (error && error.message ? error.message.includes('Failed to fetch') : false)
     }
 })
-const link = split(
+const link = retry.split(
     // split based on operation type
     ({ query }) => {
         const definition = getMainDefinition(query)
         return definition.kind === 'OperationDefinition' && definition.operation === 'subscription'
     },
     wsLink,
-    // onErrorLink.concat(httpLink)
-    httpLink
+    onErrorLink.concat(httpLink)
 )
 
 const cache = new InMemoryCache({
@@ -93,9 +89,4 @@ export default {
     default: apolloClient,
     openSeaClient: OpenSeaClient,
     nftClient: NftClient
-    // FavAddrClient,
-    // FavTokClient,
-    // LocalStoreClient,
-    // EthBlocksClient,
-    // ContractsClient
 }

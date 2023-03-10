@@ -10,7 +10,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, useAttrs } from 'vue'
+import { useAttrs } from 'vue'
 import { useDisplay } from 'vuetify'
 
 const { xs } = useDisplay()

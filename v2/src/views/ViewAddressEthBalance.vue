@@ -40,7 +40,6 @@ import { reactive, computed, onMounted } from 'vue'
 import { useAppViewGrid } from '@core/composables/AppViewGrid/AppViewGrid.composable'
 import { Tab } from '@core/components/props'
 import { ADDRESS_ROUTE_QUERY, Q_ADDRESS_TRANSFERS } from '@core/router/routesNames'
-import { useAddressUpdate } from '@core/composables/AddressUpdate/addressUpdate.composable'
 import { useDisplay } from 'vuetify/lib/framework.mjs'
 
 const { xs } = useDisplay()
@@ -61,8 +60,6 @@ const props = defineProps({
     },
     isAddressMiner: { type: Boolean }
 })
-
-const { newMinedBlocks, newMinedUncles, resetCount } = useAddressUpdate(props.addressRef)
 
 const state = reactive({
     tab: props.tab,

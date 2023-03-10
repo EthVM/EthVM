@@ -31,7 +31,8 @@
                 <div class="ml-4">
                     {{ txValue.value }} ETH
                     <div class="text-lowercase text-info">
-                        {{ timestamp }} <span v-if="mdAndDown">{{ transferDirection.direction }}</span>
+                        {{ timestamp }}
+                        <span v-if="mdAndDown">{{ transferDirection.direction }}</span>
                     </div>
                 </div>
             </div>
@@ -94,12 +95,10 @@
 </template>
 
 <script setup lang="ts">
-import AppBtnIcon from '@core/components/AppBtnIcon.vue'
 import AppAddressBlockie from '@/core/components/AppAddressBlockie.vue'
 import AppTransformHash from '@/core/components/AppTransformHash.vue'
 import AppChip from '@core/components/AppChip.vue'
 import AppTableRow from '@core/components/AppTableRow.vue'
-import { Q_ADDRESS_TRANSFERS } from '@core/router/routesNames'
 import { timeAgo, eth } from '@core/helper'
 import { TxsTransfersFragment, useGetEthTransfersByHashQuery } from '@module/address/apollo/EthTransfers/transfersHistory.generated'
 import { computed, ref } from 'vue'
@@ -108,8 +107,6 @@ import BN from 'bignumber.js'
 import { useDisplay } from 'vuetify'
 import { TransferSubtype } from '@/apollo/types'
 
-const routes = Q_ADDRESS_TRANSFERS
-const BLOCK_REWARD_HASH = '0xBLOCK_REWARD'
 const { smAndDown, mdAndDown } = useDisplay()
 
 interface ComponentProps {
@@ -173,25 +170,8 @@ const transferDirection = computed<{ [key: string]: string }>(() => {
     }
 })
 
-const isBlockReward = computed<boolean>(() => {
-    return props.transfer.transfer.from === BLOCK_REWARD_HASH
-})
-
 const isIncoming = computed<boolean>(() => {
     return transferDirection.value.direction === TRANSFER_DIRECTION.FROM
-})
-
-const transferType = computed<{ [key: string]: string }>(() => {
-    if (isBlockReward.value) {
-        return {
-            text: 'block reward',
-            color: 'success'
-        }
-    }
-    return {
-        text: 'transaction',
-        color: 'purple'
-    }
 })
 
 const balanceBefore = computed<BN>(() => {
@@ -275,14 +255,14 @@ const internalTransferValue = computed<FormattedNumber | false>(() => {
 })
 
 // Load ethTransfers by hash to see if an internal transaction exists
-const { result: ethTransfers, loading: loadingEthTransfers } = useGetEthTransfersByHashQuery(
+const { result: ethTransfers } = useGetEthTransfersByHashQuery(
     () => ({
         owner: props.addressRef,
         _limit: 1,
         hash: props.transfer.transfer.transactionHash
     }),
     () => ({
-        enabled: showMoreDetails
+        enabled: showMoreDetails.value
     })
 )
 

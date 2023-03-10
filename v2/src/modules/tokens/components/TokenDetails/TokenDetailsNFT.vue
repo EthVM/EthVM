@@ -10,10 +10,12 @@
                     </div>
                     <div class="d-flex mb-2 mb-lg-0">
                         <p v-if="props.collection.distinct_nft_count" class="mr-6 info--text">
-                            items <span class="font-weight-bold black--text">{{ props.collection.distinct_nft_count }}</span>
+                            items
+                            <span class="font-weight-bold black--text">{{ props.collection.distinct_nft_count }}</span>
                         </p>
                         <p v-if="props.collection.distinct_owner_count" class="mr-6 info--text">
-                            owners <span class="font-weight-bold black--text">{{ props.collection.distinct_owner_count }}</span>
+                            owners
+                            <span class="font-weight-bold black--text">{{ props.collection.distinct_owner_count }}</span>
                         </p>
                         <!-- <p class="mr-6 info--text">
                             floor price <span class="font-weight-bold black--text">{{ props.collection.distinct_owner_count }}</span>
@@ -37,7 +39,6 @@
 
 <script setup lang="ts">
 import TokenDetailsCollectionImg from './TokenDetailsCollectionImg.vue'
-import { ErrorMessageToken } from '@module/tokens/models/ErrorMessagesForTokens'
 import { computed } from 'vue'
 import { NftCollectionFragment } from '@module/tokens/apollo/TokenDetails/tokenDetails.generated'
 import { marked } from 'marked'
@@ -47,35 +48,6 @@ interface PropType {
 }
 
 const props = defineProps<PropType>()
-
-interface ComponentState {
-    isRopsten: boolean
-    hasError: boolean
-    imageExists: boolean
-}
-
-const state: ComponentState = {
-    isRopsten: false,
-    hasError: false,
-    imageExists: true
-}
-
-const emit = defineEmits(['errorDetails'])
-
-/*
-/*
-===================================================================================
-  Methods:
-===================================================================================
-*/
-/**
- * Emit error to Sentry
- * @param val {Boolean}
- */
-const emitErrorState = (val: boolean): void => {
-    state.hasError = val
-    emit('errorDetails', val, ErrorMessageToken.details)
-}
 
 /*
 ===================================================================================

@@ -39,10 +39,8 @@
 <script setup lang="ts">
 import TableBlocksRow from '@/modules/block/components/RecentBlocks/BlocksTableRow.vue'
 import AppPagination from '@core/components/AppPagination.vue'
-import AppIntersect from '@core/components/AppIntersect.vue'
 import { useDisplay } from 'vuetify/lib/framework.mjs'
 import { computed } from 'vue'
-import { useAppPaginate } from '@core/composables/AppPaginate/useAppPaginate.composable'
 
 const { xs, mdAndDown } = useDisplay()
 

@@ -37,7 +37,7 @@
 import AppNoResult from '@core/components/AppNoResult.vue'
 import TableInternalEthTransferRow from '@module/address/components/EthBalanceTabs/TableInternalEthTransferRow.vue'
 import AppPagination from '@core/components/AppPagination.vue'
-import { computed, onMounted, ref } from 'vue'
+import { computed } from 'vue'
 import {
     EthInternalTransactionTransfersFragment,
     useGetEthInternalTransactionTransfersQuery

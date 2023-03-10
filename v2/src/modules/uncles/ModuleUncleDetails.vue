@@ -68,7 +68,6 @@
 <script setup lang="ts">
 import AppTransformHash from '@core/components/AppTransformHash.vue'
 import AppAddressBlockie from '@core/components/AppAddressBlockie.vue'
-import { Detail } from '@core/components/props'
 import { UncleDetailsFragment as UncleDetailsType, useGetUncleByHashQuery } from './apollo/uncleDetails.generated'
 import { ErrorMessageUncle } from '@module/uncles/models/ErrorMessagesForUncle'
 import { excpUncleNotFound } from '@/apollo/errorExceptions'

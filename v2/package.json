@@ -1,6 +1,6 @@
 {
     "name": "client",
-    "version": "2.0.0",
+    "version": "2.0.1",
     "description": "",
     "main": "index.js",
     "private": true,
@@ -19,6 +19,8 @@
         "@graphql-codegen/near-operation-file-preset": "^2.2.9",
         "@graphql-codegen/typescript-vue-apollo": "^3.2.9",
         "@hrwg/vue-marked": "^0.0.2",
+        "@sentry/tracing": "^7.39.0",
+        "@sentry/vue": "^7.39.0",
         "@types/webpack-env": "^1.17.0",
         "@vue/apollo-composable": "^4.0.0-alpha.12",
         "@vueuse/core": "^9.3.0",

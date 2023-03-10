@@ -43,15 +43,11 @@ import {
     TransferFragment,
     EthTransfersFragment
 } from './apollo/transfersQuery.generated'
-import { computed, onMounted, reactive, toRefs, watch } from 'vue'
+import { computed, onMounted, reactive, watch } from 'vue'
 import TxsTable from '@module/txs/components/TxsTable.vue'
-import BN from 'bignumber.js'
-import { Q_BLOCKS_AND_TXS, ROUTE_NAME } from '@core/router/routesNames'
+import { ROUTE_NAME } from '@core/router/routesNames'
 import { useRouter } from 'vue-router'
-import { useDisplay } from 'vuetify'
 import { useAppPaginate } from '@core/composables/AppPaginate/useAppPaginate.composable'
-
-const { mdAndDown } = useDisplay()
 
 interface ModuleState {
     refetching: boolean
@@ -149,7 +145,7 @@ const transactions = computed<Array<TransferFragment | null>>(() => {
     return []
 })
 
-const { numberOfPages, pageData: currentPageData, setPageNum, pageNum } = useAppPaginate(transactions)
+const { numberOfPages, pageData: currentPageData, setPageNum } = useAppPaginate(transactions)
 
 const message = computed<string>(() => {
     return ''

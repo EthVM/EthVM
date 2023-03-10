@@ -9,10 +9,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import BN from 'bignumber.js'
-import { useDisplay } from 'vuetify/lib/framework.mjs'
 import { formatUsdValue } from '@/core/helper/number-format-helper'
-
-const { xs, sm } = useDisplay()
 
 interface Props {
     loading: boolean

@@ -211,7 +211,6 @@ Collection Meta:
 */
 const {
     loading: loadingNftMeta,
-    onError: onNftMetaError,
     result: nftMetaResult,
     fetchMore: fetchMoreCollections
 } = useGetNftContractMetaQuery(
