@@ -23,7 +23,7 @@
         </v-row>
 
         <!--Table Header-->
-        <v-row :dense="xs" class="mt-4 d-flex text-body-1 text-info mb-sm-3" :justify="xs ? 'end' : 'start'">
+        <v-row :dense="xs" class="mt-4 d-flex text-body-1 text-info mb-0" :justify="xs ? 'end' : 'start'">
             <!--
                 Token on Overview:
                 XS: NONE
@@ -94,7 +94,7 @@
             </v-col>
         </v-row>
 
-        <v-divider class="mx-n4 mx-sm-n6" />
+        <v-divider class="mx-n4 mx-sm-n6 mt-sm-3" />
         <!--Loading -->
         <v-row v-if="!store.portfolioIsLoaded" class="mt-5">
             <v-col v-for="col in 7" :key="col" cols="12" class="pb-5 pt-0">

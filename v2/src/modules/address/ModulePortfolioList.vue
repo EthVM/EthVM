@@ -1,7 +1,7 @@
 <template>
     <div class="px-4 px-sm-6 pb-4 pb-sm-6">
         <!--Table Header-->
-        <v-row :dense="xs" :class="'d-flex text-body-1 text-info mb-sm-3'" :justify="xs ? 'end' : 'start'">
+        <v-row :dense="xs" :class="'d-flex text-body-1 text-info mb-0'" :justify="xs ? 'end' : 'start'">
             <v-col sm="6" lg="3" class="py-0 d-none d-sm-block">
                 <v-btn variant="text" color="info" class="font-weight-regular ml-n3" rounded="pill" size="small" @click="sortTable(KEY.HASH)">
                     Address
@@ -50,7 +50,7 @@
             </v-col>
         </v-row>
 
-        <v-divider class="mx-n4 mx-sm-n6 mb-5" />
+        <v-divider class="mx-n4 mx-sm-n6 mb-5 mt-sm-3" />
         <template v-if="addressList.length > 0">
             <div v-for="adr in sortList" flat :key="adr.hash">
                 <table-row-portfolio-item :adr="adr"></table-row-portfolio-item>
