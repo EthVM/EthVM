@@ -7,6 +7,7 @@
 
 ### BUG
 - expand address transfers table on mobile [#1131](https://github.com/EthVM/EthVM/pull/1131)
+- fix search empry string routing to token [#1133](https://github.com/EthVM/EthVM/pull/1133)
 
 ### Devop
 - refactor adr miner table, removed unused component props [#1131](https://github.com/EthVM/EthVM/pull/1131)
