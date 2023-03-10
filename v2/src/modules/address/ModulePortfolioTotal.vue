@@ -38,13 +38,15 @@
                 :md="props.addressRef ? 5 : 4"
                 :lg="props.addressRef ? 7 : 4"
                 align-self="center"
-                class="pt-0 pl-sm-0"
+                class="pt-0 px-sm-0"
             >
-                <v-row v-for="i in topTokens.slice(0, 4)" :key="i.symbol" justify="space-between" align="center" class="ma-0">
-                    <v-col class="d-flex align-center py-1">
-                        <app-token-icon :token-icon="i.icon"></app-token-icon>
-                        <p class="pl-3 text-button">{{ i.symbol }}</p>
-                    </v-col>
+                <v-row v-for="(i, index) in topTokens.slice(0, 4)" :key="i.symbol" justify="space-between" align="center" class="ma-0 flex-nowrap">
+                    <div class="d-flex align-center py-1 pl-0">
+                        <v-badge :color="colors[index]" dot inline left> </v-badge>
+                        <app-token-icon :token-icon="i.icon" class="ml-2"></app-token-icon>
+                    </div>
+                    <p class="pl-3 text-button text-ellipses">{{ i.symbol }}</p>
+                    <v-spacer />
                     <div class="token-percent rounded-xl px-2">
                         <p class="text-center text-info">{{ formatPercentageValue(i.percent).value }}%</p>
                     </div>
@@ -241,9 +243,11 @@ const chartData = computed<ChartData<'doughnut'> | undefined>(() => {
     }
     return undefined
 })
+
+const colors = ['success', 'warning', 'purple', 'error']
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .token-percent {
     background-color: rgb(var(--v-theme-pillGrey));
     width: 70px;
