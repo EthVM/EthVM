@@ -1,3 +1,12 @@
+### Release v2.0.2
+
+### UI
+- Consistent table header [#1128][#1131](https://github.com/EthVM/EthVM/pull/1131)
+
+### BUG
+- expand address transfers table on mobile [#1131](https://github.com/EthVM/EthVM/pull/1131)
+
+======================================================================
 ### Release v2.0.1
 
 ### Devop
