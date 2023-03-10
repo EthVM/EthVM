@@ -7,6 +7,8 @@
 ### BUG
 - expand address transfers table on mobile [#1131](https://github.com/EthVM/EthVM/pull/1131)
 
+### Devop
+- refactor adr miner table, removed unused component props [#1131](https://github.com/EthVM/EthVM/pull/1131)
 ======================================================================
 ### Release v2.0.1
 
