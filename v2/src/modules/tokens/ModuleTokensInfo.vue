@@ -12,7 +12,7 @@
             <module-add-fav-token v-if="state.activeList === list[1].value" />
         </v-row>
         <v-row align="center" justify="start" class="text-body-1 text-info my-0 d-none d-sm-flex">
-            <v-col sm="6" :md="isHomePage ? '6' : '4'">
+            <v-col sm="6" :md="isHomePage ? '6' : '4'" class="py-0">
                 <v-row align="center" class="ma-0">
                     <v-btn variant="text" color="info" class="font-weight-regular ml-n3" rounded="pill" size="small" @click="sortTable(SORT_KEY.NAME)">
                         Token
@@ -20,7 +20,7 @@
                     >
                 </v-row>
             </v-col>
-            <v-col sm="2" md="2">
+            <v-col sm="2" md="2" class="py-0">
                 <v-row align="center" class="ma-0">
                     <v-btn variant="text" color="info" class="font-weight-regular ml-n3" rounded="pill" size="small" @click="sortTable(SORT_KEY.PRICE)">
                         Price
@@ -28,12 +28,12 @@
                     >
                 </v-row>
             </v-col>
-            <v-col sm="2" md="2">
+            <v-col sm="2" md="2" class="py-0">
                 <v-btn variant="text" color="info" class="font-weight-regular ml-n3" rounded="pill" size="small" @click="sortTable(SORT_KEY.PERCENTAGE_CHANGE)">
                     24h<v-icon v-if="isActiveSort(SORT_KEY.PERCENTAGE_CHANGE)" class="ml-1" :size="14">{{ sortIcon }}</v-icon></v-btn
                 ></v-col
             >
-            <v-col v-if="!isHomePage" md="2" class="d-none d-md-block">
+            <v-col v-if="!isHomePage" md="2" class="d-none d-md-block py-0">
                 <v-row align="center" class="ma-0">
                     <v-btn variant="text" color="info" class="font-weight-regular ml-n3" rounded="pill" size="small" @click="sortTable(SORT_KEY.VOLUME)">
                         Volume
@@ -41,7 +41,7 @@
                     >
                 </v-row>
             </v-col>
-            <v-col :sm="2" class="d-none d-sm-block">
+            <v-col :sm="2" class="d-none d-sm-block py-0">
                 <v-row align="center" class="ma-0">
                     <v-btn variant="text" color="info" class="font-weight-regular ml-n3" rounded="pill" size="small" @click="sortTable(SORT_KEY.MARKET_CAP)">
                         Market Cap
@@ -51,7 +51,7 @@
             </v-col>
             <!-- <v-col sm="2" lg="1"> Watchlist </v-col> -->
         </v-row>
-        <v-divider class="my-0 mt-md-4 mx-n4 mx-sm-n6" />
+        <v-divider class="my-0 mt-sm-3 mx-n4 mx-sm-n6" />
         <template v-if="!loadingCoinData">
             <div v-if="tokensInPage.length > 0">
                 <div v-for="token in currentPageData" :key="token.contract">

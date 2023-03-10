@@ -50,10 +50,12 @@
             </v-col>
         </v-row>
 
-        <v-divider class="mx-n4 mx-sm-n6 mb-5 mt-sm-3" />
+        <v-divider class="mx-n4 mx-sm-n6 mt-sm-3" />
         <template v-if="addressList.length > 0">
-            <div v-for="adr in sortList" flat :key="adr.hash">
-                <table-row-portfolio-item :adr="adr"></table-row-portfolio-item>
+            <div class="p-ten-top">
+                <div v-for="adr in sortList" flat :key="adr.hash">
+                    <table-row-portfolio-item :adr="adr"></table-row-portfolio-item>
+                </div>
             </div>
         </template>
         <template v-else>
