@@ -1,10 +1,11 @@
 <template>
     <v-card variant="elevated" elevation="1" rounded="xl" class="pa-4 pa-sm-6 h-100">
-        <v-card-title :class="['pa-0', { 'd-flex align-center justify-space-between mb-4': isHomePage }]">
+        <v-card-title :class="['pa-0', { 'd-flex align-center justify-space-between mb-2 mb-sm-4': isHomePage }]">
             <h1 :class="[isHomePage ? 'text-h6' : 'text-h4 ', 'font-weight-bold']">
                 {{ title }}
             </h1>
-            <app-btn v-if="isHomePage" text="More" isSmall icon="east" @click="goToTokens"></app-btn>
+            <app-btn v-if="isHomePage && !xs" text="More" isSmall icon="east" @click="goToTokens"></app-btn>
+            <app-btn-icon v-else-if="isHomePage && xs" icon="east" @click="goToTokens"></app-btn-icon>
         </v-card-title>
         <app-tabs v-if="!isHomePage" v-model="state.activeList" :routes="routes" :tabs="list" class="my-5" btn-variant></app-tabs>
         <v-row v-if="!isHomePage" class="mb-10 flex-nowrap" align="center">
@@ -53,7 +54,7 @@
         </v-row>
         <v-divider class="my-0 mt-sm-3 mx-n4 mx-sm-n6" />
         <template v-if="!loadingCoinData">
-            <div v-if="tokensInPage.length > 0">
+            <div v-if="tokensInPage.length > 0" class="p-ten-top">
                 <div v-for="token in currentPageData" :key="token.contract">
                     <token-market-info-table-row v-if="token" :token="token" :is-home-view="isHomePage" />
                 </div>
@@ -76,6 +77,7 @@
 <script setup lang="ts">
 import AppTabs from '@core/components/AppTabs.vue'
 import AppBtn from '@core/components/AppBtn.vue'
+import AppBtnIcon from '@core/components/AppBtnIcon.vue'
 import AppInput from '@core/components/AppInput.vue'
 import AppNoResult from '@core/components/AppNoResult.vue'
 import AppPagination from '@core/components/AppPagination.vue'
@@ -93,6 +95,9 @@ import { searchHelper } from '@core/helper/search'
 import { useAppPaginate } from '@core/composables/AppPaginate/useAppPaginate.composable'
 import { TOKENS_VIEW } from './models/tokensView'
 import { useRouter } from 'vue-router'
+import { useDisplay } from 'vuetify'
+
+const { xs } = useDisplay()
 const routes = ADDRESS_ROUTE_QUERY.Q_NFTS
 
 // const MAX_TOKENS = 200

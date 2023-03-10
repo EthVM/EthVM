@@ -35,7 +35,8 @@
                         <v-card elevation="1" rounded="xl" class="pt-4 pt-sm-6">
                             <v-card-title class="px-0 d-flex align-center justify-space-between px-4 px-sm-6 py-0 mb-4">
                                 <p class="text-h6 font-weight-bold">Your portfolio</p>
-                                <app-btn text="More" isSmall icon="east" @click="goToPortfolio"></app-btn>
+                                <app-btn v-if="!xs" text="More" isSmall icon="east" @click="goToPortfolio"></app-btn>
+                                <app-btn-icon v-else icon="east" @click="goToPortfolio"></app-btn-icon>
                             </v-card-title>
                             <module-portfolio-list /> </v-card
                     ></v-col>
@@ -125,6 +126,7 @@ import ModulePortfolioList from '@module/address/ModulePortfolioList.vue'
 import ModuleTokensInfo from '@module/tokens/ModuleTokensInfo.vue'
 import { TOKENS_VIEW } from '@module/tokens/models/tokensView'
 import AppBtn from '@core/components/AppBtn.vue'
+import AppBtnIcon from '@core/components/AppBtnIcon.vue'
 import { useAppViewGrid } from '@core/composables/AppViewGrid/AppViewGrid.composable'
 import { useDisplay } from 'vuetify/lib/framework.mjs'
 import { ROUTE_NAME } from '@core/router/routesNames'
@@ -133,7 +135,7 @@ import { computed } from 'vue'
 import { useStore } from '@/store'
 import { onMounted } from 'vue'
 import configs from '@/configs'
-const { lgAndUp, mdAndDown, mdAndUp } = useDisplay()
+const { lgAndUp, mdAndDown, mdAndUp, xs } = useDisplay()
 const { columnPadding, rowMargin } = useAppViewGrid()
 onMounted(() => {
     window.scrollTo(0, 0)

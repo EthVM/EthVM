@@ -17,8 +17,8 @@
                     />
                 </v-row>
             </div>
-            <app-btn v-if="props.isOverview && !mdAndDown" text="More" isSmall icon="east" @click="goToNftTransfersPage"></app-btn>
-            <app-btn-icon v-if="props.isOverview && mdAndDown" icon="more_horiz" @click="goToNftTransfersPage"></app-btn-icon>
+            <app-btn v-if="props.isOverview && !xs" text="More" isSmall icon="east" @click="goToNftTransfersPage"></app-btn>
+            <app-btn-icon v-if="props.isOverview && xs" icon="east" @click="goToNftTransfersPage"></app-btn-icon>
         </v-card-title>
         <div>
             <!-- Table Header -->
@@ -82,7 +82,7 @@ import { ITEMS_PER_PAGE } from '@core/constants'
 const OVERVIEW_MAX_ITEMS = 7
 const MOBILE_MAX_ITEMS = 4
 
-const { mdAndDown } = useDisplay()
+const { mdAndDown, xs } = useDisplay()
 const props = defineProps({
     addressHash: {
         type: String,

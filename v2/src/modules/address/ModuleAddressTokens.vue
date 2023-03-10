@@ -21,7 +21,7 @@
             </template>
         </v-card-title>
         <div v-if="!props.isOverview || (props.isOverview && xs)" class="d-flex align-center flex-wrap">
-            <v-col cols="12" sm="4" lg="3" class="pa-0">
+            <v-col :cols="props.isOverview && xs ? '10' : '12'" sm="4" lg="3" class="pa-0">
                 <address-balance-totals
                     title="Token Balance"
                     :is-loading="loadingTokens || loadingCoinData"
@@ -31,6 +31,8 @@
                 >
                 </address-balance-totals>
             </v-col>
+            <v-spacer v-if="props.isOverview && xs" />
+            <app-btn-icon v-if="props.isOverview && xs" icon="east" @click="goToTokensBalancePage"></app-btn-icon>
             <div class="flex-grow-1 my-5 my-sm-0">
                 <app-input place-holder="Search token name" v-model="state.searchParams" />
             </div>
@@ -146,6 +148,7 @@ import AppBtn from '@/core/components/AppBtn.vue'
 import AppNewUpdate from '@core/components/AppNewUpdate.vue'
 import TableRowTokenBalance from './components/TableRowTokenBalance.vue'
 import AppPagination from '@core/components/AppPagination.vue'
+import AppBtnIcon from '@core/components/AppBtnIcon.vue'
 import { computed, reactive, onMounted, onBeforeUnmount, toRefs } from 'vue'
 import { useCoinData } from '@core/composables/CoinData/coinData.composable'
 import { TOKEN_FILTER_VALUES, KEY, DIRECTION, Token } from '@module/address/models/TokenSort'

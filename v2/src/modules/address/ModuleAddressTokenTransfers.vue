@@ -26,7 +26,7 @@
                 </v-row>
             </div>
             <app-btn v-if="props.isOverview && !xs" text="More" isSmall icon="east" @click="goToTokenTransfersPage"></app-btn>
-            <app-btn-icon v-if="props.isOverview && xs" icon="more_horiz" @click="goToTokenTransfersPage"></app-btn-icon>
+            <app-btn-icon v-if="props.isOverview && xs" icon="east" @click="goToTokenTransfersPage"></app-btn-icon>
         </v-card-title>
         <div class="mb-n5">
             <!--            Table Header-->

@@ -28,7 +28,7 @@
                         <span class="text-h6 font-weight-bold">ETH History</span>
                     </div>
                     <app-btn v-if="!xs" text="More" isSmall icon="east" @click="goToEthPage"></app-btn>
-                    <app-btn-icon v-if="xs" icon="more_horiz" @click="goToEthPage"></app-btn-icon>
+                    <app-btn-icon v-if="xs" icon="east" @click="goToEthPage"></app-btn-icon>
                 </v-card-title>
                 <module-all-eth-transfers :address-ref="props.addressRef" is-overview />
             </v-card>
