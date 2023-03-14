@@ -8,7 +8,7 @@
         <v-card-title v-if="props.isOverview" class="card-title d-flex justify-space-between align-center mb-5 pa-0">
             <span class="text-h6 font-weight-bold">NFT Collection</span>
             <app-btn v-if="!xs" text="More" isSmall icon="east" @click="goToNftsPage"></app-btn>
-            <app-btn-icon v-else icon="more_horiz" @click="goToNftsPage"></app-btn-icon>
+            <app-btn-icon v-else icon="east" @click="goToNftsPage"></app-btn-icon>
         </v-card-title>
         <div>
             <template v-if="loadingBalance === false && loadingMeta === false">

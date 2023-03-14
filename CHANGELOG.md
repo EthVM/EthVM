@@ -1,3 +1,16 @@
+### Release v2.0.2
+
+### UI
+- Consistent table header [#1131](https://github.com/EthVM/EthVM/pull/1131)
+- Replaces more_horiz with east icon for buttons on mobile [#1131](https://github.com/EthVM/EthVM/pull/1131)
+- Adds color badge to the token on portfolio overview  [#1131](https://github.com/EthVM/EthVM/pull/1131)
+
+### BUG
+- expand address transfers table on mobile [#1131](https://github.com/EthVM/EthVM/pull/1131)
+
+### Devop
+- refactor adr miner table, removed unused component props [#1131](https://github.com/EthVM/EthVM/pull/1131)
+======================================================================
 ### Release v2.0.1
 
 ### Devop

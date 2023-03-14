@@ -12,7 +12,7 @@
             <v-col sm="4" lg="3"> Miner </v-col>
             <v-col sm="3"> Reward </v-col>
         </v-row>
-        <v-divider class="my-0 mt-md-4 mx-n4 mx-sm-n6" />
+        <v-divider class="my-0 mt-sm-4 mx-n4 mx-sm-n6" />
         <!--
             =====================================================================================
               TABLE BODY

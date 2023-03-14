@@ -9,7 +9,7 @@
                 <v-col v-if="!mdAndDown" md="3"> After </v-col>
                 <v-col lg="2"> State Difference </v-col>
             </v-row>
-            <v-divider class="my-0 mt-md-4 mx-n4 mx-sm-n6" />
+            <v-divider class="my-0 mt-sm-4 mx-n4 mx-sm-n6" />
             <!-- End Table Header -->
             <template v-if="loading || props.txStatus === TxStatus.pending">
                 <div v-for="i in 5" :key="i" class="skeleton-box rounded-xl my-4" style="height: 24px"></div>

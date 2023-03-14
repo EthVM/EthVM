@@ -15,7 +15,7 @@
             <v-col :lg="props.isBlock ? 2 : 1"> Tx Fee </v-col>
             <v-col v-if="!props.pending" lg="1"> Status </v-col>
         </v-row>
-        <v-divider class="my-0 mt-md-4 mx-n4 mx-sm-n6" />
+        <v-divider class="my-0 mt-sm-4 mx-n4 mx-sm-n6" />
         <!--
             =====================================================================================
               TABLE BODY

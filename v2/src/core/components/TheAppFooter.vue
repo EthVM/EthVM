@@ -20,7 +20,7 @@
                 </v-col>
                 <v-col cols="6" sm="6" lg="2" class="mb-11 mb-lg-0" order="2">
                     <p class="footer-item-title text-h5 font-weight-bold mb-2">Discover</p>
-                    <ul class="footer-item-lists pa-0 surf">
+                    <ul class="footer-item-lists pa-0 surf text-capitalize">
                         <li class="mb-2">
                             <router-link :to="routeAbout" class="text-link">About us</router-link>
                         </li>
