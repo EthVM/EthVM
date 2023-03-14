@@ -59,7 +59,7 @@
             </div>
         </template>
         <template v-else>
-            <app-no-result :text="`Your portfolio is empty`"></app-no-result>
+            <app-no-result :text="`Your portfolio is empty`" class="mt-3"></app-no-result>
         </template>
     </div>
 </template>
