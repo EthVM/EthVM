@@ -1,15 +1,78 @@
-import { computed, Ref } from 'vue'
+import { computed, Ref, watch, ref } from 'vue'
 import { useEnsResolveNameQuery } from './ensResolveName.generated'
-
+import { Resolution } from '@unstoppabledomains/resolution'
+import * as Sentry from '@sentry/vue'
 export function useResolveName(name: Ref<string | undefined>) {
-    const isValidTld = computed<boolean>(() => {
+    const UD_SUPPORTED_TLDS = ['blockchain', 'bitcoin', 'crypto', 'nft', 'wallet', 'x', 'dao', '888', 'zil']
+    const udResolution = new Resolution()
+
+    /**
+     * @param _name {string} - entire string including TLF. ie 'myetherwallet.eth'
+     * @returns {string} tld of the domain. ie 'eth'
+     */
+    const getTld = (_name: string): string => {
+        const labels = _name.split('.')
+        return labels.length < 2 ? '' : labels[labels.length - 1]
+    }
+
+    /**
+     * computed property
+     * @returns {boolean} weather or not name has valid Unstoppable Domain TLD
+     */
+    const isValidTldUD = computed<boolean>(() => {
+        return name.value ? UD_SUPPORTED_TLDS.includes(getTld(name.value)) : false
+    })
+
+    /**
+     * resolved Unstoppable Domain address if any
+     */
+    const resolvedUD: Ref<undefined | string> = ref(undefined)
+
+    /**
+     * property loading Unstoppable Domain resolver
+     */
+    const udLoading = ref(false)
+
+    /**
+     * Watches for changes in provided name.
+     * Resposible to resolve Unstoppable Domain name if name is valid.
+     * Resets resolvedUD on name changed.
+     */
+    watch(name, (newVal, oldVal) => {
+        if (newVal && newVal !== oldVal) {
+            resolvedUD.value = undefined
+            if (isValidTldUD.value) {
+                udLoading.value = true
+                udResolution
+                    .addr(newVal, 'ETH')
+                    .then(address => {
+                        resolvedUD.value = address
+                        udLoading.value = false
+                    })
+                    .catch(error => {
+                        udLoading.value = false
+                        Sentry.captureException(`ERROR in useResolveName unstoppable: tried resolving ${newVal}, ${error}`)
+                    })
+            }
+        }
+    })
+
+    /**
+     * computed property
+     * @returns {boolean} weather or not name has valid ENS TLD
+     */
+    const isValidTldEns = computed<boolean>(() => {
         if (!name.value) {
             return false
         }
-        const labels = name.value.split('.')
-        return labels.length < 2 ? false : labels[labels.length - 1].length > 2
+        return getTld(name.value).length > 2
     })
 
+    /**
+     * Fetches Ens resolution from Graph.
+     * ensRes - raw data
+     * ensLoading - property loading ENS Domain resolver
+     */
     const { result: ensRes, loading: ensLoading } = useEnsResolveNameQuery(
         () => ({
             name: name.value
@@ -17,16 +80,16 @@ export function useResolveName(name: Ref<string | undefined>) {
         () => ({
             clientId: 'ensClient',
             fetchPolicy: 'cache-first',
-            enabled: isValidTld.value
+            enabled: isValidTldEns.value
         })
     )
 
-    const loading = computed<boolean>(() => {
-        return ensLoading.value
-    })
-
+    /**
+     * computed property
+     * @returns {boolean} weather or not name has valid Unstoppable Domain TLD
+     */
     const resolvedEns = computed<string | undefined>(() => {
-        if (isValidTld.value) {
+        if (isValidTldEns.value) {
             if (!ensLoading.value && ensRes?.value && ensRes?.value?.domains.length > 0) {
                 return ensRes.value.domains[0].resolvedAddress?.id
             }
@@ -34,8 +97,20 @@ export function useResolveName(name: Ref<string | undefined>) {
         return undefined
     })
 
+    /**
+     * computed property
+     * @returns {boolean} weather or not name has valid Unstoppable Domain TLD
+     */
+    const loading = computed<boolean>(() => {
+        return ensLoading.value || udLoading.value
+    })
+
+    /**
+     * computed property
+     * @returns {string | undefined} resolved address
+     */
     const resolvedAdr = computed<string | undefined>(() => {
-        return isValidTld.value ? resolvedEns.value : undefined
+        return resolvedEns.value || resolvedUD.value || undefined
     })
 
     return { ensRes, loading, resolvedAdr }
