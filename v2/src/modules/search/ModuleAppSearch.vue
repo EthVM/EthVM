@@ -7,7 +7,7 @@
                     :title="search.param"
                     :subtitle="eth.toCheckSum(resolvedAdr)"
                     class="overflow-hidden"
-                    @click="routeTo(search.param)"
+                    @click="routeTo(resolvedAdr)"
                     :active="tokensResult.length === 0"
                 >
                     <template v-slot:prepend>
@@ -461,7 +461,7 @@ const routeTo = (_param: string, isBlock = false): void => {
             })
         }
     } else {
-        if (search.hashType === HASH_TYPE.AddressHash || search.hashType === HASH_TYPE.TokenHash) {
+        if (search.hashType === HASH_TYPE.AddressHash || search.hashType === HASH_TYPE.TokenHash || resolvedAdr.value) {
             router.push({
                 name: ROUTE_NAME.ADDRESS.NAME,
                 params: { [ROUTE_PROP.ADDRESS]: param }
@@ -488,7 +488,8 @@ const routeToFirst = (param: string): void => {
                 routeToToken(tokensResult.value[0].contract)
             } else {
                 const isBlock = search.isBlockNumber || search.hashType === HASH_TYPE.BlockHash || search.hashType === HASH_TYPE.UncleHash
-                routeTo(param, isBlock)
+                const _route = resolvedAdr.value ? resolvedAdr.value : param
+                routeTo(_route, isBlock)
             }
         } else if (isLoading.value && !hasError.value) {
             search.reroute = true
