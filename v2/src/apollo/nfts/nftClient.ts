@@ -15,6 +15,7 @@ import {
 import { ApolloClient, InMemoryCache } from '@apollo/client/core'
 import { RestLink } from 'apollo-link-rest'
 import { ResponceTokens, ResponceCollection } from './models'
+import * as Sentry from '@sentry/vue'
 
 const nftTypeDef = `${RespContract} ${RespNftOwner} ${RespNftPreviews} ${RespNftFloorPrice}  ${RespPaymentToken} ${RespMarketplace} ${RespCollection} ${RespNftMeta} ${RespNFT} ${RespNftTrait} ${RespTokens} ${Query}`
 
@@ -48,6 +49,7 @@ const transformNFTMeta = (data: ResponceTokens) => {
             }
             // SEND TO SENTRY OTHERWISE TO ADD PROCCESSING METHOD
             // nft.extra_metadata is not standardized, keep adding new processing methods
+            Sentry.captureException(`NFT extra_metadata new object found:, ${data}`)
             nft.extra_metadata.attributes = []
             return
         })

@@ -1,0 +1,9 @@
+query ensResolveName($name: String!) {
+  domains(where: { name: $name }) {
+    name
+    labelName
+    resolvedAddress {
+      id
+    }
+  }
+}
