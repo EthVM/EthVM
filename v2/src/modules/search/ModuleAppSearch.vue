@@ -407,13 +407,15 @@ const router = useRouter()
  * @param {string} contract - token contract address
  */
 const routeToToken = (contract: string): void => {
-    router.push({
-        name: ROUTE_NAME.TOKEN.NAME,
-        params: {
-            [ROUTE_PROP.TOKEN]: contract
-        },
-        query: { t: Q_TOKEN_DETAILS[0] }
-    })
+    if (contract !== '') {
+        router.push({
+            name: ROUTE_NAME.TOKEN.NAME,
+            params: {
+                [ROUTE_PROP.TOKEN]: contract
+            },
+            query: { t: Q_TOKEN_DETAILS[0] }
+        })
+    }
 }
 
 /**
@@ -457,16 +459,18 @@ const routeTo = (_param: string, isBlock = false): void => {
  * @param {string} param - search param
  */
 const routeToFirst = (param: string): void => {
-    if (!hasError.value && !isLoading.value) {
-        //Find First result in a list
-        if (tokensResult.value.length > 0 && tokensResult.value[0].contract) {
-            routeToToken(tokensResult.value[0].contract)
-        } else {
-            const isBlock = search.isBlockNumber || search.hashType === HASH_TYPE.BlockHash || search.hashType === HASH_TYPE.UncleHash
-            routeTo(param, isBlock)
+    if (param !== '') {
+        if (!hasError.value && !isLoading.value) {
+            //Find First result in a list
+            if (tokensResult.value.length > 0 && tokensResult.value[0].contract) {
+                routeToToken(tokensResult.value[0].contract)
+            } else {
+                const isBlock = search.isBlockNumber || search.hashType === HASH_TYPE.BlockHash || search.hashType === HASH_TYPE.UncleHash
+                routeTo(param, isBlock)
+            }
+        } else if (isLoading.value && !hasError.value) {
+            search.reroute = true
         }
-    } else if (isLoading.value && !hasError.value) {
-        search.reroute = true
     }
 }
 </script>
