@@ -1,5 +1,5 @@
-query ensResolveName($name: String!) {
-  domains(where: { name: $name }) {
+query ensResolveName($hash: ID!) {
+  domains(where: { id: $hash }) {
     name
     labelName
     resolvedAddress {

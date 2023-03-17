@@ -1,5 +1,9 @@
 {
   "compilerOptions": {
+    "typeRoots": [
+      "./typings",
+      "./node_modules/@types/"
+    ],
       "target": "esnext",
       "module": "esnext",
       "skipLibCheck": true,                                /* Skip type checking all .d.ts files. */
@@ -24,5 +28,6 @@
       },
       "lib": ["esnext", "dom", "dom.iterable", "scripthost"]
   },
-  "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.vue", "tests/**/*.ts", "tests/**/*.tsx", "src/**/*.graphql"]
+  "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.vue", "tests/**/*.ts", "tests/**/*.tsx", "src/**/*.graphql"],
+
 }

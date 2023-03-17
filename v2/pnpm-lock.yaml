@@ -3,6 +3,7 @@ lockfileVersion: 5.4
 specifiers:
   '@apollo/client': ^3.5.10
   '@babel/core': ^7.18.9
+  '@ensdomains/eth-ens-namehash': ^2.0.15
   '@graphql-codegen/add': ^3.1.1
   '@graphql-codegen/cli': 2.6.2
   '@graphql-codegen/introspection': 2.1.1
@@ -76,6 +77,7 @@ specifiers:
 
 dependencies:
   '@apollo/client': 3.6.8_iohxpigb4dhlolorrmkfbhih6y
+  '@ensdomains/eth-ens-namehash': 2.0.15
   '@graphql-codegen/add': 3.1.1_graphql@16.5.0
   '@graphql-codegen/near-operation-file-preset': 2.2.14_graphql@16.5.0
   '@graphql-codegen/typescript-vue-apollo': 3.2.14_ubrtutz2urcxyhwqr2zvlqjzha
@@ -1430,6 +1432,10 @@ packages:
     transitivePeerDependencies:
       - typescript
     dev: true
+
+  /@ensdomains/eth-ens-namehash/2.0.15:
+    resolution: {integrity: sha512-JRDFP6+Hczb1E0/HhIg0PONgBYasfGfDheujmfxaZaAv/NAH4jE6Kf48WbqfRZdxt4IZI3jl3Ri7sZ1nP09lgw==}
+    dev: false
 
   /@eslint/eslintrc/0.4.3:
     resolution: {integrity: sha512-J6KFFz5QCYUJq3pf0mjEcCJVERbzv71PUIDczuh9JkwGEzced6CO5ADLHB1rbf/+oPBtoPfMYNOpGDzCANlbXw==}

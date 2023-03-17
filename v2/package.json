@@ -15,6 +15,7 @@
     },
     "dependencies": {
         "@apollo/client": "^3.5.10",
+        "@ensdomains/eth-ens-namehash": "^2.0.15",
         "@graphql-codegen/add": "^3.1.1",
         "@graphql-codegen/near-operation-file-preset": "^2.2.9",
         "@graphql-codegen/typescript-vue-apollo": "^3.2.9",

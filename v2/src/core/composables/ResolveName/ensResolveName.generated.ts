@@ -10,7 +10,7 @@ import * as VueApolloComposable from '@vue/apollo-composable'
 import * as VueCompositionApi from 'vue'
 export type ReactiveFunction<TParam> = () => TParam
 export type EnsResolveNameQueryVariables = Types.Exact<{
-    name: Types.Scalars['String']
+    hash: Types.Scalars['ID']
 }>
 
 export type EnsResolveNameQuery = {
@@ -19,8 +19,8 @@ export type EnsResolveNameQuery = {
 }
 
 export const EnsResolveNameDocument = gql`
-    query ensResolveName($name: String!) {
-        domains(where: { name: $name }) {
+    query ensResolveName($hash: ID!) {
+        domains(where: { id: $hash }) {
             name
             labelName
             resolvedAddress {
@@ -42,7 +42,7 @@ export const EnsResolveNameDocument = gql`
  *
  * @example
  * const { result, loading, error } = useEnsResolveNameQuery({
- *   name: // value for 'name'
+ *   hash: // value for 'hash'
  * });
  */
 export function useEnsResolveNameQuery(

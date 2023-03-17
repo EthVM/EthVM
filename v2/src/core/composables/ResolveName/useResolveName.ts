@@ -2,6 +2,8 @@ import { computed, Ref, watch, ref } from 'vue'
 import { useEnsResolveNameQuery } from './ensResolveName.generated'
 import { Resolution } from '@unstoppabledomains/resolution'
 import * as Sentry from '@sentry/vue'
+import namehash from '@ensdomains/eth-ens-namehash'
+
 export function useResolveName(name: Ref<string | undefined>) {
     const UD_SUPPORTED_TLDS = ['blockchain', 'bitcoin', 'crypto', 'nft', 'wallet', 'x', 'dao', '888', 'zil']
     const udResolution = new Resolution()
@@ -68,6 +70,9 @@ export function useResolveName(name: Ref<string | undefined>) {
         return getTld(name.value).length > 2
     })
 
+    const normalizeEns = computed<string | undefined>(() => {
+        return isValidTldEns.value ? namehash.hash(name.value) : undefined
+    })
     /**
      * Fetches Ens resolution from Graph.
      * ensRes - raw data
@@ -75,7 +80,7 @@ export function useResolveName(name: Ref<string | undefined>) {
      */
     const { result: ensRes, loading: ensLoading } = useEnsResolveNameQuery(
         () => ({
-            name: name.value
+            hash: normalizeEns.value || ''
         }),
         () => ({
             clientId: 'ensClient',
@@ -113,5 +118,9 @@ export function useResolveName(name: Ref<string | undefined>) {
         return resolvedEns.value || resolvedUD.value || undefined
     })
 
-    return { ensRes, loading, resolvedAdr }
+    const isValidTld = computed<boolean>(() => {
+        return isValidTldEns.value || isValidTldUD.value
+    })
+
+    return { ensRes, loading, resolvedAdr, isValidTld }
 }
