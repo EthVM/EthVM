@@ -4,7 +4,7 @@
             <v-list v-if="resolvedAdr">
                 <v-list-subheader>Address</v-list-subheader>
                 <v-list-item
-                    :title="search.param"
+                    :title="search.param.toLowerCase()"
                     :subtitle="eth.toCheckSum(resolvedAdr)"
                     class="overflow-hidden"
                     @click="routeTo(resolvedAdr)"
