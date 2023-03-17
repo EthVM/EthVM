@@ -1,10 +1,7 @@
 import { isAPIExceptionProduction, isAPIExceptionDev } from './../errorExceptions'
 import { ApolloClient, createHttpLink, InMemoryCache } from '@apollo/client/core'
-
 import { onError } from '@apollo/client/link/error'
-import { getMainDefinition } from '@apollo/client/utilities'
 import * as Sentry from '@sentry/vue'
-import configs from '../configs'
 
 /*
   ===================================================================================
