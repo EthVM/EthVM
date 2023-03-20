@@ -80,7 +80,15 @@ interface Search {
     isActive: boolean
 }
 
-const search: Search = reactive({ focus: false, timeout: 0, value: '', optionsTimeout: 0, isActive: true, timeoutEnter: 0, timeoutBlur: 0 })
+const search: Search = reactive({
+    focus: false,
+    timeout: 0,
+    value: '',
+    optionsTimeout: 0,
+    isActive: true,
+    timeoutEnter: 0,
+    timeoutBlur: 0
+})
 /**
  * Emits user input to parent with the timeout of 600
  */
@@ -88,7 +96,7 @@ const onUserInput = (): void => {
     clearTimeout(search.timeout)
     search.timeout = window.setTimeout(() => {
         emit('onUserInput', search.value)
-    }, 600)
+    }, 800)
 }
 /**
  * Emits user pressed enter to parent with the timeout of 600
@@ -97,7 +105,7 @@ const onSearchEnter = (): void => {
     clearTimeout(search.timeoutEnter)
     search.timeoutEnter = window.setTimeout(() => {
         emit('onSearchEnter', search.value)
-    }, 600)
+    }, 800)
 }
 
 /**

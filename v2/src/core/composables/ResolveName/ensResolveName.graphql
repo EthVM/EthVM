@@ -1,0 +1,9 @@
+query ensResolveName($hash: ID!) {
+  domains(where: { id: $hash }) {
+    name
+    labelName
+    resolvedAddress {
+      id
+    }
+  }
+}

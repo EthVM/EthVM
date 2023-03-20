@@ -1,6 +1,20 @@
 <template>
     <search-core-input :is-loading="isLoading" :has-error="hasError" @onUserInput="executeSearch" @tokenSelected="routeToToken" @onSearchEnter="routeToFirst">
         <template #search-results>
+            <v-list v-if="resolvedAdr">
+                <v-list-subheader>Address</v-list-subheader>
+                <v-list-item
+                    :title="search.param.toLowerCase()"
+                    :subtitle="eth.toCheckSum(resolvedAdr)"
+                    class="overflow-hidden"
+                    @click="routeTo(resolvedAdr)"
+                    :active="tokensResult.length === 0"
+                >
+                    <template v-slot:prepend>
+                        <app-address-blockie :address="resolvedAdr" :size="6" class="mr-5" />
+                    </template>
+                </v-list-item>
+            </v-list>
             <!--
                 Search has Token result
             -->
@@ -92,7 +106,7 @@ import AppAddressBlockie from '@/core/components/AppAddressBlockie.vue'
 import { SearchTokenOption } from '@core/components/props/index'
 import AppTokenIcon from '@/core/components/AppTokenIcon.vue'
 import { eth } from '@core/helper/eth'
-import { reactive, watch, computed } from 'vue'
+import { reactive, watch, computed, ref, Ref } from 'vue'
 import { useGetHashTypeQuery, useGetTokensBeginsWithQuery } from './apollo/searchDetails.generated'
 import { HashType } from '@/apollo/types'
 import { Q_TOKEN_DETAILS, ROUTE_NAME, ROUTE_PROP } from '@core/router/routesNames'
@@ -102,6 +116,7 @@ import { useCoinData } from '@core/composables/CoinData/coinData.composable'
 import { formatUsdValue } from '@/core/helper/number-format-helper'
 import BN from 'bignumber.js'
 import { useGetTokenInfoByContractQuery } from '@module/tokens/apollo/TokenDetails/tokenDetails.generated'
+import { useResolveName } from '@/core/composables/ResolveName/useResolveName'
 
 /*
   ===================================================================================
@@ -134,6 +149,9 @@ const search: Search = reactive({
     param: ''
 })
 
+const resolveName: Ref<string | undefined> = ref(undefined)
+const { resolvedAdr, loading: isLoadingResolver } = useResolveName(resolveName)
+
 /*
 ===================================================================================
     HELPERS
@@ -163,6 +181,7 @@ const executeSearch = (searchParam: string): void => {
     search.hasErrorHahType = false
     search.hasErrorTokenSearch = false
     search.hashType = ''
+    resolveName.value = undefined
     // checks for string length
     if (Buffer.byteLength(searchParam, 'utf8') > 1024) {
         search.hasErrorHahType = true
@@ -181,6 +200,9 @@ const executeSearch = (searchParam: string): void => {
                 search.param = param
             } else {
                 search.isBlockNumber = false
+            }
+            if (!eth.isValidBlockNumber(removeSpaces(param)) && !eth.isValidHash(removeSpaces(param.toLowerCase()))) {
+                resolveName.value = removeSpaces(param)
             }
             // Search For Tokens:
             search.param = param
@@ -371,13 +393,13 @@ const tokensResult = computed(() => {
  * Returns true if search results are empty
  */
 const hasError = computed(() => {
-    return search.hasErrorTokenSearch && search.hasErrorHahType && !search.isBlockNumber && tokensResult.value.length === 0
+    return search.hasErrorTokenSearch && search.hasErrorHahType && !search.isBlockNumber && tokensResult.value.length === 0 && resolvedAdr.value === undefined
 })
 /**
  * Returns true if search is loading
  */
 const isLoading = computed(() => {
-    return loadingCoinData.value || loadingHashType.value || loadingTokenSearch.value
+    return loadingCoinData.value || loadingHashType.value || loadingTokenSearch.value || isLoadingResolver.value
 })
 
 /**
@@ -439,7 +461,7 @@ const routeTo = (_param: string, isBlock = false): void => {
             })
         }
     } else {
-        if (search.hashType === HASH_TYPE.AddressHash || search.hashType === HASH_TYPE.TokenHash) {
+        if (search.hashType === HASH_TYPE.AddressHash || search.hashType === HASH_TYPE.TokenHash || resolvedAdr.value) {
             router.push({
                 name: ROUTE_NAME.ADDRESS.NAME,
                 params: { [ROUTE_PROP.ADDRESS]: param }
@@ -466,7 +488,8 @@ const routeToFirst = (param: string): void => {
                 routeToToken(tokensResult.value[0].contract)
             } else {
                 const isBlock = search.isBlockNumber || search.hashType === HASH_TYPE.BlockHash || search.hashType === HASH_TYPE.UncleHash
-                routeTo(param, isBlock)
+                const _route = resolvedAdr.value ? resolvedAdr.value : param
+                routeTo(_route, isBlock)
             }
         } else if (isLoading.value && !hasError.value) {
             search.reroute = true

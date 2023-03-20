@@ -1,5 +1,8 @@
 ### Release v2.0.2
 
+### Feature
+- Resolve ENS and Unstoppable Domains in core app search, add address to portfolio using a domain name [#1134](https://github.com/EthVM/EthVM/pull/1134)
+
 ### UI
 - Consistent table header [#1131](https://github.com/EthVM/EthVM/pull/1131)
 - Replaces more_horiz with east icon for buttons on mobile [#1131](https://github.com/EthVM/EthVM/pull/1131)
@@ -11,6 +14,7 @@
 
 ### Devop
 - refactor adr miner table, removed unused component props [#1131](https://github.com/EthVM/EthVM/pull/1131)
+
 ======================================================================
 ### Release v2.0.1
 
