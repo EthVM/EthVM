@@ -2,7 +2,7 @@
     <v-dialog v-model="state.open" @update:model-value="changeValue" :max-width="props.width" :height="props.height" scrollable :open-on-hover="false">
         <v-card rounded="xl">
             <v-card-actions v-if="props.title" class="px-6 pt-6 pb-5">
-                <p class="text-h5 font-weight-bold">{{ props.title }}</p>
+                <p class="text-h5 font-weight-bold text-capitalize">{{ props.title }}</p>
                 <v-spacer />
                 <app-btn-icon icon="close" @click="closeOnClick" />
             </v-card-actions>

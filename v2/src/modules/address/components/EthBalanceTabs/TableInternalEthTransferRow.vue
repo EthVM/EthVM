@@ -1,6 +1,6 @@
 <template>
     <div>
-        <app-table-row v-if="smAndDown" @click="showMoreDetails = !showMoreDetails" :color="showMoreDetails ? 'pillGrey' : 'transparent'">
+        <app-table-row v-if="smAndDown" @click="toggleMoreDetails" :color="showMoreDetails ? 'pillGrey' : 'transparent'">
             <v-col cols="6">
                 <v-avatar :color="transferDirection.color" size="22">
                     <v-icon size="13" color="white"> {{ transferDirection.icon }} </v-icon>
@@ -18,7 +18,7 @@
                 </div>
             </v-col>
             <template #expandable>
-                <v-col cols="12">
+                <v-col cols="12" v-if="showMoreDetails">
                     <v-divider class="mx-n6 mb-3" />
                     <div class="mb-4 d-flex justify-space-between">
                         <span class="text-info mr-2">Balance Before:</span>
@@ -190,4 +190,8 @@ const timestamp = computed<string>(() => {
 const txValue = computed<FormattedNumber>(() => {
     return formatNonVariableEthValue(new BN(props.transfer.value))
 })
+
+const toggleMoreDetails = (): void => {
+    showMoreDetails.value = !showMoreDetails.value
+}
 </script>

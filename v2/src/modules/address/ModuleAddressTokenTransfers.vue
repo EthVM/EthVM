@@ -26,7 +26,7 @@
                 </v-row>
             </div>
             <app-btn v-if="props.isOverview && !xs" text="More" isSmall icon="east" @click="goToTokenTransfersPage"></app-btn>
-            <app-btn-icon v-if="props.isOverview && xs" icon="more_horiz" @click="goToTokenTransfersPage"></app-btn-icon>
+            <app-btn-icon v-if="props.isOverview && xs" icon="east" @click="goToTokenTransfersPage"></app-btn-icon>
         </v-card-title>
         <div class="mb-n5">
             <!--            Table Header-->
@@ -41,7 +41,7 @@
                 <v-col v-if="!props.isOverview" cols="1" class="py-0"> Timestamp </v-col>
                 <v-col v-if="!props.isOverview" cols="1" class="py-0 text-right"> More </v-col>
             </v-row>
-            <v-divider class="my-0 mt-md-5 mx-n4 mx-sm-n6" />
+            <v-divider class="my-0 mt-sm-4 mx-n4 mx-sm-n6" />
             <div v-if="initialLoad || loadingTransfers" class="p-ten-top">
                 <div v-for="item in 10" :key="item" style="padding: 10px 0">
                     <div class="skeleton-box rounded-xl" style="height: 34px"></div>

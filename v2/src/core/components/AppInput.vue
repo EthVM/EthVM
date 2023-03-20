@@ -1,5 +1,12 @@
 <template>
     <v-card elevation="0" color="transparent" :max-width="props.width">
+        <div v-if="props.hasAdrHint" class="input-adr-hint mb-1">
+            <v-scroll-x-transition hide-on-leave>
+                <p v-if="props.addressHint" class="ml-11 text-info" key="adr-hint">
+                    {{ props.addressHint }}
+                </p>
+            </v-scroll-x-transition>
+        </div>
         <v-card rounded="pill" :max-width="props.width" elevation="0">
             <v-text-field
                 v-model="state.value"
@@ -24,7 +31,7 @@
             </v-text-field>
         </v-card>
         <div v-if="props.showErrorMessage || props.isRequired" class="input-error-messages">
-            <v-scroll-x-transition>
+            <v-scroll-x-transition hide-on-leave>
                 <p v-if="(hasError && props.errorMessage) || showRequired" class="ml-11 text-error" key="error">
                     {{ message }}
                 </p>
@@ -46,6 +53,8 @@ interface ComponentProps {
     errorMessage?: string
     showErrorMessage?: boolean
     isRequired?: boolean
+    addressHint?: string
+    hasAdrHint?: boolean
 }
 const props = withDefaults(defineProps<ComponentProps>(), {
     isLoading: false,
@@ -55,7 +64,8 @@ const props = withDefaults(defineProps<ComponentProps>(), {
     width: '540',
     hasPreppendInner: true,
     showErrorMessage: false,
-    isRequired: false
+    isRequired: false,
+    hasAdrHint: false
 })
 
 const emit = defineEmits<{
@@ -145,5 +155,10 @@ watch(
     min-height: 16px;
     font-size: 10px !important;
     line-height: 16px;
+}
+.input-adr-hint {
+    min-height: 20px;
+    font-size: 14px !important;
+    line-height: 20px;
 }
 </style>

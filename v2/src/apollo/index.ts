@@ -6,6 +6,7 @@ import { onError } from '@apollo/client/link/error'
 import { getMainDefinition } from '@apollo/client/utilities'
 import { OpenSeaClient } from './opensea/OpenSeaClient'
 import { NftClient } from './nfts/nftClient'
+import { EnsClient } from './ens/ensClient'
 import * as Sentry from '@sentry/vue'
 
 import configs from '../configs'
@@ -88,5 +89,6 @@ const apolloClient = new ApolloClient({
 export default {
     default: apolloClient,
     openSeaClient: OpenSeaClient,
-    nftClient: NftClient
+    nftClient: NftClient,
+    ensClient: EnsClient
 }

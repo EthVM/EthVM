@@ -12,7 +12,7 @@
                     {{ isNft ? 'Image' : 'Percentage' }}
                 </v-col>
             </v-row>
-            <v-divider class="my-0 mt-md-4 mx-n4 mx-sm-n6" />
+            <v-divider class="my-0 mt-sm-4 mx-n4 mx-sm-n6" />
         </div>
         <!-- End Table Header -->
 

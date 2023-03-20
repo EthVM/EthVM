@@ -12,8 +12,8 @@
                 <v-col sm="2"> Balance Before </v-col>
                 <v-col sm="2" lg="3"> Balance After </v-col>
             </v-row>
-            <v-divider class="my-0 mt-md-4 mx-n4 mx-sm-n6" />
         </template>
+        <v-divider class="my-0 mt-sm-4 mx-n4 mx-sm-n6" />
         <div v-if="!initialLoad && !loadingInternalTransfersData" class="p-ten-top">
             <template v-if="transfers && transfers.length > 0">
                 <div v-for="(transfer, index) in currentPageData" :key="`${transfer.transfer.transactionHash}-${index}`">

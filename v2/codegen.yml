@@ -1,6 +1,7 @@
 overwrite: true
 schema:
     - "https://api-v2.ethvm.dev"
+    - "https://api.thegraph.com/subgraphs/name/ensdomains/ens"
     - "src/apollo/opensea/schema.graphql"
     - "src/apollo/nfts/schema.graphql"
 documents: "src/**/*.graphql"

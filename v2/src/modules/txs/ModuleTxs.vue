@@ -1,7 +1,10 @@
 <template>
-    <v-card :variant="isHome ? 'elevated' : 'flat'" :elevation="isHome ? 1 : 0" rounded="xl" :class="[isHome ? 'py-4 py-sm-6' : '', 'px-4 px-sm-6']">
-        <v-card-title v-if="(isHome || state.newMinedTransfers || tableTitle) && !isBlock" class="px-0 mb-5 d-flex align-center justify-space-between">
-            <div class="d-flex align-center mt-4 mt-sm-6">
+    <v-card :variant="isHome ? 'elevated' : 'flat'" :elevation="isHome ? 1 : 0" rounded="xl" class="pa-4 pa-sm-6">
+        <v-card-title
+            v-if="(isHome || state.newMinedTransfers || tableTitle) && !isBlock"
+            :class="[isHome ? 'mb-2 mb-sm-4' : 'mb-2 mb-sm-5', 'px-0  py-0 d-flex align-center justify-space-between']"
+        >
+            <div class="d-flex align-center">
                 <h1 v-if="tableTitle" class="text-h6 font-weight-bold">
                     {{ tableTitle }}
                 </h1>
@@ -14,7 +17,8 @@
                     hide-count
                 />
             </div>
-            <app-btn v-if="isHome" text="More" isSmall icon="east" @click="goToTransactionsPage"></app-btn>
+            <app-btn v-if="isHome && !xs" text="More" isSmall icon="east" @click="goToTransactionsPage"></app-btn>
+            <app-btn-icon v-else-if="isHome && xs" icon="east" @click="goToTransactionsPage"></app-btn-icon>
         </v-card-title>
         <txs-table
             :max-items="props.maxItems"
@@ -35,6 +39,7 @@
 
 <script setup lang="ts">
 import AppBtn from '@core/components/AppBtn.vue'
+import AppBtnIcon from '@core/components/AppBtnIcon.vue'
 import AppNewUpdate from '@core/components/AppNewUpdate.vue'
 import {
     useGetAllTxsQuery,
@@ -48,6 +53,9 @@ import TxsTable from '@module/txs/components/TxsTable.vue'
 import { ROUTE_NAME } from '@core/router/routesNames'
 import { useRouter } from 'vue-router'
 import { useAppPaginate } from '@core/composables/AppPaginate/useAppPaginate.composable'
+import { useDisplay } from 'vuetify'
+
+const { xs } = useDisplay()
 
 interface ModuleState {
     refetching: boolean
