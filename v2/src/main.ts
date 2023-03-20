@@ -3,14 +3,13 @@ import { createPinia } from 'pinia'
 import App from './App.vue'
 import router from './core/router'
 import vuetify from './core/plugins/vuetify'
-import { loadFonts } from './core/plugins/webfontloader'
 import 'core-js/features/array/at'
 import * as Sentry from '@sentry/vue'
 import { BrowserTracing } from '@sentry/tracing'
 import { ApolloClients } from '@vue/apollo-composable'
 import clients from './apollo'
 import Configs from './configs'
-loadFonts()
+import './assets/fonts/css/Roboto.css'
 
 const app = createApp({
     setup() {

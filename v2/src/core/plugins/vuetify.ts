@@ -3,7 +3,6 @@ import 'material-design-icons-iconfont/dist/material-design-icons.css'
 import 'vuetify/styles'
 import { md, aliases } from 'vuetify/iconsets/md'
 import { createVuetify, ThemeDefinition } from 'vuetify'
-// import type { IconAliases } from 'vuetify'
 
 type ThemeDefinition = typeof ThemeDefinition
 
