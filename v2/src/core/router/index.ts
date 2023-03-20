@@ -11,22 +11,22 @@ import {
 } from './routesNames'
 import configs from '@/configs'
 import { tabViewRouteGuard, loadImages } from './helpers'
-const ViewHome = () => import('@view/ViewHome.vue')
-const ViewBlocks = () => import('@view/ViewBlocks.vue')
-const ViewTxDetails = () => import('@view/ViewTxDetails.vue')
-const ViewBlockDetails = () => import('@view/ViewBlockDetails.vue')
-const ViewUncleDetails = () => import('@view/ViewUncleDetails.vue')
-const ViewTokenDetail = () => import('@view/ViewTokenDetails.vue')
-const ViewTxs = () => import('@view/ViewTxs.vue')
-const ViewAddressTokens = () => import('@view/ViewAddressTokens.vue')
-const ViewAddress = () => import('@view/ViewAddress.vue')
-const ViewAddressOverview = () => import('@view/ViewAddressOverview.vue')
-const ViewAddressEthBalance = () => import('@view/ViewAddressEthBalance.vue')
-const ViewTokens = () => import('@view/ViewTokens.vue')
-const ViewAddressNfts = () => import('@view/ViewAddressNfts.vue')
-const ViewPortfolio = () => import('@view/ViewPortfolio.vue')
-const ViewNotFound = () => import('@view/ViewNotFound.vue')
-const ViewAbout = () => import('@view/ViewAbout.vue')
+const ViewHome = () => import(/* webpackChunkName: "ViewHome" */ '@view/ViewHome.vue')
+const ViewBlocks = () => import(/* webpackChunkName: "ViewBlocks" */ '@view/ViewBlocks.vue')
+const ViewTxDetails = () => import(/* webpackChunkName: "ViewTx" */ '@view/ViewTxDetails.vue')
+const ViewBlockDetails = () => import(/* webpackChunkName: "ViewBlock" */ '@view/ViewBlockDetails.vue')
+const ViewUncleDetails = () => import(/* webpackChunkName: "ViewUncle" */ '@view/ViewUncleDetails.vue')
+const ViewTokenDetail = () => import(/* webpackChunkName: "ViewToken" */ '@view/ViewTokenDetails.vue')
+const ViewTxs = () => import(/* webpackChunkName: "ViewTxs" */ '@view/ViewTxs.vue')
+const ViewAddressTokens = () => import(/* webpackChunkName: "ViewAdrTokens" */ '@view/ViewAddressTokens.vue')
+const ViewAddress = () => import(/* webpackChunkName: "ViewAdr" */ '@view/ViewAddress.vue')
+const ViewAddressOverview = () => import(/* webpackChunkName: "ViewAdrOverview" */ '@view/ViewAddressOverview.vue')
+const ViewAddressEthBalance = () => import(/* webpackChunkName: "ViewAdrEth" */ '@view/ViewAddressEthBalance.vue')
+const ViewTokens = () => import(/* webpackChunkName: "ViewTokens" */ '@view/ViewTokens.vue')
+const ViewAddressNfts = () => import(/* webpackChunkName: "ViewAdrNfts" */ '@view/ViewAddressNfts.vue')
+const ViewPortfolio = () => import(/* webpackChunkName: "ViewPortfolio" */ '@view/ViewPortfolio.vue')
+const ViewNotFound = () => import(/* webpackChunkName: "View404" */ '@view/ViewNotFound.vue')
+const ViewAbout = () => import(/* webpackChunkName: "ViewAbout" */ '@view/ViewAbout.vue')
 
 const routes: Array<RouteRecordRaw> = [
     {

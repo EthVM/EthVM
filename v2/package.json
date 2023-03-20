@@ -86,9 +86,15 @@
         "vue-cli-plugin-vuetify": "~2.5.8",
         "vue-tsc": "^0.37.9",
         "webpack": ">=5.0.0 <6.0.0",
+        "webpack-bundle-analyzer": "^4.8.0",
         "webpack-plugin-vuetify": "^2.0.1"
     },
     "peerDependencies": {
         "subscriptions-transport-ws": "^0.11.0"
+    },
+    "pnpm": {
+        "overrides": {
+            "bn.js@4.11.6": "4.12.0"
+        }
     }
 }
