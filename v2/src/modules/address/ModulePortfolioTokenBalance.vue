@@ -86,11 +86,43 @@
                 </v-row>
             </v-col>
             <v-spacer class="d-flex d-sm-none" />
+            <!--
+               Mobile Sort:
+                XS: on the right end
+                SM: none
+             -->
             <v-col class="d-flex d-sm-none justify-end">
-                <v-btn variant="text" color="info" class="font-weight-regular mr-n3" rounded="pill" size="small" @click="sortTable(SORT_KEY.USD)">
-                    USD Value
-                    <v-icon v-if="isActiveSort(SORT_KEY.USD)" class="ml-1" :size="14">{{ sortIcon }}</v-icon></v-btn
+                <v-btn variant="text" color="info" class="font-weight-regular mr-n3" rounded="pill" size="small" id="activator-mobile-sort">
+                    {{ activeSortString }}
+                    <v-icon class="ml-1" :size="14">{{ sortIcon }}</v-icon></v-btn
                 >
+                <app-menu min-width="140" activator="#activator-mobile-sort" :close-on-content-click="false">
+                    <v-list-item title="Token Name" class="py-2" @click="sortTable(SORT_KEY.NAME)">
+                        <template #append>
+                            <v-icon v-if="isActiveSort(SORT_KEY.NAME)" class="ml-1" :size="14">{{ sortIcon }}</v-icon>
+                        </template>
+                    </v-list-item>
+                    <v-list-item title="USD Value" class="py-2" @click="sortTable(SORT_KEY.USD)">
+                        <template #append>
+                            <v-icon v-if="isActiveSort(SORT_KEY.USD)" class="ml-1" :size="14">{{ sortIcon }}</v-icon>
+                        </template>
+                    </v-list-item>
+                    <v-list-item title="Balance" class="py-2" @click="sortTable(SORT_KEY.BALANCE)">
+                        <template #append>
+                            <v-icon v-if="isActiveSort(SORT_KEY.BALANCE)" class="ml-1" :size="14">{{ sortIcon }}</v-icon></template
+                        >
+                    </v-list-item>
+                    <v-list-item title="Price" class="py-2" @click="sortTable(SORT_KEY.PRICE)">
+                        <template #append>
+                            <v-icon v-if="isActiveSort(SORT_KEY.PRICE)" class="ml-1" :size="14">{{ sortIcon }}</v-icon>
+                        </template>
+                    </v-list-item>
+                    <v-list-item title="24h" class="py-2" @click="sortTable(SORT_KEY.PERCENTAGE_CHANGE)">
+                        <template #append>
+                            <v-icon v-if="isActiveSort(SORT_KEY.PERCENTAGE_CHANGE)" class="ml-1" :size="14">{{ sortIcon }}</v-icon></template
+                        >
+                    </v-list-item>
+                </app-menu>
             </v-col>
         </v-row>
 
@@ -118,6 +150,7 @@
 
 <script setup lang="ts">
 import AppInput from '@core/components/AppInput.vue'
+import AppMenu from '@core/components/AppMenu.vue'
 import AppAddressBlockie from '@/core/components/AppAddressBlockie.vue'
 import TableRowTokenBalance from './components/TableRowTokenBalance.vue'
 import AppPagination from '@core/components/AppPagination.vue'
@@ -291,6 +324,19 @@ const tokens = computed<Token[]>(() => {
         }
     }
     return _tokens
+})
+
+const activeSortString = computed<string>(() => {
+    if (state.sortKey.includes(SORT_KEY.BALANCE)) {
+        return 'Balance'
+    } else if (state.sortKey.includes(SORT_KEY.PRICE)) {
+        return 'Price'
+    } else if (state.sortKey.includes(SORT_KEY.NAME)) {
+        return 'Token'
+    } else if (state.sortKey.includes(SORT_KEY.USD)) {
+        return 'USD Value'
+    }
+    return '24h'
 })
 
 /**------------------------
