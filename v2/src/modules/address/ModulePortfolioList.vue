@@ -48,6 +48,45 @@
                     <v-icon v-if="isActiveSort(KEY.TOTAL)" class="ml-1" :size="14">{{ sortIcon }}</v-icon></v-btn
                 >
             </v-col>
+            <v-spacer class="d-flex d-sm-none" />
+            <!--
+               Mobile Sort:
+                XS: on the right end
+                SM: none
+             -->
+            <v-col class="d-flex d-sm-none justify-end">
+                <v-btn variant="text" color="info" class="font-weight-regular mr-n3" rounded="pill" size="small" id="activator-mobile-sort">
+                    {{ activeSortString }}
+                    <v-icon class="ml-1" :size="14">{{ sortIcon }}</v-icon></v-btn
+                >
+                <app-menu min-width="140" activator="#activator-mobile-sort" :close-on-content-click="false">
+                    <v-list-item title="Name" class="py-2" @click="sortTable(KEY.NAME)">
+                        <template #append>
+                            <v-icon v-if="isActiveSort(KEY.NAME)" class="ml-1" :size="14">{{ sortIcon }}</v-icon>
+                        </template>
+                    </v-list-item>
+                    <v-list-item title="Address" class="py-2" @click="sortTable(KEY.HASH)">
+                        <template #append>
+                            <v-icon v-if="isActiveSort(KEY.HASH)" class="ml-1" :size="14">{{ sortIcon }}</v-icon>
+                        </template>
+                    </v-list-item>
+                    <v-list-item title="ETH Balance" class="py-2" @click="sortTable(KEY.ETH)">
+                        <template #append>
+                            <v-icon v-if="isActiveSort(KEY.ETH)" class="ml-1" :size="14">{{ sortIcon }}</v-icon></template
+                        >
+                    </v-list-item>
+                    <v-list-item title="ETH Value" class="py-2" @click="sortTable(KEY.ETH_USD)">
+                        <template #append>
+                            <v-icon v-if="isActiveSort(KEY.ETH_USD)" class="ml-1" :size="14">{{ sortIcon }}</v-icon>
+                        </template>
+                    </v-list-item>
+                    <v-list-item title="Total" class="py-2" @click="sortTable(KEY.TOTAL)">
+                        <template #append>
+                            <v-icon v-if="isActiveSort(KEY.TOTAL)" class="ml-1" :size="14">{{ sortIcon }}</v-icon></template
+                        >
+                    </v-list-item>
+                </app-menu>
+            </v-col>
         </v-row>
 
         <v-divider class="mx-n4 mx-sm-n6 mt-sm-3" />
@@ -66,6 +105,7 @@
 
 <script setup lang="ts">
 import AppNoResult from '@core/components/AppNoResult.vue'
+import AppMenu from '@core/components/AppMenu.vue'
 import TableRowPortfolioItem from './components/TableRowPortfolioItem.vue'
 import { computed, reactive } from 'vue'
 import { useStore } from '@/store'
@@ -162,6 +202,20 @@ const sortTable = (key: KEY) => {
         state.sortKey = key
     }
 }
+const activeSortString = computed<string>(() => {
+    if (state.sortKey.includes(KEY.HASH)) {
+        return 'Address'
+    } else if (state.sortKey.includes(KEY.ETH)) {
+        return 'ETH Balance'
+    } else if (state.sortKey.includes(KEY.NAME)) {
+        return 'Name'
+    } else if (state.sortKey.includes(KEY.ETH_USD)) {
+        return 'ETH Value'
+    } else if (state.sortKey.includes(KEY.TOTAL)) {
+        return 'Rotal'
+    }
+    return 'Sort'
+})
 
 interface SortedInterface {
     key: KEY

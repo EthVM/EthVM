@@ -102,6 +102,11 @@
                 </v-row>
             </v-col>
             <v-spacer class="d-flex d-sm-none" />
+            <!--
+               Mobile Sort:
+                XS: on the right end
+                SM: none
+             -->
             <v-col class="d-flex d-sm-none justify-end">
                 <v-btn variant="text" color="info" class="font-weight-regular mr-n3" rounded="pill" size="small" id="activator-mobile-sort">
                     {{ activeSortString }}
