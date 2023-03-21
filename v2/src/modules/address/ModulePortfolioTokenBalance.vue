@@ -326,19 +326,6 @@ const tokens = computed<Token[]>(() => {
     return _tokens
 })
 
-const activeSortString = computed<string>(() => {
-    if (state.sortKey.includes(SORT_KEY.BALANCE)) {
-        return 'Balance'
-    } else if (state.sortKey.includes(SORT_KEY.PRICE)) {
-        return 'Price'
-    } else if (state.sortKey.includes(SORT_KEY.NAME)) {
-        return 'Token'
-    } else if (state.sortKey.includes(SORT_KEY.USD)) {
-        return 'USD Value'
-    }
-    return '24h'
-})
-
 /**------------------------
  * Pagination
  -------------------------*/
@@ -370,6 +357,19 @@ const isActiveSort = (key: KEY): boolean => {
 }
 
 const SORT_KEY = KEY
+
+const activeSortString = computed<string>(() => {
+    if (state.sortKey.includes(SORT_KEY.BALANCE)) {
+        return 'Balance'
+    } else if (state.sortKey.includes(SORT_KEY.PRICE)) {
+        return 'Price'
+    } else if (state.sortKey.includes(SORT_KEY.NAME)) {
+        return 'Token'
+    } else if (state.sortKey.includes(SORT_KEY.USD)) {
+        return 'USD Value'
+    }
+    return '24h'
+})
 </script>
 
 <style scoped>
