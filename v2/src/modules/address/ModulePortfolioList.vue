@@ -1,5 +1,5 @@
 <template>
-    <div class="px-4 px-sm-6 pb-4 pb-sm-6">
+    <div class="px-4 px-sm-6 pb-4 pb-sm-6 mt-n4 mt-sm-0">
         <!--Table Header-->
         <v-row :dense="xs" :class="'d-flex text-body-1 text-info mb-0'" :justify="xs ? 'end' : 'start'">
             <v-col sm="6" lg="3" class="py-0 d-none d-sm-block">
