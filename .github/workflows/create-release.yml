@@ -84,8 +84,8 @@ jobs:
           curl -sL https://sentry.io/get-cli/ | bash
           TAG=${{ github.ref_name }}
           RELEASE=${TAG//v/}
-          sentry-cli releases new -p ethvm-web $RELEASE
-          sentry-cli releases -p ethvm-web files $RELEASE upload-sourcemaps ./v2/dist/sourcemaps --url-prefix 'https://www.ethvm.com/sourcemaps' --rewrite --validate
+          sentry-cli releases new -p ethvm-eth-front-end $RELEASE
+          sentry-cli releases -p ethvm-eth-front-end files $RELEASE upload-sourcemaps ./v2/dist/sourcemaps --url-prefix 'https://www.ethvm.com/sourcemaps' --rewrite --validate
           sentry-cli releases set-commits $RELEASE --auto
           sentry-cli releases finalize $RELEASE
       #Create Release
