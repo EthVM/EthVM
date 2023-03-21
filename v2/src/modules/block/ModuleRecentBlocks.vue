@@ -1,11 +1,12 @@
 <template>
     <v-card :variant="isHome ? 'elevated' : 'flat'" :elevation="isHome ? 1 : 0" rounded="xl" class="pa-4 pa-sm-6">
-        <v-card-title class="px-0 mb-5 d-flex align-center justify-space-between">
+        <v-card-title :class="[isHome ? 'mb-2 mb-sm-4' : 'mb-2 mb-sm-5', 'px-0  py-0 d-flex align-center justify-space-between']">
             <div class="d-flex align-center">
                 <h1 class="text-h6 font-weight-bold">{{ getTitle }}</h1>
                 <notice-new-block v-if="!isHome" @reload="setPage(1, true)" />
             </div>
-            <app-btn v-if="isHome" text="More" isSmall icon="east" @click="goToBlocksPage"></app-btn>
+            <app-btn v-if="isHome && !xs" text="More" isSmall icon="east" @click="goToBlocksPage"></app-btn>
+            <app-btn-icon v-else-if="isHome && xs" icon="east" @click="goToBlocksPage"></app-btn-icon>
         </v-card-title>
         <table-blocks
             :max-items="ITEMS_PER_PAGE"
@@ -25,6 +26,7 @@
 
 <script setup lang="ts">
 import AppBtn from '@core/components/AppBtn.vue'
+import AppBtnIcon from '@core/components/AppBtnIcon.vue'
 import TableBlocks from '@/modules/block/components/RecentBlocks/BlocksTable.vue'
 import NoticeNewBlock from '@/modules/block/components/RecentBlocks/NoticeNewBlock.vue'
 import BN from 'bignumber.js'
@@ -41,7 +43,9 @@ import { ROUTE_NAME } from '@core/router/routesNames'
 import { useRouter } from 'vue-router'
 import { ITEMS_PER_PAGE } from '@core/constants'
 import { useAppPaginate } from '@core/composables/AppPaginate/useAppPaginate.composable'
+import { useDisplay } from 'vuetify'
 
+const { xs } = useDisplay()
 interface BlockMap {
     [key: number]: TypeBlocks
 }

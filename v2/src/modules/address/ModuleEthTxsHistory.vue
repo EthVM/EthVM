@@ -52,8 +52,8 @@
             <v-col sm="2"> Hash</v-col>
             <v-col sm="3"> Balance Change </v-col>
         </v-row>
-        <v-divider class="my-0 mt-md-4 mx-n4 mx-sm-n6" />
     </template>
+    <v-divider class="my-0 mt-sm-4 mx-n4 mx-sm-n6" />
     <div v-if="initialLoad || loadingTxsTransfersData" class="p-ten-top">
         <div v-for="item in 10" :key="item" style="padding: 10px 0">
             <div class="skeleton-box rounded-xl" style="height: 40px"></div>

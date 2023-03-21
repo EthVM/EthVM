@@ -19,9 +19,9 @@
                 </template>
             </v-tooltip>
         </div>
-        <app-dialog v-model="state.openDialog" :title="title" height="256" width="480" @update:model-value="closeModule">
-            <template #scroll-content>
-                <v-row no-gutters align-center justify="center">
+        <app-dialog v-model="state.openDialog" :title="title" height="270" width="480" @update:model-value="closeModule">
+            <template #no-scroll-content>
+                <v-row no-gutters align-center justify="center" :class="{ 'mt-n5': !props.isEditMode }">
                     <v-col cols="12" v-if="props.isEditMode">
                         <div class="d-flex align-center justify-start mb-5">
                             <app-address-blockie v-if="isValidAddress" :address="hashNoSpaces" :size="6" key="identicon" class="mr-3" />
@@ -32,17 +32,19 @@
                         <app-input
                             v-model="state.adrInput"
                             :has-error="hasAddressError"
-                            place-holder="Enter Address Hash"
+                            place-holder="Enter Address Hash / Domain Name"
                             show-error-message
                             class="mb-1"
                             :error-message="addressErrorMes"
                             @on-user-input="setAddress"
                             is-required
+                            has-adr-hint
+                            :address-hint="resolvedAdrToCheckSum"
                         >
                             <template #prepend>
                                 <div class="empty-identicon">
                                     <transition name="fade" mode="out-in">
-                                        <app-address-blockie v-if="isValidAddress" :address="hashNoSpaces" :size="6" key="identicon" />
+                                        <app-address-blockie v-if="isValidAddress" :address="blockieAddress" :size="6" key="identicon" />
                                     </transition>
                                 </div>
                             </template>
@@ -81,6 +83,8 @@ import { useStore } from '@/store'
 import { useDisplay } from 'vuetify/lib/framework.mjs'
 import { eth } from '@core/helper/eth'
 import { MAX_PORTFOLIO_ITEMS } from '@/store/helpers'
+import { useResolveName } from '@/core/composables/ResolveName/useResolveName'
+
 const store = useStore()
 const { smAndDown } = useDisplay()
 
@@ -147,7 +151,7 @@ const starClick = (): void => {
 }
 
 /** -------------------
- * Hash Input Handler
+ * Hash/Domain Input Handler
  ---------------------*/
 const removeSpaces = (val: string): string => {
     if (val) {
@@ -160,12 +164,40 @@ const hashNoSpaces = computed(() => {
 })
 
 /**
+ * Try Resolving a domain inside adress input
+ */
+const { resolvedAdr } = useResolveName(hashNoSpaces)
+
+const resolvedAdrToCheckSum = computed<string | undefined>(() => {
+    return resolvedAdr.value ? eth.toCheckSum(resolvedAdr.value) : undefined
+})
+
+const blockieAddress = computed<string>(() => {
+    return resolvedAdr.value ? resolvedAdr.value : hashNoSpaces.value
+})
+
+/**
  * Sets address input with timeout from child
  * @param _value user input
  */
 const setAddress = (_value: string) => {
     state.adrInput = _value
 }
+/**
+ * Checks if address is valid
+ * @param _value user input
+ */
+const isValidAddress = computed<boolean>(() => {
+    return eth.isValidAddress(hashNoSpaces.value.toLowerCase()) || resolvedAdr.value !== undefined
+})
+
+/**
+ * Checks if address is new
+ * @param _value user input
+ */
+const addressIsNew = computed<boolean>(() => {
+    return resolvedAdr.value ? !store.addressHashIsSaved(resolvedAdr.value) : !store.addressHashIsSaved(hashNoSpaces.value)
+})
 
 /**
  * Checks if address input was valid
@@ -177,27 +209,11 @@ const hasAddressError = computed<boolean>(() => {
 })
 
 /**
- * Checks if address is valid
- * @param _value user input
- */
-const isValidAddress = computed<boolean>(() => {
-    return eth.isValidAddress(hashNoSpaces.value.toLowerCase())
-})
-
-/**
- * Checks if address is new
- * @param _value user input
- */
-const addressIsNew = computed<boolean>(() => {
-    return !store.addressHashIsSaved(hashNoSpaces.value)
-})
-
-/**
  * Returns error message based on the valid criteria
  * @param _value user input
  */
 const addressErrorMes = computed<string>(() => {
-    return !addressIsNew.value ? 'This address is already saved' : 'This address hash is not valid'
+    return !addressIsNew.value ? 'This address is already saved' : 'Input not valid'
 })
 
 /** -------------------
@@ -270,7 +286,8 @@ const addAddressToPortfolio = (): void => {
             store.addAddress(hashNoSpaces.value, state.nameInput, true)
         }
     } else {
-        store.addAddress(hashNoSpaces.value, state.nameInput)
+        const adr = resolvedAdr.value ? resolvedAdr.value : hashNoSpaces.value
+        store.addAddress(adr, state.nameInput)
     }
     if (!props.address) {
         state.adrInput = ''

@@ -33,9 +33,10 @@
                     </v-col>
                     <v-col v-if="showPortfolio" cols="12" :class="columnPadding">
                         <v-card elevation="1" rounded="xl" class="pt-4 pt-sm-6">
-                            <v-card-title class="px-0 d-flex align-center justify-space-between px-4 px-sm-6 py-0 mb-1">
-                                <p class="text-h6 font-weight-bold">Your portfolio</p>
-                                <app-btn text="More" isSmall icon="east" @click="goToPortfolio"></app-btn>
+                            <v-card-title class="px-0 d-flex align-center justify-space-between px-4 px-sm-6 py-0 mb-3 mb-sm-4">
+                                <p class="text-h6 font-weight-bold text-capitalize">Your portfolio</p>
+                                <app-btn v-if="!xs" text="More" isSmall icon="east" @click="goToPortfolio"></app-btn>
+                                <app-btn-icon v-else icon="east" @click="goToPortfolio"></app-btn-icon>
                             </v-card-title>
                             <module-portfolio-list /> </v-card
                     ></v-col>
@@ -84,12 +85,12 @@
                                 </a>
                                 <a
                                     class="d-flex align-center justify-center flex-column"
-                                    href="https://ccswap1.myetherwallet.com/?platform=ethvm"
+                                    href="https://ccswap.myetherwallet.com/?platform=ethvm"
                                     target="_blank"
                                 >
                                     <v-img :src="require('@/assets/promo/buy-crypto.png')" contain height="44" width="48" class="mb-2" />
 
-                                    <app-btn text="Buy Crypto" href="https://ccswap1.myetherwallet.com/?platform=ethvm"></app-btn>
+                                    <app-btn text="Buy Crypto" href="https://ccswap.myetherwallet.com/?platform=ethvm"></app-btn>
                                 </a>
                                 <a
                                     v-if="mdAndUp"
@@ -125,6 +126,7 @@ import ModulePortfolioList from '@module/address/ModulePortfolioList.vue'
 import ModuleTokensInfo from '@module/tokens/ModuleTokensInfo.vue'
 import { TOKENS_VIEW } from '@module/tokens/models/tokensView'
 import AppBtn from '@core/components/AppBtn.vue'
+import AppBtnIcon from '@core/components/AppBtnIcon.vue'
 import { useAppViewGrid } from '@core/composables/AppViewGrid/AppViewGrid.composable'
 import { useDisplay } from 'vuetify/lib/framework.mjs'
 import { ROUTE_NAME } from '@core/router/routesNames'
@@ -133,7 +135,7 @@ import { computed } from 'vue'
 import { useStore } from '@/store'
 import { onMounted } from 'vue'
 import configs from '@/configs'
-const { lgAndUp, mdAndDown, mdAndUp } = useDisplay()
+const { lgAndUp, mdAndDown, mdAndUp, xs } = useDisplay()
 const { columnPadding, rowMargin } = useAppViewGrid()
 onMounted(() => {
     window.scrollTo(0, 0)

@@ -19,7 +19,7 @@
             <p class="font-weight-bold mt-3 mb-1">Contract</p>
             <div class="d-flex align-center">
                 <app-address-blockie :address="props.nft.contract"></app-address-blockie>
-                <app-transform-hash is-short is-blue :hash="eth.toCheckSum(props.nft.contract)" :link="`/address/${props.nft.contract}`" class="ml-2" />
+                <app-transform-hash is-short is-blue :hash="eth.toCheckSum(props.nft.contract)" :link="`/token/${props.nft.contract}`" class="ml-2" />
             </div>
             <p class="font-weight-bold mt-3 mb-1">Token Standard</p>
             <p>{{ props.nft.type }}</p>

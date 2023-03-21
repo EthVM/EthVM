@@ -3,7 +3,7 @@
         <v-row justify="start" align="center" class="py-4 pl-3 pl-sm-6">
             <v-img :src="props.img" :max-width="maxWidth" contain class="ml-sm-8 ml-md-0 ml-lg-8"></v-img>
             <div class="ml-2 ml-sm-4">
-                <p class="text-info">{{ props.title }}</p>
+                <p class="text-info text-capitalize">{{ props.title }}</p>
                 <div v-if="!props.isLoading">
                     <p v-if="!props.isDate" class="text-h4 text-subtitle-1 font-weight-bold">
                         {{ props.value }} <span>{{ props.metrics }}</span>

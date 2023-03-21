@@ -7,14 +7,14 @@
                 <v-col sm="3" lg="2" class="d-none d-sm-block"> From </v-col>
                 <v-spacer v-if="lgAndUp" />
                 <v-col sm="3" lg="2" class="d-none d-sm-block"> To </v-col>
-                <v-col sm="3" :md="isNFT ? 1 : 2" :lg="isNFT ? 1 : 3">
+                <v-col :sm="isNFT ? '1' : '3'" :md="isNFT ? 1 : 2" :lg="isNFT ? 1 : 3">
                     <template v-if="!isNFT">Amount</template>
                     <template v-else>ID</template>
                 </v-col>
                 <v-col v-if="isNFT" sm="2"> Image </v-col>
                 <v-col md="2" class="d-none d-lg-block"> Timestamp </v-col>
             </v-row>
-            <v-divider class="my-0 mt-md-4 mx-n4 mx-sm-n6" />
+            <v-divider class="my-0 mt-sm-4 mx-n4 mx-sm-n6" />
             <!-- End Table Header -->
 
             <!-- Start Rows -->
