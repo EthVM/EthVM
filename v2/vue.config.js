@@ -4,7 +4,6 @@ const path = require('path')
 const ImageMinimizerPlugin = require('image-minimizer-webpack-plugin')
 const { VuetifyPlugin } = require('webpack-plugin-vuetify')
 const version = require('./package.json').version
-const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
 
 const vars = {
     VERSION: version
@@ -85,17 +84,26 @@ module.exports = defineConfig({
             new VuetifyPlugin({
                 styles: { configFile: 'src/styles/settings.scss' }
             }),
-            new webpack.EnvironmentPlugin(vars),
-            new BundleAnalyzerPlugin()
+            new webpack.EnvironmentPlugin(vars)
         ],
         optimization: {
             chunkIds: 'size',
             concatenateModules: true,
             splitChunks: {
-                maxSize: 244000,
-                minChunks: 1,
+                chunks: 'all',
+                minSize: 20000,
+                maxSize: 5242880,
+                maxAsyncRequests: 30,
+                maxInitialRequests: 30,
+                automaticNameDelimiter: '-',
                 cacheGroups: {
                     vendors: {
+                        test: /[\\/]node_modules[\\/]/,
+                        priority: -10
+                    },
+                    default: {
+                        minChunks: 2,
+                        priority: -20,
                         reuseExistingChunk: true
                     }
                 }
