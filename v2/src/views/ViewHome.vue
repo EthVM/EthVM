@@ -85,12 +85,12 @@
                                 </a>
                                 <a
                                     class="d-flex align-center justify-center flex-column"
-                                    href="https://ccswap1.myetherwallet.com/?platform=ethvm"
+                                    href="https://ccswap.myetherwallet.com/?platform=ethvm"
                                     target="_blank"
                                 >
                                     <v-img :src="require('@/assets/promo/buy-crypto.png')" contain height="44" width="48" class="mb-2" />
 
-                                    <app-btn text="Buy Crypto" href="https://ccswap1.myetherwallet.com/?platform=ethvm"></app-btn>
+                                    <app-btn text="Buy Crypto" href="https://ccswap.myetherwallet.com/?platform=ethvm"></app-btn>
                                 </a>
                                 <a
                                     v-if="mdAndUp"
