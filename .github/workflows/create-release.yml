@@ -76,18 +76,13 @@ jobs:
                             Virus Total analysis <br/> \
                             $VIRUS_TOTAL_URL\"}" \
                             "https://api.github.com/repos/${GITHUB_REPOSITORY}/commits/${GITHUB_SHA}/comments"
-      #Get Release Tag
-      - name: Get release tag
-        id: get_release_tag
-        run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
-
       - name: deploy to sentry
         env:
           SENTRY_AUTH_TOKEN: ${{secrets.VUE_APP_SENTRY_SECURITY_TOKEN}}
           SENTRY_ORG: myetherwallet-inc
         run: |
           curl -sL https://sentry.io/get-cli/ | bash
-          TAG=${{ steps.get_release_tag.outputs.VERSION }}
+          TAG=${{ github.ref_name }}
           RELEASE=${TAG//v/}
           sentry-cli releases new -p ethvm-web $RELEASE
           sentry-cli releases -p ethvm-web files $RELEASE upload-sourcemaps ./v2/dist/sourcemaps --url-prefix 'https://www.ethvm.com/sourcemaps' --rewrite --validate
@@ -98,4 +93,4 @@ jobs:
         env:
           GITHUB_TOKEN: ${{secrets.MEW_BOT_API_KEY}}
         run: |
-          bash ./release.sh ${{ steps.get_release_tag.outputs.VERSION }} $GITHUB_TOKEN $GITHUB_REPOSITORY true
+          bash ./release.sh ${{ github.ref_name }} $GITHUB_TOKEN $GITHUB_REPOSITORY true
