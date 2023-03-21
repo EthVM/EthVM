@@ -20,7 +20,6 @@ specifiers:
   '@sentry/vue': ^7.39.0
   '@squoosh/lib': ^0.5.3
   '@types/node': ^17.0.29
-  '@types/webfontloader': ^1.0.0
   '@types/webpack-env': ^1.17.0
   '@typescript-eslint/eslint-plugin': ^5.4.0
   '@typescript-eslint/parser': ^5.4.0
@@ -74,9 +73,7 @@ specifiers:
   vue-tsc: ^0.37.9
   vuetify: ^3.1.3
   web3-utils: ^1.7.3
-  webfontloader: ^1.0.0
   webpack: '>=5.0.0 <6.0.0'
-  webpack-bundle-analyzer: ^4.8.0
   webpack-plugin-vuetify: ^2.0.1
 
 dependencies:
@@ -114,7 +111,6 @@ dependencies:
   vue-router: 4.1.3_vue@3.2.37
   vuetify: 3.1.3_zayndjtiriujlsemojlfg23rqq
   web3-utils: 1.7.3
-  webfontloader: 1.6.28
 
 devDependencies:
   '@babel/core': 7.18.9
@@ -125,7 +121,6 @@ devDependencies:
   '@graphql-codegen/typescript-operations': 2.3.5_graphql@16.5.0
   '@squoosh/lib': 0.5.3
   '@types/node': 17.0.42
-  '@types/webfontloader': 1.6.34
   '@typescript-eslint/eslint-plugin': 5.28.0_iqjc3gxpeac4kndvfzrxjm7voe
   '@typescript-eslint/parser': 5.28.0_sgaiclxgc5mltnpgmg7py4v6ca
   '@vue/cli-plugin-babel': 5.0.4_ubpjcor7lzw7yorbz55fyvys5i
@@ -154,7 +149,6 @@ devDependencies:
   vue-cli-plugin-vuetify: 2.5.8_p5fibj3wsivnyogjsnilxdrvay
   vue-tsc: 0.37.9_typescript@4.5.5
   webpack: 5.75.0
-  webpack-bundle-analyzer: 4.8.0
   webpack-plugin-vuetify: 2.0.1_i2l5l22ukzkwi5cqebmw3ihgmy
 
 packages:
@@ -2578,10 +2572,6 @@ packages:
   /@types/web-bluetooth/0.0.15:
     resolution: {integrity: sha512-w7hEHXnPMEZ+4nGKl/KDRVpxkwYxYExuHOYXyzIzCDzEZ9ZCGMAewulr9IqJu2LR4N37fcnb1XVeuZ09qgOxhA==}
     dev: false
-
-  /@types/webfontloader/1.6.34:
-    resolution: {integrity: sha512-yNIPDl3P1yK/ag9C8CdleEhWrtU1myGr3cxb0yEBN/tkCYoGP5PbQa53mQCXcOLFAvBFzJJQfuEahOZ0ARakqw==}
-    dev: true
 
   /@types/webpack-env/1.17.0:
     resolution: {integrity: sha512-eHSaNYEyxRA5IAG0Ym/yCyf86niZUIF/TpWKofQI/CVfh5HsMEUyfE2kwFxha4ow0s5g0LfISQxpDKjbRDrizw==}
@@ -10387,10 +10377,6 @@ packages:
       number-to-bn: 1.7.0
       randombytes: 2.1.0
       utf8: 3.0.0
-    dev: false
-
-  /webfontloader/1.6.28:
-    resolution: {integrity: sha512-Egb0oFEga6f+nSgasH3E0M405Pzn6y3/9tOVanv/DLfa1YBIgcv90L18YyWnvXkRbIM17v5Kv6IT2N6g1x5tvQ==}
     dev: false
 
   /webidl-conversions/3.0.1:
