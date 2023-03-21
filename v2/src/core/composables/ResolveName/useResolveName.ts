@@ -6,7 +6,22 @@ import namehash from '@ensdomains/eth-ens-namehash'
 
 export function useResolveName(name: Ref<string | undefined>) {
     const UD_SUPPORTED_TLDS = ['blockchain', 'bitcoin', 'crypto', 'nft', 'wallet', 'x', 'dao', '888', 'zil']
-    const udResolution = new Resolution()
+    const udResolution = new Resolution({
+        sourceConfig: {
+            uns: {
+                locations: {
+                    Layer1: {
+                        url: 'https://nodes.mewapi.io/rpc/eth',
+                        network: 'mainnet'
+                    },
+                    Layer2: {
+                        url: 'https://nodes.mewapi.io/rpc/matic',
+                        network: 'polygon-mainnet'
+                    }
+                }
+            }
+        }
+    })
 
     /**
      * @param _name {string} - entire string including TLF. ie 'myetherwallet.eth'
