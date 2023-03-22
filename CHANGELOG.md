@@ -1,3 +1,12 @@
+### Release v2.0.3
+
+### Devop
+- add dynamic route imports [#1135](https://github.com/EthVM/EthVM/pull/1135)
+- add proper vuetify tree-shaking [#1135](https://github.com/EthVM/EthVM/pull/1135)
+- replace font loader with local font face [#1135](https://github.com/EthVM/EthVM/pull/1135)
+- adjust webpack optimization [#1135](https://github.com/EthVM/EthVM/pull/1135)
+
+======================================================================
 ### Release v2.0.2
 
 ### Feature

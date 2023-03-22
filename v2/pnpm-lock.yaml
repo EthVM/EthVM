@@ -1,5 +1,8 @@
 lockfileVersion: 5.4
 
+overrides:
+  bn.js@4.11.6: 4.12.0
+
 specifiers:
   '@apollo/client': ^3.5.10
   '@babel/core': ^7.18.9
@@ -17,7 +20,6 @@ specifiers:
   '@sentry/vue': ^7.39.0
   '@squoosh/lib': ^0.5.3
   '@types/node': ^17.0.29
-  '@types/webfontloader': ^1.0.0
   '@types/webpack-env': ^1.17.0
   '@typescript-eslint/eslint-plugin': ^5.4.0
   '@typescript-eslint/parser': ^5.4.0
@@ -71,7 +73,6 @@ specifiers:
   vue-tsc: ^0.37.9
   vuetify: ^3.1.3
   web3-utils: ^1.7.3
-  webfontloader: ^1.0.0
   webpack: '>=5.0.0 <6.0.0'
   webpack-plugin-vuetify: ^2.0.1
 
@@ -110,7 +111,6 @@ dependencies:
   vue-router: 4.1.3_vue@3.2.37
   vuetify: 3.1.3_zayndjtiriujlsemojlfg23rqq
   web3-utils: 1.7.3
-  webfontloader: 1.6.28
 
 devDependencies:
   '@babel/core': 7.18.9
@@ -121,7 +121,6 @@ devDependencies:
   '@graphql-codegen/typescript-operations': 2.3.5_graphql@16.5.0
   '@squoosh/lib': 0.5.3
   '@types/node': 17.0.42
-  '@types/webfontloader': 1.6.34
   '@typescript-eslint/eslint-plugin': 5.28.0_iqjc3gxpeac4kndvfzrxjm7voe
   '@typescript-eslint/parser': 5.28.0_sgaiclxgc5mltnpgmg7py4v6ca
   '@vue/cli-plugin-babel': 5.0.4_ubpjcor7lzw7yorbz55fyvys5i
@@ -1418,6 +1417,11 @@ packages:
       '@babel/helper-validator-identifier': 7.18.6
       to-fast-properties: 2.0.0
 
+  /@discoveryjs/json-ext/0.5.7:
+    resolution: {integrity: sha512-dBVuXR082gk3jsFp7Rd/JI4kytwGHecnCoTtXFb7DB6CNHp4rg5k1bhg0nWdLGLnOV71lmDzGQaLMy8iPLY0pw==}
+    engines: {node: '>=10.0.0'}
+    dev: true
+
   /@endemolshinegroup/cosmiconfig-typescript-loader/3.0.2_4hb3nbpyw5ug3teilibp2fgf6a:
     resolution: {integrity: sha512-QRVtqJuS1mcT56oHpVegkKBlgtWjXw/gHNWO3eL9oyB5Sc7HBoc2OLG/nYpVfT/Jejvo3NUrD0Udk7XgoyDKkA==}
     engines: {node: '>=10.0.0'}
@@ -2569,10 +2573,6 @@ packages:
     resolution: {integrity: sha512-w7hEHXnPMEZ+4nGKl/KDRVpxkwYxYExuHOYXyzIzCDzEZ9ZCGMAewulr9IqJu2LR4N37fcnb1XVeuZ09qgOxhA==}
     dev: false
 
-  /@types/webfontloader/1.6.34:
-    resolution: {integrity: sha512-yNIPDl3P1yK/ag9C8CdleEhWrtU1myGr3cxb0yEBN/tkCYoGP5PbQa53mQCXcOLFAvBFzJJQfuEahOZ0ARakqw==}
-    dev: true
-
   /@types/webpack-env/1.17.0:
     resolution: {integrity: sha512-eHSaNYEyxRA5IAG0Ym/yCyf86niZUIF/TpWKofQI/CVfh5HsMEUyfE2kwFxha4ow0s5g0LfISQxpDKjbRDrizw==}
 
@@ -3105,7 +3105,7 @@ packages:
       vue-loader: 17.0.0_webpack@5.75.0
       vue-style-loader: 4.1.3
       webpack: 5.75.0
-      webpack-bundle-analyzer: 4.5.0
+      webpack-bundle-analyzer: 4.8.0
       webpack-chain: 6.5.1
       webpack-dev-server: 4.9.2_debug@4.3.4+webpack@5.75.0
       webpack-merge: 5.8.0
@@ -3977,10 +3977,6 @@ packages:
   /bluebird/3.7.2:
     resolution: {integrity: sha512-XpNj6GDQzdfW+r2Wnn7xiSAd7TM3jzkxGXBGTtWKuSXv1xUV+azxAm8jdWZN06QTQk+2N2XB9jRDkvbmQmcRtg==}
     dev: true
-
-  /bn.js/4.11.6:
-    resolution: {integrity: sha512-XWwnNNFCuuSQ0m3r3C4LE3EiORltHd9M05pq6FOlVeiophzRbMo50Sbz1ehl8K3Z+jw9+vmgnXefY1hz8X+2wA==}
-    dev: false
 
   /bn.js/4.12.0:
     resolution: {integrity: sha512-c98Bf3tPniI+scsdk237ku1Dc3ujXQTSgyiPUDEOe7tRkhrqridvh8klBv0HCEso1OLOYcHuCv/cS6DNxKH+ZA==}
@@ -5671,7 +5667,7 @@ packages:
     resolution: {integrity: sha1-xmWSHkduh7ziqdWIpv4EBbLEFpk=}
     engines: {node: '>=6.5.0', npm: '>=3'}
     dependencies:
-      bn.js: 4.11.6
+      bn.js: 4.12.0
       number-to-bn: 1.7.0
     dev: false
 
@@ -7855,7 +7851,7 @@ packages:
     resolution: {integrity: sha1-uzYjWS9+X54AMLGXe9QaDFP+HqA=}
     engines: {node: '>=6.5.0', npm: '>=3'}
     dependencies:
-      bn.js: 4.11.6
+      bn.js: 4.12.0
       strip-hex-prefix: 1.0.0
     dev: false
 
@@ -10383,18 +10379,15 @@ packages:
       utf8: 3.0.0
     dev: false
 
-  /webfontloader/1.6.28:
-    resolution: {integrity: sha512-Egb0oFEga6f+nSgasH3E0M405Pzn6y3/9tOVanv/DLfa1YBIgcv90L18YyWnvXkRbIM17v5Kv6IT2N6g1x5tvQ==}
-    dev: false
-
   /webidl-conversions/3.0.1:
     resolution: {integrity: sha512-2JAn3z8AR6rjK8Sm8orRC0h/bcl/DqL7tRPdGZ4I1CjdF+EaMLmYxBHyXuKL849eucPFhvBoxMsflfOb8kxaeQ==}
 
-  /webpack-bundle-analyzer/4.5.0:
-    resolution: {integrity: sha512-GUMZlM3SKwS8Z+CKeIFx7CVoHn3dXFcUAjT/dcZQQmfSZGvitPfMob2ipjai7ovFFqPvTqkEZ/leL4O0YOdAYQ==}
+  /webpack-bundle-analyzer/4.8.0:
+    resolution: {integrity: sha512-ZzoSBePshOKhr+hd8u6oCkZVwpVaXgpw23ScGLFpR6SjYI7+7iIWYarjN6OEYOfRt8o7ZyZZQk0DuMizJ+LEIg==}
     engines: {node: '>= 10.13.0'}
     hasBin: true
     dependencies:
+      '@discoveryjs/json-ext': 0.5.7
       acorn: 8.7.1
       acorn-walk: 8.2.0
       chalk: 4.1.2

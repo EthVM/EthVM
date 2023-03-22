@@ -86,6 +86,29 @@ module.exports = defineConfig({
             }),
             new webpack.EnvironmentPlugin(vars)
         ],
+        optimization: {
+            chunkIds: 'size',
+            concatenateModules: true,
+            splitChunks: {
+                chunks: 'all',
+                minSize: 20000,
+                maxSize: 5242880,
+                maxAsyncRequests: 30,
+                maxInitialRequests: 30,
+                automaticNameDelimiter: '-',
+                cacheGroups: {
+                    vendors: {
+                        test: /[\\/]node_modules[\\/]/,
+                        priority: -10
+                    },
+                    default: {
+                        minChunks: 2,
+                        priority: -20,
+                        reuseExistingChunk: true
+                    }
+                }
+            }
+        },
         resolve: {
             extensions: ['.ts', '.tsx', '.js'],
             extensionAlias: {

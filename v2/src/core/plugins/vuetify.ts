@@ -2,10 +2,7 @@
 import 'material-design-icons-iconfont/dist/material-design-icons.css'
 import 'vuetify/styles'
 import { md, aliases } from 'vuetify/iconsets/md'
-import * as components from 'vuetify/components'
-import * as directives from 'vuetify/directives'
 import { createVuetify, ThemeDefinition } from 'vuetify'
-// import type { IconAliases } from 'vuetify'
 
 type ThemeDefinition = typeof ThemeDefinition
 
@@ -105,8 +102,6 @@ const mainnetDarkTheme: ThemeDefinition = {
 aliases.clear = 'close'
 
 export default createVuetify({
-    components,
-    directives,
     icons: {
         defaultSet: 'md',
         aliases,
