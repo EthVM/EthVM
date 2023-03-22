@@ -1,5 +1,5 @@
 <template>
-    <div class="px-4 px-sm-6 pb-4 pb-sm-6 mt-n4 mt-sm-0">
+    <div :class="['px-4 px-sm-6 pb-4 pb-sm-6', { 'mt-n4 mt-sm-0': !props.isHomePage }]">
         <!--Table Header-->
         <v-row :dense="xs" :class="'d-flex text-body-1 text-info mb-0'" :justify="xs ? 'end' : 'start'">
             <v-col sm="6" lg="3" class="py-0 d-none d-sm-block">
@@ -48,13 +48,13 @@
                     <v-icon v-if="isActiveSort(KEY.TOTAL)" class="ml-1" :size="14">{{ sortIcon }}</v-icon></v-btn
                 >
             </v-col>
-            <v-spacer class="d-flex d-sm-none" />
+            <v-spacer v-if="!props.isHomePage" class="d-flex d-sm-none" />
             <!--
                Mobile Sort:
                 XS: on the right end
                 SM: none
              -->
-            <v-col class="d-flex d-sm-none justify-end">
+            <v-col v-if="!props.isHomePage" class="d-flex d-sm-none justify-end">
                 <v-btn variant="text" color="info" class="font-weight-regular mr-n3" rounded="pill" size="small" id="activator-mobile-sort">
                     {{ activeSortString }}
                     <v-icon class="ml-1" :size="14">{{ sortIcon }}</v-icon></v-btn
@@ -128,6 +128,13 @@ const DIRECTION = {
     HIGH: 'HIGH',
     LOW: 'LOW'
 }
+
+const props = defineProps({
+    isHomePage: {
+        type: Boolean,
+        default: false
+    }
+})
 
 /** -------------------
  * Display List  Handler
@@ -212,7 +219,7 @@ const activeSortString = computed<string>(() => {
     } else if (state.sortKey.includes(KEY.ETH_USD)) {
         return 'ETH Value'
     } else if (state.sortKey.includes(KEY.TOTAL)) {
-        return 'Rotal'
+        return 'Total'
     }
     return 'Sort'
 })

@@ -1,5 +1,13 @@
 <template>
-    <v-menu close-delay="100" max-height="500" open-delay="60" :open-on-hover="openOnHover" location="bottom" :close-on-content-click="closeOnContentClick">
+    <v-menu
+        close-delay="500"
+        max-height="500"
+        open-delay="60"
+        :open-on-hover="openOnHover"
+        location="bottom"
+        :close-on-content-click="closeOnContentClick"
+        scroll-strategy="close"
+    >
         <template #activator="{ props }">
             <slot name="activator" v-bind="props" />
         </template>
