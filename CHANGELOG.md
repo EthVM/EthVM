@@ -1,5 +1,8 @@
 ### Release v2.0.3
 
+### Feat
+- add table sorting on mobile [#1137](https://github.com/EthVM/EthVM/pull/1137)
+
 ### Devop
 - add dynamic route imports [#1135](https://github.com/EthVM/EthVM/pull/1135)
 - add proper vuetify tree-shaking [#1135](https://github.com/EthVM/EthVM/pull/1135)
