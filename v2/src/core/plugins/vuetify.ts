@@ -101,6 +101,11 @@ const mainnetDarkTheme: ThemeDefinition = {
 }
 aliases.clear = 'close'
 
+export const themes = {
+    light: 'mainnetLightTheme',
+    dark: 'mainnetDarkTheme'
+}
+
 export default createVuetify({
     icons: {
         defaultSet: 'md',
@@ -110,7 +115,7 @@ export default createVuetify({
         }
     },
     theme: {
-        defaultTheme: 'mainnetLightTheme',
+        defaultTheme: themes.light,
         themes: {
             mainnetLightTheme,
             mainnetDarkTheme

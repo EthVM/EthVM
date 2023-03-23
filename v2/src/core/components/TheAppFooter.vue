@@ -77,14 +77,6 @@
                     <v-btn rounded="pill" color="primary" :to="routeSettings" :active="false" class="text-h5 font-weight-bold mb-lg-16 ml-n4 mr-auto mr-sm-n5">
                         Settings <v-icon class="ml-2">settings</v-icon>
                     </v-btn>
-                    <!-- <v-switch
-                        @update:modelValue="toggleTheme"
-                        v-model="isDarkMode"
-                        :label="themeSwitchLabel"
-                        hide-details
-                        color="textPrimary"
-                        class="theme-toggle mt-2"
-                    ></v-switch> -->
                     <p class="mb-3 text-sm-right mt-2 mt-lg-12">Pricing from Coingecko</p>
                     <div class="d-flex font-weight-light align-center justify-sm-end">
                         <p class="text-uppercase mb-0 mr-2 text-caption font-weight-light">Powered by</p>
@@ -128,10 +120,8 @@
 </template>
 
 <script setup lang="ts">
-import { useTheme } from 'vuetify'
-import { onMounted, ref, watch, computed } from 'vue'
+import { ref } from 'vue'
 import { useStore } from '@/store'
-import { usePreferredColorScheme } from '@vueuse/core'
 import { useDisplay } from 'vuetify/lib/framework.mjs'
 import { ROUTE_NAME, ROUTE_PROP } from '@core/router/routesNames'
 import configs from '@/configs'
@@ -210,39 +200,7 @@ const socialIcons = [
     }
 ]
 
-const theme = useTheme()
-const isDarkMode = ref(false)
-
 const store = useStore()
-
-const toggleTheme = () => {
-    theme.global.name.value = theme.global.current.value.dark ? 'mainnetLightTheme' : 'mainnetDarkTheme'
-    store.setDarkMode(theme.global.name.value)
-}
-
-const themeSwitchLabel = computed<string>(() => {
-    return isDarkMode.value ? 'Dark Mode On' : 'Dark Mode Off'
-})
-
-onMounted(() => {
-    const preferredColor = usePreferredColorScheme()
-    if (store.appTheme) {
-        theme.global.name.value = store.appTheme
-    } else {
-        theme.global.name.value = preferredColor.value === 'dark' ? 'mainnetDarkTheme' : 'mainnetLightTheme'
-        store.setDarkMode(theme.global.name.value)
-    }
-
-    isDarkMode.value = theme.global.name.value === 'mainnetDarkTheme'
-})
-
-watch(
-    () => store.appTheme,
-    (val: string) => {
-        theme.global.name.value = val
-        isDarkMode.value = theme.global.name.value === 'mainnetDarkTheme'
-    }
-)
 </script>
 
 <style lang="scss" scoped>
@@ -262,17 +220,5 @@ a {
 .footer-hero {
     max-width: 250px;
     max-height: 250px;
-}
-
-.theme-toggle {
-    :deep(.v-input__control) {
-        @media (min-width: 600px) {
-            justify-self: flex-end;
-        }
-    }
-
-    :deep(.v-label) {
-        opacity: 1;
-    }
 }
 </style>
