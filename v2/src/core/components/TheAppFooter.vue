@@ -66,22 +66,26 @@
                         </div>
                     </div>
                 </v-col>
-
-                <!-- <v-spacer></v-spacer> -->
-                <v-col cols="12" sm="4" class="text-lg-right mb-11 mb-sm-0" order="5" order-sm="3" order-lg="4">
-                    <!-- <a href="#" class="footer-item-title d-block text-h5 font-weight-bold mb-2 text-sm-right">
-                            Settings
-                            <v-icon class="ml-2">settings</v-icon>
-                        </a> -->
-                    <v-switch
+                <v-col
+                    cols="12"
+                    sm="4"
+                    class="text-lg-right mb-11 mb-sm-0 d-flex flex-column justify-sm-start align-sm-end"
+                    order="5"
+                    order-sm="3"
+                    order-lg="4"
+                >
+                    <v-btn rounded="pill" color="primary" :to="routeSettings" :active="false" class="text-h5 font-weight-bold mb-lg-16 ml-n4 mr-auto mr-sm-n5">
+                        Settings <v-icon class="ml-2">settings</v-icon>
+                    </v-btn>
+                    <!-- <v-switch
                         @update:modelValue="toggleTheme"
                         v-model="isDarkMode"
                         :label="themeSwitchLabel"
                         hide-details
                         color="textPrimary"
                         class="theme-toggle mt-2"
-                    ></v-switch>
-                    <p class="mb-3 text-sm-right">Pricing from Coingecko</p>
+                    ></v-switch> -->
+                    <p class="mb-3 text-sm-right mt-2 mt-lg-12">Pricing from Coingecko</p>
                     <div class="d-flex font-weight-light align-center justify-sm-end">
                         <p class="text-uppercase mb-0 mr-2 text-caption font-weight-light">Powered by</p>
                         <div class="d-flex align-center">
@@ -142,6 +146,11 @@ const routeEth = {
 const routeAbout = {
     name: ROUTE_NAME.ABOUT.NAME
 }
+
+const routeSettings = {
+    name: ROUTE_NAME.SETTINGS.NAME
+}
+
 const { lgAndUp, mdAndDown } = useDisplay()
 const version = ref(configs.VERSION || '0')
 const socialIcons = [

@@ -94,6 +94,10 @@ const ROUTE_NAME: Route = {
     PORTFOLIO: {
         PATH: '/portfolio',
         NAME: 'portfolio'
+    },
+    SETTINGS: {
+        PATH: '/settings',
+        NAME: 'settings'
     }
 }
 
