@@ -10,11 +10,15 @@ import { BrowserTracing } from '@sentry/tracing'
 import { ApolloClients } from '@vue/apollo-composable'
 import clients from './apollo'
 import Configs from './configs'
+import i18n from './translations'
+import { useI18n } from 'vue-i18n'
 loadFonts()
 
 const app = createApp({
     setup() {
         provide(ApolloClients, clients)
+        const { t } = useI18n({ useScope: 'global' }) // call useI18n, and spread t from  useI18n returning
+        return { t } // return render context that included t
     },
     render: () => h(App)
 })
@@ -34,4 +38,4 @@ Sentry.init({
     tracesSampleRate: 1.0
 })
 
-app.use(router).use(vuetify).use(createPinia()).mount('#app')
+app.use(router).use(vuetify).use(createPinia()).use(i18n).mount('#app')
