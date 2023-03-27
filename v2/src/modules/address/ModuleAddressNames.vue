@@ -36,9 +36,9 @@
             </v-row>
             <v-divider class="mx-n4 mx-sm-n6 mt-sm-3" />
             <v-col cols="12">
-                <template v-if="addressList.length > 0">
+                <template v-if="sortedList.length > 0">
                     <div class="p-ten-top">
-                        <table-row-adr-name v-for="adr in addressList" :key="adr.hash" :adr="adr"></table-row-adr-name>
+                        <table-row-adr-name v-for="adr in sortedList" :key="adr.hash" :adr="adr"></table-row-adr-name>
                     </div>
                 </template>
                 <template v-else>
@@ -54,36 +54,80 @@ import AppBtn from '@/core/components/AppBtn.vue'
 import AppInput from '@/core/components/AppInput.vue'
 import AppNoResult from '@/core/components/AppNoResult.vue'
 import TableRowAdrName from './components/TableRowAdrName.vue'
-import { onMounted, computed, watch, ref, reactive } from 'vue'
+import { computed, reactive } from 'vue'
 import { useStore } from '@/store'
-import { useTheme } from 'vuetify'
-import { themes } from '@core/plugins/vuetify'
 import { useDisplay } from 'vuetify/lib/framework.mjs'
+import { PortfolioItem } from '@/store/helpers'
 
 const { xs } = useDisplay()
 const store = useStore()
 
-const addressList = computed(() => {
-    return [...store.portfolio, ...store.adrBook]
-})
+class Sorted implements SortedInterface {
+    /* Properties: */
+    key: SORT_KEY
+    ascend: PortfolioItem[] = []
+    desend: PortfolioItem[] = []
+    /* Constructor: */
+    constructor(data: PortfolioItem[], sortKey: SORT_KEY) {
+        this.key = sortKey
+        if (data.length > 0) {
+            this.desend = [...this.sortByDescend(data, sortKey)]
+            this.ascend = [...this.desend].reverse()
+        }
+    }
 
+    /**
+     * Return  array sorted from low to high
+     * @returns { PortfolioItem[] } - sorted array
+     */
+    public getAscend(): PortfolioItem[] {
+        return this.ascend
+    }
+
+    /**
+     * Return  array sorted from high to low
+     * @returns { PortfolioItem[] } - sorted array
+     */
+    public getDesend(): PortfolioItem[] {
+        return this.desend
+    }
+
+    /**
+     * Return  array sorted from  high to low
+     * When sorting by balance or USD, since values are BN, it needs to be converted to Number
+     * @returns { PortfolioItem[] } - sorted array
+     */
+    private sortByDescend(data: PortfolioItem[], key: SORT_KEY): PortfolioItem[] {
+        if (data?.length && key) {
+            return data.sort((x, y) => {
+                const a = y[key as keyof PortfolioItem]?.toString().toLowerCase()
+                const b = x[key as keyof PortfolioItem]?.toString().toLowerCase()
+                if (a && b) {
+                    return a < b ? -1 : a > b ? 1 : 0
+                }
+                return 0
+            })
+        }
+        return []
+    }
+}
 enum SORT_KEY {
     NAME = 'name',
     HASH = 'hash'
 }
 const SORT_DIR = {
     HIGH: 'high',
-    low: 'low'
+    LOW: 'low'
 }
 interface ComponentState {
-    sortKey: string
+    sortKey: SORT_KEY
     sortDirection: string
     searchParams: string
 }
 
 const state: ComponentState = reactive({
     sortKey: SORT_KEY.NAME,
-    sortDirection: SORT_DIR.HIGH,
+    sortDirection: SORT_DIR.LOW,
     searchParams: ''
 })
 
@@ -95,32 +139,27 @@ const isActiveSort = (key: SORT_KEY): boolean => {
     return state.sortKey.includes(key)
 }
 
-// watch(
-//     () => store.appTheme,
-//     (val: string) => {
-//         theme.global.name.value = val
-//         isDarkMode.value = theme.global.name.value === themes.dark
-//     }
-// )
+const addressList = computed<PortfolioItem[]>(() => {
+    return [...store.portfolio, ...store.adrBook]
+})
 
-// const switchColor = computed<string>(() => {
-//     return isDarkMode.value ? 'secondary' : 'secondary'
-// })
+const sortedList = computed<PortfolioItem[]>(() => {
+    const sorted = new Sorted(addressList.value, state.sortKey)
+    return state.sortDirection.includes(SORT_DIR.HIGH) ? sorted.getDesend() : sorted.getAscend()
+})
 
-// onMounted(() => {
-//     window.scrollTo(0, 0)
-//     isDarkMode.value = theme.global.name.value === themes.dark
-// })
+const sortTable = (key: SORT_KEY): void => {
+    if (state.sortKey === key) {
+        state.sortDirection = state.sortDirection === SORT_DIR.HIGH ? SORT_DIR.LOW : SORT_DIR.HIGH
+    }
+    state.sortKey = key
+}
+
+interface SortedInterface {
+    key: SORT_KEY
+    ascend: PortfolioItem[]
+    desend: PortfolioItem[]
+}
 </script>
 
-<style lang="scss" scoped>
-// .theme-toggle {
-//     :deep(.v-input__control) {
-//         justify-self: flex-end;
-//     }
-
-//     :deep(.v-label) {
-//         opacity: 1;
-//     }
-// }
-</style>
+<style lang="scss" scoped></style>
