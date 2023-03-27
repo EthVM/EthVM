@@ -20,9 +20,9 @@
             <!--
                 HEADER/SORT
             -->
-            <v-row :dense="xs" :class="'d-flex text-body-1 text-info mb-0'" :justify="xs ? 'end' : 'start'">
+            <v-row :dense="xs" class="d-flex text-body-1 text-info mb-0" :justify="xs ? 'end' : 'start'">
                 <v-col cols sm="6" lg="6" class="py-0 d-none d-sm-block">
-                    <v-btn variant="text" color="info" class="font-weight-regular ml-n3" rounded="pill" size="small" @click="sortTable(SORT_KEY.HASH)">
+                    <v-btn variant="text" color="info" class="font-weight-regular ml-n1" rounded="pill" size="small" @click="sortTable(SORT_KEY.HASH)">
                         Address
                         <v-icon v-if="isActiveSort(SORT_KEY.HASH)" class="ml-1" :size="14">{{ sortIcon }}</v-icon></v-btn
                     >
@@ -33,9 +33,33 @@
                         <v-icon v-if="isActiveSort(SORT_KEY.NAME)" class="ml-1" :size="14">{{ sortIcon }}</v-icon></v-btn
                     >
                 </v-col>
+                <v-spacer class="d-flex d-sm-none" />
+                <!--
+               Mobile Sort:
+                XS: on the right end
+                SM and UP: none
+             -->
+                <v-col class="d-flex d-sm-none justify-end">
+                    <v-btn variant="text" color="info" class="font-weight-regular mr-n1" rounded="pill" size="small" id="activator-mobile-sort">
+                        {{ activeSortString }}
+                        <v-icon class="ml-1" :size="14">{{ sortIcon }}</v-icon></v-btn
+                    >
+                    <app-menu min-width="140" activator="#activator-mobile-sort" :close-on-content-click="false">
+                        <v-list-item title="Name" class="py-2" @click="sortTable(SORT_KEY.NAME)">
+                            <template #append>
+                                <v-icon v-if="isActiveSort(SORT_KEY.NAME)" class="ml-1" :size="14">{{ sortIcon }}</v-icon>
+                            </template>
+                        </v-list-item>
+                        <v-list-item title="Address" class="py-2" @click="sortTable(SORT_KEY.HASH)">
+                            <template #append>
+                                <v-icon v-if="isActiveSort(SORT_KEY.HASH)" class="ml-1" :size="14">{{ sortIcon }}</v-icon>
+                            </template>
+                        </v-list-item>
+                    </app-menu>
+                </v-col>
             </v-row>
             <v-divider class="mx-n4 mx-sm-n6 mt-sm-3" />
-            <v-col cols="12">
+            <v-col cols="12" class="pa-0">
                 <template v-if="sortedList.length > 0">
                     <div class="p-ten-top">
                         <table-row-adr-name v-for="adr in sortedList" :key="adr.hash" :adr="adr"></table-row-adr-name>
@@ -53,6 +77,7 @@
 import AppBtn from '@/core/components/AppBtn.vue'
 import AppInput from '@/core/components/AppInput.vue'
 import AppNoResult from '@/core/components/AppNoResult.vue'
+import AppMenu from '@/core/components/AppMenu.vue'
 import TableRowAdrName from './components/TableRowAdrName.vue'
 import { computed, reactive } from 'vue'
 import { useStore } from '@/store'
@@ -62,6 +87,20 @@ import { PortfolioItem } from '@/store/helpers'
 const { xs } = useDisplay()
 const store = useStore()
 
+enum SORT_KEY {
+    NAME = 'name',
+    HASH = 'hash'
+}
+const SORT_DIR = {
+    HIGH: 'high',
+    LOW: 'low'
+}
+
+interface SortedInterface {
+    key: SORT_KEY
+    ascend: PortfolioItem[]
+    desend: PortfolioItem[]
+}
 class Sorted implements SortedInterface {
     /* Properties: */
     key: SORT_KEY
@@ -111,14 +150,7 @@ class Sorted implements SortedInterface {
         return []
     }
 }
-enum SORT_KEY {
-    NAME = 'name',
-    HASH = 'hash'
-}
-const SORT_DIR = {
-    HIGH: 'high',
-    LOW: 'low'
-}
+
 interface ComponentState {
     sortKey: SORT_KEY
     sortDirection: string
@@ -155,11 +187,12 @@ const sortTable = (key: SORT_KEY): void => {
     state.sortKey = key
 }
 
-interface SortedInterface {
-    key: SORT_KEY
-    ascend: PortfolioItem[]
-    desend: PortfolioItem[]
-}
+const activeSortString = computed<string>(() => {
+    if (state.sortKey.includes(SORT_KEY.NAME)) {
+        return 'Name'
+    }
+    return 'Address'
+})
 </script>
 
 <style lang="scss" scoped></style>
