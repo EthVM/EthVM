@@ -62,11 +62,14 @@
             <v-col cols="12" class="pa-0">
                 <template v-if="sortedList.length > 0">
                     <div class="p-ten-top">
-                        <table-row-adr-name v-for="adr in sortedList" :key="adr.hash" :adr="adr"></table-row-adr-name>
+                        <table-row-adr-name v-for="adr in currentPageData" :key="adr.hash" :adr="adr"></table-row-adr-name>
                     </div>
                 </template>
                 <template v-else>
                     <app-no-result :text="`You did not namy any  addresses yet`" class="mt-3"></app-no-result>
+                </template>
+                <template v-if="showPagination">
+                    <app-pagination :length="numberOfPages" @update:modelValue="setPage" :current-page="pageNum" />
                 </template>
             </v-col>
         </v-row>
@@ -78,11 +81,13 @@ import AppBtn from '@/core/components/AppBtn.vue'
 import AppInput from '@/core/components/AppInput.vue'
 import AppNoResult from '@/core/components/AppNoResult.vue'
 import AppMenu from '@/core/components/AppMenu.vue'
+import AppPagination from '@core/components/AppPagination.vue'
 import TableRowAdrName from './components/TableRowAdrName.vue'
 import { computed, reactive } from 'vue'
 import { useStore } from '@/store'
 import { useDisplay } from 'vuetify/lib/framework.mjs'
 import { PortfolioItem } from '@/store/helpers'
+import { useAppPaginate } from '@core/composables/AppPaginate/useAppPaginate.composable'
 
 const { xs } = useDisplay()
 const store = useStore()
@@ -95,6 +100,10 @@ const SORT_DIR = {
     HIGH: 'high',
     LOW: 'low'
 }
+
+/**------------------------
+ * Sort
+ -------------------------*/
 
 interface SortedInterface {
     key: SORT_KEY
@@ -193,6 +202,21 @@ const activeSortString = computed<string>(() => {
     }
     return 'Address'
 })
+
+/**------------------------
+ * Pagination
+ -------------------------*/
+
+const MAX_ITEMS = 20
+
+const { numberOfPages, pageData: currentPageData, setPageNum, pageNum } = useAppPaginate(sortedList, 'settingsAddressNames', MAX_ITEMS)
+
+const showPagination = computed<boolean>(() => {
+    return !!sortedList.value && sortedList.value.length > MAX_ITEMS
+})
+const setPage = (pageNum: number): void => {
+    setPageNum(pageNum)
+}
 </script>
 
 <style lang="scss" scoped></style>
