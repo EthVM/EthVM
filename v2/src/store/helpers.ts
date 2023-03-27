@@ -1,3 +1,8 @@
+export interface PortfolioItem {
+    hash: string
+    name: string
+}
+
 export enum NotificationType {
     DELETE_ADR = 'DELETE_ADDRESS',
     PLAIN = 'PLAIN'

@@ -92,11 +92,13 @@ interface PropType {
     address?: string
     isEditMode?: boolean
     name?: string
+    requireName?: boolean
 }
 
 const props = withDefaults(defineProps<PropType>(), {
     isEditMode: false,
-    name: ''
+    name: '',
+    requireName: false
 })
 
 interface ComponentState {
@@ -256,6 +258,9 @@ watch(
 )
 
 const isRequiredName = computed<boolean>(() => {
+    if (props.requireName) {
+        return true
+    }
     if (props.isEditMode) {
         return store.addressHashIsSaved(hashNoSpaces.value)
     }
@@ -267,7 +272,7 @@ const isRequiredName = computed<boolean>(() => {
  ---------------------*/
 const isValidInput = computed<boolean>(() => {
     if (props.isEditMode) {
-        return store.addressHashIsSaved(hashNoSpaces.value) ? state.nameInput !== '' && !hasNameError.value : !hasNameError.value
+        return isRequiredName.value ? state.nameInput !== '' && !hasNameError.value : !hasNameError.value
     }
     return state.nameInput !== '' && state.adrInput !== '' && !hasAddressError.value && !hasNameError.value
 })

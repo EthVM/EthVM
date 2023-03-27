@@ -74,7 +74,13 @@
                     order-sm="3"
                     order-lg="4"
                 >
-                    <v-btn rounded="pill" color="primary" :to="routeSettings" :active="false" class="text-h5 font-weight-bold mb-lg-16 ml-n4 mr-auto mr-sm-n5">
+                    <v-btn
+                        rounded="pill"
+                        color="primary"
+                        :to="routeSettings"
+                        :active="false"
+                        class="text-h5 font-weight-bold mb-lg-16 ml-n4 mr-auto mr-sm-n5 mt-sm-n1"
+                    >
                         Settings <v-icon class="ml-2">settings</v-icon>
                     </v-btn>
                     <p class="mb-3 text-sm-right mt-2 mt-lg-12">Pricing from Coingecko</p>

@@ -4,12 +4,7 @@ import { defineStore } from 'pinia'
 import { GetLatestPricesQuery } from '@core/composables/CoinData/getLatestPrices.generated'
 import { useStorage, RemovableRef } from '@vueuse/core'
 import { TokenOwnersFragment } from '@module/address/apollo/AddressTokens/tokens.generated'
-import { NotificationType, NotificationDeleteAddress, Notification, MAX_PORTFOLIO_ITEMS } from './helpers'
-
-interface PortfolioItem {
-    hash: string
-    name: string
-}
+import { NotificationType, NotificationDeleteAddress, Notification, MAX_PORTFOLIO_ITEMS, PortfolioItem } from './helpers'
 
 interface PortfolioEthBalanceMap {
     [key: string]: {
@@ -244,7 +239,7 @@ export const useStore = defineStore('main', {
         },
         addAddress(_hash: string, _name: string, isAddressBook = false) {
             if (!isAddressBook) {
-                if (this.portfolio.length <= MAX_PORTFOLIO_ITEMS) {
+                if (!this.addressHashIsSaved(_hash) && this.portfolio.length <= MAX_PORTFOLIO_ITEMS) {
                     this.portfolio.push({
                         hash: _hash.toLowerCase(),
                         name: _name
@@ -259,7 +254,7 @@ export const useStore = defineStore('main', {
                     })
                 }
             } else {
-                if (!this.addressHashIsSaved(_hash)) {
+                if (!this.addressHashIsSaved(_hash, true)) {
                     this.adrBook.push({
                         hash: _hash.toLowerCase(),
                         name: _name
@@ -280,6 +275,7 @@ export const useStore = defineStore('main', {
                     const newList = this.portfolio.filter(i => i.hash.toLowerCase() !== _hash)
                     delete this.portfolioEthBalanceMap[_hash]
                     delete this.portfolioTokenBalanceMap[_hash]
+                    this.addAddress(item[0].hash, item[0].name, true)
                     this.portfolio = [...newList]
                 }
             } else {

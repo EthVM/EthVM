@@ -19,10 +19,14 @@
                 </v-row>
             </v-card>
         </v-col>
+        <v-col cols="12" :class="columnPadding">
+            <module-address-names />
+        </v-col>
     </v-row>
 </template>
 
 <script setup lang="ts">
+import ModuleAddressNames from '@module/address/ModuleAddressNames.vue'
 import { useAppViewGrid } from '@core/composables/AppViewGrid/AppViewGrid.composable'
 import { onMounted, computed, watch, ref } from 'vue'
 import { useStore } from '@/store'
@@ -36,8 +40,6 @@ const store = useStore()
  -------------------------*/
 const theme = useTheme()
 const isDarkMode = ref(false)
-
-const tracking = ref(true)
 
 const toggleTheme = () => {
     theme.global.name.value = theme.global.current.value.dark ? themes.light : themes.dark
