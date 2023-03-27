@@ -164,7 +164,7 @@ const tableTitle = computed<string>(() => {
     if (isBlock.value) {
         return ''
     }
-    return isHome.value ? 'Last Transactions' : t('txs.header')
+    return isHome.value ? t('txs.isHomeHeader') : t('txs.header')
 })
 
 const isHome = computed<boolean>(() => {

@@ -6,14 +6,14 @@
             =====================================================================================
         -->
         <v-row v-if="!xs" align="center" justify="start" class="text-info d-none d-sm-flex">
-            <v-col v-if="!props.pending && !props.isBlock" sm="3" lg="2"> {{ $t('txs.block') }} </v-col>
-            <v-col sm="3" md="2"> {{ $t('txs.hash') }} </v-col>
-            <v-col v-if="!mdAndDown" lg="2"> {{ $t('txs.from') }} </v-col>
+            <v-col v-if="!props.pending && !props.isBlock" sm="3" lg="2"> {{ $t('common.block') }} </v-col>
+            <v-col sm="3" md="2"> {{ $t('common.hash') }} </v-col>
+            <v-col v-if="!mdAndDown" lg="2"> {{ $t('common.from') }} </v-col>
             <v-spacer v-if="props.isBlock" />
-            <v-col v-if="!mdAndDown" lg="2"> {{ $t('txs.to') }} </v-col>
-            <v-col lg="2"> {{ $t('txs.amount') }} </v-col>
-            <v-col :lg="props.isBlock ? 2 : 1"> {{ $t('txs.fee') }} </v-col>
-            <v-col v-if="!props.pending" lg="1"> {{ $t('txs.status') }} </v-col>
+            <v-col v-if="!mdAndDown" lg="2"> {{ $t('common.to') }} </v-col>
+            <v-col lg="2"> {{ $t('common.amount') }} </v-col>
+            <v-col :lg="props.isBlock ? 2 : 1"> {{ $t('common.fee') }} </v-col>
+            <v-col v-if="!props.pending" lg="1"> {{ $t('common.status') }} </v-col>
         </v-row>
         <v-divider class="my-0 mt-sm-4 mx-n4 mx-sm-n6" />
         <!--

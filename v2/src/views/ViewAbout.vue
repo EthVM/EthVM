@@ -5,9 +5,9 @@
                 <div class="nebula mb-5 rounded-xl d-flex align-center justify-center">
                     <v-img :src="require('@/assets/hero/hero-group.png')" alt="" :max-height="xs ? '150' : '300'" />
                 </div>
-                <p class="text-h5 font-weight-bold mb-3">{{ $t('about.whatHeader') }}</p>
-                <p class="mb-15">{{ $t('about.whatBody') }}</p>
-                <p class="text-h5 font-weight-bold mb-3">{{ $t('about.whoHeader') }}</p>
+                <p class="text-h5 font-weight-bold mb-3">{{ $t('about.what.header') }}</p>
+                <p class="mb-15">{{ $t('about.what.body') }}</p>
+                <p class="text-h5 font-weight-bold mb-3">{{ $t('about.who.header') }}</p>
                 <div class="d-flex align-end justify-start mb-3">
                     <v-img
                         :src="require('@/assets/logo/mew-long.svg')"
@@ -19,14 +19,14 @@
                         contain
                         class="mr-3"
                     />
-                    <p>{{ $t('about.whoBody') }}</p>
+                    <p>{{ $t('about.who.body') }}</p>
                 </div>
                 <p class="mb-15">
-                    {{ $t('about.Body2') }}
+                    {{ $t('about.who.body2') }}
                 </p>
-                <p class="text-h5 font-weight-bold mb-3">{{ $t('about.whyHeader') }}</p>
+                <p class="text-h5 font-weight-bold mb-3">{{ $t('about.why.header') }}</p>
                 <p class="mb-15">
-                    {{ $t('about.whyBody') }}
+                    {{ $t('about.why.body') }}
                 </p>
 
                 <p>{{ $t('about.foot') }}</p>
