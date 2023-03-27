@@ -78,5 +78,12 @@ onMounted(() => {
     :deep(.v-label) {
         opacity: 1;
     }
+    :deep(.v-switch__track) {
+        color: rgb(var(--v-theme-switchTrack)) !important;
+        opacity: 1;
+    }
+    :deep(.v-switch__thumb) {
+        color: rgb(var(--v-theme-switchThumb));
+    }
 }
 </style>
