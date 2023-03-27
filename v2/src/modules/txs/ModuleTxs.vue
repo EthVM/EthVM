@@ -11,13 +11,13 @@
                 <app-new-update
                     v-if="!isHome && !isBlock"
                     icon-only
-                    text="New Txs Found, Refresh"
+                    :text="$t('txs.refresh')"
                     :update-count="state.newMinedTransfers"
                     @reload="setPage(1, true)"
                     hide-count
                 />
             </div>
-            <app-btn v-if="isHome && !xs" text="More" isSmall icon="east" @click="goToTransactionsPage"></app-btn>
+            <app-btn v-if="isHome && !xs" :text="$t('txs.more')" isSmall icon="east" @click="goToTransactionsPage"></app-btn>
             <app-btn-icon v-else-if="isHome && xs" icon="east" @click="goToTransactionsPage"></app-btn-icon>
         </v-card-title>
         <txs-table
@@ -54,7 +54,8 @@ import { ROUTE_NAME } from '@core/router/routesNames'
 import { useRouter } from 'vue-router'
 import { useAppPaginate } from '@core/composables/AppPaginate/useAppPaginate.composable'
 import { useDisplay } from 'vuetify'
-
+import { useI18n } from 'vue-i18n'
+const { t } = useI18n()
 const { xs } = useDisplay()
 
 interface ModuleState {
@@ -163,7 +164,7 @@ const tableTitle = computed<string>(() => {
     if (isBlock.value) {
         return ''
     }
-    return isHome.value ? 'Last Transactions' : 'All Transactions'
+    return isHome.value ? t('txs.isHomeHeader') : t('txs.header')
 })
 
 const isHome = computed<boolean>(() => {
