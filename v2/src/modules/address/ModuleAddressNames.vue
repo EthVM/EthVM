@@ -7,7 +7,7 @@
             </v-col>
             <v-col cols="2" md="4" lg="6" class="d-flex align-center justify-end">
                 <app-btn v-if="!smAndDown" text="import" class="mr-5"></app-btn>
-                <app-btn v-if="!smAndDown" text="export"></app-btn>
+                <app-btn v-if="!smAndDown" text="export" @click="exportNames"></app-btn>
                 <app-btn-icon v-else icon="more_vert" id="activator-mobile-names-menu" btn-color="secondary"></app-btn-icon>
             </v-col>
             <!--
@@ -94,6 +94,7 @@ import { useStore } from '@/store'
 import { useDisplay } from 'vuetify/lib/framework.mjs'
 import { PortfolioItem } from '@/store/helpers'
 import { useAppPaginate } from '@core/composables/AppPaginate/useAppPaginate.composable'
+import { captureException } from '@sentry/vue'
 
 const { xs, smAndDown } = useDisplay()
 const store = useStore()
@@ -222,6 +223,29 @@ const showPagination = computed<boolean>(() => {
 })
 const setPage = (pageNum: number): void => {
     setPageNum(pageNum)
+}
+
+/**------------------------
+ * Export / Import List
+ -------------------------*/
+const exportNames = () => {
+    try {
+        const data = JSON.stringify({
+            portfolio: store.portfolio,
+            otherNames: store.adrBook
+        })
+        const time = new Date()
+        const fileName = `ethVM-adrs-names-${time.getTime()}.json`
+        const body = document.body
+        const el = document.createElement('a')
+        el.setAttribute('href', `data:text/plain;charset=utf-8,${encodeURIComponent(data)}`)
+        el.setAttribute('download', fileName)
+        body.appendChild(el)
+        el.click()
+        body.removeChild(el)
+    } catch (err) {
+        captureException(`ERROR in export file: ${err}`)
+    }
 }
 </script>
 
