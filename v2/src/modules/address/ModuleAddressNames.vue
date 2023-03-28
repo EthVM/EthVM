@@ -1,19 +1,20 @@
 <template>
     <v-card class="pa-4 pa-sm-6" elevation="1" rounded="xl">
         <v-row align="start" justify="start">
-            <v-col cols="6">
+            <v-col cols="10" md="8" lg="6">
                 <p class="font-weight-bold text-h5">Address Names</p>
                 <p class="">Add custom names to addresses in order to easily track them through ethVM</p>
             </v-col>
-            <v-col cols="6" class="d-flex align-center justify-end">
-                <app-btn text="import" class="ml-5"></app-btn>
-                <app-btn text="export"></app-btn>
+            <v-col cols="2" md="4" lg="6" class="d-flex align-center justify-end">
+                <app-btn v-if="!smAndDown" text="import" class="mr-5"></app-btn>
+                <app-btn v-if="!smAndDown" text="export"></app-btn>
+                <app-btn-icon v-else icon="more_vert" id="activator-mobile-names-menu" btn-color="secondary"></app-btn-icon>
             </v-col>
             <!--
                 FILTER
             -->
             <v-col cols="12" class="d-flex align-center justify-space-between">
-                <div class="flex-grow-1 my-5">
+                <div class="flex-grow-1 mt-2 mb-4">
                     <app-input place-holder="Search by hash or name" v-model="state.searchParams" />
                 </div>
             </v-col>
@@ -73,11 +74,16 @@
                 </template>
             </v-col>
         </v-row>
+        <app-menu min-width="140" activator="#activator-mobile-names-menu">
+            <v-list-item title="Import" class="py-2"> </v-list-item>
+            <v-list-item title="Export" class="py-2"> </v-list-item>
+        </app-menu>
     </v-card>
 </template>
 
 <script setup lang="ts">
 import AppBtn from '@/core/components/AppBtn.vue'
+import AppBtnIcon from '@/core/components/AppBtnIcon.vue'
 import AppInput from '@/core/components/AppInput.vue'
 import AppNoResult from '@/core/components/AppNoResult.vue'
 import AppMenu from '@/core/components/AppMenu.vue'
@@ -89,7 +95,7 @@ import { useDisplay } from 'vuetify/lib/framework.mjs'
 import { PortfolioItem } from '@/store/helpers'
 import { useAppPaginate } from '@core/composables/AppPaginate/useAppPaginate.composable'
 
-const { xs } = useDisplay()
+const { xs, smAndDown } = useDisplay()
 const store = useStore()
 
 enum SORT_KEY {

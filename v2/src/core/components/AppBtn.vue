@@ -10,7 +10,7 @@
             :disabled="componentProps.disabled"
             :height="isSmall ? '24px' : '40px'"
             @click.stop="btnClick()"
-            :class="[isSmall ? 'small-button px-3' : 'large-button px-3', 'text-button']"
+            :class="[isSmall ? 'small-button px-3' : 'large-button px-3', componentProps.class, 'text-button']"
         >
             <v-icon v-if="componentProps.icon && !isSmall" class="mr-2">{{ componentProps.icon }}</v-icon>
             {{ componentProps.text }}
@@ -35,6 +35,9 @@ const componentProps = defineProps({
     disabled: {
         type: Boolean,
         default: false
+    },
+    class: {
+        type: String
     }
 })
 const emit = defineEmits(['click'])
