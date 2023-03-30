@@ -3,6 +3,7 @@
 ### Feature
 
 -   added crowdin support in about, txs, notfound [#1140](https://github.com/EthVM/EthVM/pull/1140)
+-   added crowdin support in homepage [#1142](https://github.com/EthVM/EthVM/pull/1142)
 
 ### Devop
 
