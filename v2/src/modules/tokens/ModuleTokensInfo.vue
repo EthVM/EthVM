@@ -96,6 +96,8 @@ import { useAppPaginate } from '@core/composables/AppPaginate/useAppPaginate.com
 import { TOKENS_VIEW } from './models/tokensView'
 import { useRouter } from 'vue-router'
 import { useDisplay } from 'vuetify'
+import { useI18n } from 'vue-i18n'
+const { t } = useI18n()
 
 const { xs } = useDisplay()
 const routes = ADDRESS_ROUTE_QUERY.Q_NFTS
@@ -222,7 +224,11 @@ const showLoadingRows = computed<boolean>(() => {
 })
 
 const title = computed<string>(() => {
-    return props.homePage === TOKENS_VIEW.ALL ? 'Top Tokens' : props.homePage === TOKENS_VIEW.FAV ? 'Favorite Tokens' : 'Token Market'
+    return props.homePage === TOKENS_VIEW.ALL
+        ? t('home.table.topTokenTitle')
+        : props.homePage === TOKENS_VIEW.FAV
+        ? t('home.table.favoriteTokenTitle')
+        : t('home.table.marketTokenTitle')
 })
 
 const router = useRouter()

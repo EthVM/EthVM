@@ -32,6 +32,43 @@
         "to": "To",
         "amount": "Amount",
         "fee": "Tx Fee",
-        "status": "Status"
+        "status": "Status",
+        "mew": "MEW"
+    },
+    "home": {
+        "tagline": {
+            "row1": "Track, analyze and explore",
+            "row2": "on the Ethereum blockchain."
+        },
+        "table": {
+            "lastBlockTitle": "Last Blocks",
+            "addressBlockTitle": "Mined Blocks",
+            "allBlockTitle": "All Blocks",
+            "topTokenTitle": "Top Tokens",
+            "favoriteTokenTitle": "Favorite Tokens",
+            "marketTokenTitle": "Token Market",
+            "header": {
+                "blockNumber": "Block #",
+                "time": "Timestamp",
+                "transactions": "Transactions",
+                "miner": "Miner",
+                "reward": "Reward"
+            }
+        },
+        "footer": {
+            "discover": "Discover",
+            "about": "About Us",
+            "policy": "Privacy Policy",
+            "help": "Help Center",
+            "love": "Love ethVM?",
+            "free": "Help us keep ethVM free and open-source, your donations go a long way towards making that possible.",
+            "eDonate": "Ethereum Donation",
+            "bDonate": "Bitcoin Donation",
+            "pricing": "Pricing from Coingecko",
+            "power": "Powered by",
+            "rights": "All rights reserved.",
+            "evmV": "ethVM v",
+            "mew": "MyEtherWallet Inc."
+        }
     }
 }
