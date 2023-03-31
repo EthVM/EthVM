@@ -98,6 +98,7 @@ import { useDisplay } from 'vuetify/lib/framework.mjs'
 import { PortfolioItem } from '@/store/helpers'
 import { useAppPaginate } from '@core/composables/AppPaginate/useAppPaginate.composable'
 import { captureException } from '@sentry/vue'
+import { searchHelper } from '@core/helper/search'
 
 const { xs, smAndDown } = useDisplay()
 const store = useStore()
@@ -193,7 +194,14 @@ const isActiveSort = (key: SORT_KEY): boolean => {
 }
 
 const addressList = computed<PortfolioItem[]>(() => {
-    return [...store.portfolio, ...store.adrBook]
+    let _items: PortfolioItem[] = []
+    const _list = [...store.portfolio, ...store.adrBook]
+    if (state.searchParams !== '') {
+        _items = searchHelper(_list, ['name', 'hash'], state.searchParams) as PortfolioItem[]
+    } else {
+        _items = _list
+    }
+    return _items
 })
 
 const sortedList = computed<PortfolioItem[]>(() => {
@@ -219,7 +227,7 @@ const activeSortString = computed<string>(() => {
  * Pagination
  -------------------------*/
 
-const MAX_ITEMS = 20
+const MAX_ITEMS = 10
 
 const { numberOfPages, pageData: currentPageData, setPageNum, pageNum } = useAppPaginate(sortedList, 'settingsAddressNames', MAX_ITEMS)
 
