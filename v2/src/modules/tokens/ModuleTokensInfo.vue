@@ -138,6 +138,10 @@ const state: ComponentState = reactive({
 
 const { tokensWithMarketCap, loading: loadingCoinData, getEthereumTokenByContract } = useCoinData()
 
+const isHomePage = computed<boolean>(() => {
+    return !!props.homePage
+})
+
 const tokens = computed<TokenSortMarket | null>(() => {
     if (!store.loadingCoinData && tokensWithMarketCap) {
         const filtered = tokensWithMarketCap.value.filter((x): x is TokenMarketData => x !== null)
@@ -214,9 +218,7 @@ const sortTable = (key: KEY): void => {
 /** -------------------
  * Handle View: home page / default
  ---------------------*/
-const isHomePage = computed<boolean>(() => {
-    return !!props.homePage
-})
+
 const showLoadingRows = computed<boolean>(() => {
     return isHomePage.value ? 7 : 10
 })
