@@ -237,7 +237,7 @@ export const useStore = defineStore('main', {
             const newList = this.favTokens.filter(i => i !== contract)
             this.favTokens = [...newList]
         },
-        addAddress(_hash: string, _name: string, isAddressBook = false) {
+        addAddress(_hash: string, _name: string, isAddressBook = false, notify = true) {
             if (!isAddressBook) {
                 if (!this.addressHashIsSaved(_hash) && this.portfolio.length <= MAX_PORTFOLIO_ITEMS) {
                     this.portfolio.push({
@@ -248,10 +248,12 @@ export const useStore = defineStore('main', {
                     if (this.addressHashIsSaved(_hash, true)) {
                         this.removeAddress(_hash, true)
                     }
-                    this.addNotification({
-                        _type: NotificationType.PLAIN,
-                        text: `${_name} has been added to your portfolio`
-                    })
+                    if (notify) {
+                        this.addNotification({
+                            _type: NotificationType.PLAIN,
+                            text: `${_name} has been added to your portfolio`
+                        })
+                    }
                 }
             } else {
                 if (!this.addressHashIsSaved(_hash, true)) {

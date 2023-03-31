@@ -10,6 +10,7 @@
             :disabled="componentProps.disabled"
             :height="isSmall ? '24px' : '40px'"
             @click.stop="btnClick()"
+            :loading="componentProps.loading"
             :class="[isSmall ? 'small-button px-3' : 'large-button px-3', componentProps.class, 'text-button']"
         >
             <v-icon v-if="componentProps.icon && !isSmall" class="mr-2">{{ componentProps.icon }}</v-icon>
@@ -38,6 +39,14 @@ const componentProps = defineProps({
     },
     class: {
         type: String
+    },
+    minWidth: {
+        type: String,
+        default: '84'
+    },
+    loading: {
+        type: Boolean,
+        required: false
     }
 })
 const emit = defineEmits(['click'])
@@ -53,13 +62,13 @@ const button = computed<ButtonState>(() => {
               color: componentProps.btnColor ? componentProps.btnColor : 'textPrimary',
               size: 'x-small',
               rounded: 'pill',
-              minWidth: '84'
+              minWidth: componentProps.minWidth
           }
         : {
               color: componentProps.btnColor ? componentProps.btnColor : 'secondary',
               size: 'default',
               rounded: 'pill',
-              minWidth: '84'
+              minWidth: componentProps.minWidth
           }
 })
 

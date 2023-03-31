@@ -1,6 +1,16 @@
+import { eth } from '@core/helper/eth'
+
 export interface PortfolioItem {
     hash: string
     name: string
+}
+
+// eslint-disable-next-line
+export const isPortfolioItem = (toBeDetermined: PortfolioItem | any): toBeDetermined is PortfolioItem => {
+    if ((<PortfolioItem>toBeDetermined).hash !== undefined && (<PortfolioItem>toBeDetermined).name !== undefined) {
+        return toBeDetermined.name !== '' && eth.isValidAddress(toBeDetermined.hash)
+    }
+    return false
 }
 
 export enum NotificationType {

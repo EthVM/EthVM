@@ -6,7 +6,7 @@
                 <p class="">Add custom names to addresses in order to easily track them through ethVM</p>
             </v-col>
             <v-col cols="2" md="4" lg="6" class="d-flex align-center justify-end">
-                <app-btn v-if="!smAndDown" text="import" class="mr-5"></app-btn>
+                <app-btn v-if="!smAndDown" text="import" class="mr-5" @click="state.openImport = true"></app-btn>
                 <app-btn v-if="!smAndDown" text="export" @click="exportNames"></app-btn>
                 <app-btn-icon v-else icon="more_vert" id="activator-mobile-names-menu" btn-color="secondary"></app-btn-icon>
             </v-col>
@@ -36,10 +36,10 @@
                 </v-col>
                 <v-spacer class="d-flex d-sm-none" />
                 <!--
-               Mobile Sort:
-                XS: on the right end
-                SM and UP: none
-             -->
+                    Mobile Sort:
+                    XS: on the right end
+                    SM and UP: none
+                -->
                 <v-col class="d-flex d-sm-none justify-end">
                     <v-btn variant="text" color="info" class="font-weight-regular mr-n1" rounded="pill" size="small" id="activator-mobile-sort">
                         {{ activeSortString }}
@@ -67,7 +67,7 @@
                     </div>
                 </template>
                 <template v-else>
-                    <app-no-result :text="`You did not namy any  addresses yet`" class="mt-3"></app-no-result>
+                    <app-no-result :text="`This list is empty`" class="mt-3"></app-no-result>
                 </template>
                 <template v-if="showPagination">
                     <app-pagination :length="numberOfPages" @update:modelValue="setPage" :current-page="pageNum" />
@@ -75,9 +75,10 @@
             </v-col>
         </v-row>
         <app-menu min-width="140" activator="#activator-mobile-names-menu">
-            <v-list-item title="Import" class="py-2"> </v-list-item>
-            <v-list-item title="Export" class="py-2"> </v-list-item>
+            <v-list-item title="Import" class="py-2" @click="state.openImport = true"> </v-list-item>
+            <v-list-item title="Export" class="py-2" @click="exportNames"> </v-list-item>
         </app-menu>
+        <module-import-settings :type="IMPORT_TYPE.NAMES" v-model="state.openImport"></module-import-settings>
     </v-card>
 </template>
 
@@ -89,6 +90,8 @@ import AppNoResult from '@/core/components/AppNoResult.vue'
 import AppMenu from '@/core/components/AppMenu.vue'
 import AppPagination from '@core/components/AppPagination.vue'
 import TableRowAdrName from './components/TableRowAdrName.vue'
+import ModuleImportSettings from './ModuleImportSettings.vue'
+import { IMPORT_TYPE, EXPORT_KEYS } from './helpers/index'
 import { computed, reactive } from 'vue'
 import { useStore } from '@/store'
 import { useDisplay } from 'vuetify/lib/framework.mjs'
@@ -171,12 +174,14 @@ interface ComponentState {
     sortKey: SORT_KEY
     sortDirection: string
     searchParams: string
+    openImport: boolean
 }
 
 const state: ComponentState = reactive({
     sortKey: SORT_KEY.NAME,
     sortDirection: SORT_DIR.LOW,
-    searchParams: ''
+    searchParams: '',
+    openImport: false
 })
 
 const sortIcon = computed<string>(() => {
@@ -231,11 +236,10 @@ const setPage = (pageNum: number): void => {
 const exportNames = () => {
     try {
         const data = JSON.stringify({
-            portfolio: store.portfolio,
-            otherNames: store.adrBook
+            [EXPORT_KEYS.PORTFOLIO]: store.portfolio,
+            [EXPORT_KEYS.NAMES]: store.adrBook
         })
-        const time = new Date()
-        const fileName = `ethVM-adrs-names-${time.getTime()}.json`
+        const fileName = `ethVM-names.json`
         const body = document.body
         const el = document.createElement('a')
         el.setAttribute('href', `data:text/plain;charset=utf-8,${encodeURIComponent(data)}`)
