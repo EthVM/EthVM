@@ -1,7 +1,7 @@
 <template>
     <div>
         <div v-if="!props.isEditMode">
-            <v-tooltip text="You can only store 10 addresses in your portfolio" :disabled="!isDisabled">
+            <v-tooltip v-if="!props.isAddNameMode" text="You can only store 10 addresses in your portfolio" :disabled="!isDisabled">
                 <template v-slot:activator="{ props }">
                     <div v-bind="props" class="d-inline-block">
                         <app-btn-icon v-if="addressPropIsValid" :icon="icon" @click="starClick" :disabled="isDisabled"></app-btn-icon>
@@ -12,12 +12,15 @@
                             :disabled="isDisabled"
                             icon="add"
                         ></app-btn>
-                        <v-btn v-else icon flat color="secondary" height="34px" width="34px" @click="state.openDialog = true" :disabled="isDisabled">
+                        <v-btn v-else icon flat color="secondary" height="34px" width="34px" @click="state.openDialog = true">
                             <v-icon>add</v-icon>
                         </v-btn>
                     </div>
                 </template>
             </v-tooltip>
+            <v-btn v-else icon flat color="secondary" height="34px" width="34px" @click="state.openDialog = true" :disabled="isDisabled">
+                <v-icon>add</v-icon>
+            </v-btn>
         </div>
         <app-dialog v-model="state.openDialog" :title="title" height="290" width="480" @update:model-value="closeModule">
             <template #no-scroll-content>
@@ -103,13 +106,15 @@ interface PropType {
     name?: string
     requireName?: boolean
     hideSettingsLink?: boolean
+    isAddNameMode?: boolean
 }
 
 const props = withDefaults(defineProps<PropType>(), {
     isEditMode: false,
     name: '',
     requireName: false,
-    hideSettingsLink: false
+    hideSettingsLink: false,
+    isAddNameMode: false
 })
 
 interface ComponentState {
@@ -209,7 +214,11 @@ const isValidAddress = computed<boolean>(() => {
  * @param _value user input
  */
 const addressIsNew = computed<boolean>(() => {
-    return resolvedAdr.value ? !store.addressHashIsSaved(resolvedAdr.value) : !store.addressHashIsSaved(hashNoSpaces.value)
+    const adr = resolvedAdr.value ? resolvedAdr.value : hashNoSpaces.value
+    if (props.isAddNameMode) {
+        return !store.addressHashIsSaved(adr) && !store.addressHashIsSaved(adr, true)
+    }
+    return !store.addressHashIsSaved(adr)
 })
 
 /**
@@ -303,7 +312,7 @@ const addAddressToPortfolio = (): void => {
         }
     } else {
         const adr = resolvedAdr.value ? resolvedAdr.value : hashNoSpaces.value
-        store.addAddress(adr, state.nameInput)
+        store.addAddress(adr, state.nameInput, props.isAddNameMode)
     }
     if (!props.address) {
         state.adrInput = ''

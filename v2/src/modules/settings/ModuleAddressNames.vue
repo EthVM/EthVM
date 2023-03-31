@@ -13,10 +13,9 @@
             <!--
                 FILTER
             -->
-            <v-col cols="12" class="d-flex align-center justify-space-between">
-                <div class="flex-grow-1 mt-2 mb-4">
-                    <app-input place-holder="Search by hash or name" v-model="state.searchParams" />
-                </div>
+            <v-col cols="12" class="d-flex align-center justify-start mt-2 mb-4">
+                <app-input place-holder="Search by hash or name" v-model="state.searchParams" class="w-100 mr-5" />
+                <module-porfolio-handle-adr is-add-name-mode></module-porfolio-handle-adr>
             </v-col>
             <!--
                 HEADER/SORT
@@ -91,6 +90,7 @@ import AppMenu from '@/core/components/AppMenu.vue'
 import AppPagination from '@core/components/AppPagination.vue'
 import TableRowAdrName from './components/TableRowAdrName.vue'
 import ModuleImportSettings from './ModuleImportSettings.vue'
+import ModulePorfolioHandleAdr from '@module/address/ModulePorfolioHandleAdr.vue'
 import { IMPORT_TYPE, EXPORT_KEYS } from './helpers/index'
 import { computed, reactive } from 'vue'
 import { useStore } from '@/store'
