@@ -4,9 +4,9 @@
         max-height="500"
         open-delay="60"
         :open-on-hover="openOnHover"
-        location="bottom"
         :close-on-content-click="closeOnContentClick"
         scroll-strategy="close"
+        location="bottom right"
     >
         <template #activator="{ props }">
             <slot name="activator" v-bind="props" />

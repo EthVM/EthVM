@@ -92,7 +92,7 @@
                 SM: none
              -->
             <v-col class="d-flex d-sm-none justify-end">
-                <v-btn variant="text" color="info" class="font-weight-regular mr-n3" rounded="pill" size="small" id="activator-mobile-sort">
+                <v-btn variant="text" color="info" class="font-weight-regular mr-n3 d-block" rounded="pill" size="small" id="activator-mobile-sort">
                     {{ activeSortString }}
                     <v-icon class="ml-1" :size="14">{{ sortIcon }}</v-icon></v-btn
                 >
