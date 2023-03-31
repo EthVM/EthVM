@@ -55,7 +55,6 @@ const props = defineProps({
 })
 
 const isHome = computed<boolean>(() => {
-    console.log(props.pageType)
     return props.pageType === 'home'
 })
 
