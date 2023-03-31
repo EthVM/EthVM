@@ -19,7 +19,7 @@
                 </template>
             </v-tooltip>
         </div>
-        <app-dialog v-model="state.openDialog" :title="title" height="270" width="480" @update:model-value="closeModule">
+        <app-dialog v-model="state.openDialog" :title="title" height="290" width="480" @update:model-value="closeModule">
             <template #no-scroll-content>
                 <v-row no-gutters align-center justify="center" :class="{ 'mt-n5': !props.isEditMode }">
                     <v-col cols="12" v-if="props.isEditMode">
@@ -65,6 +65,11 @@
                         ></app-input>
                     </v-col>
                     <app-btn :text="buttonText" @click="addAddressToPortfolio" :disabled="!isValidInput"></app-btn>
+                    <v-col v-if="props.isEditMode && !props.hideSettingsLink" cols="12" class="d-flex align-centet justify-center">
+                        <v-btn class="rounded-pill mt-3 text-body-1" :to="routeSettings">
+                            View in Settings <span><v-icon icon="east" size="16"></v-icon></span>
+                        </v-btn>
+                    </v-col>
                 </v-row>
             </template>
         </app-dialog>
@@ -84,7 +89,11 @@ import { useDisplay } from 'vuetify/lib/framework.mjs'
 import { eth } from '@core/helper/eth'
 import { MAX_PORTFOLIO_ITEMS } from '@/store/helpers'
 import { useResolveName } from '@/core/composables/ResolveName/useResolveName'
+import { ROUTE_NAME } from '@core/router/routesNames'
 
+const routeSettings = {
+    name: ROUTE_NAME.SETTINGS.NAME
+}
 const store = useStore()
 const { smAndDown } = useDisplay()
 
@@ -93,12 +102,14 @@ interface PropType {
     isEditMode?: boolean
     name?: string
     requireName?: boolean
+    hideSettingsLink?: boolean
 }
 
 const props = withDefaults(defineProps<PropType>(), {
     isEditMode: false,
     name: '',
-    requireName: false
+    requireName: false,
+    hideSettingsLink: false
 })
 
 interface ComponentState {

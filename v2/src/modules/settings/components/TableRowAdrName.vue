@@ -50,6 +50,7 @@
         :address="props.adr.hash"
         :name="props.adr.name"
         :require-name="true"
+        :hide-settings-link="true"
         @close-module="openEditDialog(false)"
     >
     </module-porfolio-handle-adr>
