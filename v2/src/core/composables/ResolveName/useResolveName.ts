@@ -86,7 +86,12 @@ export function useResolveName(name: Ref<string | undefined>) {
     })
 
     const normalizeEns = computed<string | undefined>(() => {
-        return isValidTldEns.value ? namehash.hash(name.value) : undefined
+        try {
+            const normalized = namehash.normalize(name.value)
+            return isValidTldEns.value ? namehash.hash(normalized) : undefined
+        } catch {
+            return undefined
+        }
     })
     /**
      * Fetches Ens resolution from Graph.

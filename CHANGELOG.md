@@ -1,15 +1,21 @@
 ### Release v2.0.3
 
 ### Feature
-
 -   added crowdin support in about, txs, notfound [#1140](https://github.com/EthVM/EthVM/pull/1140)
 
-### Devop
+### BUG
+- fix error on url enter in search bar [#1138](https://github.com/EthVM/EthVM/pull/1138)
 
--   add dynamic route imports [#1135](https://github.com/EthVM/EthVM/pull/1135)
--   add proper vuetify tree-shaking [#1135](https://github.com/EthVM/EthVM/pull/1135)
--   replace font loader with local font face [#1135](https://github.com/EthVM/EthVM/pull/1135)
--   adjust webpack optimization [#1135](https://github.com/EthVM/EthVM/pull/1135)
+### UI
+- ui jump on add address name on desktop view [#1138](https://github.com/EthVM/EthVM/pull/1138)
+- add hover states to address menu [#1138](https://github.com/EthVM/EthVM/pull/1138)
+
+### Devop
+- add dynamic route imports [#1135](https://github.com/EthVM/EthVM/pull/1135)
+- add proper vuetify tree-shaking [#1135](https://github.com/EthVM/EthVM/pull/1135)
+- replace font loader with local font face [#1135](https://github.com/EthVM/EthVM/pull/1135)
+- adjust webpack optimization [#1135](https://github.com/EthVM/EthVM/pull/1135)
+- reduce sentry sample in production [#1138](https://github.com/EthVM/EthVM/pull/1138)
 
 ======================================================================
 
