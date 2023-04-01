@@ -1,5 +1,5 @@
 <template>
-    <v-card variant="elevated" elevation="1" rounded="xl" class="pa-4 pa-sm-6 h-100">
+    <v-card variant="elevated" elevation="1" rounded="xl" :class="['pa-4 pa-sm-6 h-100']">
         <v-card-title :class="['pa-0', { 'd-flex align-center justify-space-between mb-2 mb-sm-4': isHomePage }]">
             <h1 :class="[isHomePage ? 'text-h6' : 'text-h4 ', 'font-weight-bold']">
                 {{ title }}
@@ -8,9 +8,9 @@
             <app-btn-icon v-else-if="isHomePage && xs" icon="east" @click="goToTokens"></app-btn-icon>
         </v-card-title>
         <app-tabs v-if="!isHomePage" v-model="state.activeList" :routes="routes" :tabs="list" class="my-5" btn-variant></app-tabs>
-        <v-row v-if="!isHomePage" class="mb-10 flex-nowrap" align="center">
-            <app-input place-holder="Search tokens" v-model="state.tokenSearch" class="w-100 mr-5" />
-            <module-add-fav-token v-if="state.activeList === list[1].value" />
+        <v-row v-if="!isHomePage" class="mt-0 mb-3 mb-sm-5 flex-nowrap" align="center">
+            <app-input place-holder="Search tokens" v-model="state.tokenSearch" class="w-100" />
+            <module-add-fav-token v-if="state.activeList === list[1].value" class="ml-5" />
         </v-row>
         <v-row align="center" justify="start" class="text-body-1 text-info my-0 d-none d-sm-flex">
             <v-col sm="6" :md="isHomePage ? '6' : '4'" class="py-0">
@@ -50,7 +50,47 @@
                     >
                 </v-row>
             </v-col>
-            <!-- <v-col sm="2" lg="1"> Watchlist </v-col> -->
+        </v-row>
+        <!--
+            Mobile Sort:
+            XS: on the right end
+            SM: none
+        -->
+        <v-row v-if="xs && !isHomePage" align="center" justify="start" class="mb-0" dense>
+            <v-spacer />
+            <v-col class="d-flex d-sm-none justify-end">
+                <v-btn variant="text" color="info" class="font-weight-regular mr-n3 d-block" rounded="pill" size="small" id="activator-mobile-sort">
+                    {{ activeSortString }}
+                    <v-icon class="ml-1" :size="14">{{ sortIcon }}</v-icon></v-btn
+                >
+                <app-menu min-width="140" activator="#activator-mobile-sort" :close-on-content-click="false">
+                    <v-list-item title="Token Name" class="py-2" @click="sortTable(SORT_KEY.NAME)">
+                        <template #append>
+                            <v-icon v-if="isActiveSort(SORT_KEY.NAME)" class="ml-1" :size="14">{{ sortIcon }}</v-icon>
+                        </template>
+                    </v-list-item>
+                    <v-list-item title="Price" class="py-2" @click="sortTable(SORT_KEY.PRICE)">
+                        <template #append>
+                            <v-icon v-if="isActiveSort(SORT_KEY.PRICE)" class="ml-1" :size="14">{{ sortIcon }}</v-icon>
+                        </template>
+                    </v-list-item>
+                    <v-list-item title="Volume" class="py-2" @click="sortTable(SORT_KEY.VOLUME)">
+                        <template #append>
+                            <v-icon v-if="isActiveSort(SORT_KEY.VOLUME)" class="ml-1" :size="14">{{ sortIcon }}</v-icon></template
+                        >
+                    </v-list-item>
+                    <v-list-item title="Market Cap" class="py-2" @click="sortTable(SORT_KEY.MARKET_CAP)">
+                        <template #append>
+                            <v-icon v-if="isActiveSort(SORT_KEY.MARKET_CAP)" class="ml-1" :size="14">{{ sortIcon }}</v-icon>
+                        </template>
+                    </v-list-item>
+                    <v-list-item title="24h" class="py-2" @click="sortTable(SORT_KEY.PERCENTAGE_CHANGE)">
+                        <template #append>
+                            <v-icon v-if="isActiveSort(SORT_KEY.PERCENTAGE_CHANGE)" class="ml-1" :size="14">{{ sortIcon }}</v-icon></template
+                        >
+                    </v-list-item>
+                </app-menu>
+            </v-col>
         </v-row>
         <v-divider class="my-0 mt-sm-3 mx-n4 mx-sm-n6" />
         <template v-if="!loadingCoinData">
@@ -81,6 +121,7 @@ import AppBtnIcon from '@core/components/AppBtnIcon.vue'
 import AppInput from '@core/components/AppInput.vue'
 import AppNoResult from '@core/components/AppNoResult.vue'
 import AppPagination from '@core/components/AppPagination.vue'
+import AppMenu from '@core/components/AppMenu.vue'
 import { Tab } from '@/core/components/props'
 import TokenMarketInfoTableRow from '@module/tokens/components/TokenMarketInfo/TableRowTokenMarketInfo.vue'
 import ModuleAddFavToken from './ModuleAddFavToken.vue'
@@ -188,6 +229,10 @@ const showPagination = computed<boolean>(() => {
     return !store.loadingCoinData && tokensInPage.value.length > 0 && !isHomePage.value
 })
 
+/**------------------------
+ * Table Sorting
+ -------------------------*/
+
 const sortIcon = computed<string>(() => {
     return state.sortDirection === DIRECTION.HIGH ? 'south' : 'north'
 })
@@ -197,6 +242,19 @@ const isActiveSort = (key: KEY): boolean => {
 }
 
 const SORT_KEY = KEY
+
+const activeSortString = computed<string>(() => {
+    if (state.sortKey.includes(SORT_KEY.MARKET_CAP)) {
+        return 'Market Cap'
+    } else if (state.sortKey.includes(SORT_KEY.PRICE)) {
+        return 'Price'
+    } else if (state.sortKey.includes(SORT_KEY.NAME)) {
+        return 'Token'
+    } else if (state.sortKey.includes(SORT_KEY.VOLUME)) {
+        return 'Volume'
+    }
+    return '24h'
+})
 
 /**
  * Sets page number and reset value and emit
@@ -217,7 +275,7 @@ const sortTable = (key: KEY): void => {
 const isHomePage = computed<boolean>(() => {
     return !!props.homePage
 })
-const showLoadingRows = computed<boolean>(() => {
+const showLoadingRows = computed<number>(() => {
     return isHomePage.value ? 7 : 10
 })
 

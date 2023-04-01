@@ -1,7 +1,9 @@
 ### Release v2.0.3
 
+
 ### Feature
--   added crowdin support in about, txs, notfound [#1140](https://github.com/EthVM/EthVM/pull/1140)
+- added crowdin support in about, txs, notfound [#1140](https://github.com/EthVM/EthVM/pull/1140)
+- add table sorting on mobile [#1137](https://github.com/EthVM/EthVM/pull/1137)
 
 ### BUG
 - fix error on url enter in search bar [#1138](https://github.com/EthVM/EthVM/pull/1138)

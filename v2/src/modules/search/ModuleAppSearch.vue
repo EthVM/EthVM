@@ -24,7 +24,7 @@
                     v-for="(item, index) in tokensResult"
                     :key="`${item.contract}+${index}`"
                     :title="item.text || ''"
-                    :subtitle="item.subtext || ''"
+                    :subtitle="item.subtext?.toUpperCase() || ''"
                     class="overflow-hidden"
                     :active="index === 0"
                     @click="routeToToken(item.contract || '')"
