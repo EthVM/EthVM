@@ -18,7 +18,7 @@
                     </div>
                 </template>
             </v-tooltip>
-            <v-btn v-else icon flat color="secondary" height="34px" width="34px" @click="state.openDialog = true" :disabled="isDisabled">
+            <v-btn v-else icon flat color="secondary" height="34px" width="34px" @click="state.openDialog = true">
                 <v-icon>add</v-icon>
             </v-btn>
         </div>
