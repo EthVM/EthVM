@@ -69,7 +69,7 @@
             <app-transform-hash :hash="eth.toCheckSum(props.adr.hash)" :link="`address/${props.adr.hash}`" is-blue is-short :show-name="false" />
         </v-col>
     </app-table-row>
-    <app-menu min-width="180" :activator="`#list-item-menu-${props.adr.hash}`">
+    <app-menu min-width="160" :activator="`#list-item-menu-${props.adr.hash}`">
         <v-list-item title="Edit Name" class="py-2" @click="openEditDialog(true)"> </v-list-item>
         <v-list-item title="View Tokens" class="py-2" @click="viewTokens"></v-list-item>
         <v-divider class="my-1 mx-4" />

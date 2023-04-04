@@ -1,9 +1,17 @@
 <template>
-    <v-menu close-delay="100" max-height="500" open-delay="60" :open-on-hover="openOnHover" location="bottom">
+    <v-menu
+        close-delay="500"
+        max-height="500"
+        open-delay="60"
+        :open-on-hover="openOnHover"
+        :close-on-content-click="closeOnContentClick"
+        scroll-strategy="close"
+        location="bottom right"
+    >
         <template #activator="{ props }">
             <slot name="activator" v-bind="props" />
         </template>
-        <v-list :bg-color="bgColor" class="py-2 rounded-xl" max-width="1000px">
+        <v-list :bg-color="bgColor" class="py-2 rounded-xl" :min-width="minWidth" max-width="1000px">
             <slot v-if="$slots.default" />
         </v-list>
     </v-menu>
@@ -18,6 +26,14 @@ defineProps({
     bgColor: {
         type: String,
         default: 'surface'
+    },
+    closeOnContentClick: {
+        type: Boolean,
+        default: true
+    },
+    minWidth: {
+        type: String,
+        default: '180'
     }
 })
 </script>
