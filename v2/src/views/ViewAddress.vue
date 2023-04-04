@@ -131,9 +131,10 @@ import ModulePorfolioHandleAdr from '@module/address/ModulePorfolioHandleAdr.vue
 import { useDisplay } from 'vuetify/lib/framework.mjs'
 import { useStore } from '@/store'
 import { useIsAddressMiner } from '@core/composables/IsAddressMiner/isAddressMiner.composable'
+import { useNetwork } from '@/core/composables/Network/useNetwork'
 
 const { smAndDown, xs } = useDisplay()
-
+const { currencyName } = useNetwork()
 const store = useStore()
 const tabs = reactive([
     {
@@ -143,7 +144,7 @@ const tabs = reactive([
     },
     {
         id: 1,
-        text: 'ETH Balance',
+        text: `${currencyName.value} Balance`,
         routeName: ROUTE_NAME.ADDRESS_BALANCE.NAME
     },
     {

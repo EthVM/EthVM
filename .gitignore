@@ -46,6 +46,7 @@ docker/templer/stacks
 docker/templer/vars/*.custom.yaml
 
 .env
+.env.*
 docker-compose.yaml
 
 # Terraform

@@ -6,9 +6,9 @@
                 <v-divider v-if="!props.addressRef && !xs" class="mt-10 mb-6" length="154"></v-divider>
                 <address-balance-totals
                     v-if="!props.addressRef"
-                    title="ETH Balance"
+                    :title="`${currencyName} Balance`"
                     :is-loading="!store.portfolioEthIsLoaded()"
-                    :balance="`${ethBalancePortfolio} ETH`"
+                    :balance="`${ethBalancePortfolio} ${currencyName}`"
                     class="mt-7"
                 >
                     <template #extra>
@@ -72,8 +72,9 @@ import ChartPie from '@module/chart/components/ChartPie.vue'
 import AppTokenIcon from '@/core/components/AppTokenIcon.vue'
 import { useStore } from '@/store'
 import { TokenSort } from '@module/address/models/TokenSort'
-
+import { useNetwork } from '@core/composables/Network/useNetwork'
 const { xs } = useDisplay()
+const { currencyName } = useNetwork()
 const store = useStore()
 
 interface PropType {
@@ -177,7 +178,7 @@ const topTokens = computed<Token[]>(() => {
         }
         const ethPercent = eth.multipliedBy(100).dividedBy(portfolioValueBN.value)
 
-        let topFive: Token[] = [{ symbol: 'ETH', percent: ethPercent, icon: ethMarketInfo.value?.image, usd: eth }]
+        let topFive: Token[] = [{ symbol: currencyName.value, percent: ethPercent, icon: ethMarketInfo.value?.image, usd: eth }]
         //Add Token Balance
         if (sortedTokens && tokenTotalBalance.gt(0)) {
             const topFiveTokens: Token[] | undefined = sortedTokens.usdValue?.desend.slice(0, 5).map(i => {
