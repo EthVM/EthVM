@@ -153,7 +153,7 @@ const tokenName = computed<string>(() => {
         ? props.nftMeta.name
         : props.transfer.tokenInfo.name
         ? props.transfer.tokenInfo.name
-        : `NFT-${props.transfer.transfer.type}`
+        : `Unknown-${props.transfer.transfer.type}`
 })
 
 const totalTokens = computed<string>(() => {
