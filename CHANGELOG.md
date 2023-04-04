@@ -1,4 +1,14 @@
-### Release v2.0.3
+### Release v2.1.0
+This release includes:
+- App Settings with ability to browse created local names
+
+### Feat
+- app settings [#1141](https://github.com/EthVM/EthVM/pull/1141)
+- app address names with import/export features [#1141](https://github.com/EthVM/EthVM/pull/1141)
+
+### BUG
+- reset pagination to page 1 when filter is active [#1141](https://github.com/EthVM/EthVM/pull/1141)
+- remove checksumed address requirement in url [#1141](https://github.com/EthVM/EthVM/pull/1141)
 
 ### Devop
 - add dynamic route imports [#1135](https://github.com/EthVM/EthVM/pull/1135)
