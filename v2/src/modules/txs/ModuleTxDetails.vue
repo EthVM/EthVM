@@ -78,7 +78,8 @@
                 <v-col cols="12" lg="5">
                     <div class="rounded-lg bg-tableGrey pa-6">
                         <div class="tx-info">
-                            <p class="text-button mb-1">To</p>
+                            <p v-if="transactionData && transactionData.contractAddress" class="text-button mb-1">Created Contract</p>
+                            <p v-else class="text-button mb-1">To</p>
                             <template v-if="loadingTransactionHash || !transactionData">
                                 <div class="d-flex align-center">
                                     <div class="skeleton-box rounded-circle mr-1 mr-sm-2 flex-shrink-0" style="height: 32px; width: 32px"></div>
@@ -87,11 +88,15 @@
                             </template>
                             <template v-else>
                                 <div class="d-flex align-center">
-                                    <app-address-blockie :address="transactionData.to || ''" :size="8" class="mr-1 mr-sm-2" />
+                                    <app-address-blockie
+                                        :address="transactionData.to || transactionData.contractAddress || ''"
+                                        :size="8"
+                                        class="mr-1 mr-sm-2"
+                                    />
                                     <app-transform-hash
                                         is-blue
-                                        :hash="eth.toCheckSum(transactionData.to || '')"
-                                        :link="`/address/${transactionData.to}`"
+                                        :hash="eth.toCheckSum(transactionData.to || transactionData.contractAddress || '')"
+                                        :link="`/address/${transactionData.to || transactionData.contractAddress || ''}`"
                                         class="text-body-1"
                                     />
                                 </div>
