@@ -8,7 +8,7 @@ export const isSupportedNetwork = (_network: string): boolean => {
 export interface NetworkType {
     name: string
     curr: string
-    support_usd: boolean
+    support_fiat: boolean
     support_nft: boolean
     coingecko_id?: string
 }
@@ -20,14 +20,14 @@ export const NETWORKS: NetworksInterface = {
     [DEFAULT_NETWORK]: {
         name: 'Ethereum Mainnet',
         curr: 'ETH',
-        support_usd: true,
+        support_fiat: true,
         support_nft: true,
         coingecko_id: 'ethereum'
     },
     SEPOLIA: {
         name: 'Sepolia Testnet',
         curr: 'SEP',
-        support_usd: false,
+        support_fiat: false,
         support_nft: false
     }
 }

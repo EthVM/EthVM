@@ -7,7 +7,7 @@
             <app-btn v-if="isHomePage && !xs" text="More" isSmall icon="east" @click="goToTokens"></app-btn>
             <app-btn-icon v-else-if="isHomePage && xs" icon="east" @click="goToTokens"></app-btn-icon>
         </v-card-title>
-        <app-tabs v-if="!isHomePage" v-model="state.activeList" :routes="routes" :tabs="list" class="my-5" btn-variant></app-tabs>
+        <app-tabs v-if="!isHomePage && supportsFiat" v-model="state.activeList" :routes="routes" :tabs="list" class="my-5" btn-variant></app-tabs>
         <v-row v-if="!isHomePage" class="mb-10 flex-nowrap" align="center">
             <app-input place-holder="Search tokens" v-model="state.tokenSearch" class="w-100 mr-5" />
             <module-add-fav-token v-if="state.activeList === list[1].value" />
@@ -96,8 +96,10 @@ import { useAppPaginate } from '@core/composables/AppPaginate/useAppPaginate.com
 import { TOKENS_VIEW } from './models/tokensView'
 import { useRouter } from 'vue-router'
 import { useDisplay } from 'vuetify'
+import { useNetwork } from '@/core/composables/Network/useNetwork'
 
 const { xs } = useDisplay()
+const { supportsFiat } = useNetwork()
 const routes = ADDRESS_ROUTE_QUERY.Q_NFTS
 
 // const MAX_TOKENS = 200
@@ -109,14 +111,16 @@ interface PropType {
 const props = withDefaults(defineProps<PropType>(), {})
 const list: Tab[] = [
     {
-        value: 'all',
-        title: 'All'
-    },
-    {
         value: 'fav',
         title: 'Favorites'
     }
 ]
+if (supportsFiat.value) {
+    list.unshift({
+        value: 'all',
+        title: 'All'
+    })
+}
 
 interface ComponentState {
     index: number
@@ -133,7 +137,7 @@ const state: ComponentState = reactive({
     sortKey: TOKEN_FILTER_VALUES[13],
     sortDirection: DIRECTION.HIGH,
     tokenSearch: '',
-    activeList: 'all'
+    activeList: list[0].value
 })
 
 const { tokensWithMarketCap, loading: loadingCoinData, getEthereumTokenByContract } = useCoinData()
@@ -219,12 +223,12 @@ const sortTable = (key: KEY): void => {
  * Handle View: home page / default
  ---------------------*/
 
-const showLoadingRows = computed<boolean>(() => {
+const showLoadingRows = computed<number>(() => {
     return isHomePage.value ? 7 : 10
 })
 
 const title = computed<string>(() => {
-    return props.homePage === TOKENS_VIEW.ALL ? 'Top Tokens' : props.homePage === TOKENS_VIEW.FAV ? 'Favorite Tokens' : 'Token Market'
+    return props.homePage === TOKENS_VIEW.ALL ? 'Top Tokens' : props.homePage === TOKENS_VIEW.FAV || !supportsFiat.value ? 'Favorite Tokens' : 'Token Market'
 })
 
 const router = useRouter()

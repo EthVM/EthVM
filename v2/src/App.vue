@@ -27,9 +27,16 @@ import { useStorage } from '@vueuse/core'
 import { usePreferredColorScheme } from '@vueuse/core'
 import { useTheme } from 'vuetify/lib/framework.mjs'
 import { themes } from './core/plugins/vuetify'
-const store = useStore()
+import { useNetwork } from './core/composables/Network/useNetwork'
 
-const { result: coinData, loading: loadingCoinData, onResult: onCoinDataResult } = useGetLatestPricesQuery({ pollInterval: 300000 })
+const store = useStore()
+const { supportsFiat } = useNetwork()
+
+const {
+    result: coinData,
+    loading: loadingCoinData,
+    onResult: onCoinDataResult
+} = useGetLatestPricesQuery({ pollInterval: 300000, enabled: supportsFiat.value })
 store.loadingCoinData = loadingCoinData.value
 
 onCoinDataResult(() => {
