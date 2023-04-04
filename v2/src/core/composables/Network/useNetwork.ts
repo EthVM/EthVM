@@ -37,9 +37,16 @@ export function useNetwork() {
         return NETWORKS[Configs.NETWORK].nft_id || ''
     })
 
+    /**
+     * Returns if network has ens support
+     */
     const ensId = computed<string | undefined>(() => {
         return NETWORKS[Configs.NETWORK].ens_id
     })
+
+    /**
+     * Returns if network has unstoppable support
+     */
     const unstoppableId = computed<string | undefined>(() => {
         return NETWORKS[Configs.NETWORK].unstoppable_id
     })
