@@ -37,11 +37,20 @@ export function useNetwork() {
         return NETWORKS[Configs.NETWORK].nft_id || ''
     })
 
+    const ensId = computed<string | undefined>(() => {
+        return NETWORKS[Configs.NETWORK].ens_id
+    })
+    const unstoppableId = computed<string | undefined>(() => {
+        return NETWORKS[Configs.NETWORK].unstoppable_id
+    })
+
     return {
         currencyName,
         supportsFiat,
         coingeckoId,
         supportsNft,
-        nftId
+        nftId,
+        ensId,
+        unstoppableId
     }
 }

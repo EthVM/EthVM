@@ -12,6 +12,8 @@ export interface NetworkType {
     support_nft: boolean
     coingecko_id?: string
     nft_id?: string
+    ens_id?: string
+    unstoppable_id?: string
 }
 interface NetworksInterface {
     [key: string]: NetworkType
@@ -24,7 +26,9 @@ export const NETWORKS: NetworksInterface = {
         support_fiat: true,
         support_nft: true,
         coingecko_id: 'ethereum',
-        nft_id: 'ethereum'
+        nft_id: 'ethereum',
+        ens_id: 'ETH',
+        unstoppable_id: 'ETH'
     },
     SEPOLIA: {
         name: 'Sepolia Testnet',
