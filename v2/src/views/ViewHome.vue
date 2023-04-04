@@ -40,10 +40,10 @@
                             </v-card-title>
                             <module-portfolio-list /> </v-card
                     ></v-col>
-                    <v-col cols="12" lg="6" :class="columnPadding">
+                    <v-col v-if="supportsFiat" cols="12" lg="6" :class="columnPadding">
                         <module-tokens-info :home-page="TOKENS_VIEW.ALL" />
                     </v-col>
-                    <v-col v-if="showFavToknes || (!showFavToknes && lgAndUp)" cols="12" lg="6" :class="columnPadding">
+                    <v-col v-if="supportsFiat && (showFavToknes || (!showFavToknes && lgAndUp))" cols="12" lg="6" :class="columnPadding">
                         <module-tokens-info v-if="showFavToknes" :home-page="TOKENS_VIEW.FAV" />
                         <v-card
                             v-if="!showFavToknes && lgAndUp"
@@ -64,7 +64,13 @@
                             />
                         </v-card>
                     </v-col>
-                    <v-col v-if="showFavToknes || (!showFavToknes && mdAndDown)" cols="12" sm="6" md="4" :class="columnPadding">
+                    <v-col
+                        v-if="(supportsFiat && (showFavToknes || (!showFavToknes && mdAndDown))) || !supportsFiat"
+                        cols="12"
+                        sm="6"
+                        md="4"
+                        :class="columnPadding"
+                    >
                         <v-card elevation="1" rounded="xl" class="enkrypt-promo-bg-sm" max-height="200" :href="downloadEnkrypt" target="_blank">
                             <v-img
                                 :src="require('@/assets/promo/enkrypt-text-sm.png')"
@@ -76,8 +82,14 @@
                             />
                         </v-card>
                     </v-col>
-                    <v-col v-if="showFavToknes || (!showFavToknes && mdAndDown)" cols="12" sm="6" md="8" :class="columnPadding">
-                        <v-card elevation="1" rounded="xl" max-height="200" class="promo pa-4 pa-sm-6">
+                    <v-col
+                        v-if="(supportsFiat && (showFavToknes || (!showFavToknes && mdAndDown))) || !supportsFiat"
+                        cols="12"
+                        sm="6"
+                        md="8"
+                        :class="columnPadding"
+                    >
+                        <v-card elevation="1" rounded="xl" min-height="150" max-height="200" class="promo pa-4 pa-sm-6">
                             <v-row align="end" justify="space-around" class="fill-height">
                                 <a class="d-flex align-center justify-center flex-column" href="https://www.myetherwallet.com/" target="_blank">
                                     <v-img :src="require('@/assets/promo/mew.png')" cover height="40" width="88" />
@@ -134,9 +146,13 @@ import { useRouter } from 'vue-router'
 import { computed } from 'vue'
 import { useStore } from '@/store'
 import { onMounted } from 'vue'
+import { useNetwork } from '@core/composables/Network/useNetwork'
 import configs from '@/configs'
+
 const { lgAndUp, mdAndDown, mdAndUp, xs } = useDisplay()
 const { columnPadding, rowMargin } = useAppViewGrid()
+const { supportsFiat } = useNetwork()
+
 onMounted(() => {
     window.scrollTo(0, 0)
 })
@@ -152,7 +168,7 @@ const goToPortfolio = async (): Promise<void> => {
     })
 }
 const showFavToknes = computed<boolean>(() => {
-    return store.favTokens.length > 0
+    return supportsFiat.value && store.favTokens.length > 0
 })
 
 const detect = (): string => {
