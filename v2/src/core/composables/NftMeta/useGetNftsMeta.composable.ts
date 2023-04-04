@@ -1,8 +1,9 @@
 import { computed, Ref } from 'vue'
 import { useGetNftTokensMetaQuery, NftMetaFragment } from './nftMeta.generated'
 import { NftId, generateId, generateMapId } from './helpers'
-
+import { useNetwork } from '../Network/useNetwork'
 export function useGetNftsMeta(tokenIds: Ref<NftId[]>, loadingIds: Ref<boolean>) {
+    const { supportsNft, nftId } = useNetwork()
     /**
      * Functions generates id to be used in the fetch useGetNftTokensMetaQuery
      */
@@ -10,7 +11,7 @@ export function useGetNftsMeta(tokenIds: Ref<NftId[]>, loadingIds: Ref<boolean>)
         let ids = ''
         tokens.forEach(i => {
             const id = generateId(i.id)
-            ids = `${ids}ethereum.${i.contract}.${id},`
+            ids = `${ids}${nftId.value}.${i.contract}.${id},`
         })
         return ids
     }
@@ -31,7 +32,7 @@ export function useGetNftsMeta(tokenIds: Ref<NftId[]>, loadingIds: Ref<boolean>)
         }),
         () => ({
             clientId: 'nftClient',
-            enabled: ids.value !== ''
+            enabled: ids.value !== '' && supportsNft.value
         })
     )
 

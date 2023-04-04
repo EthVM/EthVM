@@ -23,9 +23,25 @@ export function useNetwork() {
         return NETWORKS[Configs.NETWORK].coingecko_id || ''
     })
 
+    /**
+     * Returns if network has nft support
+     */
+    const supportsNft = computed<boolean>(() => {
+        return NETWORKS[Configs.NETWORK].support_nft
+    })
+
+    /**
+     * Returns if network has nft support
+     */
+    const nftId = computed<string>(() => {
+        return NETWORKS[Configs.NETWORK].nft_id || ''
+    })
+
     return {
         currencyName,
         supportsFiat,
-        coingeckoId
+        coingeckoId,
+        supportsNft,
+        nftId
     }
 }
