@@ -27,7 +27,7 @@ const ViewAddressNfts = () => import(/* webpackChunkName: "ViewAdrNfts" */ '@vie
 const ViewPortfolio = () => import(/* webpackChunkName: "ViewPortfolio" */ '@view/ViewPortfolio.vue')
 const ViewNotFound = () => import(/* webpackChunkName: "View404" */ '@view/ViewNotFound.vue')
 const ViewAbout = () => import(/* webpackChunkName: "ViewAbout" */ '@view/ViewAbout.vue')
-
+const ViewSettings = () => import(/* webpackChunkName: "ViewSettings" */ '@view/ViewSettings.vue')
 const routes: Array<RouteRecordRaw> = [
     {
         path: ROUTE_NAME.HOME.PATH,
@@ -143,7 +143,11 @@ const routes: Array<RouteRecordRaw> = [
         component: ViewAbout,
         name: ROUTE_NAME.ABOUT.NAME
     },
-
+    {
+        path: ROUTE_NAME.SETTINGS.PATH,
+        component: ViewSettings,
+        name: ROUTE_NAME.SETTINGS.NAME
+    },
     {
         path: '/:pathMatch(.*)*',
         redirect: ROUTE_NAME.NOT_FOUND.PATH,

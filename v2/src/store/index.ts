@@ -4,12 +4,7 @@ import { defineStore } from 'pinia'
 import { GetLatestPricesQuery } from '@core/composables/CoinData/getLatestPrices.generated'
 import { useStorage, RemovableRef } from '@vueuse/core'
 import { TokenOwnersFragment } from '@module/address/apollo/AddressTokens/tokens.generated'
-import { NotificationType, NotificationDeleteAddress, Notification, MAX_PORTFOLIO_ITEMS } from './helpers'
-
-interface PortfolioItem {
-    hash: string
-    name: string
-}
+import { NotificationType, NotificationDeleteAddress, Notification, MAX_PORTFOLIO_ITEMS, PortfolioItem } from './helpers'
 
 interface PortfolioEthBalanceMap {
     [key: string]: {
@@ -242,9 +237,9 @@ export const useStore = defineStore('main', {
             const newList = this.favTokens.filter(i => i !== contract)
             this.favTokens = [...newList]
         },
-        addAddress(_hash: string, _name: string, isAddressBook = false) {
+        addAddress(_hash: string, _name: string, isAddressBook = false, notify = true) {
             if (!isAddressBook) {
-                if (this.portfolio.length <= MAX_PORTFOLIO_ITEMS) {
+                if (!this.addressHashIsSaved(_hash) && this.portfolio.length <= MAX_PORTFOLIO_ITEMS) {
                     this.portfolio.push({
                         hash: _hash.toLowerCase(),
                         name: _name
@@ -253,13 +248,15 @@ export const useStore = defineStore('main', {
                     if (this.addressHashIsSaved(_hash, true)) {
                         this.removeAddress(_hash, true)
                     }
-                    this.addNotification({
-                        _type: NotificationType.PLAIN,
-                        text: `${_name} has been added to your portfolio`
-                    })
+                    if (notify) {
+                        this.addNotification({
+                            _type: NotificationType.PLAIN,
+                            text: `${_name} has been added to your portfolio`
+                        })
+                    }
                 }
             } else {
-                if (!this.addressHashIsSaved(_hash)) {
+                if (!this.addressHashIsSaved(_hash, true)) {
                     this.adrBook.push({
                         hash: _hash.toLowerCase(),
                         name: _name
@@ -280,6 +277,7 @@ export const useStore = defineStore('main', {
                     const newList = this.portfolio.filter(i => i.hash.toLowerCase() !== _hash)
                     delete this.portfolioEthBalanceMap[_hash]
                     delete this.portfolioTokenBalanceMap[_hash]
+                    this.addAddress(item[0].hash, item[0].name, true)
                     this.portfolio = [...newList]
                 }
             } else {

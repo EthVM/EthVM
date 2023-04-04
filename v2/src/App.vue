@@ -20,11 +20,13 @@ import TheNotifications from './core/components/TheNotifications.vue'
 import { useStore } from '@/store'
 import { useGetLatestPricesQuery } from '@core/composables/CoinData/getLatestPrices.generated'
 import { useSetPortfolio } from './core/composables/Portfolio/useSetPortfolioBalance'
-import { computed, watch, reactive } from 'vue'
+import { computed, watch, reactive, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { ROUTE_NAME } from '@core/router/routesNames'
 import { useStorage } from '@vueuse/core'
-
+import { usePreferredColorScheme } from '@vueuse/core'
+import { useTheme } from 'vuetify/lib/framework.mjs'
+import { themes } from './core/plugins/vuetify'
 const store = useStore()
 
 const { result: coinData, loading: loadingCoinData, onResult: onCoinDataResult } = useGetLatestPricesQuery({ pollInterval: 300000 })
@@ -162,6 +164,20 @@ if (oldAdrs.value.length > 0) {
     })
 }
 oldAdrs.value = null
+
+/** -------------------
+ * Set Default Theme
+ * --------------------*/
+const theme = useTheme()
+onMounted(() => {
+    const preferredColor = usePreferredColorScheme()
+    if (store.appTheme) {
+        theme.global.name.value = store.appTheme
+    } else {
+        theme.global.name.value = preferredColor.value === 'dark' ? themes.dark : themes.light
+        store.setDarkMode(theme.global.name.value)
+    }
+})
 </script>
 <style lang="scss">
 .app-view {

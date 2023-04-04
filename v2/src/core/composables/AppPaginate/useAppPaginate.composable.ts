@@ -23,6 +23,15 @@ export function useAppPaginate<T>(dataToPaginate: Ref<Array<T>>, id?: Ref<string
             })
         }
     }
+    const dataLenth = computed(() => {
+        return dataToPaginate.value.length
+    })
+
+    watch(dataLenth, (newVal, oldVal) => {
+        if (newVal < oldVal) {
+            setPageNum(1)
+        }
+    })
 
     const computedPageNum = computed<number>(() => {
         return pageId.value ? store.paginationStateMap.get(pageId.value) || 1 : pageNum.value

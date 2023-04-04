@@ -1,7 +1,7 @@
 <template>
     <div>
         <div v-if="!props.isEditMode">
-            <v-tooltip text="You can only store 10 addresses in your portfolio" :disabled="!isDisabled">
+            <v-tooltip v-if="!props.isAddNameMode" text="You can only store 10 addresses in your portfolio" :disabled="!isDisabled">
                 <template v-slot:activator="{ props }">
                     <div v-bind="props" class="d-inline-block">
                         <app-btn-icon v-if="addressPropIsValid" :icon="icon" @click="starClick" :disabled="isDisabled"></app-btn-icon>
@@ -12,14 +12,17 @@
                             :disabled="isDisabled"
                             icon="add"
                         ></app-btn>
-                        <v-btn v-else icon flat color="secondary" height="34px" width="34px" @click="state.openDialog = true" :disabled="isDisabled">
+                        <v-btn v-else icon flat color="secondary" height="34px" width="34px" @click="state.openDialog = true">
                             <v-icon>add</v-icon>
                         </v-btn>
                     </div>
                 </template>
             </v-tooltip>
+            <v-btn v-else icon flat color="secondary" height="34px" width="34px" @click="state.openDialog = true">
+                <v-icon>add</v-icon>
+            </v-btn>
         </div>
-        <app-dialog v-model="state.openDialog" :title="title" height="270" width="480" @update:model-value="closeModule">
+        <app-dialog v-model="state.openDialog" :title="title" height="290" width="480" @update:model-value="closeModule">
             <template #no-scroll-content>
                 <v-row no-gutters align-center justify="center" :class="{ 'mt-n5': !props.isEditMode }">
                     <v-col cols="12" v-if="props.isEditMode">
@@ -65,6 +68,11 @@
                         ></app-input>
                     </v-col>
                     <app-btn :text="buttonText" @click="addAddressToPortfolio" :disabled="!isValidInput"></app-btn>
+                    <v-col v-if="props.isEditMode && !props.hideSettingsLink" cols="12" class="d-flex align-centet justify-center">
+                        <v-btn class="rounded-pill mt-3 text-body-1" :to="routeSettings">
+                            View in Settings <span><v-icon icon="east" size="16"></v-icon></span>
+                        </v-btn>
+                    </v-col>
                 </v-row>
             </template>
         </app-dialog>
@@ -84,7 +92,11 @@ import { useDisplay } from 'vuetify/lib/framework.mjs'
 import { eth } from '@core/helper/eth'
 import { MAX_PORTFOLIO_ITEMS } from '@/store/helpers'
 import { useResolveName } from '@/core/composables/ResolveName/useResolveName'
+import { ROUTE_NAME } from '@core/router/routesNames'
 
+const routeSettings = {
+    name: ROUTE_NAME.SETTINGS.NAME
+}
 const store = useStore()
 const { smAndDown } = useDisplay()
 
@@ -92,11 +104,17 @@ interface PropType {
     address?: string
     isEditMode?: boolean
     name?: string
+    requireName?: boolean
+    hideSettingsLink?: boolean
+    isAddNameMode?: boolean
 }
 
 const props = withDefaults(defineProps<PropType>(), {
     isEditMode: false,
-    name: ''
+    name: '',
+    requireName: false,
+    hideSettingsLink: false,
+    isAddNameMode: false
 })
 
 interface ComponentState {
@@ -196,7 +214,11 @@ const isValidAddress = computed<boolean>(() => {
  * @param _value user input
  */
 const addressIsNew = computed<boolean>(() => {
-    return resolvedAdr.value ? !store.addressHashIsSaved(resolvedAdr.value) : !store.addressHashIsSaved(hashNoSpaces.value)
+    const adr = resolvedAdr.value ? resolvedAdr.value : hashNoSpaces.value
+    if (props.isAddNameMode) {
+        return !store.addressHashIsSaved(adr) && !store.addressHashIsSaved(adr, true)
+    }
+    return !store.addressHashIsSaved(adr)
 })
 
 /**
@@ -256,6 +278,9 @@ watch(
 )
 
 const isRequiredName = computed<boolean>(() => {
+    if (props.requireName) {
+        return true
+    }
     if (props.isEditMode) {
         return store.addressHashIsSaved(hashNoSpaces.value)
     }
@@ -267,7 +292,7 @@ const isRequiredName = computed<boolean>(() => {
  ---------------------*/
 const isValidInput = computed<boolean>(() => {
     if (props.isEditMode) {
-        return store.addressHashIsSaved(hashNoSpaces.value) ? state.nameInput !== '' && !hasNameError.value : !hasNameError.value
+        return isRequiredName.value ? state.nameInput !== '' && !hasNameError.value : !hasNameError.value
     }
     return state.nameInput !== '' && state.adrInput !== '' && !hasAddressError.value && !hasNameError.value
 })
@@ -287,7 +312,7 @@ const addAddressToPortfolio = (): void => {
         }
     } else {
         const adr = resolvedAdr.value ? resolvedAdr.value : hashNoSpaces.value
-        store.addAddress(adr, state.nameInput)
+        store.addAddress(adr, state.nameInput, props.isAddNameMode)
     }
     if (!props.address) {
         state.adrInput = ''

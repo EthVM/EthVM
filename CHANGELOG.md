@@ -1,12 +1,17 @@
-### Release v2.0.3
-
+### Release v2.1.0
+This release includes:
+- App Settings with ability to browse created local names
 
 ### Feature
+- app settings [#1141](https://github.com/EthVM/EthVM/pull/1141)
+- app address names with import/export features [#1141](https://github.com/EthVM/EthVM/pull/1141)
 - added crowdin support in about, txs, notfound [#1140](https://github.com/EthVM/EthVM/pull/1140)
 - add table sorting on mobile [#1137](https://github.com/EthVM/EthVM/pull/1137)
 
 ### BUG
 - fix error on url enter in search bar [#1138](https://github.com/EthVM/EthVM/pull/1138)
+- reset pagination to page 1 when filter is active [#1141](https://github.com/EthVM/EthVM/pull/1141)
+- remove checksumed address requirement in url [#1141](https://github.com/EthVM/EthVM/pull/1141)
 
 ### UI
 - ui jump on add address name on desktop view [#1138](https://github.com/EthVM/EthVM/pull/1138)
