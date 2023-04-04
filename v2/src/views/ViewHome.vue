@@ -38,7 +38,7 @@
                                 <app-btn v-if="!xs" text="More" isSmall icon="east" @click="goToPortfolio"></app-btn>
                                 <app-btn-icon v-else icon="east" @click="goToPortfolio"></app-btn-icon>
                             </v-card-title>
-                            <module-portfolio-list /> </v-card
+                            <module-portfolio-list is-home-page /> </v-card
                     ></v-col>
                     <v-col cols="12" lg="6" :class="columnPadding">
                         <module-tokens-info :home-page="TOKENS_VIEW.ALL" />
