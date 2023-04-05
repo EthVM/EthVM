@@ -109,7 +109,7 @@ const ADDRESS_ROUTE_QUERY = {
 const Q_PORTFOLIO = ['address-list', 'balances']
 const Q_TOKEN_DETAILS = ['transfers', 'holders']
 const Q_BLOCKS_AND_TXS = ['blocks', 'transactions']
-const Q_BLOCK_DETAILS = ['transaction', 'more']
+const Q_BLOCK_DETAILS = ['transaction', 'stake-withdrawals', 'more']
 const Q_ADDRESS_TRANSFERS = ['all', 'internal', 'tx-history', 'pending', 'rewards']
 const Q_TXS_DETAILS = ['state', 'more']
 

@@ -13,12 +13,13 @@
         <block-txs
             v-show="state.tab === routes[0]"
             :max-items="10"
-            :block-ref="blockNumber"
+            :block-ref="blockNumber.toString()"
             :is-hash="isHash"
             :is-mined="state.isMined"
             page-type="blockDetails"
         />
-        <more-block-details v-show="state.tab === routes[1]" :block-details="blockDetails" :uncle-hashes="uncleHashes" :is-loading="isLoading" />
+        <module-block-withdrawals v-show="state.tab === routes[1]" :block-number="blockNumber" :is-loading="isLoading" />
+        <more-block-details v-show="state.tab === routes[2]" :block-details="blockDetails" :uncle-hashes="uncleHashes" :is-loading="isLoading" />
     </v-card>
 </template>
 
@@ -27,6 +28,7 @@ import AppTabs from '@/core/components/AppTabs.vue'
 // Weird ESLINT error that  'BlockDetails' is defined but never used  even though it is used.
 // eslint-disable-next-line
 import BlockDetails from '@module/block/components/BlockDetails.vue'
+import ModuleBlockWithdrawals from './ModuleBlockWithdrawals.vue'
 import MoreBlockDetails from '@module/block/components/MoreBlockDetails.vue'
 import BlockTxs from '@module/txs/ModuleTxs.vue'
 import { reactive, computed, ref, onMounted, watch } from 'vue'
@@ -59,6 +61,10 @@ const tabs: Tab[] = [
     },
     {
         value: routes[1],
+        title: 'Stake Withdrawals'
+    },
+    {
+        value: routes[2],
         title: 'More'
     }
 ]
@@ -314,11 +320,11 @@ const currBlockNumber = computed<string | null>(() => {
 })
 
 // This returns the block number or the block hash depending on the url
-const blockNumber = computed<string | number>(() => {
+const blockNumber = computed<number>(() => {
     if (props.isHash) {
-        return state.blockNumber
+        return new BN(state.blockNumber).toNumber()
     }
-    return props.blockRef
+    return new BN(props.blockRef || 0).toNumber()
 })
 
 /**
