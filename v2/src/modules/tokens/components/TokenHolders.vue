@@ -323,11 +323,11 @@ const nextKey = computed<string | null | undefined>(() => {
 })
 
 const showPagination = computed<boolean>(() => {
-    return !initialLoad.value && !!holders.value && holders.value.length > 0
+    return !initialLoad.value && !!holders.value && (holders.value.length > queryLimit.value || !!nextKey.value)
 })
 
 const hasMore = computed<boolean>(() => {
-    return hasItems.value && nextKey.value !== undefined
+    return hasItems.value && !!nextKey.value
 })
 
 /**
