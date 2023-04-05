@@ -55,7 +55,7 @@
                 <v-col md="3" :lg="props.isBlock ? 2 : 3">
                     <div class="d-flex justify-space-between align-center">
                         <div v-if="!props.isBlock && !mdAndDown">
-                            <router-link :to="`/block/number/${transaction.block}`" class="text-secondary pb-1">{{ transaction.block }}</router-link>
+                            <router-link :to="`/block/number/${props.tx.transfer.block}`" class="text-secondary pb-1">{{ transaction.block }}</router-link>
                             <p class="text-info mb-0">
                                 {{ transaction.timestamp }}
                             </p>

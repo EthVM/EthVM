@@ -74,7 +74,7 @@ const {
 )
 
 const hasWithdrawals = computed<boolean>(() => {
-    return result.value?.getEthWithdrawalTransfers !== undefined
+    return result.value?.getEthWithdrawalTransfers?.transfers && result.value?.getEthWithdrawalTransfers?.transfers.length > 0
 })
 
 const withdrawals = computed<BlockWithdrawalFragment[]>(() => {
