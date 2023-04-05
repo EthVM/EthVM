@@ -22,7 +22,6 @@
         </v-card-title>
         <txs-table
             :max-items="props.maxItems"
-            :index="state.index"
             :initial-load="initialLoad"
             :is-loading="isLoading"
             :table-message="message"
@@ -46,7 +45,9 @@ import {
     useNewTransfersCompleteFeedSubscription,
     useGetBlockTransfersQuery,
     TransferFragment,
-    EthTransfersFragment
+    EthTransfersFragment,
+    BlockTransactionsFragment,
+    BlockTransactionFragment
 } from './apollo/transfersQuery.generated'
 import { computed, onMounted, reactive, watch } from 'vue'
 import TxsTable from '@module/txs/components/TxsTable.vue'
@@ -140,16 +141,16 @@ const allEthTransfers = computed<EthTransfersFragment | undefined>(() => {
     return getEthTransactionTransfers.value?.getEthTransactionTransfers
 })
 
-const allBlockTransfersResult = computed<EthTransfersFragment | undefined>(() => {
+const allBlockTransfersResult = computed<BlockTransactionsFragment | undefined>(() => {
     return getAllBlockTransfersResult.value?.getBlockTransfers
 })
 
-const transactions = computed<Array<TransferFragment | null>>(() => {
+const transactions = computed<Array<TransferFragment | BlockTransactionFragment>>(() => {
     if (!isBlock.value && allEthTransfers.value && allEthTransfers.value.transfers !== null) {
         return allEthTransfers.value.transfers
     }
     if (isBlock.value && allBlockTransfersResult.value && allBlockTransfersResult.value.transfers !== null) {
-        return allBlockTransfersResult.value.transfers
+        return allBlockTransfersResult.value.transfers.filter((x): x is BlockTransactionFragment => x !== null)
     }
     return []
 })
@@ -204,7 +205,7 @@ const initialLoad = computed<boolean>(() => {
 const { onResult: onNewTransferLoaded } = useNewTransfersCompleteFeedSubscription()
 
 onNewTransferLoaded(result => {
-    if (result?.data.newTransfersCompleteFeed.type === 'ETH') {
+    if (result?.data?.newTransfersCompleteFeed.type === 'ETH') {
         if (isHome.value) {
             refetchTxArray()
         } else {

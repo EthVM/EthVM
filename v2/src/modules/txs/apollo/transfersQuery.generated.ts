@@ -20,8 +20,8 @@ export type SummaryFragment = {
     status?: boolean | null
 }
 
-export type TransferFragment = {
-    __typename?: 'ETHTransactionTransfer'
+export type BlockTransactionFragment = {
+    __typename?: 'EthTransfer'
     value: string
     transfer: {
         __typename?: 'Transfer'
@@ -35,19 +35,22 @@ export type TransferFragment = {
     }
 }
 
-export type EthTransferFragment = {
-    __typename?: 'EthTransfer'
-    value: string
-    transfer: {
-        __typename?: 'Transfer'
-        transactionHash: string
-        to: string
-        block: number
-        timestamp: number
-        from: string
-        txFee: string
-        status?: boolean | null
-    }
+export type BlockTransactionsFragment = {
+    __typename?: 'ETHTransfers'
+    transfers: Array<{
+        __typename?: 'EthTransfer'
+        value: string
+        transfer: {
+            __typename?: 'Transfer'
+            transactionHash: string
+            to: string
+            block: number
+            timestamp: number
+            from: string
+            txFee: string
+            status?: boolean | null
+        }
+    } | null>
 }
 
 export type GetBlockTransfersQueryVariables = Types.Exact<{
@@ -72,6 +75,21 @@ export type GetBlockTransfersQuery = {
                 status?: boolean | null
             }
         } | null>
+    }
+}
+
+export type TransferFragment = {
+    __typename?: 'ETHTransactionTransfer'
+    value: string
+    transfer: {
+        __typename?: 'Transfer'
+        transactionHash: string
+        to: string
+        block: number
+        timestamp: number
+        from: string
+        txFee: string
+        status?: boolean | null
     }
 }
 
@@ -139,14 +157,22 @@ export const SummaryFragmentDoc = gql`
         status
     }
 `
-export const EthTransferFragmentDoc = gql`
-    fragment EthTransfer on EthTransfer {
+export const BlockTransactionFragmentDoc = gql`
+    fragment BlockTransaction on EthTransfer {
         transfer {
             ...Summary
         }
         value
     }
     ${SummaryFragmentDoc}
+`
+export const BlockTransactionsFragmentDoc = gql`
+    fragment BlockTransactions on ETHTransfers {
+        transfers {
+            ...BlockTransaction
+        }
+    }
+    ${BlockTransactionFragmentDoc}
 `
 export const TransferFragmentDoc = gql`
     fragment Transfer on ETHTransactionTransfer {
@@ -169,12 +195,10 @@ export const EthTransfersFragmentDoc = gql`
 export const GetBlockTransfersDocument = gql`
     query getBlockTransfers($_number: Int) {
         getBlockTransfers(number: $_number) {
-            transfers {
-                ...EthTransfer
-            }
+            ...BlockTransactions
         }
     }
-    ${EthTransferFragmentDoc}
+    ${BlockTransactionsFragmentDoc}
 `
 
 /**
