@@ -1,15 +1,12 @@
 <template>
-    <template v-if="!smAndDown">
+    <template v-if="!xs">
         <v-row align="center" justify="start" class="text-info mt-2 mt-sm-3">
-            <v-col sm="3" lg="2">
-                <span style="width: 30px; height: 1px" class="d-inline-block"></span>
-                <span class="ml-4">Value</span>
-            </v-col>
-            <v-col v-if="!mdAndDown" sm="2"> Type </v-col>
-            <v-col sm="2"> Hash/Block </v-col>
-            <v-col sm="2" class="d-flex justify-sm-center justify-lg-start"> To/From </v-col>
-            <v-col sm="3" lg="2"> Address </v-col>
-            <v-col sm="2"> Tx Fee Paid </v-col>
+            <v-col sm="4" md="3" lg="2" order="1"> Status </v-col>
+            <v-col sm="5" md="3" lg="2" order="2"> Address </v-col>
+            <v-col sm="3" lg="2" order-sm="last" order-lg="3"> Value </v-col>
+            <v-col lg="2" class="d-none d-lg-flex" order="4"> Tx Fee Paid </v-col>
+            <v-col sm="3" class="d-none d-lg-flex" lg="2" order="5"> Type </v-col>
+            <v-col md="3" lg="2" class="d-none d-md-flex" order-md="3" order-lg="6"> Hash/Block </v-col>
         </v-row>
     </template>
     <v-divider class="my-0 mt-sm-4 mx-n4 mx-sm-n6" />
@@ -24,7 +21,7 @@
     </div>
     <div v-else class="p-ten-top">
         <div v-for="item in 10" :key="item" style="padding: 10px 0">
-            <div class="skeleton-box rounded-xl" style="height: 40px"></div>
+            <div class="skeleton-box rounded-xl" :style="xs ? 'height: 56px' : 'height: 46px'"></div>
         </div>
     </div>
     <template v-if="showPagination">
@@ -37,13 +34,12 @@ import AppNoResult from '@core/components/AppNoResult.vue'
 import TableAllEthTransferRow from '@module/address/components/EthBalanceTabs/TableAllEthTransferRow.vue'
 import AppPagination from '@core/components/AppPagination.vue'
 import { computed } from 'vue'
-import { EthInternalTransactionTransfersFragment } from '@module/address/apollo/EthTransfers/internalTransfers.generated'
 import { useDisplay } from 'vuetify'
-import { useGetAllEthTransfersQuery } from '@module/address/apollo/EthTransfers/allTransfers.generated'
+import { useGetAllEthTransfersQuery, AllEthTransfersFragment } from '@module/address/apollo/EthTransfers/allTransfers.generated'
 import { useAppPaginate } from '@core/composables/AppPaginate/useAppPaginate.composable'
 import { ITEMS_PER_PAGE } from '@core/constants'
 
-const { smAndDown, mdAndDown } = useDisplay()
+const { xs } = useDisplay()
 
 const props = defineProps({
     addressRef: {
@@ -70,8 +66,11 @@ const {
     }
 )
 
-const transfers = computed<Array<EthInternalTransactionTransfersFragment | null>>(() => {
-    return allTransfersData.value?.getAllEthTransfers.transfers || []
+const transfers = computed<AllEthTransfersFragment[]>(() => {
+    if (allTransfersData.value && allTransfersData.value.getAllEthTransfers) {
+        return allTransfersData.value.getAllEthTransfers.transfers.filter((x): x is AllEthTransfersFragment => x !== null)
+    }
+    return []
 })
 
 const { numberOfPages, pageData: currentPageData, setPageNum, pageNum } = useAppPaginate(transfers, 'allTxs')

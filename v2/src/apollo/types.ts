@@ -4994,6 +4994,8 @@ export type TransferWithError = {
     transferError?: Maybe<Scalars['String']>
     txFee: Scalars['String']
     type: TransferType
+    validatorIndex?: Maybe<Scalars['String']>
+    withdrawalIndex?: Maybe<Scalars['String']>
 }
 
 export type Transfer_Filter = {

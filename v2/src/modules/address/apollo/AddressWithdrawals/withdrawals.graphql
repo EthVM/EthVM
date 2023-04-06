@@ -14,11 +14,3 @@ query getAdrWithdrawals($address: String!,  $nextKey: String, $limit: Int!) {
         nextKey
     }
 }
-
-query getAdrHasWithdrawals($address: String!) {
-    getEthWithdrawalTransfers(address: $address, limit: 1){
-        transfers{
-            ...AdrWithdrawal
-        }
-    }
-}
