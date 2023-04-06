@@ -10,7 +10,6 @@
         </v-row>
     </template>
     <v-divider class="my-0 mt-sm-4 mx-n4 mx-sm-n6" />
-
     <div v-if="!initialLoad && !loadingAllTransfersData" class="p-ten-top">
         <template v-if="transfers && transfers.length > 0">
             <div v-for="(transfer, index) in currentPageData" :key="`${transfer.transfer.transactionHash}-${index}`">
