@@ -23,6 +23,7 @@ This release includes:
 ### UI
 - ui jump on add address name on desktop view [#1138](https://github.com/EthVM/EthVM/pull/1138)
 - add hover states to address menu [#1138](https://github.com/EthVM/EthVM/pull/1138)
+- fix txs table responsiveness [#1144](https://github.com/EthVM/EthVM/pull/1144)
 
 ### Devop
 - add dynamic route imports [#1135](https://github.com/EthVM/EthVM/pull/1135)
