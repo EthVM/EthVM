@@ -78,7 +78,8 @@
                 <v-col cols="12" lg="5">
                     <div class="rounded-lg bg-tableGrey pa-6">
                         <div class="tx-info">
-                            <p class="text-button mb-1">To</p>
+                            <p v-if="transactionData && transactionData.contractAddress" class="text-button mb-1">Created Contract</p>
+                            <p v-else class="text-button mb-1">To</p>
                             <template v-if="loadingTransactionHash || !transactionData">
                                 <div class="d-flex align-center">
                                     <div class="skeleton-box rounded-circle mr-1 mr-sm-2 flex-shrink-0" style="height: 32px; width: 32px"></div>
@@ -87,11 +88,15 @@
                             </template>
                             <template v-else>
                                 <div class="d-flex align-center">
-                                    <app-address-blockie :address="transactionData.to || ''" :size="8" class="mr-1 mr-sm-2" />
+                                    <app-address-blockie
+                                        :address="transactionData.to || transactionData.contractAddress || ''"
+                                        :size="8"
+                                        class="mr-1 mr-sm-2"
+                                    />
                                     <app-transform-hash
                                         is-blue
-                                        :hash="eth.toCheckSum(transactionData.to || '')"
-                                        :link="`/address/${transactionData.to}`"
+                                        :hash="eth.toCheckSum(transactionData.to || transactionData.contractAddress || '')"
+                                        :link="`/address/${transactionData.to || transactionData.contractAddress || ''}`"
                                         class="text-body-1"
                                     />
                                 </div>
@@ -106,7 +111,7 @@
                         <div class="tx-info">
                             <p class="text-button mb-1">Value</p>
                             <div v-if="loadingTransactionHash" class="skeleton-box rounded-xl" style="height: 21px"></div>
-                            <p v-else class="text-no-wrap">{{ txAmount.value }} ETH</p>
+                            <p v-else class="text-no-wrap">{{ txAmount.value }} {{ currencyName }}</p>
                         </div>
                     </div>
                 </v-col>
@@ -115,7 +120,7 @@
                         <div class="tx-info">
                             <p class="text-button mb-1">Fee</p>
                             <div v-if="loadingTransactionHash" class="skeleton-box rounded-xl" style="height: 21px"></div>
-                            <p v-else class="text-no-wrap">{{ txFee.value }} ETH</p>
+                            <p v-else class="text-no-wrap">{{ txFee.value }} {{ currencyName }}</p>
                         </div>
                     </div>
                 </v-col>
@@ -140,7 +145,7 @@ import BN from 'bignumber.js'
 import { TxDetailsFragment as TxDetailsType, useGetTransactionByHashQuery, useTransactionEventSubscription } from './apollo/TxDetails.generated'
 import { ErrorMessageTx, TitleStatus } from '@/modules/txs/models/ErrorMessagesForTx'
 import { excpTxDoNotExists } from '@/apollo/errorExceptions'
-import { formatNumber, FormattedNumber, FormattedNumberUnit, formatVariableUnitEthValue } from '@/core/helper/number-format-helper'
+import { formatNumber, FormattedNumber, formatVariableUnitEthValue } from '@/core/helper/number-format-helper'
 import { eth, timeAgo } from '@core/helper'
 import { useGetLatestBlockInfoQuery } from '@module/block/apollo/BlockStats/blockStats.generated'
 import { useBlockSubscription } from '@core/composables/NewBlock/newBlock.composable'
@@ -150,7 +155,9 @@ import TabState from '@module/txs/components/TabState.vue'
 import { useDisplay } from 'vuetify'
 import { TxStatus } from '@module/txs/models/ErrorMessagesForTx'
 import { Tab } from '@core/components/props'
+import { useNetwork } from '@core/composables/Network/useNetwork'
 
+const { currencyName } = useNetwork()
 const props = defineProps({
     txRef: {
         type: String,
@@ -287,7 +294,7 @@ const txFee = computed<FormattedNumber>(() => {
         const fee = new BN(transactionData.value.gas).multipliedBy(transactionData.value.gasPrice)
         return formatVariableUnitEthValue(fee)
     }
-    return { value: '0', unit: FormattedNumberUnit.ETH }
+    return { value: '0', unit: currencyName.value }
 })
 
 /**

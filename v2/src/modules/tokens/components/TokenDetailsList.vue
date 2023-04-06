@@ -141,13 +141,11 @@ interface PropType {
 const props = defineProps<PropType>()
 
 interface ComponentState {
-    isRopsten: boolean
     hasError: boolean
     imageExists: boolean
 }
 
 const state: ComponentState = {
-    isRopsten: false,
     hasError: false,
     imageExists: true
 }
@@ -211,14 +209,12 @@ const tokenDetailsList = computed<Detail[]>(() => {
     if (props.holderDetails && props.holderDetails.owner && contractOwnerDetail.value.detail) {
         details.push(contractOwnerDetail.value)
     }
-    if (!props.isRopsten && priceDetail.value.detail) {
+    if (priceDetail.value.detail) {
         details.push(priceDetail.value)
     }
     supplyDetail.value.detail ? details.push(supplyDetail.value) : null
-    if (!state.isRopsten) {
-        marketCapDetail.value.detail ? details.push(marketCapDetail.value) : null
-        volumeDetail.value.detail ? details.push(volumeDetail.value) : null
-    }
+    marketCapDetail.value.detail ? details.push(marketCapDetail.value) : null
+    volumeDetail.value.detail ? details.push(volumeDetail.value) : null
     return details
 })
 
@@ -227,7 +223,7 @@ const tokenDetailsList = computed<Detail[]>(() => {
  */
 const holderDetailsList = computed<Detail[]>(() => {
     const details = [holderDetail.value, holderBalanceDetail.value]
-    if (!state.isRopsten && holderUsdDetail.value.detail) {
+    if (holderUsdDetail.value.detail) {
         details.push(holderUsdDetail.value)
     }
     // details.push(holderTransfersDetail.value)

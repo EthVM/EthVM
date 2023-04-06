@@ -9,7 +9,7 @@
                     {{ transferDirection.text }}
                 </span>
             </v-col>
-            <v-col cols="6" class="text-right">{{ txValue.value }} ETH</v-col>
+            <v-col cols="6" class="text-right">{{ txValue.value }} {{ currencyName }}</v-col>
             <v-col cols="6" class="text-info text-lowercase"> {{ timestamp }} {{ transferDirection.direction }} </v-col>
             <v-col cols="6">
                 <div class="d-flex align-center justify-end">
@@ -22,11 +22,11 @@
                     <v-divider class="mx-n6 mb-3" />
                     <div class="mb-4 d-flex justify-space-between">
                         <span class="text-info mr-2">Balance Before:</span>
-                        <span>{{ balanceBefore.value }} ETH</span>
+                        <span>{{ balanceBefore.value }} {{ currencyName }}</span>
                     </div>
                     <div class="mb-4 d-flex justify-space-between">
                         <span class="text-info mr-2">Balance After:</span>
-                        <span>{{ balanceAfter.value }} ETH</span>
+                        <span>{{ balanceAfter.value }} {{ currencyName }}</span>
                     </div>
                     <div class="d-flex justify-space-between">
                         <span class="text-info mr-2">Hash:</span>
@@ -49,8 +49,8 @@
                         <v-icon :color="statusIcon.color">{{ statusIcon.icon }}</v-icon>
                     </span>
                     <div class="ml-4">
-                        {{ txValue.value }} ETH
-                        <div class="text-lowercase">
+                        {{ txValue.value }} {{ currencyName }}
+                        <div class="text-lowercase text-info">
                             {{ timestamp }}
                             <span v-if="mdAndDown">{{ transferDirection.direction }}</span>
                         </div>
@@ -74,8 +74,8 @@
                     :link="`/tx/${transfer.transfer.transactionHash}`"
                 />
             </v-col>
-            <v-col sm="2"> {{ balanceBefore.value }} ETH </v-col>
-            <v-col sm="2" lg="3"> {{ balanceAfter.value }} ETH </v-col>
+            <v-col sm="2"> {{ balanceBefore.value }} {{ currencyName }} </v-col>
+            <v-col sm="2" lg="3"> {{ balanceAfter.value }} {{ currencyName }} </v-col>
         </app-table-row>
     </div>
 </template>
@@ -91,7 +91,9 @@ import { computed, ref } from 'vue'
 import { formatNonVariableEthValue, FormattedNumber } from '@core/helper/number-format-helper'
 import BN from 'bignumber.js'
 import { useDisplay } from 'vuetify'
+import { useNetwork } from '@core/composables/Network/useNetwork'
 
+const { currencyName } = useNetwork()
 const { smAndDown, mdAndDown } = useDisplay()
 
 interface ComponentProps {

@@ -1,10 +1,12 @@
 import BigNumber from 'bignumber.js'
 import { EthValue } from '@core/models'
-
+import Configs from '@/configs'
+import { NETWORKS } from '@/core/helper/networks'
 BigNumber.config({ ROUNDING_MODE: 1 }) // equivalent to ROUND_DOWN
 
+const FormattedNumberUnitETH = NETWORKS[Configs.NETWORK].curr
+
 export enum FormattedNumberUnit {
-    ETH = 'eth',
     GWEI = 'gwei',
     WEI = 'wei',
     PERCENT = '%',
@@ -18,7 +20,7 @@ export enum FormattedNumberUnit {
 
 export interface FormattedNumber {
     value: string
-    unit?: FormattedNumberUnit
+    unit?: FormattedNumberUnit | string
     tooltipText?: string
 }
 
@@ -203,7 +205,7 @@ export const formatVariableUnitEthValue = (value: BigNumber): FormattedNumber =>
      * Return: "0 ETH"
      */
     if (value.isZero()) {
-        return { value: '0', unit: FormattedNumberUnit.ETH }
+        return { value: '0', unit: FormattedNumberUnitETH }
     } else if (value.isLessThan(TenThousand)) {
         /**
          * Case II: value < 10,000 wei
@@ -228,7 +230,7 @@ export const formatVariableUnitEthValue = (value: BigNumber): FormattedNumber =>
     }
 
     const ethBN = new EthValue(value).toEthBN()
-    const unit = FormattedNumberUnit.ETH
+    const unit = FormattedNumberUnitETH
     const dps = ethBN.decimalPlaces()
 
     /**
@@ -282,7 +284,7 @@ export const formatNonVariableEthValue = (value: BigNumber): FormattedNumber => 
      * Return: "0 ETH"
      */
     if (value.isZero()) {
-        return { value: '0', unit: FormattedNumberUnit.ETH }
+        return { value: '0', unit: FormattedNumberUnitETH }
     } else if (value.isLessThan(TenThousand)) {
         /**
          * Case II: value < 10,000 wei
@@ -307,7 +309,7 @@ export const formatNonVariableEthValue = (value: BigNumber): FormattedNumber => 
     }
 
     const ethBN = new EthValue(value).toEthBN()
-    return { ...formatFloatingPointValue(ethBN), unit: FormattedNumberUnit.ETH }
+    return { ...formatFloatingPointValue(ethBN), unit: FormattedNumberUnitETH }
 }
 
 /**

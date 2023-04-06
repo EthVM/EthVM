@@ -24,8 +24,7 @@
                     -->
             <v-col sm="3" lg="2" class="py-0 d-none d-sm-block">
                 <v-btn variant="text" color="info" class="font-weight-regular ml-n3" rounded="pill" size="small" @click="sortTable(KEY.ETH)">
-                    ETH Balance
-                    <v-icon v-if="isActiveSort(KEY.ETH)" class="ml-1" :size="14">{{ sortIcon }}</v-icon></v-btn
+                    {{ currencyName }} Balance <v-icon v-if="isActiveSort(KEY.ETH)" class="ml-1" :size="14">{{ sortIcon }}</v-icon></v-btn
                 >
             </v-col>
             <!--
@@ -34,8 +33,7 @@
                     -->
             <v-col lg="2" class="py-0 d-none d-lg-block">
                 <v-btn variant="text" color="info" class="font-weight-regular ml-n3" rounded="pill" size="small" @click="sortTable(KEY.ETH_USD)">
-                    ETH Value
-                    <v-icon v-if="isActiveSort(KEY.ETH_USD)" class="ml-1" :size="14">{{ sortIcon }}</v-icon></v-btn
+                    {{ currencyName }} Value <v-icon v-if="isActiveSort(KEY.ETH_USD)" class="ml-1" :size="14">{{ sortIcon }}</v-icon></v-btn
                 >
             </v-col>
             <!--
@@ -112,8 +110,10 @@ import { useStore } from '@/store'
 import { useDisplay } from 'vuetify/lib/framework.mjs'
 import { formatUsdValue } from '@core/helper/number-format-helper'
 import BN from 'bignumber.js'
+import { useNetwork } from '@core/composables/Network/useNetwork'
 
 const { xs } = useDisplay()
+const { currencyName } = useNetwork()
 const store = useStore()
 
 enum KEY {

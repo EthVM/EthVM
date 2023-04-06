@@ -9,7 +9,7 @@
                     {{ transferDirection.text }}
                 </span>
             </v-col>
-            <v-col cols="6" class="text-right">{{ txValue.value }} ETH</v-col>
+            <v-col cols="6" class="text-right">{{ txValue.value }} {{ currencyName }}</v-col>
             <v-col cols="6" class="text-info text-lowercase"> {{ timestamp }} {{ transferDirection.direction }} </v-col>
             <v-col cols="6">
                 <div class="d-flex align-center justify-end">
@@ -21,7 +21,7 @@
                 <v-col cols="12" v-if="showMoreDetails">
                     <div v-if="!isIncoming" class="mb-4 d-flex justify-space-between">
                         <span class="text-info mr-2">tx fee paid:</span>
-                        <span>{{ txFee.value }} ETH</span>
+                        <span>{{ txFee.value }} {{ currencyName }}</span>
                     </div>
                     <div class="d-flex justify-space-between">
                         <span class="text-info mr-2">
@@ -50,7 +50,7 @@
                         <v-icon :color="statusIcon.color">{{ statusIcon.icon }}</v-icon>
                     </span>
                     <div class="ml-4">
-                        {{ txValue.value }} ETH
+                        {{ txValue.value }} {{ currencyName }}
                         <div class="text-lowercase text-info">
                             {{ timestamp }}
                         </div>
@@ -89,7 +89,7 @@
                 </div>
             </v-col>
             <v-col sm="2">
-                <span v-if="!isIncoming"> {{ txFee.value }} ETH </span>
+                <span v-if="!isIncoming"> {{ txFee.value }} {{ currencyName }} </span>
             </v-col>
         </app-table-row>
     </div>
@@ -107,9 +107,10 @@ import { formatNonVariableEthValue, FormattedNumber, formatNumber } from '@core/
 import BN from 'bignumber.js'
 import { useDisplay } from 'vuetify'
 import { TransferSubtype } from '@/apollo/types'
+import { useNetwork } from '@/core/composables/Network/useNetwork'
 
 const { smAndDown, mdAndDown } = useDisplay()
-
+const { currencyName } = useNetwork()
 interface ComponentProps {
     transfer: EthInternalTransactionTransfersFragment
     addressRef: string

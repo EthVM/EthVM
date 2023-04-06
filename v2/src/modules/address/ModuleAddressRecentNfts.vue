@@ -26,10 +26,10 @@
                                 :index="index"
                                 :tokens="displayTokens"
                             ></token-nft-img>
-                            <p v-if="!props.isOverview && token.meta && token.meta.name">
+                            <p v-if="!props.isOverview && token.meta && token.meta.name" class="my-1 text-info">
                                 {{ token.meta.name }}
                             </p>
-                            <p v-if="!props.isOverview && (!token.meta || !token.meta.name)">Unknown</p>
+                            <p v-if="!props.isOverview && (!token.meta || !token.meta.name)" class="my-1">Unknown-{{ token.type }}</p>
                         </v-col>
                     </v-row>
                 </template>
@@ -64,7 +64,10 @@ import { useGetNftsMeta } from '@core/composables/NftMeta/useGetNftsMeta.composa
 import { NftId, generateId, generateMapId } from '@/core/composables/NftMeta/helpers'
 import { NftType } from '@/apollo/types'
 import { useAppPaginate } from '@core/composables/AppPaginate/useAppPaginate.composable'
+import { useNetwork } from '@/core/composables/Network/useNetwork'
+
 const { xs } = useDisplay()
+const { nftId } = useNetwork()
 const props = defineProps({
     addressHash: {
         type: String,
@@ -126,12 +129,23 @@ const { nftMeta, loadingMeta } = useGetNftsMeta(tokenIDS, loadingBalance)
 const displayTokens = computed<NFTDetails[]>(() => {
     return resultBalance.value
         ? currentPageData.value.map(token => {
+              let _meta = nftMeta.value.get(generateMapId(token.tokenInfo.contract, token.tokenInfo.tokenId))
+              if (!_meta) {
+                  _meta = {
+                      __typename: 'RespNFT',
+                      nft_id: token.tokenInfo.tokenId || '',
+                      chain: nftId.value,
+                      contract_address: token.tokenInfo.contract,
+                      name: token.tokenInfo.name || null,
+                      previews: { __typename: 'RespNftPreviews' }
+                  }
+              }
               return {
                   type: token.type,
                   balance: token.type === NftType.Erc1155 ? token.balance : undefined,
                   contract: token.tokenInfo.contract,
                   id: generateId(token.tokenInfo.tokenId),
-                  meta: nftMeta.value.get(generateMapId(token.tokenInfo.contract, token.tokenInfo.tokenId))
+                  meta: _meta
               }
           })
         : []

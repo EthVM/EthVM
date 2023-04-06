@@ -47,8 +47,11 @@ import { useQuery } from '@vue/apollo-composable'
 import { timeAgo } from '@core/helper'
 import { fromWei } from 'web3-utils'
 import { Q_BLOCK_DETAILS } from '@core/router/routesNames'
+import { useNetwork } from '@core/composables/Network/useNetwork'
+
 const routes = Q_BLOCK_DETAILS
 
+const { currencyName } = useNetwork()
 const tabs: Tab[] = [
     {
         value: routes[0],
@@ -95,17 +98,17 @@ const blockDetails = computed<{ [key: string]: Detail } | null>(() => {
             totalRewards: {
                 title: 'Total Rewards',
                 detail: `${rewards.value.value} ${rewards.value.unit}`,
-                tooltip: rewards.value.tooltipText ? `${rewards.value.tooltipText} ETH` : undefined
+                tooltip: rewards.value.tooltipText ? `${rewards.value.tooltipText} ${currencyName}` : undefined
             },
             txsFees: {
                 title: 'Txs Fees',
                 detail: `${transactionFees.value.value} ${transactionFees.value.unit}`,
-                tooltip: transactionFees.value.tooltipText ? `${transactionFees.value.tooltipText} ETH` : undefined
+                tooltip: transactionFees.value.tooltipText ? `${transactionFees.value.tooltipText} ${currencyName}` : undefined
             },
             uncleReward: {
                 title: 'Uncle Reward',
                 detail: `${uncleRewards.value.value} ${uncleRewards.value.unit}`,
-                tooltip: uncleRewards.value.tooltipText ? `${uncleRewards.value.tooltipText} ETH` : undefined
+                tooltip: uncleRewards.value.tooltipText ? `${uncleRewards.value.tooltipText} ${currencyName}` : undefined
             },
             transactions: {
                 title: 'Transactions',
