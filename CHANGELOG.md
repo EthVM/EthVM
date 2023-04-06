@@ -2,19 +2,23 @@
 This release includes:
 - App Settings with ability to browse created local names
 - Ability to support multiple networks
+- Ability to view stake withdrawals in block details and address pages
 
 ### Feature
 - app settings [#1141](https://github.com/EthVM/EthVM/pull/1141)
 - app address names with import/export features [#1141](https://github.com/EthVM/EthVM/pull/1141)
 - added crowdin support in about, txs, notfound [#1140](https://github.com/EthVM/EthVM/pull/1140)
 - add table sorting on mobile [#1137](https://github.com/EthVM/EthVM/pull/1137)
-- multiple networks support [#1138]https://github.com/EthVM/EthVM/pull/1143)
+- multiple networks support [#1143](https://github.com/EthVM/EthVM/pull/1143)
+- withdrawals tables [#1144](https://github.com/EthVM/EthVM/pull/1144)
 
 ### BUG
 - fix error on url enter in search bar [#1138](https://github.com/EthVM/EthVM/pull/1138)
 - reset pagination to page 1 when filter is active [#1141](https://github.com/EthVM/EthVM/pull/1141)
 - remove checksumed address requirement in url [#1141](https://github.com/EthVM/EthVM/pull/1141)
-- show contract creation details in tx details page [#1138]https://github.com/EthVM/EthVM/pull/1143)
+- show contract creation details in tx details page [#1143]https://github.com/EthVM/EthVM/pull/1143)
+- reset pagination on token view on contract change [#1144](https://github.com/EthVM/EthVM/pull/1144)
+- check for proper nexKey in token holders table pagination [#1144](https://github.com/EthVM/EthVM/pull/1144)
 
 ### UI
 - ui jump on add address name on desktop view [#1138](https://github.com/EthVM/EthVM/pull/1138)
