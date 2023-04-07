@@ -1,6 +1,6 @@
 <template>
     <v-row :class="rowMargin">
-        <v-col cols="12" :class="columnPadding">
+        <v-col cols="12" :class="['px-1', columnPadding]">
             <block-stats-module />
         </v-col>
         <v-col cols="12">
