@@ -1,6 +1,6 @@
 <template>
     <div>
-        <v-btn class="text-subtitle-1 font-weight-light" rounded="pill" variant="outlined" height="24" id="network-dropdown">
+        <v-btn class="text-subtitle-1 font-weight-light text-body-1" rounded="pill" variant="outlined" height="24" id="network-dropdown">
             {{ networkName }}
             <v-icon class="ml-1" size="16">expand_more</v-icon>
         </v-btn>
