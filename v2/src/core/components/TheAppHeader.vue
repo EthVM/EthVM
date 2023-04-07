@@ -71,10 +71,10 @@
                                 <span v-if="getPercentage" :class="[getPercentage.color, 'mx-2']"> {{ getPercentage.change }}</span>
                             </p>
                         </v-scroll-y-reverse-transition>
-                        <div v-if="loadingMarketInfo" style="height: 20px; width: 144px"></div>
+                        <div v-if="loadingMarketInfo" style="height: 20px; width: 153px"></div>
                     </div>
                     <v-scroll-y-reverse-transition hide-on-leave>
-                        <p v-if="gasPriceLoaded" key="gas-transition">GAS {{ gasPrice }} Gwei</p>
+                        <p v-if="gasPriceLoaded" key="gas-transition">Gas {{ gasPrice }} Gwei</p>
                     </v-scroll-y-reverse-transition>
                     <v-spacer />
                     <app-change-network />

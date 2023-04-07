@@ -1,6 +1,6 @@
 import { computed } from 'vue'
 import Configs from '@/configs'
-import { NETWORKS } from '@core/helper/networks'
+import { NETWORKS, DEFAULT_NETWORK } from '@core/helper/networks'
 export function useNetwork() {
     /**
      * Returns network name
@@ -58,6 +58,13 @@ export function useNetwork() {
         return NETWORKS[Configs.NETWORK].unstoppable_id
     })
 
+    const isETH = computed<boolean>(() => {
+        return NETWORKS[Configs.NETWORK].name === NETWORKS[DEFAULT_NETWORK].name
+    })
+
+    const isSEP = computed<boolean>(() => {
+        return NETWORKS[Configs.NETWORK].name === NETWORKS.SEPOLIA.name
+    })
     return {
         currencyName,
         supportsFiat,
@@ -66,6 +73,8 @@ export function useNetwork() {
         nftId,
         ensId,
         unstoppableId,
-        networkName
+        networkName,
+        isETH,
+        isSEP
     }
 }
