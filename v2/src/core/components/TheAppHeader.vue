@@ -1,14 +1,14 @@
 <template>
-    <v-app-bar app flat :color="background" :class="['py-0 px-0 py-sm-2']">
-        <v-container class="mx-2 mx-sm-6 mx-md-auto mx-lg-6 mx-xl-auto pa-0 text-white">
-            <v-row align="center" justify="start" class="mr-0 mx-lg-0 flex-nowrap">
-                <div class="mr-4 ml-4 logo-btn">
+    <v-app-bar app flat :color="background" :class="['py-0 px-0 py-sm-2']" :height="xs ? '64' : '114'">
+        <v-container class="mx-2 mx-sm-6 mx-md-auto mx-lg-6 mx-xl-auto px-0 text-white pt-lg-5 pb-lg-4">
+            <v-row align="center" justify="start" class="mr-0 mx-0 flex-nowrap my-0 mr-lg-n3">
+                <div class="mr-4 logo-btn">
                     <v-img
                         :src="appStore.isDarkMode ? require('@/assets/logo-dark.svg') : require('@/assets/logo.svg')"
                         height="35"
                         :width="xs ? '80' : '100'"
                         contain
-                        class="ml-3 ml-sm-none mr-auto logo-dark"
+                        class="ml-3 ml-sm-0 mr-auto logo-dark"
                         @click="goToHome"
                     />
                 </div>
@@ -47,6 +47,20 @@
                 </template>
                 <v-app-bar-nav-icon v-if="showDrawerBtn" @click="appStore.appDrawer = !appStore.appDrawer" />
             </v-row>
+            <div v-if="!xs" class="d-flex align-center justify-end mt-3 mr-2 mr-lg-1">
+                <div v-if="supportsFiat">
+                    <v-scroll-y-reverse-transition hide-on-leave>
+                        <p v-if="!loadingMarketInfo" key="price-transition">
+                            {{ getPrice }} <span v-if="getPercentage" :class="[getPercentage.color, 'ml-2']"> {{ getPercentage.change }}</span>
+                        </p>
+                    </v-scroll-y-reverse-transition>
+                    <div v-if="loadingMarketInfo" style="height: 20px; width: 144px"></div>
+                </div>
+
+                <p class="ml-2">GAS 57 Gwei</p>
+                <v-spacer />
+                <app-change-network />
+            </div>
         </v-container>
     </v-app-bar>
 </template>
@@ -58,12 +72,17 @@ import { useAppNavigation } from '../composables/AppNavigation/useAppNavigation.
 import { useStore } from '@/store'
 import ModuleSearch from '@/modules/search/ModuleAppSearch.vue'
 import AppMenu from './AppMenu.vue'
+import AppChangeNetwork from './AppChangeNetwork.vue'
 import BigNumber from 'bignumber.js'
 import { useRouter } from 'vue-router'
 import { ROUTE_NAME } from '@core/router/routesNames'
-
+import { useNetwork } from '../composables/Network/useNetwork'
+import { useCoinData } from '../composables/CoinData/coinData.composable'
+import { formatUsdValue, formatPercentageValue } from '../helper/number-format-helper'
+import BN from 'bignumber.js'
 /* Vuetify BreakPoints */
 const { name, xs, lgAndUp } = useDisplay()
+const { supportsFiat, currencyName } = useNetwork()
 
 const props = defineProps({
     hideSearchBar: {
@@ -161,6 +180,38 @@ const onScroll = () => {
         offset.value = window.scrollY
     })
 }
+
+/*
+===================================================================================
+  Price / Gas Price
+===================================================================================
+*/
+const { loading: loadingMarketInfo, ethMarketInfo } = useCoinData()
+
+const getPrice = computed<string>(() => {
+    if (supportsFiat.value && !loadingMarketInfo.value) {
+        return `${currencyName.value} ${formatUsdValue(new BN(ethMarketInfo.value?.current_price || 0)).value}`
+    }
+    return `${currencyName.value} $0.00`
+})
+
+interface PercentChange {
+    color: string
+    change: string
+}
+const getPercentage = computed<PercentChange | undefined>(() => {
+    if (supportsFiat.value && !loadingMarketInfo.value) {
+        const _change = new BN(ethMarketInfo.value?.price_change_percentage_24h || 0)
+        const isPositive = _change.isGreaterThan(0)
+        const isNegative = _change.isLessThan(0)
+        const sign = isPositive ? '+ ' : ''
+        return {
+            change: `${sign}${formatPercentageValue(_change).value}%`,
+            color: isPositive ? 'text-success' : isNegative ? 'text-error' : ''
+        }
+    }
+    return undefined
+})
 </script>
 <style scoped lang="scss">
 .transparent-header {

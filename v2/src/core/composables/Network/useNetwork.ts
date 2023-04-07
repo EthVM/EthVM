@@ -3,6 +3,13 @@ import Configs from '@/configs'
 import { NETWORKS } from '@core/helper/networks'
 export function useNetwork() {
     /**
+     * Returns network name
+     */
+    const networkName = computed<string>(() => {
+        return NETWORKS[Configs.NETWORK].name
+    })
+
+    /**
      * Returns currency name of the network
      */
     const currencyName = computed<string>(() => {
@@ -58,6 +65,7 @@ export function useNetwork() {
         supportsNft,
         nftId,
         ensId,
-        unstoppableId
+        unstoppableId,
+        networkName
     }
 }
