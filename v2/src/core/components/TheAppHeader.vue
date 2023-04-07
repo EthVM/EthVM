@@ -1,69 +1,87 @@
 <template>
-    <v-app-bar app flat :color="background" :class="['py-0 px-0 py-sm-2']" :height="xs ? '64' : '114'">
-        <v-container class="mx-2 mx-sm-6 mx-md-auto mx-lg-6 mx-xl-auto px-0 text-white pt-lg-5 pb-lg-4">
-            <v-row align="center" justify="start" class="mr-0 mx-0 flex-nowrap my-0 mr-lg-n3" style="min-height: 40px">
-                <div class="mr-4 logo-btn">
-                    <v-img
-                        :src="appStore.isDarkMode ? require('@/assets/logo-dark.svg') : require('@/assets/logo.svg')"
-                        height="35"
-                        :width="xs ? '80' : '100'"
-                        contain
-                        class="ml-3 ml-sm-0 mr-auto logo-dark"
-                        @click="goToHome"
-                    />
-                </div>
-                <v-fade-transition hide-on-leave>
-                    <module-search v-if="showSearchbar" class="justify-center mx-2 mx-sm-4" />
-                </v-fade-transition>
-                <v-spacer v-if="props.hideSearchBar && !showSearchbar"></v-spacer>
-
-                <template v-if="!showDrawerBtn">
-                    <template v-for="(item, index) in navItems" :key="index">
-                        <v-btn v-if="!item.links" rounded="pill" :active="false" :to="item.header.routerLink" class="text-subtitle-1 font-weight-light">
-                            {{ item.header.text }}
-                            <v-icon v-if="item.header.icon" class="ml-3">{{ item.header.icon }}</v-icon>
-                        </v-btn>
-                        <v-btn v-else class="text-subtitle-1 font-weight-light" rounded="pill">
-                            {{ item.header.text }}
-                            <v-icon class="ml-1">expand_more</v-icon>
-                            <app-menu min-width="180" activator="parent" :items="item.links">
-                                <template v-for="(link, j) in item.links" :key="j">
-                                    <v-list-item
-                                        :to="link.isExternal ? undefined : link.routerLink"
-                                        :href="link.isExternal ? link.routerLink : undefined"
-                                        :target="link.isExternal ? '_blank' : '_self'"
-                                        :value="link.routerLink"
-                                        :title="link.text"
-                                        class="primary--text py-3"
-                                        :subtitle="link.subtext"
-                                        ><template v-if="link.img" v-slot:prepend>
-                                            <v-avatar rounded="0"><v-img :src="link.img"></v-img></v-avatar>
-                                        </template>
-                                    </v-list-item>
-                                </template>
-                            </app-menu>
-                        </v-btn>
-                    </template>
-                </template>
-                <v-app-bar-nav-icon v-if="showDrawerBtn" @click="appStore.appDrawer = !appStore.appDrawer" />
-            </v-row>
-            <div v-if="!xs" class="d-flex align-center justify-end mt-3 mr-2 mr-lg-1">
-                <div v-if="supportsFiat">
-                    <v-scroll-y-reverse-transition hide-on-leave>
-                        <p v-if="!loadingMarketInfo" key="price-transition">
-                            {{ getPrice }} <span v-if="getPercentage" :class="[getPercentage.color, 'mx-2']"> {{ getPercentage.change }}</span>
-                        </p>
-                    </v-scroll-y-reverse-transition>
-                    <div v-if="loadingMarketInfo" style="height: 20px; width: 144px"></div>
-                </div>
+    <div>
+        <v-system-bar v-if="xs" color="surface" class="font-weight-bold">
+            <div v-if="supportsFiat">
                 <v-scroll-y-reverse-transition hide-on-leave>
-                    <p v-if="gasPriceLoaded" key="gas-transition">GAS {{ gasPrice }} Gwei</p>
+                    <p v-if="!loadingMarketInfo" key="price-transition">
+                        <span class="text-info">{{ currencyName }}</span> {{ getPrice }}
+                        <span v-if="getPercentage" :class="[getPercentage.color, 'mx-2']"> {{ getPercentage.change }}</span>
+                    </p>
                 </v-scroll-y-reverse-transition>
-                <v-spacer />
-                <app-change-network />
+                <div v-if="loadingMarketInfo" style="height: 20px; width: 144px"></div>
             </div>
-        </v-container>
-    </v-app-bar>
+            <v-spacer />
+            <v-scroll-y-reverse-transition hide-on-leave>
+                <p v-if="gasPriceLoaded" key="gas-transition"><span class="text-info">GAS</span> {{ gasPrice }} Gwei</p>
+            </v-scroll-y-reverse-transition>
+        </v-system-bar>
+        <v-app-bar app flat :color="background" :class="['py-0 px-0 py-sm-2']" :height="xs ? '64' : '114'">
+            <v-container class="mx-2 mx-sm-6 mx-md-auto mx-lg-6 mx-xl-auto px-0 text-white pt-lg-5 pb-lg-4">
+                <v-row align="center" justify="start" class="mr-0 mx-0 flex-nowrap my-0 mr-lg-n3" style="min-height: 40px">
+                    <div class="mr-4 logo-btn">
+                        <v-img
+                            :src="appStore.isDarkMode ? require('@/assets/logo-dark.svg') : require('@/assets/logo.svg')"
+                            height="35"
+                            :width="xs ? '80' : '100'"
+                            contain
+                            class="ml-3 ml-sm-0 mr-auto logo-dark"
+                            @click="goToHome"
+                        />
+                    </div>
+                    <v-fade-transition hide-on-leave>
+                        <module-search v-if="showSearchbar" class="justify-center mx-2 mx-sm-4" />
+                    </v-fade-transition>
+                    <v-spacer v-if="props.hideSearchBar && !showSearchbar"></v-spacer>
+
+                    <template v-if="!showDrawerBtn">
+                        <template v-for="(item, index) in navItems" :key="index">
+                            <v-btn v-if="!item.links" rounded="pill" :active="false" :to="item.header.routerLink" class="text-subtitle-1 font-weight-light">
+                                {{ item.header.text }}
+                                <v-icon v-if="item.header.icon" class="ml-3">{{ item.header.icon }}</v-icon>
+                            </v-btn>
+                            <v-btn v-else class="text-subtitle-1 font-weight-light" rounded="pill">
+                                {{ item.header.text }}
+                                <v-icon class="ml-1">expand_more</v-icon>
+                                <app-menu min-width="180" activator="parent" :items="item.links">
+                                    <template v-for="(link, j) in item.links" :key="j">
+                                        <v-list-item
+                                            :to="link.isExternal ? undefined : link.routerLink"
+                                            :href="link.isExternal ? link.routerLink : undefined"
+                                            :target="link.isExternal ? '_blank' : '_self'"
+                                            :value="link.routerLink"
+                                            :title="link.text"
+                                            class="primary--text py-3"
+                                            :subtitle="link.subtext"
+                                            ><template v-if="link.img" v-slot:prepend>
+                                                <v-avatar rounded="0"><v-img :src="link.img"></v-img></v-avatar>
+                                            </template>
+                                        </v-list-item>
+                                    </template>
+                                </app-menu>
+                            </v-btn>
+                        </template>
+                    </template>
+                    <v-app-bar-nav-icon v-if="showDrawerBtn" @click="appStore.appDrawer = !appStore.appDrawer" />
+                </v-row>
+                <div v-if="!xs" class="d-flex align-center justify-end mt-3 mr-2 mr-lg-1">
+                    <div v-if="supportsFiat">
+                        <v-scroll-y-reverse-transition hide-on-leave>
+                            <p v-if="!loadingMarketInfo" key="price-transition">
+                                {{ currencyName }} {{ getPrice }}
+                                <span v-if="getPercentage" :class="[getPercentage.color, 'mx-2']"> {{ getPercentage.change }}</span>
+                            </p>
+                        </v-scroll-y-reverse-transition>
+                        <div v-if="loadingMarketInfo" style="height: 20px; width: 144px"></div>
+                    </div>
+                    <v-scroll-y-reverse-transition hide-on-leave>
+                        <p v-if="gasPriceLoaded" key="gas-transition">GAS {{ gasPrice }} Gwei</p>
+                    </v-scroll-y-reverse-transition>
+                    <v-spacer />
+                    <app-change-network />
+                </div>
+            </v-container>
+        </v-app-bar>
+    </div>
 </template>
 
 <script setup lang="ts">
@@ -195,9 +213,9 @@ const { loading: loadingMarketInfo, ethMarketInfo } = useCoinData()
 
 const getPrice = computed<string>(() => {
     if (supportsFiat.value && !loadingMarketInfo.value) {
-        return `${currencyName.value} ${formatUsdValue(new BN(ethMarketInfo.value?.current_price || 0)).value}`
+        return `${formatUsdValue(new BN(ethMarketInfo.value?.current_price || 0)).value}`
     }
-    return `${currencyName.value} $0.00`
+    return `$0.00`
 })
 
 interface PercentChange {
