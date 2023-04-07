@@ -2,7 +2,7 @@
     <v-app class="app-view">
         <the-app-navigation-drawer-vue />
         <the-app-header :hide-search-bar="isHomeView" :is-transparent="isLost || isHomeView" />
-        <v-main class="w-100">
+        <v-main :class="[{ 'pt-16': isHomeView || isLost }, 'w-100']">
             <v-container :class="[isAddressView || isHomeView || isLost ? 'pa-0' : 'px-2 px-sm-6 pt-4 pt-sm-6']" :fluid="isAddressView || isHomeView || isLost">
                 <router-view />
             </v-container>

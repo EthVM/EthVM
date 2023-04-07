@@ -1,7 +1,7 @@
 <template>
     <v-app-bar app flat :color="background" :class="['py-0 px-0 py-sm-2']" :height="xs ? '64' : '114'">
         <v-container class="mx-2 mx-sm-6 mx-md-auto mx-lg-6 mx-xl-auto px-0 text-white pt-lg-5 pb-lg-4">
-            <v-row align="center" justify="start" class="mr-0 mx-0 flex-nowrap my-0 mr-lg-n3">
+            <v-row align="center" justify="start" class="mr-0 mx-0 flex-nowrap my-0 mr-lg-n3" style="min-height: 40px">
                 <div class="mr-4 logo-btn">
                     <v-img
                         :src="appStore.isDarkMode ? require('@/assets/logo-dark.svg') : require('@/assets/logo.svg')"
