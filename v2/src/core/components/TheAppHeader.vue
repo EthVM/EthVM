@@ -51,13 +51,14 @@
                 <div v-if="supportsFiat">
                     <v-scroll-y-reverse-transition hide-on-leave>
                         <p v-if="!loadingMarketInfo" key="price-transition">
-                            {{ getPrice }} <span v-if="getPercentage" :class="[getPercentage.color, 'ml-2']"> {{ getPercentage.change }}</span>
+                            {{ getPrice }} <span v-if="getPercentage" :class="[getPercentage.color, 'mx-2']"> {{ getPercentage.change }}</span>
                         </p>
                     </v-scroll-y-reverse-transition>
                     <div v-if="loadingMarketInfo" style="height: 20px; width: 144px"></div>
                 </div>
-
-                <p class="ml-2">GAS 57 Gwei</p>
+                <v-scroll-y-reverse-transition hide-on-leave>
+                    <p v-if="gasPriceLoaded" key="gas-transition">GAS {{ gasPrice }} Gwei</p>
+                </v-scroll-y-reverse-transition>
                 <v-spacer />
                 <app-change-network />
             </div>
@@ -79,7 +80,11 @@ import { ROUTE_NAME } from '@core/router/routesNames'
 import { useNetwork } from '../composables/Network/useNetwork'
 import { useCoinData } from '../composables/CoinData/coinData.composable'
 import { formatUsdValue, formatPercentageValue } from '../helper/number-format-helper'
+import { useGetLatestBlockInfoQuery } from '@module/block/apollo/BlockStats/blockStats.generated'
+import { useBlockSubscription } from '@core/composables/NewBlock/newBlock.composable'
 import BN from 'bignumber.js'
+import Web3Utils from 'web3-utils'
+
 /* Vuetify BreakPoints */
 const { name, xs, lgAndUp } = useDisplay()
 const { supportsFiat, currencyName } = useNetwork()
@@ -211,6 +216,23 @@ const getPercentage = computed<PercentChange | undefined>(() => {
         }
     }
     return undefined
+})
+
+const { result: blockInfo, loading } = useGetLatestBlockInfoQuery()
+const { newGasPrice } = useBlockSubscription()
+
+const gasPriceLoaded = computed<boolean>(() => {
+    return !loading.value || !!newGasPrice.value
+})
+
+const gasPrice = computed<string>(() => {
+    if (newGasPrice.value) {
+        return new BN(Web3Utils.fromWei(newGasPrice.value || '0x', 'Gwei')).toFixed(0).toString()
+    }
+    if (!loading.value && blockInfo.value?.getLatestBlockInfo.avgGasPrice) {
+        return new BN(Web3Utils.fromWei(blockInfo.value?.getLatestBlockInfo.avgGasPrice || '0x', 'Gwei')).toFixed(0).toString()
+    }
+    return ''
 })
 </script>
 <style scoped lang="scss">
