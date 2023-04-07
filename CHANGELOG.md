@@ -11,6 +11,8 @@ This release includes:
 - add table sorting on mobile [#1137](https://github.com/EthVM/EthVM/pull/1137)
 - multiple networks support [#1143](https://github.com/EthVM/EthVM/pull/1143)
 - withdrawals tables [#1144](https://github.com/EthVM/EthVM/pull/1144)
+- change network [#1145](https://github.com/EthVM/EthVM/pull/1145)
+- display current ETH Price and Gas Price in app header [#1145](https://github.com/EthVM/EthVM/pull/1145)
 
 ### BUG
 - fix error on url enter in search bar [#1138](https://github.com/EthVM/EthVM/pull/1138)
@@ -24,6 +26,8 @@ This release includes:
 - ui jump on add address name on desktop view [#1138](https://github.com/EthVM/EthVM/pull/1138)
 - add hover states to address menu [#1138](https://github.com/EthVM/EthVM/pull/1138)
 - fix txs table responsiveness [#1144](https://github.com/EthVM/EthVM/pull/1144)
+- fix container elevation in Txs and Blocks views [#1145](https://github.com/EthVM/EthVM/pull/1145)
+- fix basic views paddings [#1145](https://github.com/EthVM/EthVM/pull/1145)
 
 ### Devop
 - add dynamic route imports [#1135](https://github.com/EthVM/EthVM/pull/1135)
