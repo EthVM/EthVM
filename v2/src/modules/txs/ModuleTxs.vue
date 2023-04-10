@@ -1,5 +1,5 @@
 <template>
-    <v-card :variant="isHome ? 'elevated' : 'flat'" :elevation="isHome ? 1 : 0" rounded="xl" class="pa-4 pa-sm-6">
+    <v-card variant="elevated" :elevation="1" rounded="xl" class="pa-4 pa-sm-6">
         <v-card-title
             v-if="(isHome || state.newMinedTransfers || tableTitle) && !isBlock"
             :class="[isHome ? 'mb-2 mb-sm-4' : 'mb-2 mb-sm-5', 'px-0  py-0 d-flex align-center justify-space-between']"

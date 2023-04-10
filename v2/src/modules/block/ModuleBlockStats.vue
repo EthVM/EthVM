@@ -82,8 +82,8 @@ const ethPrice = computed<string>(() => {
 })
 
 const gasPrice = computed<string>(() => {
-    if (blockInfo.value) {
-        const gwei = Web3Utils.fromWei(blockInfo.value?.getLatestBlockInfo.avgGasPrice, 'Gwei')
+    if (blockInfo.value && blockInfo.value?.getLatestBlockInfo.baseFeePerGas) {
+        const gwei = Web3Utils.fromWei(blockInfo.value.getLatestBlockInfo.baseFeePerGas, 'Gwei')
         return formatFloatingPointValue(new BN(gwei)).value
     }
     return '0'

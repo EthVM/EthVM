@@ -11,9 +11,14 @@ export function useBlockSubscription() {
     const newTxs = computed<number | undefined>(() => {
         return result ? result.value?.newBlockFeed.txCount : undefined
     })
+
+    const newGasPrice = computed(() => {
+        return result.value?.newBlockFeed?.baseFeePerGas
+    })
     return {
         onNewBlockLoaded: onResult,
         newBlockNumber,
-        newTxs
+        newTxs,
+        newGasPrice
     }
 }

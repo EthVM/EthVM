@@ -6,7 +6,11 @@
                     <v-img v-if="mdAndDown" :src="require('@/assets/hero/hero.png')" alt="" height="300" width="300" max-height="300" max-width="300" contain />
                     <div class="pl-lg-14 pb-10 pb-sm-16 pb-lg-0">
                         <p class="mt-lg-16 text-white font-weight-light text-h3 text-sm-h2 text-lg-h1 text-center text-lg-left">Track, analyze and explore</p>
-                        <p class="text-white font-weight-light text-h3 text-sm-h2 text-lg-h1 text-center text-lg-left">on the Ethereum blockchain.</p>
+                        <p v-if="isETH" class="text-white font-weight-light text-h3 text-sm-h2 text-lg-h1 text-center text-lg-left">
+                            on the Ethereum blockchain.
+                        </p>
+                        <p v-if="isSEP" class="text-white font-weight-light text-h3 text-sm-h2 text-lg-h1 text-center text-lg-left">on the Sepolia Testnet.</p>
+
                         <div class="ml-1">
                             <module-search class="justify-center justify-lg-start mt-5 mt-lg-10" />
                         </div>
@@ -151,7 +155,7 @@ import configs from '@/configs'
 
 const { lgAndUp, mdAndDown, mdAndUp, xs } = useDisplay()
 const { columnPadding, rowMargin } = useAppViewGrid()
-const { supportsFiat } = useNetwork()
+const { supportsFiat, isETH, isSEP } = useNetwork()
 
 onMounted(() => {
     window.scrollTo(0, 0)
