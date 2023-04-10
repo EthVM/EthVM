@@ -463,6 +463,78 @@ export type Block_Height = {
     number_gte?: InputMaybe<Scalars['Int']>
 }
 
+export type CoinGeckoTokenInfo = {
+    __typename?: 'CoinGeckoTokenInfo'
+    id: Scalars['String']
+    last_updated_iso8601: Scalars['String']
+    name: Scalars['String']
+    platforms: Array<CoinGeckoTokenInfoItemPlatform>
+    symbol: Scalars['String']
+}
+
+export type CoinGeckoTokenInfoItemPlatform = {
+    __typename?: 'CoinGeckoTokenInfoItemPlatform'
+    address?: Maybe<Scalars['String']>
+    platform: Scalars['String']
+}
+
+export type CoinGeckoTokenMarketDataItem = {
+    __typename?: 'CoinGeckoTokenMarketDataItem'
+    ath?: Maybe<Scalars['Float']>
+    ath_change_percentage?: Maybe<Scalars['Float']>
+    ath_date?: Maybe<Scalars['String']>
+    atl?: Maybe<Scalars['Float']>
+    atl_change_percentage?: Maybe<Scalars['Float']>
+    atl_date?: Maybe<Scalars['String']>
+    circulating_supply?: Maybe<Scalars['Float']>
+    current_price?: Maybe<Scalars['Float']>
+    fully_diluted_valuation?: Maybe<Scalars['Float']>
+    high_24h?: Maybe<Scalars['Float']>
+    id: Scalars['String']
+    image?: Maybe<Scalars['String']>
+    last_updated_iso8601?: Maybe<Scalars['String']>
+    low_24h?: Maybe<Scalars['Float']>
+    market_cap?: Maybe<Scalars['Float']>
+    market_cap_change_24h?: Maybe<Scalars['Float']>
+    market_cap_change_percentage_24h?: Maybe<Scalars['Float']>
+    market_cap_rank?: Maybe<Scalars['Float']>
+    max_supply?: Maybe<Scalars['Float']>
+    name?: Maybe<Scalars['String']>
+    price_change_24h?: Maybe<Scalars['Float']>
+    price_change_percentage_1h_in_currency?: Maybe<Scalars['Float']>
+    price_change_percentage_1y_in_currency?: Maybe<Scalars['Float']>
+    price_change_percentage_7d_in_currency?: Maybe<Scalars['Float']>
+    price_change_percentage_14d_in_currency?: Maybe<Scalars['Float']>
+    price_change_percentage_24h?: Maybe<Scalars['Float']>
+    price_change_percentage_24h_in_currency?: Maybe<Scalars['Float']>
+    price_change_percentage_30d_in_currency?: Maybe<Scalars['Float']>
+    price_change_percentage_200d_in_currency?: Maybe<Scalars['Float']>
+    roi?: Maybe<CoinGeckoTokenMarketDataItemRoi>
+    sparkline_in_7d: CoinGeckoTokenMarketDataItemSparkline
+    symbol?: Maybe<Scalars['String']>
+    total_supply?: Maybe<Scalars['Float']>
+    total_volume?: Maybe<Scalars['Float']>
+}
+
+export type CoinGeckoTokenMarketDataItemRoi = {
+    __typename?: 'CoinGeckoTokenMarketDataItemRoi'
+    currency?: Maybe<Scalars['String']>
+    percentage?: Maybe<Scalars['Float']>
+    times?: Maybe<Scalars['Float']>
+}
+
+export type CoinGeckoTokenMarketDataItemSparkline = {
+    __typename?: 'CoinGeckoTokenMarketDataItemSparkline'
+    price: Array<Scalars['Float']>
+}
+
+export type CoinGeckoTokenPrice = {
+    __typename?: 'CoinGeckoTokenPrice'
+    id: Scalars['String']
+    last_updated_iso8601?: Maybe<Scalars['String']>
+    usd?: Maybe<Scalars['Float']>
+}
+
 export type ContenthashChanged = ResolverEvent & {
     __typename?: 'ContenthashChanged'
     blockNumber: Scalars['Int']
@@ -1015,6 +1087,21 @@ export type EthTransfers = {
     transfers: Array<Maybe<EthTransfer>>
 }
 
+export type EthWithdrawalTransfer = {
+    __typename?: 'ETHWithdrawalTransfer'
+    stateDiff?: Maybe<StateDiffChange>
+    transfer: Transfer
+    validatorIndex: Scalars['String']
+    value: Scalars['String']
+    withdrawalIndex: Scalars['String']
+}
+
+export type EthWithdrawalTransfers = {
+    __typename?: 'ETHWithdrawalTransfers'
+    nextKey?: Maybe<Scalars['String']>
+    transfers: Array<EthWithdrawalTransfer>
+}
+
 export type EthAndErc20TokenBalances = {
     __typename?: 'EthAndErc20TokenBalances'
     balances: Array<EthOrErc20TokenBalance>
@@ -1024,6 +1111,7 @@ export type EthOrErc20TokenBalance = {
     __typename?: 'EthOrErc20TokenBalance'
     balance: Scalars['String']
     owner: Scalars['String']
+    timestampUnixSec: Scalars['Int']
     tokenInfo?: Maybe<EthTokenInfo>
 }
 
@@ -2561,6 +2649,17 @@ export type Query = {
     getBlockRewards: EthTransfers
     getBlockTransfers: EthTransfers
     getBlocksArrayByNumber: Array<Maybe<BlockSummary>>
+    /** Get info of all CoinGecko tokens */
+    getCoinGeckoTokenInfoAll: Array<CoinGeckoTokenInfo>
+    /** Get info of all CoinGecko tokens by their address */
+    getCoinGeckoTokenInfoByAddresses: Array<Maybe<CoinGeckoTokenInfo>>
+    /**
+     * Get the market data of tokens on CoinGecko by their CoinGecko IDs
+     * For id's that are not found the response array element will be null
+     */
+    getCoinGeckoTokenMarketDataByIds: Array<Maybe<CoinGeckoTokenMarketDataItem>>
+    /** Get the prices of all tokens on CoinGecko */
+    getCoinGeckoTokenPriceAll: Array<CoinGeckoTokenPrice>
     getContractMeta: ContractMeta
     /** Get the number of ERC20 tokens of a contract owned by an address */
     getERC20TokenBalance: Erc20TokenBalance
@@ -2588,6 +2687,7 @@ export type Query = {
     getEthTransfers: EthTransfers
     getEthTransfersByHash: EthTransfers
     getEthTransfersV2: EthTransfers
+    getEthWithdrawalTransfers: EthWithdrawalTransfers
     getGenesisRewards: EthTransfers
     getHashType: HashType
     getLatestBlockInfo: LatestBlockData
@@ -2844,6 +2944,14 @@ export type QueryGetBlocksArrayByNumberArgs = {
     limit?: InputMaybe<Scalars['Int']>
 }
 
+export type QueryGetCoinGeckoTokenInfoByAddressesArgs = {
+    addresses: Array<Scalars['String']>
+}
+
+export type QueryGetCoinGeckoTokenMarketDataByIdsArgs = {
+    coinGeckoTokenIds: Array<Scalars['String']>
+}
+
 export type QueryGetContractMetaArgs = {
     contract: Scalars['String']
 }
@@ -2962,6 +3070,13 @@ export type QueryGetEthTransfersV2Args = {
     limit?: InputMaybe<Scalars['Int']>
     nextKey?: InputMaybe<Scalars['String']>
     owner?: InputMaybe<Scalars['String']>
+}
+
+export type QueryGetEthWithdrawalTransfersArgs = {
+    address?: InputMaybe<Scalars['String']>
+    blockNumber?: InputMaybe<Scalars['Int']>
+    limit?: InputMaybe<Scalars['Int']>
+    nextKey?: InputMaybe<Scalars['String']>
 }
 
 export type QueryGetGenesisRewardsArgs = {
@@ -4827,6 +4942,8 @@ export type Transfer = DomainEvent & {
     transactionID: Scalars['Bytes']
     txFee: Scalars['String']
     type: TransferType
+    validatorIndex?: Maybe<Scalars['String']>
+    withdrawalIndex?: Maybe<Scalars['String']>
 }
 
 export type TransferComplete = {
@@ -4849,10 +4966,10 @@ export enum TransferSubtype {
     Erc1155 = 'ERC1155',
     Genesis = 'Genesis',
     InternalTransaction = 'InternalTransaction',
-    StakingWithdrawl = 'StakingWithdrawl',
     Transaction = 'Transaction',
     UncleReward = 'UncleReward',
-    Unknown = 'Unknown'
+    Unknown = 'Unknown',
+    Withdrawl = 'Withdrawl'
 }
 
 export enum TransferType {
@@ -4877,6 +4994,8 @@ export type TransferWithError = {
     transferError?: Maybe<Scalars['String']>
     txFee: Scalars['String']
     type: TransferType
+    validatorIndex?: Maybe<Scalars['String']>
+    withdrawalIndex?: Maybe<Scalars['String']>
 }
 
 export type Transfer_Filter = {

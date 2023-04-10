@@ -3,25 +3,25 @@
         <app-table-row
             row-align="center"
             row-justify="start"
-            :color="state.showMoreDetails ? 'pillGrey' : 'transparent'"
-            v-on="{ click: mdAndDown ? toggleMoreDetails : null }"
+            :color="state.showMoreDetails && mdAndDown ? 'pillGrey' : 'transparent'"
+            v-on="{ click: smAndDown ? toggleMoreDetails : null }"
         >
             <!--
                  =====================================================================================
                    Mobile (XS-SM)
                  =====================================================================================
             -->
-            <template v-if="xs">
+            <template v-if="smAndDown">
                 <v-col cols="6">
-                    <div class="d-flex align-start">
+                    <div class="d-flex align-center">
                         <div class="mr-3">
                             <v-icon v-if="transaction.status" small class="text-success">check_circle</v-icon>
                             <v-icon v-else small class="text-error">highlight_off</v-icon>
                         </div>
                         <div>
                             <template v-if="!props.isPending">
-                                <router-link :to="`/block/number/${transferObj.block}`" class="text-secondary pb-1">{{ transaction.block }}</router-link>
-                                <p class="text-info mb-0">
+                                <app-transform-hash is-short is-blue :hash="transaction.hash" :link="`/tx/${transaction.hash}`" />
+                                <p v-if="!props.isBlock" class="text-info mb-0">
                                     {{ transaction.timestamp }}
                                 </p>
                             </template>
@@ -29,11 +29,16 @@
                         </div>
                     </div>
                 </v-col>
-                <v-col cols="6" class="text-right">
-                    <app-transform-hash is-short is-blue :hash="transaction.hash" :link="`/tx/${transaction.hash}`" />
+                <v-col cols="6" sm="3" class="text-right text-sm-left">
                     <div>
                         {{ transaction.value.value }}
                         <span class="text-uppercase">{{ transaction.value.unit }}</span>
+                    </div>
+                </v-col>
+                <v-col sm="3" class="d-none d-sm-flex text-right text-sm-left">
+                    <div>
+                        {{ transaction.fee.value }}
+                        <span class="text-uppercase">{{ transaction.fee.unit }}</span>
                     </div>
                 </v-col>
             </template>
@@ -43,75 +48,91 @@
                   =====================================================================================
             -->
             <template v-else>
-                <v-col v-if="!props.isPending && !props.isBlock" sm="3" lg="2">
-                    <router-link :to="`/block/number/${transferObj.block}`" class="text-secondary pb-1">{{ transaction.block }}</router-link>
-                    <p class="text-info mb-0">
-                        {{ transaction.timestamp }}
-                    </p>
-                </v-col>
-                <v-col sm="3" md="2">
-                    <app-transform-hash is-short is-blue :hash="transaction.hash" :link="`/tx/${transaction.hash}`" />
-                </v-col>
-                <v-col v-if="!mdAndDown" lg="2">
-                    <div class="d-flex align-center">
-                        <app-address-blockie :address="transaction.from || ''" :size="8" class="mr-1 mr-sm-2" />
-                        <app-transform-hash is-short is-blue :hash="eth.toCheckSum(transaction.from)" :link="`/address/${transaction.from}`" />
-                        <v-icon v-if="!props.isBlock" color="success" class="ml-5">east</v-icon>
+                <!--
+                    Hash/Block/Timestamp
+                    Block:
+                -->
+                <v-col md="3" :lg="props.isBlock ? 2 : 3">
+                    <div class="d-flex justify-space-between align-center">
+                        <div v-if="!props.isBlock && !mdAndDown">
+                            <router-link :to="`/block/number/${props.tx.transfer.block}`" class="text-secondary pb-1">{{ transaction.block }}</router-link>
+                            <p class="text-info mb-0">
+                                {{ transaction.timestamp }}
+                            </p>
+                        </div>
+                        <div>
+                            <app-transform-hash is-short is-blue :hash="transaction.hash" :link="`/tx/${transaction.hash}`" />
+                            <p v-if="!props.isBlock && mdAndDown" class="text-info mb-0">
+                                {{ transaction.timestamp }}
+                            </p>
+                        </div>
                     </div>
                 </v-col>
-                <v-col v-if="!mdAndDown && props.isBlock">
-                    <v-icon color="success" class="ml-5">east</v-icon>
-                </v-col>
-                <v-col v-if="!mdAndDown" lg="2">
-                    <div class="d-flex align-center">
-                        <app-address-blockie :address="transaction.to || ''" :size="8" class="mr-1 mr-sm-2" />
-                        <app-transform-hash
-                            v-if="transaction.to && transaction.to !== ''"
-                            is-short
-                            is-blue
-                            :hash="eth.toCheckSum(transaction.to)"
-                            :link="`/address/${transaction.to}`"
-                        />
+                <v-spacer v-if="!mdAndDown && !props.isBlock" />
+                <!--
+                    FROM/TO
+                -->
+                <v-col md="6" :lg="props.isBlock ? 5 : 4">
+                    <div class="d-flex align-center justify-space-between">
+                        <div class="d-flex align-center justify-start" style="min-width: 158px">
+                            <app-address-blockie :address="transaction.from || ''" :size="8" class="mr-1 mr-sm-2" />
+                            <app-transform-hash is-short is-blue :hash="eth.toCheckSum(transaction.from)" :link="`/address/${transaction.from}`" />
+                        </div>
+                        <v-icon color="success" class="mx-5">east</v-icon>
+                        <div class="d-flex align-center justify-start" style="min-width: 158px">
+                            <app-address-blockie :address="transaction.to || ''" :size="8" class="mr-1 mr-sm-2" />
+                            <app-transform-hash
+                                v-if="transaction.to && transaction.to !== ''"
+                                is-short
+                                is-blue
+                                :hash="eth.toCheckSum(transaction.to)"
+                                :link="`/address/${transaction.to}`"
+                            />
+                        </div>
                     </div>
                 </v-col>
-                <v-col lg="2">
-                    <span>
+                <!--
+                    Amount
+                -->
+                <v-spacer v-if="!mdAndDown" />
+                <v-col md="3" lg="2">
+                    <p class="text-right text-lg-left">
                         {{ transaction.value.value }}
                         <span class="text-uppercase">{{ transaction.value.unit }}</span>
-                    </span>
+                        <span v-if="mdAndDown" class="pl-3">
+                            <v-icon v-if="transaction.status" small class="text-success">check_circle</v-icon>
+                            <v-icon v-else small class="text-error">highlight_off</v-icon>
+                        </span>
+                    </p>
                 </v-col>
-                <v-col :lg="props.isBlock ? 2 : 1">
-                    <span>
+                <!--
+                    Fee
+                -->
+                <v-col lg="2" class="d-none d-lg-flex justify-space-between">
+                    <p>
                         {{ transaction.fee.value }}
-                    </span>
-                </v-col>
-                <v-col v-if="!props.isPending" lg="1">
-                    <div class="d-flex align-center">
+                    </p>
+                    <div class="pl-3">
                         <v-icon v-if="transaction.status" small class="text-success">check_circle</v-icon>
                         <v-icon v-else small class="text-error">highlight_off</v-icon>
-                        <p v-if="props.isPending && transaction.isMined" class="caption primary--text blinking">Mined</p>
                     </div>
                 </v-col>
             </template>
-            <v-row v-if="state.showMoreDetails && mdAndDown" justify="space-between" align="center" class="mt-2 pb-5">
-                <v-col cols="5">
-                    <div class="d-flex align-center">
-                        <app-address-blockie :address="transaction.from || ''" :size="6" class="mr-1 mr-sm-2" />
-                        <app-transform-hash is-short is-blue :hash="eth.toCheckSum(transaction.from)" :link="`/address/${transaction.from}`" />
-                    </div>
+            <v-row v-if="state.showMoreDetails && smAndDown" align="center" class="mt-2 pb-5 px-1 px-sm-1 justify-space-between justify-sm-start" :dense="xs">
+                <v-col cols="5" sm="4" class="d-flex align-center text-ellipses">
+                    <app-address-blockie :address="transaction.from || ''" :size="xs ? 5 : 6" class="mr-2" />
+                    <app-transform-hash is-short is-blue :hash="eth.toCheckSum(transaction.from)" :link="`/address/${transaction.from}`" />
                 </v-col>
-                <v-icon color="success">east</v-icon>
-                <v-col cols="5">
-                    <div class="d-flex align-center justify-end">
-                        <app-address-blockie :address="transaction.to || ''" :size="6" class="mr-1 mr-sm-2" />
-                        <app-transform-hash
-                            v-if="transaction.to && transaction.to !== ''"
-                            is-short
-                            is-blue
-                            :hash="eth.toCheckSum(transaction.to)"
-                            :link="`/address/${transaction.to}`"
-                        />
-                    </div>
+                <v-icon color="success" size="20">east</v-icon>
+                <v-col cols="5" sm="4" class="d-flex align-center justify-end text-ellipses">
+                    <app-address-blockie :address="transaction.to || ''" :size="xs ? 5 : 6" class="mr-2" />
+                    <app-transform-hash
+                        v-if="transaction.to && transaction.to !== ''"
+                        is-short
+                        is-blue
+                        :hash="eth.toCheckSum(transaction.to)"
+                        :link="`/address/${transaction.to}`"
+                    />
                 </v-col>
             </v-row>
         </app-table-row>
@@ -123,17 +144,20 @@ import AppAddressBlockie from '@core/components/AppAddressBlockie.vue'
 import AppTransformHash from '@core/components/AppTransformHash.vue'
 import AppTableRow from '@core/components/AppTableRow.vue'
 import BN from 'bignumber.js'
-import { Tx } from '../types'
-import { computed, reactive } from 'vue'
+import { computed, reactive, PropType } from 'vue'
 import { eth, timeAgo } from '@core/helper'
 import { useDisplay } from 'vuetify/lib/framework.mjs'
-import { formatNumber, formatNonVariableEthValue } from '@core/helper/number-format-helper'
-import { SummaryFragment as TransferObj } from '@module/txs/apollo/transfersQuery.generated'
+import { formatNumber, formatNonVariableEthValue, FormattedNumber } from '@core/helper/number-format-helper'
+import { TransferFragment, BlockTransactionFragment } from '../apollo/transfersQuery.generated'
 
-const { xs, mdAndDown } = useDisplay()
+const { xs, smAndDown, mdAndDown } = useDisplay()
 
 const props = defineProps({
-    tx: Object,
+    tx: {
+        type: Object as PropType<TransferFragment | BlockTransactionFragment>,
+        defualt: {},
+        required: true
+    },
     isPending: {
         type: Boolean,
         default: false
@@ -152,22 +176,29 @@ const state: ComponentState = reactive({
     showMoreDetails: false
 })
 
-const transferObj = computed<TransferObj>(() => {
-    return props.tx ? props.tx.transfer : { transactionHash: '', block: 0, from: '', to: '', timestamp: 0, txFee: '', status: false, __typename: 'Transfer' }
-})
-
+interface Tx {
+    isMined: boolean
+    hash: string
+    block: string
+    from: string
+    to: string
+    timestamp: string
+    fee: FormattedNumber
+    value: FormattedNumber
+    status: boolean
+}
 const transaction = computed<Tx>(() => {
-    const tx = props.isPending ? props.tx : transferObj.value
+    const tx = props.tx
     return {
-        isMined: props.isPending ? tx['isMined'] : false,
-        hash: tx['transactionHash'],
-        block: formatNumber(new BN(tx['block'])),
-        from: tx['from'],
-        to: tx['to'],
-        timestamp: timeAgo(new Date(tx['timestamp'] * 1e3)),
-        fee: formatNonVariableEthValue(new BN(tx['txFee'])),
-        value: formatNonVariableEthValue(new BN(props.tx ? props.tx.value : '')),
-        status: tx['status'] != null ? tx['status'] : false
+        isMined: props.isPending,
+        hash: tx.transfer.transactionHash,
+        block: formatNumber(tx.transfer.block),
+        from: tx.transfer.from,
+        to: tx.transfer.to,
+        timestamp: timeAgo(new Date(tx.transfer.timestamp * 1e3)),
+        fee: formatNonVariableEthValue(new BN(tx.transfer.txFee)),
+        value: formatNonVariableEthValue(new BN(tx.value)),
+        status: tx.transfer.status ? true : false
     }
 })
 

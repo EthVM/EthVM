@@ -8,6 +8,25 @@ fragment Summary on Transfer {
     status
 }
 
+fragment BlockTransaction on EthTransfer  {
+    transfer {
+        ...Summary
+    }
+    value
+}
+
+fragment BlockTransactions on ETHTransfers {
+    transfers {
+        ...BlockTransaction 
+    }
+}
+
+query getBlockTransfers($_number: Int) {
+    getBlockTransfers(number: $_number) {
+        ...BlockTransactions
+    }
+}
+
 fragment Transfer on ETHTransactionTransfer  {
     transfer {
         ...Summary
@@ -15,20 +34,6 @@ fragment Transfer on ETHTransactionTransfer  {
     value
 }
 
-fragment EthTransfer on EthTransfer  {
-    transfer {
-        ...Summary
-    }
-    value
-}
-
-query getBlockTransfers($_number: Int) {
-    getBlockTransfers(number: $_number) {
-        transfers {
-            ...EthTransfer
-        }
-    }
-}
 
 fragment EthTransfers on ETHTransactionTransfers {
     transfers {

@@ -8,6 +8,7 @@ fragment AllTransfers on Transfer {
     to
     txFee
     status
+    validatorIndex
 }
 
 fragment BalanceFragment on BalanceDiff {
