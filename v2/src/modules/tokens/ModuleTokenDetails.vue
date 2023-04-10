@@ -20,7 +20,7 @@
                         <p v-if="state.standard !== ''">{{ state.standard }}</p>
                         <div v-else class="skeleton-box rounded-xl mr-10" style="height: 40px; width: 120px"></div>
                     </v-col>
-                    <v-col cols="6" sm="2">
+                    <v-col cols="6" sm="2" v-if="showLeftText">
                         <p v-if="leftText !== ''" class="font-weight-bold">{{ leftTitle }}</p>
                         <p v-if="leftText !== ''" class="text-body">{{ leftText }}</p>
                         <div v-else class="skeleton-box rounded-xl mr-10" style="height: 40px; width: 120px"></div>
@@ -310,6 +310,10 @@ const leftText = computed<string>(() => {
         }
     }
     return ''
+})
+
+const showLeftText = computed<boolean>(() => {
+    return supportsNft.value ? true : state.standard === TransferType.Erc20
 })
 
 const showLoading = computed<boolean>(() => {
