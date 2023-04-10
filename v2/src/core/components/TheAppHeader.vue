@@ -240,15 +240,15 @@ const { result: blockInfo, loading } = useGetLatestBlockInfoQuery()
 const { newGasPrice } = useBlockSubscription()
 
 const gasPriceLoaded = computed<boolean>(() => {
-    return !loading.value || !!newGasPrice.value
+    return (!loading.value || !!newGasPrice.value) && gasPrice.value !== ''
 })
 
 const gasPrice = computed<string>(() => {
     if (newGasPrice.value) {
-        return new BN(Web3Utils.fromWei(newGasPrice.value || '0x', 'Gwei')).toFixed(0).toString()
+        return new BN(Web3Utils.fromWei(newGasPrice.value, 'Gwei')).toFixed(0).toString()
     }
-    if (!loading.value && blockInfo.value?.getLatestBlockInfo.avgGasPrice) {
-        return new BN(Web3Utils.fromWei(blockInfo.value?.getLatestBlockInfo.avgGasPrice || '0x', 'Gwei')).toFixed(0).toString()
+    if (!loading.value && blockInfo.value?.getLatestBlockInfo.baseFeePerGas) {
+        return new BN(Web3Utils.fromWei(blockInfo.value?.getLatestBlockInfo.baseFeePerGas, 'Gwei')).toFixed(0).toString()
     }
     return ''
 })

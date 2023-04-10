@@ -15234,6 +15234,18 @@
                         "deprecationReason": null
                     },
                     {
+                        "name": "baseFeePerGas",
+                        "description": null,
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "String",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
                         "name": "difficulty",
                         "description": null,
                         "args": [],

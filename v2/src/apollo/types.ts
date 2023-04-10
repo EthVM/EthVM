@@ -1432,6 +1432,7 @@ export type LatestBlockData = {
     avgBlockTime: Scalars['Int']
     avgGasBurnt?: Maybe<Scalars['String']>
     avgGasPrice: Scalars['String']
+    baseFeePerGas?: Maybe<Scalars['String']>
     difficulty: Scalars['String']
     hashRate: Scalars['String']
     number: Scalars['Int']

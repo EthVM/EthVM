@@ -16,13 +16,22 @@ export type BlockInfoFragment = {
     hashRate: string
     difficulty: string
     avgGasPrice: string
+    baseFeePerGas?: string | null
 }
 
 export type GetLatestBlockInfoQueryVariables = Types.Exact<{ [key: string]: never }>
 
 export type GetLatestBlockInfoQuery = {
     __typename?: 'Query'
-    getLatestBlockInfo: { __typename?: 'LatestBlockData'; number: number; avgBlockTime: number; hashRate: string; difficulty: string; avgGasPrice: string }
+    getLatestBlockInfo: {
+        __typename?: 'LatestBlockData'
+        number: number
+        avgBlockTime: number
+        hashRate: string
+        difficulty: string
+        avgGasPrice: string
+        baseFeePerGas?: string | null
+    }
 }
 
 export const BlockInfoFragmentDoc = gql`
@@ -32,6 +41,7 @@ export const BlockInfoFragmentDoc = gql`
         hashRate
         difficulty
         avgGasPrice
+        baseFeePerGas
     }
 `
 export const GetLatestBlockInfoDocument = gql`
