@@ -1,11 +1,9 @@
 <div align="center">
-  <img src="https://raw.githubusercontent.com/EthVM/ethvm/master/.github/assets/logo.png" alt="ethvm-logo">
-  <p>:zap: EthVM: An Open Source Proccessing Engine and Block Explorer for Ethereum, based on Apache Kafka :zap:</p>
+  <img src="https://raw.githubusercontent.com/EthVM/ethvm/main/.github/assets/logo.png" alt="ethvm-logo">
+  <p>:zap: ethVM: An Open Source Block Explorer for Ethereum with Users In Mind :zap:</p>
   <p>Powered by <a href="https://www.typescriptlang.org/">TypeScript</a> / <a href="https://vuejs.org/">VueJS</a>
   <p><a href="https://travis-ci.org/EthVM/EthVM.svg?branch=develop""><img src="https://travis-ci.org/EthVM/EthVM.svg?branch=develop"/></a></p>
 </div>
-
-# EthVM: Open Source Processing Engine and Block Explorer for Ethereum
 
 ![Screenshot example](.github/assets/capture-1.png)
 
@@ -19,8 +17,20 @@
 
 ## About
 
-### What is EthVM?
-EthVM is an open-source [Ethereum](https://www.ethereum.org/) Blockchain Data Processing and Analytics Engine with a client-side Block Explorer, although other networks and forks will be supported over time. EthVM is built by the [MyEtherWallet](https://github.com/MyEtherWallet) team and is secured under the [SSPL license](https://www.mongodb.com/licensing/server-side-public-license) (a small variation of the GNU Affero License v3) and is written in a mixture of different languages.
+### What is ethVM?
+
+ethVM is an Ethereum Blockchain Data Processing and Analytics Engine with an open-source and client-side Block Explorer developed by the team at MyEtherWallet. It is secured under the SSPL license (a variation of the GNU Affero License v3).
+
+While ethVM is currently launched for Ethereum, it was created with the intention of supporting multiple chains.
+
+
+## Currently Supported Networks:
+
+- Ethereum Mainnet - [ethVM.com](https://www.ethvm.com/)
+- Sepolia Testnet - [sepolia.ethVM.com](https://sepolia.ethvm.com/)
+
+
+## Core infrastructure
 
 Our core infrastructure is based on well known languages:
 
@@ -31,45 +41,63 @@ And also is backed by popular frameworks:
 
 - [VueJs](https://vuejs.org/)
 - [Apollo Graphql](https://www.apollographql.com/)
-- [Serverless](https://www.serverless.com/)
-- [DynamoDB](https://aws.amazon.com/dynamodb/)
 
-Our Block Explorer is currently in Beta right now. You can check it out live at [www.ethvm.com](https://www.ethvm.com/) and read more about it [here](https://medium.com/myetherwallet/introducing-mews-ethereum-blockchain-explorer-ethvm-beta-78e5b849e2fc). We are currently focused on bug fixes while we work on adding new features in the near future. If you have any questions or requests, feel free to open an issue or send us an email at *dev@ethvm.com*.
+If you have any questions or requests, please feel free to open an issue or send us an email at *dev@ethvm.com*.
 
 
 ## Getting Started
+You can run Sepolia front end locally, you will need:
 
-Right now you can only view EthVM’s Block Explorer (front-end) code. We will be merging the api and processor into the same repo within a couple of weeks, so you can inspect the entire project after the merge.
+*Prerequisites*
+- Node version 18.0.0
+- pnpm, [installation guide](https://pnpm.io/installation). 
 
-You can run  `yarn start:dev` within the newclient folder, but you will not be able to propagate any data to the front-end, since the api code base has yet to be merged. However, you can still check out the front-end, and we greatly appreciate any PRs that can improve on code readability - including commentary and structure!
+1. Open terminal
+2. Clone the repo: git clone git@github.com:https://github.com/EthVM/EthVM.git
+3. run `cd v2`. Note that front end codebase files are located under v2 folder at this momoment.
+4. Create local .env file:
+  `nano ./.env `
+  
+  add the following variables to the file:
+  ```
+  NODE_ENV=development
+  VUE_APP_NETWORK='SEPOLIA'
+  VUE_APP_PUBLIC_URL='sepolia.ethvm.com/'
+  VUE_APP_HTTP_LINK=https://sepolia-api-v2.ethvm.dev
+  VUE_APP_WS_CLIENT=wss://sepolia-apiws-v2.ethvm.dev
+  ```
+  
+5. run `pnpm install` to install node packages
+6. run `pnpm serve`. 
+App should be running in https://localhost:8080
 
 
 ## Contributing
 
-We welcome every kind of contribution, so, please see [CONTRIBUTING](.github/CONTRIBUTING.md) for more details on how to proceed.
+We welcome and encourage every kind of contribution to ethVM, so, please see [CONTRIBUTING](.github/CONTRIBUTING.md) for more details on how to proceed.
 
 ## Stay in touch!
 
-We have created our `EthVM - Devs` [Telegram channel](https://t.me/ethvm), feel free to join and hang out!
+We have created our [Discord channel](https://discord.gg/eAjufBYX4r), feel free to join and collaborate!
 You can also reach out to us on [Twitter](https://twitter.com/Eth_VM) and [Reddit](https://www.reddit.com/r/ethvm/).
+
 
 ## About [MyEtherWallet](https://github.com/MyEtherWallet) Inc
 
-EthVM is backed by the team of [MyEtherWallet](https://github.com/MyEtherWallet) (MEW), Ethereum’s original wallet. The MEW team is a group of Ethereum-enthusiasts dedicated to building open-source, intuitive products for the Ethereum community. Our team is committed to providing safe spaces for users to view and interact with their funds, without having to worry about who has access to their information and data.
+ethVM is created and supported by the team at MyEtherWallet (MEW).
+
+MyEtherWallet is Ethereum’s original wallet and has been in continuous operation since 2015. The MEW team is a group of crypto-enthusiasts dedicated to building open-source, beautiful and intuitive products that people and communities actually use. Our team is committed to protecting user privacy. We created tools that allow users to view and interact with their funds, while having confidence that they are the only ones with access to their data. without having to worry about who has access to their information and data.
 
 All of our products are completely open-source and available on GitHub for review:
 
 [MyEtherWallet Inc](https://github.com/MyEtherWallet/MyEtherWallet)
 
-[Knowledge Base](https://github.com/MyEtherWallet/knowledge-base)
-
-[MEWconnect Protocol](https://github.com/MyEtherWallet/MEWconnect)
-
+[Enkrypt](https://github.com/enkryptcom/enKrypt)
 
 ## License
 
 This project is licensed under the SSPL License (a small variation of the GNU Affero License v3) - see the [LICENSE](LICENSE) file for details ([or read it here online](https://www.mongodb.com/licensing/server-side-public-license)).
 
 <div align="center">
-  <img src="https://raw.githubusercontent.com/EthVM/EthVM/develop/.github/assets/powered-by-MEW.png" alt="Powered by MEW" />
+  <img src="https://raw.githubusercontent.com/EthVM/EthVM/develop/.github/assets/powered-by-MEW.png" alt="Powered by MEW"  width="150"/>
 </div>
