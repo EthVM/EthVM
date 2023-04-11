@@ -1,8 +1,7 @@
 <div align="center">
-  <img src="https://raw.githubusercontent.com/EthVM/ethvm/main/.github/assets/logo.png" alt="ethvm-logo">
+  <img src="https://raw.githubusercontent.com/EthVM/ethvm/develop/.github/assets/logo.png" alt="ethvm-logo" width="200">
   <p>:zap: ethVM: An Open Source Block Explorer for Ethereum with Users In Mind :zap:</p>
   <p>Powered by <a href="https://www.typescriptlang.org/">TypeScript</a> / <a href="https://vuejs.org/">VueJS</a>
-  <p><a href="https://travis-ci.org/EthVM/EthVM.svg?branch=develop""><img src="https://travis-ci.org/EthVM/EthVM.svg?branch=develop"/></a></p>
 </div>
 
 ![Screenshot example](.github/assets/capture-1.png)
