@@ -69,7 +69,7 @@ jobs:
           cd dist && zip -r ../ethVM-$GITHUB_SHA.zip * && cd ..
           VIRUS_TOTAL_URL=`curl -s -F "file=@ethVM-$GITHUB_SHA.zip" -F apikey=${VIRUS_TOTAL_API_KEY} https://www.virustotal.com/vtapi/v2/file/scan | jq --raw-output '.permalink'`
           curl -H "Authorization: token ${GITHUB_TOKEN}" -X POST \
-            -d "{\"body\": \"Copy of this build can be found at <br/>https://builds.ethvm.dev/builds/${GITHUB_SHA}/index.html<br/> \
+            -d "{\"body\": \"Copy of this build can be found at <br/>https://builds.ethvm.dev/${GITHUB_SHA}/index.html<br/> \
                             Virus Total analysis <br/> \
                             $VIRUS_TOTAL_URL\"}" \
                             "https://api.github.com/repos/${GITHUB_REPOSITORY}/commits/${GITHUB_SHA}/comments"
