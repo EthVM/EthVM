@@ -13,7 +13,7 @@ export type NewBlockFeedSubscriptionVariables = Types.Exact<{ [key: string]: nev
 
 export type NewBlockFeedSubscription = {
     __typename?: 'Subscription'
-    newBlockFeed: { __typename?: 'BlockSummary'; number: number; miner: string; txCount: number; timestamp: number }
+    newBlockFeed: { __typename?: 'BlockSummary'; number: number; miner: string; txCount: number; timestamp: number; baseFeePerGas?: string | null }
 }
 
 export const NewBlockFeedDocument = gql`
@@ -23,6 +23,7 @@ export const NewBlockFeedDocument = gql`
             miner
             txCount
             timestamp
+            baseFeePerGas
         }
     }
 `

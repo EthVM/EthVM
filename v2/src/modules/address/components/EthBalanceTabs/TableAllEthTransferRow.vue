@@ -1,98 +1,117 @@
 <template>
-    <div>
-        <app-table-row v-if="smAndDown" @click="showMoreDetails = !showMoreDetails" :color="showMoreDetails ? 'pillGrey' : 'transparent'">
-            <v-col cols="6">
-                <v-avatar :color="transferDirection.color" size="22">
-                    <v-icon size="13" color="white"> {{ transferDirection.icon }} </v-icon>
-                </v-avatar>
-                <span class="ml-2">
-                    {{ transferDirection.text }}
-                </span>
-            </v-col>
-            <v-col cols="6" class="text-right">{{ txValue.value }} ETH</v-col>
-            <v-col cols="6" class="text-info text-lowercase"> {{ timestamp }} {{ transferDirection.direction }} </v-col>
-            <v-col cols="6">
-                <div class="d-flex align-center justify-end">
-                    <app-address-blockie :address="txAddress || ''" :size="6" class="mr-2 mr-sm-2" />
-                    <app-transform-hash is-short is-blue :hash="eth.toCheckSum(txAddress)" :link="`/address/${txAddress}`" />
-                </div>
-            </v-col>
-            <template #expandable>
-                <v-col cols="12" v-if="showMoreDetails">
-                    <div v-if="!isIncoming" class="mb-4 d-flex justify-space-between">
-                        <span class="text-info mr-2">tx fee paid:</span>
-                        <span>{{ txFee.value }} ETH</span>
-                    </div>
-                    <div class="d-flex justify-space-between">
-                        <span class="text-info mr-2">
-                            <app-chip :bg="transferType.color" :text="transferType.text.toUpperCase()" class="text-caption" style="min-width: 120px" />
-                        </span>
-                        <span>
-                            <router-link v-if="isBlockReward" :to="`/block/number/${props.transfer.transfer.block}`" class="text-secondary">
-                                {{ formatNumber(props.transfer.transfer.block) }}
-                            </router-link>
-                            <app-transform-hash
-                                v-else
-                                is-short
-                                is-blue
-                                :hash="eth.toCheckSum(transfer.transfer.transactionHash)"
-                                :link="`/tx/${transfer.transfer.transactionHash}`"
-                            />
-                        </span>
-                    </div>
-                </v-col>
-            </template>
-        </app-table-row>
-        <app-table-row v-else row-align="center">
-            <v-col sm="3" lg="2">
-                <div class="d-flex">
-                    <span style="width: 30px" class="d-inline-block">
-                        <v-icon :color="statusIcon.color">{{ statusIcon.icon }}</v-icon>
-                    </span>
-                    <div class="ml-4">
-                        {{ txValue.value }} ETH
-                        <div class="text-lowercase text-info">
-                            {{ timestamp }}
+    <app-table-row row-align="center" :link="mdAndDown" @click="openMoreInfo" :color="showMoreDetails && mdAndDown ? 'pillGrey' : 'transparent'">
+        <!--
+            Status
+        -->
+        <v-col cols="6" sm="4" md="3" lg="2" order="1">
+            <v-avatar :color="transferStatus.color" size="22">
+                <v-icon size="13" color="white"> {{ transferStatus.icon }} </v-icon>
+            </v-avatar>
+            <span class="ml-2">
+                {{ transferStatus.text }}
+            </span>
+            <p class="text-info text-lowercase mt-1">
+                {{ timestamp }}
+                <span
+                    v-if="
+                        transferType.type === TransferSubtype.Withdrawl ||
+                        transferType.type === TransferSubtype.Transaction ||
+                        transferType.type === TransferSubtype.InternalTransaction
+                    "
+                    >{{ transferStatus.direction }}</span
+                >
+            </p>
+        </v-col>
+        <!--
+            Address/ Validator
+            Value on XS ONLY
+            Hidden on XS
+        -->
+        <v-col cols="6" sm="5" md="3" lg="2" order="2" :class="{ 'mobile-value': xs }">
+            <p v-if="xs" class="text-right text-sm-left">{{ valueSign }} {{ txValue.value }} {{ txValue.unit }}</p>
+            <p v-if="transferType.type === TransferSubtype.Withdrawl" class="text-right text-sm-left mt-2 mt-sm-0">#{{ getValidator() }}</p>
+            <div
+                v-if="transferType.type === TransferSubtype.Transaction || transferType.type === TransferSubtype.InternalTransaction"
+                class="d-flex align-center justify-end justify-sm-start"
+            >
+                <app-address-blockie :address="txAddress || ''" :size="6" class="mr-2 mr-sm-2" />
+                <app-transform-hash is-short is-blue :hash="eth.toCheckSum(txAddress)" :link="`/address/${txAddress}`" />
+            </div>
+        </v-col>
+        <!--
+           Value
+        -->
+        <v-col v-if="!xs" sm="3" lg="2" order-sm="last" order-lg="3">
+            <p class="text-right text-sm-left">{{ valueSign }} {{ txValue.value }} {{ txValue.unit }}</p>
+        </v-col>
+        <!--
+           Fee
+        -->
+        <v-col v-if="!mdAndDown" cols="6" sm="3" lg="2" order="4">
+            <p v-if="isOutgoing && transferType.type === TransferSubtype.Transaction">- {{ txFee.value }} {{ txFee.unit }}</p>
+        </v-col>
+        <!--
+          Type
+        -->
+        <v-col v-if="!mdAndDown" cols="6" sm="3" lg="2" order="5">
+            <app-chip bg="switchTrack" :text="transferType.text.toUpperCase()" size="x-small" class="tiny-text" style="min-width: 131px" />
+        </v-col>
+        <!--
+          Block / Hash
+        -->
+        <v-col v-if="!smAndDown" cols="6" md="3" lg="2" order-md="3" order-lg="6">
+            <router-link v-if="showBlock" :to="`/block/number/${props.transfer.transfer.block}`" class="text-secondary">
+                {{ formatNumber(props.transfer.transfer.block) }}
+            </router-link>
+            <app-transform-hash
+                v-else
+                is-short
+                is-blue
+                :hash="eth.toCheckSum(transfer.transfer.transactionHash)"
+                :link="`/tx/${transfer.transfer.transactionHash}`"
+            />
+        </v-col>
+        <template #expandable>
+            <v-col cols="12" v-if="showMoreDetails && mdAndDown" order="last">
+                <v-row>
+                    <v-spacer />
+                    <!--
+                        Type
+                    -->
+                    <v-col cols="6" sm="4" md="3">
+                        <p v-if="!xs" class="text-info mb-2">Type</p>
+                        <app-chip bg="switchTrack" :text="transferType.text.toUpperCase()" size="x-small" class="tiny-text" style="min-width: 131px" />
+                    </v-col>
+                    <!--
+                        Block/Hash
+                    -->
+                    <v-col cols="6" sm="5" md="3" class="d-flex justify-end justify-sm-start flex-sm-column d-md-none">
+                        <p v-if="!xs && showBlock" class="text-info mb-2">Block</p>
+                        <p v-if="!xs && !showBlock" class="text-info mb-2">Hash</p>
+                        <router-link v-if="showBlock" :to="`/block/number/${props.transfer.transfer.block}`" class="text-secondary">
+                            {{ formatNumber(props.transfer.transfer.block) }}
+                        </router-link>
+                        <app-transform-hash
+                            v-else
+                            is-short
+                            is-blue
+                            :hash="eth.toCheckSum(transfer.transfer.transactionHash)"
+                            :link="`/tx/${transfer.transfer.transactionHash}`"
+                        />
+                    </v-col>
+                    <!--
+                        Fee
+                    -->
+                    <v-col cols="12" sm="3">
+                        <div v-if="isOutgoing && transferType.type === TransferSubtype.Transaction" class="d-flex justify-space-between flex-sm-column">
+                            <p class="text-info mb-sm-2">Fee Paid</p>
+                            <p class="text-right text-sm-left">- {{ txFee.value }} {{ txFee.unit }}</p>
                         </div>
-                    </div>
-                </div>
+                    </v-col>
+                </v-row>
             </v-col>
-            <v-col v-if="!mdAndDown" sm="2">
-                <app-chip :bg="transferType.color" :text="transferType.text.toUpperCase()" size="x-small" class="tiny-text" style="min-width: 131px" />
-            </v-col>
-            <v-col sm="2">
-                <app-chip v-if="mdAndDown" :bg="transferType.color" :text="transferType.text.toUpperCase()" class="tiny-text mb-1" style="min-width: 120px" />
-                <router-link v-if="isBlockReward" :to="`/block/number/${props.transfer.transfer.block}`" class="text-secondary">
-                    {{ formatNumber(props.transfer.transfer.block) }}
-                </router-link>
-                <app-transform-hash
-                    v-else
-                    is-short
-                    is-blue
-                    :hash="eth.toCheckSum(props.transfer.transfer.transactionHash)"
-                    :link="`/tx/${props.transfer.transfer.transactionHash}`"
-                />
-            </v-col>
-            <v-col sm="2" class="d-flex justify-sm-center justify-lg-start">
-                <app-chip
-                    v-if="!isBlockReward"
-                    :bg="transferDirection.color"
-                    :text="transferDirection.direction"
-                    size="x-small"
-                    class="tiny-text text-uppercase"
-                />
-            </v-col>
-            <v-col sm="3" lg="2">
-                <div v-if="!isBlockReward" class="d-flex align-center">
-                    <app-address-blockie :address="txAddress || ''" :size="8" class="mr-2 mr-sm-2" />
-                    <app-transform-hash is-short is-blue :hash="eth.toCheckSum(txAddress)" :link="`/address/${txAddress}`" />
-                </div>
-            </v-col>
-            <v-col sm="2">
-                <span v-if="!isIncoming"> {{ txFee.value }} ETH </span>
-            </v-col>
-        </app-table-row>
-    </div>
+        </template>
+    </app-table-row>
 </template>
 
 <script setup lang="ts">
@@ -101,66 +120,60 @@ import AppTransformHash from '@/core/components/AppTransformHash.vue'
 import AppChip from '@core/components/AppChip.vue'
 import AppTableRow from '@core/components/AppTableRow.vue'
 import { eth, timeAgo } from '@core/helper'
-import { EthInternalTransactionTransfersFragment } from '@module/address/apollo/EthTransfers/internalTransfers.generated'
+import { AllEthTransfersFragment } from '@module/address/apollo/EthTransfers/allTransfers.generated'
 import { computed, ref } from 'vue'
 import { formatNonVariableEthValue, FormattedNumber, formatNumber } from '@core/helper/number-format-helper'
 import BN from 'bignumber.js'
 import { useDisplay } from 'vuetify'
 import { TransferSubtype } from '@/apollo/types'
 
-const { smAndDown, mdAndDown } = useDisplay()
+const { smAndDown, xs, mdAndDown } = useDisplay()
 
 interface ComponentProps {
-    transfer: EthInternalTransactionTransfersFragment
+    transfer: AllEthTransfersFragment
     addressRef: string
 }
-
 const props = defineProps<ComponentProps>()
 
 const showMoreDetails = ref(false)
 
-const statusIcon = computed<{ [key: string]: string }>(() => {
-    if (props.transfer.transfer.status) {
-        return {
-            icon: 'task_alt',
-            color: 'success'
-        }
-    }
-    return {
-        icon: 'highlight_off',
-        color: 'danger'
-    }
-})
-
 enum TRANSFER_DIRECTION {
     FROM = 'From',
     TO = 'To',
-    SELF = 'Self'
+    SELF = 'To'
 }
 
-const transferDirection = computed<{ [key: string]: string }>(() => {
+interface Status {
+    direction: TRANSFER_DIRECTION
+    text: string
+    color: string
+    icon: string
+}
+
+const transferStatus = computed<Status>(() => {
+    const isFailed = props.transfer.transfer.status !== true
     // If to and from address is the same, then transfer is self
     if (props.transfer.transfer.to === props.addressRef.toLowerCase() && props.transfer.transfer.from === props.addressRef.toLowerCase()) {
         return {
             direction: TRANSFER_DIRECTION.SELF,
-            text: 'Self',
-            color: 'info',
-            icon: 'refresh'
+            text: isFailed ? 'Fail Send' : 'Self Sent',
+            color: isFailed ? 'error' : 'warning',
+            icon: isFailed ? 'close' : 'north_west'
         }
     }
     if (props.transfer.transfer.to === props.addressRef.toLowerCase()) {
         return {
             direction: TRANSFER_DIRECTION.FROM,
-            text: 'Received',
-            color: 'success',
-            icon: 'south_east'
+            text: isFailed ? 'Fail Recieve' : 'Received',
+            color: isFailed ? 'error' : 'success',
+            icon: isFailed ? 'close' : 'south_east'
         }
     } else if (props.transfer.transfer.from === props.addressRef.toLowerCase()) {
         return {
             direction: TRANSFER_DIRECTION.TO,
-            text: 'Sent',
-            color: 'warning',
-            icon: 'north_west'
+            text: isFailed ? 'Fail Send' : 'Sent',
+            color: isFailed ? 'error' : 'warning',
+            icon: isFailed ? 'close' : 'north_west'
         }
     }
     return {
@@ -171,48 +184,65 @@ const transferDirection = computed<{ [key: string]: string }>(() => {
     }
 })
 
-const isBlockReward = computed<boolean>(() => {
-    return props.transfer.transfer.subtype === TransferSubtype.BlockReward
+const openMoreInfo = () => {
+    if (mdAndDown.value) {
+        showMoreDetails.value = !showMoreDetails.value
+    }
+}
+
+const timestamp = computed<string>(() => {
+    const date = new Date(props.transfer.transfer.timestamp * 1e3)
+    return timeAgo(date)
 })
 
-const isIncoming = computed<boolean>(() => {
-    return transferDirection.value.direction === TRANSFER_DIRECTION.FROM
-})
+interface Type {
+    text: string
+    type: TransferSubtype
+}
 
-const transferType = computed<{ [key: string]: string }>(() => {
+const transferType = computed<Type>(() => {
     switch (props.transfer.transfer.subtype) {
         case TransferSubtype.BlockReward:
             return {
                 text: 'block reward',
-                color: 'success'
+                type: TransferSubtype.BlockReward
             }
         case TransferSubtype.UncleReward:
             return {
                 text: 'uncle reward',
-                color: 'success'
+                type: TransferSubtype.UncleReward
             }
         case TransferSubtype.Genesis:
             return {
                 text: 'genesis reward',
-                color: 'success'
+                type: TransferSubtype.Genesis
             }
         case TransferSubtype.InternalTransaction:
             return {
                 text: 'internal',
-                color: 'purple'
+                type: TransferSubtype.InternalTransaction
             }
         case TransferSubtype.DaoHardFork:
             return {
                 text: 'dao hard fork',
-                color: 'purple'
+                type: TransferSubtype.DaoHardFork
+            }
+        case TransferSubtype.Withdrawl:
+            return {
+                text: 'withdrawal',
+                type: TransferSubtype.Withdrawl
             }
         default:
             return {
                 text: 'transaction',
-                color: 'purple'
+                type: TransferSubtype.Transaction
             }
     }
 })
+
+const getValidator = (): string => {
+    return formatNumber(new BN(props.transfer.transfer.validatorIndex || 0).toNumber())
+}
 
 const txAddress = computed<string>(() => {
     if (props.transfer.transfer.to === props.addressRef.toLowerCase()) {
@@ -223,11 +253,26 @@ const txAddress = computed<string>(() => {
     return props.transfer.transfer.to
 })
 
-const timestamp = computed<string>(() => {
-    const date = new Date(props.transfer.transfer.timestamp * 1e3)
-    return timeAgo(date, smAndDown.value)
+const showBlock = computed<boolean>(() => {
+    return (
+        props.transfer.transfer.subtype === TransferSubtype.Withdrawl ||
+        props.transfer.transfer.subtype === TransferSubtype.BlockReward ||
+        props.transfer.transfer.subtype === TransferSubtype.UncleReward ||
+        props.transfer.transfer.subtype === TransferSubtype.DaoHardFork ||
+        props.transfer.transfer.subtype === TransferSubtype.Genesis
+    )
+})
+const transferDirection = computed<TRANSFER_DIRECTION>(() => {
+    // If to and from address is the same, then transfer is self
+    if (props.transfer.transfer.from === props.addressRef.toLowerCase()) {
+        return TRANSFER_DIRECTION.TO
+    }
+    return TRANSFER_DIRECTION.FROM
 })
 
+const valueSign = computed<string>(() => {
+    return isOutgoing.value ? '-' : '+'
+})
 const txValue = computed<FormattedNumber>(() => {
     return formatNonVariableEthValue(new BN(props.transfer.value))
 })
@@ -235,4 +280,13 @@ const txValue = computed<FormattedNumber>(() => {
 const txFee = computed<FormattedNumber>(() => {
     return formatNonVariableEthValue(new BN(props.transfer.transfer.txFee))
 })
+const isOutgoing = computed<boolean>(() => {
+    return transferDirection.value === TRANSFER_DIRECTION.TO
+})
 </script>
+
+<style lang="scss">
+.mobile-value {
+    min-height: 56px;
+}
+</style>

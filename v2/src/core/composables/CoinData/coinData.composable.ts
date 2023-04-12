@@ -2,8 +2,9 @@ import { MarketDataFragment as TokenMarketData } from './getLatestPrices.generat
 import { computed } from 'vue'
 import { useStore } from '@/store'
 import { storeToRefs } from 'pinia'
+import { useNetwork } from '../Network/useNetwork'
 
-const ETH_ID = 'ethereum'
+const { supportsFiat, coingeckoId } = useNetwork()
 
 export function useCoinData() {
     const store = useStore()
@@ -18,30 +19,30 @@ export function useCoinData() {
      * Returns market info for ETH ONLY
      */
     const ethMarketInfo = computed<TokenMarketData | null>(() => {
-        if (loadingCoinData.value === false && coinData.value && coinData.value?.getLatestPrices.length > 0) {
-            const filteredRes = coinData.value.getLatestPrices.filter(token => token?.id === ETH_ID)
+        if (supportsFiat.value && loadingCoinData.value === false && coinData.value && coinData.value?.getLatestPrices.length > 0) {
+            const filteredRes = coinData.value.getLatestPrices.filter(token => token?.id === coingeckoId.value)
             return filteredRes[0] || null
         }
         return null
     })
 
     const filteredLatestPrice = computed<Array<TokenMarketData | null>>(() => {
-        if (coinData.value && coinData.value?.getLatestPrices.length > 0) {
-            const filteredRes = coinData.value.getLatestPrices.filter(token => hasData(token) && token?.id !== ETH_ID)
+        if (supportsFiat.value && coinData.value && coinData.value?.getLatestPrices.length > 0) {
+            const filteredRes = coinData.value.getLatestPrices.filter(token => hasData(token) && token?.id !== coingeckoId.value)
             return filteredRes || []
         }
         return []
     })
 
     const ethereumTokens = computed<Array<TokenMarketData | null>>(() => {
-        if (coinData.value && coinData.value?.getLatestPrices.length > 0) {
-            const filteredRes = filteredLatestPrice.value.filter(token => token?.id !== ETH_ID)
+        if (supportsFiat.value && coinData.value && coinData.value?.getLatestPrices.length > 0) {
+            const filteredRes = filteredLatestPrice.value.filter(token => token?.id !== coingeckoId.value)
             return filteredRes || []
         }
         return []
     })
     const tokensWithMarketCap = computed(() => {
-        if (ethereumTokens.value.length > 0) {
+        if (supportsFiat.value && ethereumTokens.value.length > 0) {
             const nonEmpty = ethereumTokens.value.filter((x): x is TokenMarketData => x !== null)
             const filteredRes = nonEmpty.filter(token => token && token.market_cap && token.market_cap > 0)
             return filteredRes
@@ -51,9 +52,9 @@ export function useCoinData() {
 
     const tokensMarketInfo = computed<Map<string, TokenMarketData>>(() => {
         const marketInfo = new Map()
-        if (coinData.value && coinData.value?.getLatestPrices.length > 0) {
+        if (supportsFiat.value && coinData.value && coinData.value?.getLatestPrices.length > 0) {
             coinData.value?.getLatestPrices.forEach(token => {
-                if (token?.id !== ETH_ID && hasData(token)) {
+                if (token?.id !== coingeckoId.value && hasData(token)) {
                     marketInfo.set(token?.contract?.toLowerCase(), token)
                 }
             })
@@ -67,7 +68,7 @@ export function useCoinData() {
      * @returns {Map} TokenMarketData or {Boolean}
      */
     const getEthereumTokensMap = (contracts: string[]): Map<string, TokenMarketData> | false => {
-        if (!loadingCoinData.value) {
+        if (!loadingCoinData.value && supportsFiat.value) {
             const requestMarketInfo = new Map<string, TokenMarketData>()
             contracts.forEach(contract => {
                 const token = tokensMarketInfo.value.get(contract.toLowerCase())
@@ -88,7 +89,7 @@ export function useCoinData() {
      * @returns {Map} TokenMarketData or {Boolean}
      */
     const getEthereumTokenByContract = (contract: string): TokenMarketData | false => {
-        if (!loadingCoinData.value) {
+        if (supportsFiat.value && !loadingCoinData.value) {
             const token = tokensMarketInfo.value.get(contract.toLowerCase())
             if (token) {
                 return token

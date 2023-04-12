@@ -1,5 +1,5 @@
 <template>
-    <v-card :variant="isHome ? 'elevated' : 'flat'" :elevation="isHome ? 1 : 0" rounded="xl" class="pa-4 pa-sm-6">
+    <v-card :variant="isBlock ? 'flat' : 'elevated'" :elevation="isBlock ? 0 : 1" rounded="xl" class="pa-4 pa-sm-6">
         <v-card-title
             v-if="(isHome || state.newMinedTransfers || tableTitle) && !isBlock"
             :class="[isHome ? 'mb-2 mb-sm-4' : 'mb-2 mb-sm-5', 'px-0  py-0 d-flex align-center justify-space-between']"
@@ -11,18 +11,17 @@
                 <app-new-update
                     v-if="!isHome && !isBlock"
                     icon-only
-                    text="New Txs Found, Refresh"
+                    :text="$t('txs.refresh')"
                     :update-count="state.newMinedTransfers"
                     @reload="setPage(1, true)"
                     hide-count
                 />
             </div>
-            <app-btn v-if="isHome && !xs" text="More" isSmall icon="east" @click="goToTransactionsPage"></app-btn>
+            <app-btn v-if="isHome && !xs" :text="$t('txs.more')" isSmall icon="east" @click="goToTransactionsPage"></app-btn>
             <app-btn-icon v-else-if="isHome && xs" icon="east" @click="goToTransactionsPage"></app-btn-icon>
         </v-card-title>
         <txs-table
             :max-items="props.maxItems"
-            :index="state.index"
             :initial-load="initialLoad"
             :is-loading="isLoading"
             :table-message="message"
@@ -46,7 +45,9 @@ import {
     useNewTransfersCompleteFeedSubscription,
     useGetBlockTransfersQuery,
     TransferFragment,
-    EthTransfersFragment
+    EthTransfersFragment,
+    BlockTransactionsFragment,
+    BlockTransactionFragment
 } from './apollo/transfersQuery.generated'
 import { computed, onMounted, reactive, watch } from 'vue'
 import TxsTable from '@module/txs/components/TxsTable.vue'
@@ -54,7 +55,8 @@ import { ROUTE_NAME } from '@core/router/routesNames'
 import { useRouter } from 'vue-router'
 import { useAppPaginate } from '@core/composables/AppPaginate/useAppPaginate.composable'
 import { useDisplay } from 'vuetify'
-
+import { useI18n } from 'vue-i18n'
+const { t } = useI18n()
 const { xs } = useDisplay()
 
 interface ModuleState {
@@ -139,16 +141,16 @@ const allEthTransfers = computed<EthTransfersFragment | undefined>(() => {
     return getEthTransactionTransfers.value?.getEthTransactionTransfers
 })
 
-const allBlockTransfersResult = computed<EthTransfersFragment | undefined>(() => {
+const allBlockTransfersResult = computed<BlockTransactionsFragment | undefined>(() => {
     return getAllBlockTransfersResult.value?.getBlockTransfers
 })
 
-const transactions = computed<Array<TransferFragment | null>>(() => {
+const transactions = computed<Array<TransferFragment | BlockTransactionFragment>>(() => {
     if (!isBlock.value && allEthTransfers.value && allEthTransfers.value.transfers !== null) {
         return allEthTransfers.value.transfers
     }
     if (isBlock.value && allBlockTransfersResult.value && allBlockTransfersResult.value.transfers !== null) {
-        return allBlockTransfersResult.value.transfers
+        return allBlockTransfersResult.value.transfers.filter((x): x is BlockTransactionFragment => x !== null)
     }
     return []
 })
@@ -163,7 +165,7 @@ const tableTitle = computed<string>(() => {
     if (isBlock.value) {
         return ''
     }
-    return isHome.value ? 'Last Transactions' : 'All Transactions'
+    return isHome.value ? t('txs.isHomeHeader') : t('txs.header')
 })
 
 const isHome = computed<boolean>(() => {
@@ -203,7 +205,7 @@ const initialLoad = computed<boolean>(() => {
 const { onResult: onNewTransferLoaded } = useNewTransfersCompleteFeedSubscription()
 
 onNewTransferLoaded(result => {
-    if (result?.data.newTransfersCompleteFeed.type === 'ETH') {
+    if (result?.data?.newTransfersCompleteFeed.type === 'ETH') {
         if (isHome.value) {
             refetchTxArray()
         } else {

@@ -1,6 +1,7 @@
 <template>
     <v-navigation-drawer v-model="appStore.appDrawer" color="primary" temporary location="right">
-        <v-row justify="space-between" align="center" class="mt-2">
+        <v-row justify="space-between" align="center" class="mt-2 mx-0">
+            <app-change-network class="pl-2" />
             <v-spacer />
             <v-col cols="2">
                 <app-btn-icon icon="close" @click="appStore.appDrawer = false" color="white" />
@@ -50,6 +51,7 @@
 import { useAppNavigation } from '../composables/AppNavigation/useAppNavigation.composable'
 import { useStore } from '@/store'
 import AppBtnIcon from './AppBtnIcon.vue'
+import AppChangeNetwork from './AppChangeNetwork.vue'
 import { computed } from 'vue'
 import { useRoute } from 'vue-router'
 /*

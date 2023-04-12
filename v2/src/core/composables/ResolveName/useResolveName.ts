@@ -3,9 +3,12 @@ import { useEnsResolveNameQuery } from './ensResolveName.generated'
 import { Resolution } from '@unstoppabledomains/resolution'
 import * as Sentry from '@sentry/vue'
 import namehash from '@ensdomains/eth-ens-namehash'
+import { useNetwork } from '../Network/useNetwork'
 
 export function useResolveName(name: Ref<string | undefined>) {
     const UD_SUPPORTED_TLDS = ['blockchain', 'bitcoin', 'crypto', 'nft', 'wallet', 'x', 'dao', '888', 'zil']
+    const { ensId, unstoppableId } = useNetwork()
+
     const udResolution = new Resolution({
         sourceConfig: {
             uns: {
@@ -56,12 +59,12 @@ export function useResolveName(name: Ref<string | undefined>) {
      * Resets resolvedUD on name changed.
      */
     watch(name, (newVal, oldVal) => {
-        if (newVal && newVal !== oldVal) {
+        if (unstoppableId.value && newVal && newVal !== oldVal) {
             resolvedUD.value = undefined
             if (isValidTldUD.value) {
                 udLoading.value = true
                 udResolution
-                    .addr(newVal, 'ETH')
+                    .addr(newVal, unstoppableId.value)
                     .then(address => {
                         resolvedUD.value = address
                         udLoading.value = false
@@ -79,14 +82,19 @@ export function useResolveName(name: Ref<string | undefined>) {
      * @returns {boolean} weather or not name has valid ENS TLD
      */
     const isValidTldEns = computed<boolean>(() => {
-        if (!name.value) {
+        if (!ensId.value || !name.value) {
             return false
         }
         return getTld(name.value).length > 2
     })
 
     const normalizeEns = computed<string | undefined>(() => {
-        return isValidTldEns.value ? namehash.hash(name.value) : undefined
+        try {
+            const normalized = namehash.normalize(name.value)
+            return isValidTldEns.value ? namehash.hash(normalized) : undefined
+        } catch {
+            return undefined
+        }
     })
     /**
      * Fetches Ens resolution from Graph.

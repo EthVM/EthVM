@@ -25,7 +25,7 @@
             <v-card class="pa-4 pa-sm-6" elevation="1" rounded="xl">
                 <v-card-title class="d-flex justify-space-between align-center pa-0 mb-5">
                     <div>
-                        <span class="text-h6 font-weight-bold">ETH History</span>
+                        <span class="text-h6 font-weight-bold">{{ currencyName }} History</span>
                     </div>
                     <app-btn v-if="!xs" text="More" isSmall icon="east" @click="goToEthPage"></app-btn>
                     <app-btn-icon v-if="xs" icon="east" @click="goToEthPage"></app-btn-icon>
@@ -53,12 +53,13 @@ import { useDisplay } from 'vuetify/lib/framework.mjs'
 import { useRouter } from 'vue-router'
 import { Q_ADDRESS_TRANSFERS, ROUTE_NAME } from '@core/router/routesNames'
 import { onMounted, watch } from 'vue'
-
+import { useNetwork } from '@/core/composables/Network/useNetwork'
 onMounted(() => {
     window.scrollTo(0, 0)
 })
 
 const { xs } = useDisplay()
+const { currencyName } = useNetwork()
 const props = defineProps({
     addressRef: { type: String, required: true }
 })

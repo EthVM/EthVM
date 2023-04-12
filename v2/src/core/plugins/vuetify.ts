@@ -2,10 +2,7 @@
 import 'material-design-icons-iconfont/dist/material-design-icons.css'
 import 'vuetify/styles'
 import { md, aliases } from 'vuetify/iconsets/md'
-import * as components from 'vuetify/components'
-import * as directives from 'vuetify/directives'
 import { createVuetify, ThemeDefinition } from 'vuetify'
-// import type { IconAliases } from 'vuetify'
 
 type ThemeDefinition = typeof ThemeDefinition
 
@@ -60,7 +57,9 @@ const mainnetLightTheme: ThemeDefinition = {
         tabActive: COLORS.blue,
         greyInputText: COLORS.greyInputText,
         snackbar: COLORS.navy,
-        darkSurface: COLORS.greyBackdroundDM
+        darkSurface: COLORS.greyBackdroundDM,
+        switchTrack: COLORS.lightGreyDM,
+        switchThumb: COLORS.lightBlue
     },
     variables: {
         'skeleton-gradient': 0.3
@@ -96,7 +95,9 @@ const mainnetDarkTheme: ThemeDefinition = {
         tabActive: COLORS.blue,
         greyInputText: COLORS.greyInputText,
         snackbar: COLORS.lightBlue,
-        darkSurface: COLORS.greyBackgroundLM
+        darkSurface: COLORS.greyBackgroundLM,
+        switchTrack: COLORS.lightGreyDM,
+        switchThumb: COLORS.lightBlue
     },
     variables: {
         'skeleton-gradient': 0.03
@@ -104,9 +105,12 @@ const mainnetDarkTheme: ThemeDefinition = {
 }
 aliases.clear = 'close'
 
+export const themes = {
+    light: 'mainnetLightTheme',
+    dark: 'mainnetDarkTheme'
+}
+
 export default createVuetify({
-    components,
-    directives,
     icons: {
         defaultSet: 'md',
         aliases,
@@ -115,7 +119,7 @@ export default createVuetify({
         }
     },
     theme: {
-        defaultTheme: 'mainnetLightTheme',
+        defaultTheme: themes.light,
         themes: {
             mainnetLightTheme,
             mainnetDarkTheme

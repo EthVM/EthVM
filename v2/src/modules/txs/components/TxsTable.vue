@@ -6,14 +6,24 @@
             =====================================================================================
         -->
         <v-row v-if="!xs" align="center" justify="start" class="text-info d-none d-sm-flex">
-            <v-col v-if="!props.pending && !props.isBlock" sm="3" lg="2"> Block / Timestamp </v-col>
-            <v-col sm="3" md="2"> Hash </v-col>
-            <v-col v-if="!mdAndDown" lg="2"> From </v-col>
-            <v-spacer v-if="props.isBlock" />
-            <v-col v-if="!mdAndDown" lg="2"> To </v-col>
-            <v-col lg="2"> Amount </v-col>
-            <v-col :lg="props.isBlock ? 2 : 1"> Tx Fee </v-col>
-            <v-col v-if="!props.pending" lg="1"> Status </v-col>
+            <v-col sm="6" md="3" :lg="props.isBlock ? 2 : 3" class="d-flex flex-nowrap">
+                <p v-if="!mdAndDown && !props.isBlock">{{ $t('common.block') }}</p>
+                <v-spacer v-if="!mdAndDown && !props.isBlock"></v-spacer>
+                <p class="pl-8 pl-md-0" style="width: 116px">{{ $t('common.hash') }}</p>
+            </v-col>
+            <v-spacer v-if="!mdAndDown && !props.isBlock" />
+            <v-col md="6" :lg="props.isBlock ? 5 : 4" class="d-none d-md-flex">
+                <p style="width: 158px">{{ $t('common.from') }}</p>
+                <v-spacer></v-spacer>
+                <p style="width: 158px">{{ $t('common.to') }}</p>
+            </v-col>
+            <v-spacer v-if="!mdAndDown" />
+            <v-col sm="3" lg="2">
+                <p class="text-md-right text-lg-left pr-8 pr-lg-0">
+                    {{ $t('common.amount') }}
+                </p>
+            </v-col>
+            <v-col sm="3" lg="2" class="d-md-none d-lg-flex"> {{ $t('common.fee') }} </v-col>
         </v-row>
         <v-divider class="my-0 mt-sm-4 mx-n4 mx-sm-n6" />
         <!--
@@ -47,16 +57,22 @@ import TxsTableRow from '@module/txs/components/TxsTableRow.vue'
 import AppNoResult from '@core/components/AppNoResult.vue'
 import AppPagination from '@core/components/AppPagination.vue'
 import { useDisplay } from 'vuetify/lib/framework.mjs'
-import { computed } from 'vue'
+import { computed, PropType } from 'vue'
+import { TransferFragment, BlockTransactionFragment } from '../apollo/transfersQuery.generated'
 
 const { xs, mdAndDown } = useDisplay()
 
 const props = defineProps({
-    txsData: Array,
+    txsData: {
+        type: Array as PropType<Array<BlockTransactionFragment | TransferFragment>>,
+        default: () => []
+    },
     isLoading: Boolean,
     maxItems: Number,
-    index: Number,
-    pages: Number,
+    pages: {
+        type: Number,
+        default: 0
+    },
     address: {
         type: String,
         default: ''

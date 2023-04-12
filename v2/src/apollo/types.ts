@@ -463,6 +463,78 @@ export type Block_Height = {
     number_gte?: InputMaybe<Scalars['Int']>
 }
 
+export type CoinGeckoTokenInfo = {
+    __typename?: 'CoinGeckoTokenInfo'
+    id: Scalars['String']
+    last_updated_iso8601: Scalars['String']
+    name: Scalars['String']
+    platforms: Array<CoinGeckoTokenInfoItemPlatform>
+    symbol: Scalars['String']
+}
+
+export type CoinGeckoTokenInfoItemPlatform = {
+    __typename?: 'CoinGeckoTokenInfoItemPlatform'
+    address?: Maybe<Scalars['String']>
+    platform: Scalars['String']
+}
+
+export type CoinGeckoTokenMarketDataItem = {
+    __typename?: 'CoinGeckoTokenMarketDataItem'
+    ath?: Maybe<Scalars['Float']>
+    ath_change_percentage?: Maybe<Scalars['Float']>
+    ath_date?: Maybe<Scalars['String']>
+    atl?: Maybe<Scalars['Float']>
+    atl_change_percentage?: Maybe<Scalars['Float']>
+    atl_date?: Maybe<Scalars['String']>
+    circulating_supply?: Maybe<Scalars['Float']>
+    current_price?: Maybe<Scalars['Float']>
+    fully_diluted_valuation?: Maybe<Scalars['Float']>
+    high_24h?: Maybe<Scalars['Float']>
+    id: Scalars['String']
+    image?: Maybe<Scalars['String']>
+    last_updated_iso8601?: Maybe<Scalars['String']>
+    low_24h?: Maybe<Scalars['Float']>
+    market_cap?: Maybe<Scalars['Float']>
+    market_cap_change_24h?: Maybe<Scalars['Float']>
+    market_cap_change_percentage_24h?: Maybe<Scalars['Float']>
+    market_cap_rank?: Maybe<Scalars['Float']>
+    max_supply?: Maybe<Scalars['Float']>
+    name?: Maybe<Scalars['String']>
+    price_change_24h?: Maybe<Scalars['Float']>
+    price_change_percentage_1h_in_currency?: Maybe<Scalars['Float']>
+    price_change_percentage_1y_in_currency?: Maybe<Scalars['Float']>
+    price_change_percentage_7d_in_currency?: Maybe<Scalars['Float']>
+    price_change_percentage_14d_in_currency?: Maybe<Scalars['Float']>
+    price_change_percentage_24h?: Maybe<Scalars['Float']>
+    price_change_percentage_24h_in_currency?: Maybe<Scalars['Float']>
+    price_change_percentage_30d_in_currency?: Maybe<Scalars['Float']>
+    price_change_percentage_200d_in_currency?: Maybe<Scalars['Float']>
+    roi?: Maybe<CoinGeckoTokenMarketDataItemRoi>
+    sparkline_in_7d: CoinGeckoTokenMarketDataItemSparkline
+    symbol?: Maybe<Scalars['String']>
+    total_supply?: Maybe<Scalars['Float']>
+    total_volume?: Maybe<Scalars['Float']>
+}
+
+export type CoinGeckoTokenMarketDataItemRoi = {
+    __typename?: 'CoinGeckoTokenMarketDataItemRoi'
+    currency?: Maybe<Scalars['String']>
+    percentage?: Maybe<Scalars['Float']>
+    times?: Maybe<Scalars['Float']>
+}
+
+export type CoinGeckoTokenMarketDataItemSparkline = {
+    __typename?: 'CoinGeckoTokenMarketDataItemSparkline'
+    price: Array<Scalars['Float']>
+}
+
+export type CoinGeckoTokenPrice = {
+    __typename?: 'CoinGeckoTokenPrice'
+    id: Scalars['String']
+    last_updated_iso8601?: Maybe<Scalars['String']>
+    usd?: Maybe<Scalars['Float']>
+}
+
 export type ContenthashChanged = ResolverEvent & {
     __typename?: 'ContenthashChanged'
     blockNumber: Scalars['Int']
@@ -893,7 +965,7 @@ export enum Domain_OrderBy {
     WrappedDomainExpiryDate = 'wrappedDomain__expiryDate',
     WrappedDomainFuses = 'wrappedDomain__fuses',
     WrappedDomainId = 'wrappedDomain__id',
-    WrappedDomainLabelName = 'wrappedDomain__labelName'
+    WrappedDomainName = 'wrappedDomain__name'
 }
 
 export type Erc20TokenBalance = {
@@ -1015,6 +1087,21 @@ export type EthTransfers = {
     transfers: Array<Maybe<EthTransfer>>
 }
 
+export type EthWithdrawalTransfer = {
+    __typename?: 'ETHWithdrawalTransfer'
+    stateDiff?: Maybe<StateDiffChange>
+    transfer: Transfer
+    validatorIndex: Scalars['String']
+    value: Scalars['String']
+    withdrawalIndex: Scalars['String']
+}
+
+export type EthWithdrawalTransfers = {
+    __typename?: 'ETHWithdrawalTransfers'
+    nextKey?: Maybe<Scalars['String']>
+    transfers: Array<EthWithdrawalTransfer>
+}
+
 export type EthAndErc20TokenBalances = {
     __typename?: 'EthAndErc20TokenBalances'
     balances: Array<EthOrErc20TokenBalance>
@@ -1024,6 +1111,7 @@ export type EthOrErc20TokenBalance = {
     __typename?: 'EthOrErc20TokenBalance'
     balance: Scalars['String']
     owner: Scalars['String']
+    timestampUnixSec: Scalars['Int']
     tokenInfo?: Maybe<EthTokenInfo>
 }
 
@@ -1060,12 +1148,98 @@ export type EthTransfer = {
     value: Scalars['String']
 }
 
+export type ExpiryExtended = DomainEvent & {
+    __typename?: 'ExpiryExtended'
+    blockNumber: Scalars['Int']
+    domain: Domain
+    expiryDate: Scalars['BigInt']
+    id: Scalars['ID']
+    transactionID: Scalars['Bytes']
+}
+
+export type ExpiryExtended_Filter = {
+    /** Filter for the block changed event. */
+    _change_block?: InputMaybe<BlockChangedFilter>
+    and?: InputMaybe<Array<InputMaybe<ExpiryExtended_Filter>>>
+    blockNumber?: InputMaybe<Scalars['Int']>
+    blockNumber_gt?: InputMaybe<Scalars['Int']>
+    blockNumber_gte?: InputMaybe<Scalars['Int']>
+    blockNumber_in?: InputMaybe<Array<Scalars['Int']>>
+    blockNumber_lt?: InputMaybe<Scalars['Int']>
+    blockNumber_lte?: InputMaybe<Scalars['Int']>
+    blockNumber_not?: InputMaybe<Scalars['Int']>
+    blockNumber_not_in?: InputMaybe<Array<Scalars['Int']>>
+    domain?: InputMaybe<Scalars['String']>
+    domain_?: InputMaybe<Domain_Filter>
+    domain_contains?: InputMaybe<Scalars['String']>
+    domain_contains_nocase?: InputMaybe<Scalars['String']>
+    domain_ends_with?: InputMaybe<Scalars['String']>
+    domain_ends_with_nocase?: InputMaybe<Scalars['String']>
+    domain_gt?: InputMaybe<Scalars['String']>
+    domain_gte?: InputMaybe<Scalars['String']>
+    domain_in?: InputMaybe<Array<Scalars['String']>>
+    domain_lt?: InputMaybe<Scalars['String']>
+    domain_lte?: InputMaybe<Scalars['String']>
+    domain_not?: InputMaybe<Scalars['String']>
+    domain_not_contains?: InputMaybe<Scalars['String']>
+    domain_not_contains_nocase?: InputMaybe<Scalars['String']>
+    domain_not_ends_with?: InputMaybe<Scalars['String']>
+    domain_not_ends_with_nocase?: InputMaybe<Scalars['String']>
+    domain_not_in?: InputMaybe<Array<Scalars['String']>>
+    domain_not_starts_with?: InputMaybe<Scalars['String']>
+    domain_not_starts_with_nocase?: InputMaybe<Scalars['String']>
+    domain_starts_with?: InputMaybe<Scalars['String']>
+    domain_starts_with_nocase?: InputMaybe<Scalars['String']>
+    expiryDate?: InputMaybe<Scalars['BigInt']>
+    expiryDate_gt?: InputMaybe<Scalars['BigInt']>
+    expiryDate_gte?: InputMaybe<Scalars['BigInt']>
+    expiryDate_in?: InputMaybe<Array<Scalars['BigInt']>>
+    expiryDate_lt?: InputMaybe<Scalars['BigInt']>
+    expiryDate_lte?: InputMaybe<Scalars['BigInt']>
+    expiryDate_not?: InputMaybe<Scalars['BigInt']>
+    expiryDate_not_in?: InputMaybe<Array<Scalars['BigInt']>>
+    id?: InputMaybe<Scalars['ID']>
+    id_gt?: InputMaybe<Scalars['ID']>
+    id_gte?: InputMaybe<Scalars['ID']>
+    id_in?: InputMaybe<Array<Scalars['ID']>>
+    id_lt?: InputMaybe<Scalars['ID']>
+    id_lte?: InputMaybe<Scalars['ID']>
+    id_not?: InputMaybe<Scalars['ID']>
+    id_not_in?: InputMaybe<Array<Scalars['ID']>>
+    or?: InputMaybe<Array<InputMaybe<ExpiryExtended_Filter>>>
+    transactionID?: InputMaybe<Scalars['Bytes']>
+    transactionID_contains?: InputMaybe<Scalars['Bytes']>
+    transactionID_gt?: InputMaybe<Scalars['Bytes']>
+    transactionID_gte?: InputMaybe<Scalars['Bytes']>
+    transactionID_in?: InputMaybe<Array<Scalars['Bytes']>>
+    transactionID_lt?: InputMaybe<Scalars['Bytes']>
+    transactionID_lte?: InputMaybe<Scalars['Bytes']>
+    transactionID_not?: InputMaybe<Scalars['Bytes']>
+    transactionID_not_contains?: InputMaybe<Scalars['Bytes']>
+    transactionID_not_in?: InputMaybe<Array<Scalars['Bytes']>>
+}
+
+export enum ExpiryExtended_OrderBy {
+    BlockNumber = 'blockNumber',
+    Domain = 'domain',
+    DomainCreatedAt = 'domain__createdAt',
+    DomainId = 'domain__id',
+    DomainIsMigrated = 'domain__isMigrated',
+    DomainLabelName = 'domain__labelName',
+    DomainLabelhash = 'domain__labelhash',
+    DomainName = 'domain__name',
+    DomainSubdomainCount = 'domain__subdomainCount',
+    DomainTtl = 'domain__ttl',
+    ExpiryDate = 'expiryDate',
+    Id = 'id',
+    TransactionId = 'transactionID'
+}
+
 export type FusesSet = DomainEvent & {
     __typename?: 'FusesSet'
     blockNumber: Scalars['Int']
     domain: Domain
-    expiry: Scalars['BigInt']
-    fuses: Scalars['BigInt']
+    fuses: Scalars['Int']
     id: Scalars['ID']
     transactionID: Scalars['Bytes']
 }
@@ -1103,22 +1277,14 @@ export type FusesSet_Filter = {
     domain_not_starts_with_nocase?: InputMaybe<Scalars['String']>
     domain_starts_with?: InputMaybe<Scalars['String']>
     domain_starts_with_nocase?: InputMaybe<Scalars['String']>
-    expiry?: InputMaybe<Scalars['BigInt']>
-    expiry_gt?: InputMaybe<Scalars['BigInt']>
-    expiry_gte?: InputMaybe<Scalars['BigInt']>
-    expiry_in?: InputMaybe<Array<Scalars['BigInt']>>
-    expiry_lt?: InputMaybe<Scalars['BigInt']>
-    expiry_lte?: InputMaybe<Scalars['BigInt']>
-    expiry_not?: InputMaybe<Scalars['BigInt']>
-    expiry_not_in?: InputMaybe<Array<Scalars['BigInt']>>
-    fuses?: InputMaybe<Scalars['BigInt']>
-    fuses_gt?: InputMaybe<Scalars['BigInt']>
-    fuses_gte?: InputMaybe<Scalars['BigInt']>
-    fuses_in?: InputMaybe<Array<Scalars['BigInt']>>
-    fuses_lt?: InputMaybe<Scalars['BigInt']>
-    fuses_lte?: InputMaybe<Scalars['BigInt']>
-    fuses_not?: InputMaybe<Scalars['BigInt']>
-    fuses_not_in?: InputMaybe<Array<Scalars['BigInt']>>
+    fuses?: InputMaybe<Scalars['Int']>
+    fuses_gt?: InputMaybe<Scalars['Int']>
+    fuses_gte?: InputMaybe<Scalars['Int']>
+    fuses_in?: InputMaybe<Array<Scalars['Int']>>
+    fuses_lt?: InputMaybe<Scalars['Int']>
+    fuses_lte?: InputMaybe<Scalars['Int']>
+    fuses_not?: InputMaybe<Scalars['Int']>
+    fuses_not_in?: InputMaybe<Array<Scalars['Int']>>
     id?: InputMaybe<Scalars['ID']>
     id_gt?: InputMaybe<Scalars['ID']>
     id_gte?: InputMaybe<Scalars['ID']>
@@ -1151,7 +1317,6 @@ export enum FusesSet_OrderBy {
     DomainName = 'domain__name',
     DomainSubdomainCount = 'domain__subdomainCount',
     DomainTtl = 'domain__ttl',
-    Expiry = 'expiry',
     Fuses = 'fuses',
     Id = 'id',
     TransactionId = 'transactionID'
@@ -1267,6 +1432,7 @@ export type LatestBlockData = {
     avgBlockTime: Scalars['Int']
     avgGasBurnt?: Maybe<Scalars['String']>
     avgGasPrice: Scalars['String']
+    baseFeePerGas?: Maybe<Scalars['String']>
     difficulty: Scalars['String']
     hashRate: Scalars['String']
     number: Scalars['Int']
@@ -1943,10 +2109,10 @@ export type NameWrapped = DomainEvent & {
     __typename?: 'NameWrapped'
     blockNumber: Scalars['Int']
     domain: Domain
-    expiry: Scalars['BigInt']
-    fuses: Scalars['BigInt']
+    expiryDate: Scalars['BigInt']
+    fuses: Scalars['Int']
     id: Scalars['ID']
-    name: Scalars['String']
+    name?: Maybe<Scalars['String']>
     owner: Account
     transactionID: Scalars['Bytes']
 }
@@ -1984,22 +2150,22 @@ export type NameWrapped_Filter = {
     domain_not_starts_with_nocase?: InputMaybe<Scalars['String']>
     domain_starts_with?: InputMaybe<Scalars['String']>
     domain_starts_with_nocase?: InputMaybe<Scalars['String']>
-    expiry?: InputMaybe<Scalars['BigInt']>
-    expiry_gt?: InputMaybe<Scalars['BigInt']>
-    expiry_gte?: InputMaybe<Scalars['BigInt']>
-    expiry_in?: InputMaybe<Array<Scalars['BigInt']>>
-    expiry_lt?: InputMaybe<Scalars['BigInt']>
-    expiry_lte?: InputMaybe<Scalars['BigInt']>
-    expiry_not?: InputMaybe<Scalars['BigInt']>
-    expiry_not_in?: InputMaybe<Array<Scalars['BigInt']>>
-    fuses?: InputMaybe<Scalars['BigInt']>
-    fuses_gt?: InputMaybe<Scalars['BigInt']>
-    fuses_gte?: InputMaybe<Scalars['BigInt']>
-    fuses_in?: InputMaybe<Array<Scalars['BigInt']>>
-    fuses_lt?: InputMaybe<Scalars['BigInt']>
-    fuses_lte?: InputMaybe<Scalars['BigInt']>
-    fuses_not?: InputMaybe<Scalars['BigInt']>
-    fuses_not_in?: InputMaybe<Array<Scalars['BigInt']>>
+    expiryDate?: InputMaybe<Scalars['BigInt']>
+    expiryDate_gt?: InputMaybe<Scalars['BigInt']>
+    expiryDate_gte?: InputMaybe<Scalars['BigInt']>
+    expiryDate_in?: InputMaybe<Array<Scalars['BigInt']>>
+    expiryDate_lt?: InputMaybe<Scalars['BigInt']>
+    expiryDate_lte?: InputMaybe<Scalars['BigInt']>
+    expiryDate_not?: InputMaybe<Scalars['BigInt']>
+    expiryDate_not_in?: InputMaybe<Array<Scalars['BigInt']>>
+    fuses?: InputMaybe<Scalars['Int']>
+    fuses_gt?: InputMaybe<Scalars['Int']>
+    fuses_gte?: InputMaybe<Scalars['Int']>
+    fuses_in?: InputMaybe<Array<Scalars['Int']>>
+    fuses_lt?: InputMaybe<Scalars['Int']>
+    fuses_lte?: InputMaybe<Scalars['Int']>
+    fuses_not?: InputMaybe<Scalars['Int']>
+    fuses_not_in?: InputMaybe<Array<Scalars['Int']>>
     id?: InputMaybe<Scalars['ID']>
     id_gt?: InputMaybe<Scalars['ID']>
     id_gte?: InputMaybe<Scalars['ID']>
@@ -2073,7 +2239,7 @@ export enum NameWrapped_OrderBy {
     DomainName = 'domain__name',
     DomainSubdomainCount = 'domain__subdomainCount',
     DomainTtl = 'domain__ttl',
-    Expiry = 'expiry',
+    ExpiryDate = 'expiryDate',
     Fuses = 'fuses',
     Id = 'id',
     Name = 'name',
@@ -2551,6 +2717,8 @@ export type Query = {
     domainEvent?: Maybe<DomainEvent>
     domainEvents: Array<DomainEvent>
     domains: Array<Domain>
+    expiryExtended?: Maybe<ExpiryExtended>
+    expiryExtendeds: Array<ExpiryExtended>
     fusesSet?: Maybe<FusesSet>
     fusesSets: Array<FusesSet>
     getAllEthTransfers: EthTransfers
@@ -2561,6 +2729,17 @@ export type Query = {
     getBlockRewards: EthTransfers
     getBlockTransfers: EthTransfers
     getBlocksArrayByNumber: Array<Maybe<BlockSummary>>
+    /** Get info of all CoinGecko tokens */
+    getCoinGeckoTokenInfoAll: Array<CoinGeckoTokenInfo>
+    /** Get info of all CoinGecko tokens by their address */
+    getCoinGeckoTokenInfoByAddresses: Array<Maybe<CoinGeckoTokenInfo>>
+    /**
+     * Get the market data of tokens on CoinGecko by their CoinGecko IDs
+     * For id's that are not found the response array element will be null
+     */
+    getCoinGeckoTokenMarketDataByIds: Array<Maybe<CoinGeckoTokenMarketDataItem>>
+    /** Get the prices of all tokens on CoinGecko */
+    getCoinGeckoTokenPriceAll: Array<CoinGeckoTokenPrice>
     getContractMeta: ContractMeta
     /** Get the number of ERC20 tokens of a contract owned by an address */
     getERC20TokenBalance: Erc20TokenBalance
@@ -2588,6 +2767,7 @@ export type Query = {
     getEthTransfers: EthTransfers
     getEthTransfersByHash: EthTransfers
     getEthTransfersV2: EthTransfers
+    getEthWithdrawalTransfers: EthWithdrawalTransfers
     getGenesisRewards: EthTransfers
     getHashType: HashType
     getLatestBlockInfo: LatestBlockData
@@ -2787,6 +2967,22 @@ export type QueryDomainsArgs = {
     where?: InputMaybe<Domain_Filter>
 }
 
+export type QueryExpiryExtendedArgs = {
+    block?: InputMaybe<Block_Height>
+    id: Scalars['ID']
+    subgraphError?: _SubgraphErrorPolicy_
+}
+
+export type QueryExpiryExtendedsArgs = {
+    block?: InputMaybe<Block_Height>
+    first?: InputMaybe<Scalars['Int']>
+    orderBy?: InputMaybe<ExpiryExtended_OrderBy>
+    orderDirection?: InputMaybe<OrderDirection>
+    skip?: InputMaybe<Scalars['Int']>
+    subgraphError?: _SubgraphErrorPolicy_
+    where?: InputMaybe<ExpiryExtended_Filter>
+}
+
 export type QueryFusesSetArgs = {
     block?: InputMaybe<Block_Height>
     id: Scalars['ID']
@@ -2842,6 +3038,14 @@ export type QueryGetBlockTransfersArgs = {
 export type QueryGetBlocksArrayByNumberArgs = {
     fromBlock?: InputMaybe<Scalars['Int']>
     limit?: InputMaybe<Scalars['Int']>
+}
+
+export type QueryGetCoinGeckoTokenInfoByAddressesArgs = {
+    addresses: Array<Scalars['String']>
+}
+
+export type QueryGetCoinGeckoTokenMarketDataByIdsArgs = {
+    coinGeckoTokenIds: Array<Scalars['String']>
 }
 
 export type QueryGetContractMetaArgs = {
@@ -2962,6 +3166,13 @@ export type QueryGetEthTransfersV2Args = {
     limit?: InputMaybe<Scalars['Int']>
     nextKey?: InputMaybe<Scalars['String']>
     owner?: InputMaybe<Scalars['String']>
+}
+
+export type QueryGetEthWithdrawalTransfersArgs = {
+    address?: InputMaybe<Scalars['String']>
+    blockNumber?: InputMaybe<Scalars['Int']>
+    limit?: InputMaybe<Scalars['Int']>
+    nextKey?: InputMaybe<Scalars['String']>
 }
 
 export type QueryGetGenesisRewardsArgs = {
@@ -3984,6 +4195,8 @@ export type Subscription = {
     domainEvent?: Maybe<DomainEvent>
     domainEvents: Array<DomainEvent>
     domains: Array<Domain>
+    expiryExtended?: Maybe<ExpiryExtended>
+    expiryExtendeds: Array<ExpiryExtended>
     fusesSet?: Maybe<FusesSet>
     fusesSets: Array<FusesSet>
     interfaceChanged?: Maybe<InterfaceChanged>
@@ -4156,6 +4369,22 @@ export type SubscriptionDomainsArgs = {
     skip?: InputMaybe<Scalars['Int']>
     subgraphError?: _SubgraphErrorPolicy_
     where?: InputMaybe<Domain_Filter>
+}
+
+export type SubscriptionExpiryExtendedArgs = {
+    block?: InputMaybe<Block_Height>
+    id: Scalars['ID']
+    subgraphError?: _SubgraphErrorPolicy_
+}
+
+export type SubscriptionExpiryExtendedsArgs = {
+    block?: InputMaybe<Block_Height>
+    first?: InputMaybe<Scalars['Int']>
+    orderBy?: InputMaybe<ExpiryExtended_OrderBy>
+    orderDirection?: InputMaybe<OrderDirection>
+    skip?: InputMaybe<Scalars['Int']>
+    subgraphError?: _SubgraphErrorPolicy_
+    where?: InputMaybe<ExpiryExtended_Filter>
 }
 
 export type SubscriptionFusesSetArgs = {
@@ -4827,6 +5056,8 @@ export type Transfer = DomainEvent & {
     transactionID: Scalars['Bytes']
     txFee: Scalars['String']
     type: TransferType
+    validatorIndex?: Maybe<Scalars['String']>
+    withdrawalIndex?: Maybe<Scalars['String']>
 }
 
 export type TransferComplete = {
@@ -4849,10 +5080,10 @@ export enum TransferSubtype {
     Erc1155 = 'ERC1155',
     Genesis = 'Genesis',
     InternalTransaction = 'InternalTransaction',
-    StakingWithdrawl = 'StakingWithdrawl',
     Transaction = 'Transaction',
     UncleReward = 'UncleReward',
-    Unknown = 'Unknown'
+    Unknown = 'Unknown',
+    Withdrawl = 'Withdrawl'
 }
 
 export enum TransferType {
@@ -4877,6 +5108,8 @@ export type TransferWithError = {
     transferError?: Maybe<Scalars['String']>
     txFee: Scalars['String']
     type: TransferType
+    validatorIndex?: Maybe<Scalars['String']>
+    withdrawalIndex?: Maybe<Scalars['String']>
 }
 
 export type Transfer_Filter = {
@@ -5100,9 +5333,9 @@ export type WrappedDomain = {
     __typename?: 'WrappedDomain'
     domain: Domain
     expiryDate: Scalars['BigInt']
-    fuses: Scalars['BigInt']
+    fuses: Scalars['Int']
     id: Scalars['ID']
-    labelName?: Maybe<Scalars['String']>
+    name?: Maybe<Scalars['String']>
     owner: Account
 }
 
@@ -5139,14 +5372,14 @@ export type WrappedDomain_Filter = {
     expiryDate_lte?: InputMaybe<Scalars['BigInt']>
     expiryDate_not?: InputMaybe<Scalars['BigInt']>
     expiryDate_not_in?: InputMaybe<Array<Scalars['BigInt']>>
-    fuses?: InputMaybe<Scalars['BigInt']>
-    fuses_gt?: InputMaybe<Scalars['BigInt']>
-    fuses_gte?: InputMaybe<Scalars['BigInt']>
-    fuses_in?: InputMaybe<Array<Scalars['BigInt']>>
-    fuses_lt?: InputMaybe<Scalars['BigInt']>
-    fuses_lte?: InputMaybe<Scalars['BigInt']>
-    fuses_not?: InputMaybe<Scalars['BigInt']>
-    fuses_not_in?: InputMaybe<Array<Scalars['BigInt']>>
+    fuses?: InputMaybe<Scalars['Int']>
+    fuses_gt?: InputMaybe<Scalars['Int']>
+    fuses_gte?: InputMaybe<Scalars['Int']>
+    fuses_in?: InputMaybe<Array<Scalars['Int']>>
+    fuses_lt?: InputMaybe<Scalars['Int']>
+    fuses_lte?: InputMaybe<Scalars['Int']>
+    fuses_not?: InputMaybe<Scalars['Int']>
+    fuses_not_in?: InputMaybe<Array<Scalars['Int']>>
     id?: InputMaybe<Scalars['ID']>
     id_gt?: InputMaybe<Scalars['ID']>
     id_gte?: InputMaybe<Scalars['ID']>
@@ -5155,26 +5388,26 @@ export type WrappedDomain_Filter = {
     id_lte?: InputMaybe<Scalars['ID']>
     id_not?: InputMaybe<Scalars['ID']>
     id_not_in?: InputMaybe<Array<Scalars['ID']>>
-    labelName?: InputMaybe<Scalars['String']>
-    labelName_contains?: InputMaybe<Scalars['String']>
-    labelName_contains_nocase?: InputMaybe<Scalars['String']>
-    labelName_ends_with?: InputMaybe<Scalars['String']>
-    labelName_ends_with_nocase?: InputMaybe<Scalars['String']>
-    labelName_gt?: InputMaybe<Scalars['String']>
-    labelName_gte?: InputMaybe<Scalars['String']>
-    labelName_in?: InputMaybe<Array<Scalars['String']>>
-    labelName_lt?: InputMaybe<Scalars['String']>
-    labelName_lte?: InputMaybe<Scalars['String']>
-    labelName_not?: InputMaybe<Scalars['String']>
-    labelName_not_contains?: InputMaybe<Scalars['String']>
-    labelName_not_contains_nocase?: InputMaybe<Scalars['String']>
-    labelName_not_ends_with?: InputMaybe<Scalars['String']>
-    labelName_not_ends_with_nocase?: InputMaybe<Scalars['String']>
-    labelName_not_in?: InputMaybe<Array<Scalars['String']>>
-    labelName_not_starts_with?: InputMaybe<Scalars['String']>
-    labelName_not_starts_with_nocase?: InputMaybe<Scalars['String']>
-    labelName_starts_with?: InputMaybe<Scalars['String']>
-    labelName_starts_with_nocase?: InputMaybe<Scalars['String']>
+    name?: InputMaybe<Scalars['String']>
+    name_contains?: InputMaybe<Scalars['String']>
+    name_contains_nocase?: InputMaybe<Scalars['String']>
+    name_ends_with?: InputMaybe<Scalars['String']>
+    name_ends_with_nocase?: InputMaybe<Scalars['String']>
+    name_gt?: InputMaybe<Scalars['String']>
+    name_gte?: InputMaybe<Scalars['String']>
+    name_in?: InputMaybe<Array<Scalars['String']>>
+    name_lt?: InputMaybe<Scalars['String']>
+    name_lte?: InputMaybe<Scalars['String']>
+    name_not?: InputMaybe<Scalars['String']>
+    name_not_contains?: InputMaybe<Scalars['String']>
+    name_not_contains_nocase?: InputMaybe<Scalars['String']>
+    name_not_ends_with?: InputMaybe<Scalars['String']>
+    name_not_ends_with_nocase?: InputMaybe<Scalars['String']>
+    name_not_in?: InputMaybe<Array<Scalars['String']>>
+    name_not_starts_with?: InputMaybe<Scalars['String']>
+    name_not_starts_with_nocase?: InputMaybe<Scalars['String']>
+    name_starts_with?: InputMaybe<Scalars['String']>
+    name_starts_with_nocase?: InputMaybe<Scalars['String']>
     or?: InputMaybe<Array<InputMaybe<WrappedDomain_Filter>>>
     owner?: InputMaybe<Scalars['String']>
     owner_?: InputMaybe<Account_Filter>
@@ -5212,7 +5445,7 @@ export enum WrappedDomain_OrderBy {
     ExpiryDate = 'expiryDate',
     Fuses = 'fuses',
     Id = 'id',
-    LabelName = 'labelName',
+    Name = 'name',
     Owner = 'owner',
     OwnerId = 'owner__id'
 }

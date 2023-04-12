@@ -1,8 +1,12 @@
 import { reactive } from 'vue'
 import { ROUTE_NAME } from '@core/router/routesNames'
 import { useRouter } from 'vue-router'
+import { useNetwork } from '../Network/useNetwork'
+
 export function useAppNavigation() {
+    const { supportsFiat } = useNetwork()
     /**
+     *
      * Nav Items
      */
     interface NavMenuEntry {
@@ -32,13 +36,6 @@ export function useAppNavigation() {
                 routerLink: ROUTE_NAME.HOME.PATH
             }
         },
-        {
-            header: {
-                text: 'Tokens',
-                routerLink: ROUTE_NAME.TOKENS.PATH
-            }
-        },
-
         {
             header: {
                 text: 'Blockchain'
@@ -107,6 +104,15 @@ export function useAppNavigation() {
             }
         }
     ])
+
+    if (supportsFiat.value) {
+        navItems.splice(1, 0, {
+            header: {
+                text: 'Tokens',
+                routerLink: ROUTE_NAME.TOKENS.PATH
+            }
+        })
+    }
     const router = useRouter()
     const navigateTo = (path: string) => {
         router.push(path)

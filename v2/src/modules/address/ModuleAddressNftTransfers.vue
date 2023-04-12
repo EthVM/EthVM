@@ -113,7 +113,7 @@ const {
 )
 
 const hasMore = computed<boolean>(() => {
-    return result.value?.getNFTTransfers.nextKey !== null
+    return !!result.value?.getNFTTransfers.nextKey
 })
 
 const transferHistory = computed<Array<Transfer | null>>(() => result.value?.getNFTTransfers.transfers || [])

@@ -19,6 +19,7 @@
                     <module-eth-txs-history v-if="state.tab === routes[1]" :address-ref="props.addressRef" />
                     <module-internal-eth-transfers v-if="state.tab === routes[2]" :tab="state.tab" :address-ref="props.addressRef" />
                     <module-pending-transfers v-if="state.tab === routes[3]" :tab="state.tab" :address-ref="props.addressRef" />
+                    <module-stake-withdrawals v-if="state.tab === routes[5]" tab="state.tab" :address-ref="props.addressRef" />
                     <template v-if="props.isAddressMiner && state.tab === routes[4]">
                         <module-address-miner-block :address-hash="props.addressRef" />
                     </template>
@@ -36,6 +37,7 @@ import ModuleAddressBalance from '@module/address/ModuleAddressBalance.vue'
 import ModuleEthTxsHistory from '@module/address/ModuleEthTxsHistory.vue'
 import ModuleAddressMinerBlock from '@module/address/ModuleAddressMinerBlock.vue'
 import ModuleAllEthTransfers from '@module/address/ModuleAllEthTransfers.vue'
+import ModuleStakeWithdrawals from '@/modules/address/ModuleStakeWithdrawals.vue'
 import { reactive, computed, onMounted } from 'vue'
 import { useAppViewGrid } from '@core/composables/AppViewGrid/AppViewGrid.composable'
 import { Tab } from '@core/components/props'
@@ -86,6 +88,10 @@ const tabs = computed<Tab[]>(() => {
         {
             value: routes[3],
             title: 'Pending'
+        },
+        {
+            value: routes[5],
+            title: 'Stake Withdrawals'
         }
     ]
 
