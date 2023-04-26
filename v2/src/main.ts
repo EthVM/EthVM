@@ -34,7 +34,11 @@ Sentry.init({
     // Set tracesSampleRate to 1.0 to capture 100%
     // of transactions for performance monitoring.
     // We recommend adjusting this value in production
-    tracesSampleRate: Configs.NODE_ENV === 'production' ? 0.2 : 1.0
+    tracesSampleRate: Configs.NODE_ENV === 'production' ? 0.2 : 1.0,
+    release: Configs.VERSION,
+    environment: Configs.NODE_ENV,
+    initialScope: {
+        tags: { chain: Configs.NETWORK }
+    }
 })
-
 app.use(router).use(vuetify).use(createPinia()).use(i18n).mount('#app')
