@@ -1,3 +1,4 @@
+import BigNumber from 'bignumber.js'
 /*------------------------------------------------------------------*/
 /* LIST OF ALL API ERRORS TO BE HANDLED ON FRONT END AS NONE ERRORS */
 /*------------------------------------------------------------------*/
@@ -71,4 +72,19 @@ const isAPIExceptionDev = (errorMessage: string): boolean => {
     return errorMessage.toLowerCase().includes(excpAddrNotContract)
 }
 
-export { isAPIExceptionProduction, isAPIExceptionDev, excpBlockNotMined, excpTxDoNotExists, excpUncleNotFound, excpAddrNotContract, excpInvariantViolation }
+const isOverOrEq32Bit = (_num: number | BigNumber): boolean => {
+    const MAX_SAFE = new BigNumber(2).pow(31)
+    return MAX_SAFE.lte(_num)
+}
+
+export {
+    isAPIExceptionProduction,
+    isAPIExceptionDev,
+    excpBlockNotMined,
+    excpTxDoNotExists,
+    excpUncleNotFound,
+    excpAddrNotContract,
+    excpInvariantViolation,
+    excpIntViolation,
+    isOverOrEq32Bit
+}

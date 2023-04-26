@@ -39,11 +39,13 @@
 import AppNoResult from '@/core/components/AppNoResult.vue'
 import AppPagination from '@/core/components/AppPagination.vue'
 import BlockWithdrawalRow from './components/BlockWithdrawalRow.vue'
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import { useAppPaginate } from '@core/composables/AppPaginate/useAppPaginate.composable'
 import { useGetBlockWithdrawalsQuery, BlockWithdrawalFragment } from './apollo/BlockWithdrawals/blockWithdrawals.generated'
+import { useNewTransfersCompleteFeedSubscription } from '@module/txs/apollo/transfersQuery.generated'
 import { useDisplay } from 'vuetify'
 import { useI18n } from 'vue-i18n'
+
 const { t } = useI18n()
 const { xs } = useDisplay()
 
@@ -51,6 +53,15 @@ const props = defineProps({
     blockNumber: {
         type: Number,
         required: true
+    },
+    isMined: {
+        type: Boolean,
+        required: true
+    },
+    blockHasWithdrawals: {
+        type: Boolean,
+        required: true,
+        default: true
     }
 })
 
@@ -60,18 +71,34 @@ const props = defineProps({
  * =======================================================
  */
 
+const isProcessedBlock = ref(true)
 const {
     result,
-    loading: isLoading,
-    fetchMore
+    loading,
+    fetchMore,
+    onResult: onWithdrawalsResult,
+    refetch
 } = useGetBlockWithdrawalsQuery(
     () => ({
         blockNumber: props.blockNumber
     }),
     () => ({
-        notifyOnNetworkStatusChange: true
+        notifyOnNetworkStatusChange: true,
+        enabled: props.isMined
     })
 )
+
+onWithdrawalsResult(() => {
+    if (props.blockHasWithdrawals && !hasWithdrawals.value) {
+        isProcessedBlock.value = false
+    } else {
+        isProcessedBlock.value = true
+    }
+})
+
+const isLoading = computed<boolean>(() => {
+    return isProcessedBlock.value && props.isMined ? loading.value : true
+})
 
 const hasWithdrawals = computed<boolean>(() => {
     return !!result.value?.getEthWithdrawalTransfers?.transfers && result.value?.getEthWithdrawalTransfers?.transfers.length > 0
@@ -84,6 +111,19 @@ const withdrawals = computed<BlockWithdrawalFragment[]>(() => {
 const hasMore = computed<boolean>(() => {
     return !!result.value?.getEthWithdrawalTransfers.nextKey
 })
+
+const { onResult: onNewTransfersLoaded } = useNewTransfersCompleteFeedSubscription(() => ({
+    enabled: !isProcessedBlock.value
+}))
+
+onNewTransfersLoaded(result => {
+    const res = result?.data?.newTransfersCompleteFeed
+    if (res && res.block >= props.blockNumber && res.type === 'ETH') {
+        refetch()
+        isProcessedBlock.value = true
+    }
+})
+
 /*
  * =======================================================
  * Pagination

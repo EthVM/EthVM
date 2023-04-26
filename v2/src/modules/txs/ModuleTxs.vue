@@ -192,7 +192,7 @@ const showPagination = computed<boolean>(() => {
 })
 
 const isLoading = computed<boolean>(() => {
-    return loadingTxs.value || loadingBlockTransfers.value
+    return enableBlockTranfersQuery.value ? loadingTxs.value || loadingBlockTransfers.value : true
 })
 
 const initialLoad = computed<boolean>(() => {

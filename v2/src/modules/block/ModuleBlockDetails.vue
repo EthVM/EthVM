@@ -18,7 +18,12 @@
             :is-mined="state.isMined"
             page-type="blockDetails"
         />
-        <module-block-withdrawals v-show="state.tab === routes[1]" :block-number="blockNumber" :is-loading="isLoading" />
+        <module-block-withdrawals
+            v-show="state.tab === routes[1]"
+            :block-number="blockNumber"
+            :is-mined="state.isMined"
+            :block-has-withdrawals="state.hasWithdrawals"
+        />
         <more-block-details v-show="state.tab === routes[2]" :block-details="blockDetails" :uncle-hashes="uncleHashes" :is-loading="isLoading" />
     </v-card>
 </template>
@@ -41,7 +46,7 @@ import {
     useGetLastBlockNumberQuery
 } from '@/modules/block/apollo/BlockDetails/blockDetails.generated'
 import { ErrorMessageBlock } from '@/modules/block/models/ErrorMessagesForBlock'
-import { excpBlockNotMined } from '@/apollo/errorExceptions'
+import { excpBlockNotMined, isOverOrEq32Bit } from '@/apollo/errorExceptions'
 import { FormattedNumber, formatNumber, formatVariableUnitEthValue } from '@/core/helper/number-format-helper'
 import { useNewBlockFeedSubscription } from '@core/composables/NewBlock/newBlockFeed.generated'
 import { useBlockSubscription } from '@core/composables/NewBlock/newBlock.composable'
@@ -196,13 +201,15 @@ interface ModuleState {
     tab: string
     isMined: boolean
     blockNumber: string
+    hasWithdrawals: boolean
 }
 
 const state: ModuleState = reactive({
     hasError: false,
     tab: routes[0],
-    isMined: true,
-    blockNumber: !props.isHash && props.blockRef ? props.blockRef : ''
+    isMined: false,
+    blockNumber: !props.isHash && props.blockRef ? props.blockRef : '',
+    hasWithdrawals: false
 })
 
 const subscriptionEnabled = ref(false)
@@ -236,13 +243,15 @@ onBlockDetailsLoaded(() => {
     if (blockDetailsData.value) {
         state.blockNumber = blockDetailsData.value.summary.number.toString()
         state.isMined = true
+        state.hasWithdrawals = true
         emitErrorState(false)
     }
 })
 
 onBlockDetailsError(error => {
     const newError = JSON.stringify(error.message)
-    if (newError.toLowerCase().includes(excpBlockNotMined) && !subscriptionEnabled.value && !props.isHash) {
+    const isOver32 = props.isHash ? false : isOverOrEq32Bit(new BN(props.blockRef || 0))
+    if ((newError.toLowerCase().includes(excpBlockNotMined) || isOver32) && !subscriptionEnabled.value && !props.isHash) {
         subscriptionEnabled.value = true
         state.isMined = false
     }
