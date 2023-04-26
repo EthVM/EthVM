@@ -38,6 +38,13 @@ const excpAddrNotContract = 'no contract found'
 const excpInvariantViolation = 'invariant violation'
 
 /**
+ *  @event - This error is thrown, when an fetching large numbers in query params ( graphql int is max of 32 bits, ).
+ *          Happens when user requests block number info ( details, transfers, etc).
+ *          This can be safely ignored since this kinda of blocks 2bil+ are not  being mined yet, but user still can search for it.
+ **/
+const excpIntViolation = 'int cannot represent non 32-bit signed integer value'
+
+/**
  *  @function = checks whether or no an error is an exepction in production mode
  *  @param {string} - errorMessage
  *  @returns {boolean}
@@ -50,7 +57,8 @@ const isAPIExceptionProduction = (errorMessage: string): boolean => {
         newE.includes(excpUncleNotFound) ||
         newE.includes(excpAddrNotContract) ||
         newE.includes(excpInvariantViolation) ||
-        newE.includes(excpInvalidHash)
+        newE.includes(excpInvalidHash) ||
+        newE.includes(excpIntViolation)
     )
 }
 
