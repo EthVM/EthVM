@@ -93,7 +93,7 @@
                     prepend-icon="image"
                     :title="removeSpaces(search.param)"
                     class="overflow-hidden"
-                    @click="routeTo(search.param, true)"
+                    @click="routeTo(removeSpaces(search.param).replace(/[_,\s]/g, ''), true)"
                     :active="tokensResult.length === 0"
                 >
                 </v-list-item>
@@ -213,7 +213,7 @@ const executeSearch = (searchParam: string): void => {
             } else {
                 search.hasErrorHahType = true
             }
-            if (eth.isValidBlockNumber(removeSpaces(param))) {
+            if (eth.isValidBlockNumber(removeSpaces(param).replace(/[_,\s]/g, ''))) {
                 search.isBlockNumber = true
                 search.param = param
             } else {
