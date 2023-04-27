@@ -431,6 +431,7 @@ export type Block = {
     totalDifficulty: Scalars['String']
     transactions: Array<Maybe<Scalars['String']>>
     transactionsRoot: Scalars['String']
+    withdrawalCount: Scalars['Int']
 }
 
 export type BlockChangedFilter = {

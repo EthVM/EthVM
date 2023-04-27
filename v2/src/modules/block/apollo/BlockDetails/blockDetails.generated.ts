@@ -26,6 +26,7 @@ export type BlockDetailsFragment = {
     gasLimit: number
     gasUsed: number
     transactions: Array<string | null>
+    withdrawalCount: number
     summary: {
         __typename?: 'BlockSummary'
         number: number
@@ -62,6 +63,7 @@ export type GetBlockByNumberQuery = {
         gasLimit: number
         gasUsed: number
         transactions: Array<string | null>
+        withdrawalCount: number
         summary: {
             __typename?: 'BlockSummary'
             number: number
@@ -99,6 +101,7 @@ export type GetBlockByHashQuery = {
         gasLimit: number
         gasUsed: number
         transactions: Array<string | null>
+        withdrawalCount: number
         summary: {
             __typename?: 'BlockSummary'
             number: number
@@ -148,6 +151,7 @@ export const BlockDetailsFragmentDoc = gql`
         gasLimit
         gasUsed
         transactions
+        withdrawalCount
     }
 `
 export const GetBlockByNumberDocument = gql`
