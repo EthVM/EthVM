@@ -1,9 +1,13 @@
 <template>
     <search-core-input :is-loading="isLoading" :has-error="hasError" @onUserInput="executeSearch" @tokenSelected="routeToToken" @onSearchEnter="routeToFirst">
         <template #search-results>
-            <v-list v-if="resolvedAdr">
+            <!--
+                Search has Address result
+            -->
+            <v-list v-if="search.hashType === HASH_TYPE.AddressHash || search.hashType === HASH_TYPE.TokenHash || searchSavedNames.length > 0 || resolvedAdr">
                 <v-list-subheader>Address</v-list-subheader>
                 <v-list-item
+                    v-if="resolvedAdr"
                     :title="search.param.toLowerCase()"
                     :subtitle="eth.toCheckSum(resolvedAdr)"
                     class="overflow-hidden"
@@ -12,6 +16,34 @@
                 >
                     <template v-slot:prepend>
                         <app-address-blockie :address="resolvedAdr" :size="6" class="mr-5" />
+                    </template>
+                </v-list-item>
+                <template v-else-if="searchSavedNames.length > 0">
+                    <v-list-item
+                        v-for="hash in searchSavedNames"
+                        :key="hash"
+                        :title="store.getAddressName(hash)"
+                        :subtitle="eth.toCheckSum(removeSpaces(hash))"
+                        class="overflow-hidden"
+                        @click="routeTo(hash)"
+                        :active="tokensResult.length === 0"
+                    >
+                        <template v-slot:prepend>
+                            <app-address-blockie :address="hash || ''" :size="6" class="mr-5" />
+                        </template>
+                    </v-list-item>
+                </template>
+
+                <v-list-item
+                    v-else
+                    :title="eth.toCheckSum(removeSpaces(search.param))"
+                    :subtitle="store.getAddressName(search.param)"
+                    class="overflow-hidden"
+                    @click="routeTo(search.param)"
+                    :active="tokensResult.length === 0"
+                >
+                    <template v-slot:prepend>
+                        <app-address-blockie :address="search.param || ''" :size="6" class="mr-5" />
                     </template>
                 </v-list-item>
             </v-list>
@@ -35,22 +67,6 @@
                     <template #append v-if="item.price">
                         <p class="pl-6">{{ item.price }}</p></template
                     >
-                </v-list-item>
-            </v-list>
-            <!--
-                Search has Address result
-            -->
-            <v-list v-if="search.hashType === HASH_TYPE.AddressHash || search.hashType === HASH_TYPE.TokenHash">
-                <v-list-subheader>Address</v-list-subheader>
-                <v-list-item
-                    :title="eth.toCheckSum(removeSpaces(search.param))"
-                    class="overflow-hidden"
-                    @click="routeTo(search.param)"
-                    :active="tokensResult.length === 0"
-                >
-                    <template v-slot:prepend>
-                        <app-address-blockie :address="search.param || ''" :size="6" class="mr-5" />
-                    </template>
                 </v-list-item>
             </v-list>
             <!--
@@ -117,13 +133,15 @@ import { formatUsdValue } from '@/core/helper/number-format-helper'
 import BN from 'bignumber.js'
 import { useGetTokenInfoByContractQuery } from '@module/tokens/apollo/TokenDetails/tokenDetails.generated'
 import { useResolveName } from '@/core/composables/ResolveName/useResolveName'
-
+import { useStore } from '@/store'
+import { PortfolioItem } from '@/store/helpers'
+import { searchHelper } from '@core/helper/search'
 /*
   ===================================================================================
     Initial Data
   ===================================================================================
   */
-
+const store = useStore()
 const HASH_TYPE = HashType
 interface Search {
     param: string
@@ -204,12 +222,23 @@ const executeSearch = (searchParam: string): void => {
             if (!eth.isValidBlockNumber(removeSpaces(param)) && !eth.isValidHash(removeSpaces(param.toLowerCase()))) {
                 resolveName.value = removeSpaces(param)
             }
-            // Search For Tokens:
             search.param = param
+            // Search For Tokens:
             search.enabledTokenSearch = true
         }
     }
 }
+
+const searchSavedNames = computed<string[]>(() => {
+    let _items: PortfolioItem[] = []
+    const _list = [...store.portfolio, ...store.adrBook]
+    if (search.param !== '') {
+        _items = searchHelper(_list, ['name', 'hash'], search.param) as PortfolioItem[]
+    } else {
+        _items = _list
+    }
+    return _items.map(i => i.hash).slice(0, 5)
+})
 /*
 ===================================================================================
     Fetch HashType
@@ -393,7 +422,14 @@ const tokensResult = computed(() => {
  * Returns true if search results are empty
  */
 const hasError = computed(() => {
-    return search.hasErrorTokenSearch && search.hasErrorHahType && !search.isBlockNumber && tokensResult.value.length === 0 && resolvedAdr.value === undefined
+    return (
+        search.hasErrorTokenSearch &&
+        search.hasErrorHahType &&
+        !search.isBlockNumber &&
+        tokensResult.value.length === 0 &&
+        resolvedAdr.value === undefined &&
+        searchSavedNames.value.length < 1
+    )
 })
 /**
  * Returns true if search is loading
