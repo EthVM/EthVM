@@ -243,7 +243,7 @@ onBlockDetailsLoaded(() => {
     if (blockDetailsData.value) {
         state.blockNumber = blockDetailsData.value.summary.number.toString()
         state.isMined = true
-        state.hasWithdrawals = true
+        state.hasWithdrawals = !!blockDetailsData.value.withdrawalCount
         emitErrorState(false)
     }
 })
