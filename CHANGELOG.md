@@ -1,3 +1,14 @@
+### Release v2.1.1
+
+### Devop
+- update sentry object for logging release version, chain env [#1150](https://github.com/EthVM/EthVM/pull/1150)
+- add graphql int exception and handler in block details [#1150](https://github.com/EthVM/EthVM/pull/1150)
+- add unstopable exception to sentry  [#1150](https://github.com/EthVM/EthVM/pull/1150)
+
+### BUG
+- fix empty withdrawals list on new block subscription [#1150](https://github.com/EthVM/EthVM/pull/1150)
+======================================================================
+
 ### Release v2.1.0
 This release includes:
 - App Settings with ability to browse created local names
