@@ -15,7 +15,7 @@
                     :active="tokensResult.length === 0"
                 >
                     <template v-slot:prepend>
-                        <app-address-blockie :address="resolvedAdr" :size="6" class="mr-5" />
+                        <app-address-blockie :address="resolvedAdr" :size="7" class="mr-2" />
                     </template>
                 </v-list-item>
                 <template v-else-if="searchSavedNames.length > 0">
@@ -29,7 +29,7 @@
                         :active="tokensResult.length === 0"
                     >
                         <template v-slot:prepend>
-                            <app-address-blockie :address="hash || ''" :size="6" class="mr-5" />
+                            <app-address-blockie :address="hash || ''" :size="7" class="mr-2" />
                         </template>
                     </v-list-item>
                 </template>
@@ -43,7 +43,7 @@
                     :active="tokensResult.length === 0"
                 >
                     <template v-slot:prepend>
-                        <app-address-blockie :address="search.param || ''" :size="6" class="mr-5" />
+                        <app-address-blockie :address="search.param || ''" :size="7" class="mr-2" />
                     </template>
                 </v-list-item>
             </v-list>
