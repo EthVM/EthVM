@@ -86,7 +86,7 @@ export function useResolveName(name: Ref<string | undefined>) {
                         let isException = false
                         let i = UD_ERROR_EXCEPTIONS.length
                         while (i > 0 && !isException) {
-                            if (error.inlcudes(UD_ERROR_EXCEPTIONS[i - 1])) {
+                            if (error.includes(UD_ERROR_EXCEPTIONS[i - 1])) {
                                 isException = true
                             }
                             --i
