@@ -76,7 +76,7 @@
                 <v-list-subheader>Transaction</v-list-subheader>
                 <v-list-item
                     :title="removeSpaces(search.param)"
-                    prepend-icon="image"
+                    prepend-icon="sync_alt"
                     class="overflow-hidden"
                     singli
                     @click="routeTo(search.param)"
@@ -90,7 +90,7 @@
             <v-list v-if="search.isBlockNumber || search.hashType === HASH_TYPE.BlockHash">
                 <v-list-subheader>Block</v-list-subheader>
                 <v-list-item
-                    prepend-icon="image"
+                    prepend-icon="widgets"
                     :title="formatNumber(Number(removeSpaces(search.param).replace(/[_,\s]/g, '')))"
                     class="overflow-hidden"
                     @click="routeTo(removeSpaces(search.param).replace(/[_,\s]/g, ''), true)"
@@ -104,7 +104,7 @@
             <v-list v-if="search.hashType === HASH_TYPE.UncleHash">
                 <v-list-subheader>Uncle</v-list-subheader>
                 <v-list-item
-                    prepend-icon="image"
+                    prepend-icon="widgets"
                     :title="removeSpaces(search.param)"
                     class="overflow-hidden"
                     @click="routeTo(search.param, true)"
