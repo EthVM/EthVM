@@ -91,7 +91,7 @@
                 <v-list-subheader>Block</v-list-subheader>
                 <v-list-item
                     prepend-icon="image"
-                    :title="removeSpaces(search.param)"
+                    :title="formatNumber(Number(removeSpaces(search.param).replace(/[_,\s]/g, '')))"
                     class="overflow-hidden"
                     @click="routeTo(removeSpaces(search.param).replace(/[_,\s]/g, ''), true)"
                     :active="tokensResult.length === 0"
@@ -129,7 +129,7 @@ import { Q_TOKEN_DETAILS, ROUTE_NAME, ROUTE_PROP } from '@core/router/routesName
 import { useRouter } from 'vue-router'
 import { Buffer } from 'buffer'
 import { useCoinData } from '@core/composables/CoinData/coinData.composable'
-import { formatUsdValue } from '@/core/helper/number-format-helper'
+import { formatUsdValue, formatNumber } from '@/core/helper/number-format-helper'
 import BN from 'bignumber.js'
 import { useGetTokenInfoByContractQuery } from '@module/tokens/apollo/TokenDetails/tokenDetails.generated'
 import { useResolveName } from '@/core/composables/ResolveName/useResolveName'
