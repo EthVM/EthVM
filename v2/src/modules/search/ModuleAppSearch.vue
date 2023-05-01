@@ -1,116 +1,135 @@
 <template>
-    <search-core-input :is-loading="isLoading" :has-error="hasError" @onUserInput="executeSearch" @tokenSelected="routeToToken" @onSearchEnter="routeToFirst">
+    <search-core-input
+        :is-loading="isLoading"
+        :has-error="hasError"
+        @onUserInput="executeSearch"
+        @tokenSelected="routeToToken"
+        @onSearchEnter="routeToSelected"
+        @menuArrowPress="selectItems"
+    >
         <template #search-results>
-            <!--
-                Search has Address result
-            -->
-            <v-list v-if="search.hashType === HASH_TYPE.AddressHash || search.hashType === HASH_TYPE.TokenHash || searchSavedNames.length > 0 || resolvedAdr">
-                <v-list-subheader>Address</v-list-subheader>
-                <v-list-item
-                    v-if="resolvedAdr"
-                    :title="search.param.toLowerCase()"
-                    :subtitle="eth.toCheckSum(resolvedAdr)"
-                    class="overflow-hidden"
-                    @click="routeTo(resolvedAdr)"
-                    :active="tokensResult.length === 0"
+            <v-list lines="one">
+                <!--
+                    Search has Address result
+                -->
+                <template
+                    v-if="search.hashType === HASH_TYPE.AddressHash || search.hashType === HASH_TYPE.TokenHash || searchSavedNames.length > 0 || resolvedAdr"
                 >
-                    <template v-slot:prepend>
-                        <app-address-blockie :address="resolvedAdr" :size="7" class="mr-2" />
-                    </template>
-                </v-list-item>
-                <template v-else-if="searchSavedNames.length > 0">
+                    <v-list-subheader>Address</v-list-subheader>
+                    <!--
+                        Resolved Adr
+                    -->
                     <v-list-item
-                        v-for="hash in searchSavedNames"
-                        :key="hash"
-                        :title="store.getAddressName(hash)"
-                        :subtitle="eth.toCheckSum(removeSpaces(hash))"
+                        v-if="resolvedAdr"
+                        :title="search.param.toLowerCase()"
+                        :subtitle="eth.toCheckSum(resolvedAdr)"
                         class="overflow-hidden"
-                        @click="routeTo(hash)"
-                        :active="tokensResult.length === 0"
+                        @click="routeTo(resolvedAdr)"
+                        :active="SELECTED_LISTS[0] === search.selectedId"
                     >
                         <template v-slot:prepend>
-                            <app-address-blockie :address="hash || ''" :size="7" class="mr-2" />
+                            <app-address-blockie :address="resolvedAdr" :size="7" class="mr-2" />
+                        </template>
+                    </v-list-item>
+                    <!--
+                        Saved Names
+                    -->
+                    <template v-else-if="searchSavedNames.length > 0">
+                        <v-list-item
+                            v-for="(hash, index) in searchSavedNames"
+                            :key="hash"
+                            :title="store.getAddressName(hash)"
+                            :subtitle="eth.toCheckSum(removeSpaces(hash))"
+                            class="overflow-hidden"
+                            @click="routeTo(hash)"
+                            :active="`${SELECTED_LISTS[1]}-${index}` === search.selectedId"
+                        >
+                            <template v-slot:prepend>
+                                <app-address-blockie :address="hash || ''" :size="7" class="mr-2" />
+                            </template>
+                        </v-list-item>
+                    </template>
+                    <!--
+                        Address 
+                    -->
+                    <v-list-item
+                        v-else
+                        :title="eth.toCheckSum(removeSpaces(search.param))"
+                        :subtitle="store.getAddressName(search.param)"
+                        class="overflow-hidden"
+                        @click="routeTo(search.param)"
+                        :active="SELECTED_LISTS[2] === search.selectedId"
+                    >
+                        <template v-slot:prepend>
+                            <app-address-blockie :address="search.param || ''" :size="7" class="mr-2" />
                         </template>
                     </v-list-item>
                 </template>
-
-                <v-list-item
-                    v-else
-                    :title="eth.toCheckSum(removeSpaces(search.param))"
-                    :subtitle="store.getAddressName(search.param)"
-                    class="overflow-hidden"
-                    @click="routeTo(search.param)"
-                    :active="tokensResult.length === 0"
-                >
-                    <template v-slot:prepend>
-                        <app-address-blockie :address="search.param || ''" :size="7" class="mr-2" />
-                    </template>
-                </v-list-item>
-            </v-list>
-            <!--
-                Search has Token result
-            -->
-            <v-list v-if="tokensResult.length > 0">
-                <v-list-subheader>Tokens</v-list-subheader>
-                <v-list-item
-                    v-for="(item, index) in tokensResult"
-                    :key="`${item.contract}+${index}`"
-                    :title="item.text || ''"
-                    :subtitle="item.subtext?.toUpperCase() || ''"
-                    class="overflow-hidden"
-                    :active="index === 0"
-                    @click="routeToToken(item.contract || '')"
-                >
-                    <template #prepend>
-                        <app-token-icon :token-icon="item.icon || undefined" class="mr-2"></app-token-icon>
-                    </template>
-                    <template #append v-if="item.price">
-                        <p class="pl-6">{{ item.price }}</p></template
+                <!--
+                    Search has Token result
+                -->
+                <template v-if="tokensResult.length > 0">
+                    <v-list-subheader>Tokens</v-list-subheader>
+                    <v-list-item
+                        v-for="(item, index) in tokensResult"
+                        :key="`${item.contract}+${index}`"
+                        :title="item.text || ''"
+                        :subtitle="item.subtext?.toUpperCase() || ''"
+                        class="overflow-hidden"
+                        :active="`${SELECTED_LISTS[3]}-${index}` === search.selectedId"
+                        @click="routeToToken(item.contract || '')"
                     >
-                </v-list-item>
-            </v-list>
-            <!--
-                Search has Tx result
-            -->
-            <v-list v-if="search.hashType === HASH_TYPE.TxHash" lines="one">
-                <v-list-subheader>Transaction</v-list-subheader>
-                <v-list-item
-                    :title="removeSpaces(search.param)"
-                    prepend-icon="sync_alt"
-                    class="overflow-hidden"
-                    singli
-                    @click="routeTo(search.param)"
-                    :active="tokensResult.length === 0"
-                >
-                </v-list-item>
-            </v-list>
-            <!--
+                        <template #prepend>
+                            <app-token-icon :token-icon="item.icon || undefined" class="mr-2"></app-token-icon>
+                        </template>
+                        <template #append v-if="item.price">
+                            <p class="pl-6">{{ item.price }}</p></template
+                        >
+                    </v-list-item>
+                </template>
+                <!--
+                    Search has Tx result
+                -->
+                <template v-if="search.hashType === HASH_TYPE.TxHash">
+                    <v-list-subheader>Transaction</v-list-subheader>
+                    <v-list-item
+                        :title="removeSpaces(search.param)"
+                        prepend-icon="sync_alt"
+                        class="overflow-hidden"
+                        singli
+                        @click="routeTo(search.param)"
+                        :active="SELECTED_LISTS[4] === search.selectedId"
+                    >
+                    </v-list-item>
+                </template>
+                <!--
                 Search has Block result
-            -->
-            <v-list v-if="search.isBlockNumber || search.hashType === HASH_TYPE.BlockHash">
-                <v-list-subheader>Block</v-list-subheader>
-                <v-list-item
-                    prepend-icon="widgets"
-                    :title="formatNumber(Number(removeSpaces(search.param).replace(/[_,\s]/g, '')))"
-                    class="overflow-hidden"
-                    @click="routeTo(removeSpaces(search.param).replace(/[_,\s]/g, ''), true)"
-                    :active="tokensResult.length === 0"
-                >
-                </v-list-item>
-            </v-list>
-            <!--
-                Search has Uncle result
-            -->
-            <v-list v-if="search.hashType === HASH_TYPE.UncleHash">
-                <v-list-subheader>Uncle</v-list-subheader>
-                <v-list-item
-                    prepend-icon="widgets"
-                    :title="removeSpaces(search.param)"
-                    class="overflow-hidden"
-                    @click="routeTo(search.param, true)"
-                    :active="tokensResult.length === 0"
-                >
-                </v-list-item>
+                -->
+                <template v-if="search.isBlockNumber || search.hashType === HASH_TYPE.BlockHash">
+                    <v-list-subheader>Block</v-list-subheader>
+                    <v-list-item
+                        prepend-icon="widgets"
+                        :title="formatNumber(Number(removeSpaces(search.param).replace(/[_,\s]/g, '')))"
+                        class="overflow-hidden"
+                        @click="routeTo(removeSpaces(search.param).replace(/[_,\s]/g, ''), true)"
+                        :active="SELECTED_LISTS[5] === search.selectedId"
+                    >
+                    </v-list-item>
+                </template>
+                <!--
+                    Search has Uncle result
+                -->
+                <template v-if="search.hashType === HASH_TYPE.UncleHash">
+                    <v-list-subheader>Uncle</v-list-subheader>
+                    <v-list-item
+                        prepend-icon="widgets"
+                        :title="removeSpaces(search.param)"
+                        class="overflow-hidden"
+                        @click="routeTo(search.param, true)"
+                        :active="SELECTED_LISTS[6] === search.selectedId"
+                    >
+                    </v-list-item>
+                </template>
             </v-list>
         </template>
     </search-core-input>
@@ -141,6 +160,8 @@ import { searchHelper } from '@core/helper/search'
     Initial Data
   ===================================================================================
   */
+
+const SELECTED_LISTS = ['resolvedAdr', 'savedAdr', 'adr', 'tokens', 'tx', 'block', 'uncle']
 const store = useStore()
 const HASH_TYPE = HashType
 interface Search {
@@ -153,6 +174,7 @@ interface Search {
     isBlockNumber: boolean
     hashType: string
     reroute: boolean
+    selectedId?: string
 }
 
 const search: Search = reactive({
@@ -447,7 +469,7 @@ watch(
     newVal => {
         if (!newVal && search.reroute) {
             search.reroute = false
-            routeToFirst(search.param)
+            routeToSelected(search.param)
         }
     }
 )
@@ -497,7 +519,7 @@ const routeTo = (_param: string, isBlock = false): void => {
             })
         }
     } else {
-        if (search.hashType === HASH_TYPE.AddressHash || search.hashType === HASH_TYPE.TokenHash || resolvedAdr.value) {
+        if (search.hashType === HASH_TYPE.AddressHash || search.hashType === HASH_TYPE.TokenHash || searchSavedNames.value.length > 0 || resolvedAdr.value) {
             router.push({
                 name: ROUTE_NAME.ADDRESS.NAME,
                 params: { [ROUTE_PROP.ADDRESS]: param }
@@ -516,19 +538,110 @@ const routeTo = (_param: string, isBlock = false): void => {
  * Routes to the first result loaded
  * @param {string} param - search param
  */
-const routeToFirst = (param: string): void => {
+const routeToSelected = (param: string): void => {
     if (param !== '') {
         if (!hasError.value && !isLoading.value) {
             //Find First result in a list
-            if (tokensResult.value.length > 0 && tokensResult.value[0].contract) {
-                routeToToken(tokensResult.value[0].contract)
+            if (search.selectedId === SELECTED_LISTS[0] || search.selectedId === SELECTED_LISTS[2] || search.selectedId?.includes(SELECTED_LISTS[1])) {
+                let adr = ''
+                if (search.selectedId?.includes(SELECTED_LISTS[1])) {
+                    const index = parseInt(search.selectedId.substring(9))
+                    adr = searchSavedNames.value[index]
+                } else {
+                    adr = search.selectedId === SELECTED_LISTS[0] && resolvedAdr.value ? resolvedAdr.value : param
+                }
+                routeTo(adr, false)
+            } else if (search.selectedId?.includes(SELECTED_LISTS[3])) {
+                const index = parseInt(search.selectedId.substring(7))
+                const contract = tokensResult.value[index].contract
+                if (contract) {
+                    routeToToken(contract)
+                }
             } else {
                 const isBlock = search.isBlockNumber || search.hashType === HASH_TYPE.BlockHash || search.hashType === HASH_TYPE.UncleHash
-                const _route = resolvedAdr.value ? resolvedAdr.value : param
-                routeTo(_route, isBlock)
+                routeTo(param, isBlock)
             }
         } else if (isLoading.value && !hasError.value) {
             search.reroute = true
+        }
+    }
+}
+/*
+===================================================================================
+    Select Items. Items Slected reset to first every time new user input comes in
+
+    ITEMS ORDER Display and triversal:
+    1. Resolved Address
+    2. N saved Addresses
+    3. Found Address
+    4. N Token Results
+    5. Tx
+    6. Block
+    7. Uncles
+===================================================================================
+*/
+
+const itemsInSelect = computed<string[]>(() => {
+    const items: string[] = []
+    if (resolvedAdr.value) {
+        items.push(SELECTED_LISTS[0])
+    }
+    if (searchSavedNames.value.length > 0) {
+        searchSavedNames.value.forEach((i, index) => {
+            items.push(`${SELECTED_LISTS[1]}-${index}`)
+        })
+    }
+    if (search.hashType === HASH_TYPE.AddressHash || search.hashType === HASH_TYPE.TokenHash) {
+        items.push(SELECTED_LISTS[2])
+    }
+    if (tokensResult.value.length > 0) {
+        tokensResult.value.forEach((i, index) => {
+            items.push(`${SELECTED_LISTS[3]}-${index}`)
+        })
+    }
+    if (search.hashType === HASH_TYPE.TxHash) {
+        items.push(SELECTED_LISTS[4])
+    }
+    if (search.isBlockNumber || search.hashType === HASH_TYPE.BlockHash) {
+        items.push(SELECTED_LISTS[5])
+    }
+    if (search.hashType === HASH_TYPE.UncleHash) {
+        items.push(SELECTED_LISTS[6])
+    }
+    return items
+})
+/**
+ * Watching changes in the itemsInSelect
+ * Sets First element to be selected
+ * Resets selcts if results are empty
+ */
+watch(
+    () => itemsInSelect.value,
+
+    newVal => {
+        if (newVal && itemsInSelect.value.length > 0) {
+            search.selectedId = itemsInSelect.value[0]
+        } else {
+            search.selectedId = undefined
+        }
+    },
+    { deep: true }
+)
+
+const selectItems = (direction: string) => {
+    if (itemsInSelect.value.length > 0) {
+        if (!search.selectedId) {
+            search.selectedId = itemsInSelect.value[0]
+        } else {
+            const index = itemsInSelect.value.findIndex(i => i === search.selectedId)
+            const next = direction === 'down' ? index + 1 : index - 1
+            if (next === itemsInSelect.value.length) {
+                search.selectedId = itemsInSelect.value[0]
+            } else if (next < 0) {
+                search.selectedId = itemsInSelect.value[itemsInSelect.value.length - 1]
+            } else {
+                search.selectedId = itemsInSelect.value[next]
+            }
         }
     }
 }
