@@ -1,5 +1,10 @@
 ### Release v2.1.1
 
+### Feature
+- ability to search by saved address names [#1152](https://github.com/EthVM/EthVM/pull/1152)
+- allow block search with separators [#1152](https://github.com/EthVM/EthVM/pull/1152)
+- add select items by arrow keys [#1152](https://github.com/EthVM/EthVM/pull/1152)
+
 ### Devop
 - update sentry object for logging release version, chain env [#1150](https://github.com/EthVM/EthVM/pull/1150)
 - add graphql int exception and handler in block details [#1150](https://github.com/EthVM/EthVM/pull/1150)
@@ -8,6 +13,9 @@
 
 ### BUG
 - fix empty withdrawals list on new block subscription [#1150](https://github.com/EthVM/EthVM/pull/1150)
+
+### UI
+- add icons to block and tx search results [#1152](https://github.com/EthVM/EthVM/pull/1152)
 ======================================================================
 
 ### Release v2.1.0
