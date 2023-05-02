@@ -652,7 +652,13 @@ const selectItems = (direction: string) => {
         }
         const el = document.getElementById(search.selectedId)
         if (el) {
-            el.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' })
+            const blockVal =
+                search.selectedId === itemsInSelect.value[0]
+                    ? 'start'
+                    : search.selectedId === itemsInSelect.value[itemsInSelect.value.length - 1]
+                    ? 'end'
+                    : 'nearest'
+            el.scrollIntoView({ behavior: 'smooth', block: blockVal, inline: 'nearest' })
         }
     }
 }
