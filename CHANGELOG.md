@@ -4,6 +4,7 @@
 - update sentry object for logging release version, chain env [#1150](https://github.com/EthVM/EthVM/pull/1150)
 - add graphql int exception and handler in block details [#1150](https://github.com/EthVM/EthVM/pull/1150)
 - add unstopable exception to sentry  [#1150](https://github.com/EthVM/EthVM/pull/1150)
+- prevent fetching isMiner on onvalid addressHash [#1151](https://github.com/EthVM/EthVM/pull/1151)
 
 ### BUG
 - fix empty withdrawals list on new block subscription [#1150](https://github.com/EthVM/EthVM/pull/1150)
