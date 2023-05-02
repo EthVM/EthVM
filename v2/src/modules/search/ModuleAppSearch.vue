@@ -8,7 +8,7 @@
         @menuArrowPress="selectItems"
     >
         <template #search-results>
-            <v-list lines="one">
+            <v-list lines="one" style="overflow: scroll">
                 <!--
                     Search has Address result
                 -->
@@ -148,7 +148,7 @@ import AppAddressBlockie from '@/core/components/AppAddressBlockie.vue'
 import { SearchTokenOption } from '@core/components/props/index'
 import AppTokenIcon from '@/core/components/AppTokenIcon.vue'
 import { eth } from '@core/helper/eth'
-import { reactive, watch, computed, ref, Ref } from 'vue'
+import { reactive, watch, computed, ref, Ref, nextTick } from 'vue'
 import { useGetHashTypeQuery, useGetTokensBeginsWithQuery } from './apollo/searchDetails.generated'
 import { HashType } from '@/apollo/types'
 import { Q_TOKEN_DETAILS, ROUTE_NAME, ROUTE_PROP } from '@core/router/routesNames'
@@ -653,12 +653,12 @@ const selectItems = (direction: string) => {
         const el = document.getElementById(search.selectedId)
         if (el) {
             const blockVal =
-                search.selectedId === itemsInSelect.value[0]
-                    ? 'start'
-                    : search.selectedId === itemsInSelect.value[itemsInSelect.value.length - 1]
-                    ? 'end'
+                search.selectedId === itemsInSelect.value[0] || asearch.selectedId === itemsInSelect.value[itemsInSelect.value.length - 1]
+                    ? 'center'
                     : 'nearest'
-            el.scrollIntoView({ behavior: 'smooth', block: blockVal, inline: 'nearest' })
+            nextTick(() => {
+                el.scrollIntoView({ behavior: 'smooth', block: blockVal, inline: 'nearest' })
+            })
         }
     }
 }
