@@ -25,6 +25,7 @@
                         :subtitle="eth.toCheckSum(resolvedAdr)"
                         class="overflow-hidden"
                         @click="routeTo(resolvedAdr)"
+                        :id="SELECTED_LISTS[0]"
                         :active="SELECTED_LISTS[0] === search.selectedId"
                     >
                         <template v-slot:prepend>
@@ -42,6 +43,7 @@
                             :subtitle="eth.toCheckSum(removeSpaces(hash))"
                             class="overflow-hidden"
                             @click="routeTo(hash)"
+                            :id="`${SELECTED_LISTS[1]}-${index}`"
                             :active="`${SELECTED_LISTS[1]}-${index}` === search.selectedId"
                         >
                             <template v-slot:prepend>
@@ -58,6 +60,7 @@
                         :subtitle="store.getAddressName(search.param)"
                         class="overflow-hidden"
                         @click="routeTo(search.param)"
+                        :id="SELECTED_LISTS[2]"
                         :active="SELECTED_LISTS[2] === search.selectedId"
                     >
                         <template v-slot:prepend>
@@ -76,6 +79,7 @@
                         :title="item.text || ''"
                         :subtitle="item.subtext?.toUpperCase() || ''"
                         class="overflow-hidden"
+                        :id="`${SELECTED_LISTS[3]}-${index}`"
                         :active="`${SELECTED_LISTS[3]}-${index}` === search.selectedId"
                         @click="routeToToken(item.contract || '')"
                     >
@@ -98,6 +102,7 @@
                         class="overflow-hidden"
                         singli
                         @click="routeTo(search.param)"
+                        :id="SELECTED_LISTS[4]"
                         :active="SELECTED_LISTS[4] === search.selectedId"
                     >
                     </v-list-item>
@@ -112,6 +117,7 @@
                         :title="formatNumber(Number(removeSpaces(search.param).replace(/[_,\s]/g, '')))"
                         class="overflow-hidden"
                         @click="routeTo(removeSpaces(search.param).replace(/[_,\s]/g, ''), true)"
+                        :id="SELECTED_LISTS[5]"
                         :active="SELECTED_LISTS[5] === search.selectedId"
                     >
                     </v-list-item>
@@ -126,6 +132,7 @@
                         :title="removeSpaces(search.param)"
                         class="overflow-hidden"
                         @click="routeTo(search.param, true)"
+                        :id="SELECTED_LISTS[6]"
                         :active="SELECTED_LISTS[6] === search.selectedId"
                     >
                     </v-list-item>
@@ -642,6 +649,10 @@ const selectItems = (direction: string) => {
             } else {
                 search.selectedId = itemsInSelect.value[next]
             }
+        }
+        const el = document.getElementById(search.selectedId)
+        if (el) {
+            el.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' })
         }
     }
 }
