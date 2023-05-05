@@ -1,16 +1,20 @@
 <template>
     <app-table-row row-align="center" row-justify="start" @click="toggleMoreDetails" :link="xs" :color="xs && showMoreDetails ? 'pillGrey' : 'transparent'">
         <v-col cols="6" sm="5" md="3">
-            <div class="d-flex justify-start align-center">
+            <component
+                :is="props.transfer.type === TransferType.Eth ? 'div' : 'router-link'"
+                :to="`/token/${props.transfer.erc20Meta?.contract}`"
+                class="d-flex justify-start align-center text-textPrimary"
+            >
                 <app-token-icon :token-icon="tokenImg" img-size="32px" class="mr-2" />
                 <div>
-                    <p class="text-ellipses">
+                    <p class="text-ellipses text-textPrimary">
                         <span v-if="sm" class="mr-2 text-ellipses">{{ valueFormatted.value }}</span
                         >{{ tokenSymbol }} <span v-if="sm"><app-tooltip :text="valueFormatted.tooltipText"></app-tooltip></span>
                     </p>
-                    <p v-if="xs" class="text-ellipses text-info">{{ tokenName }}</p>
+                    <p class="text-ellipses text-info">{{ tokenName }}</p>
                 </div>
-            </div>
+            </component>
         </v-col>
         <v-col cols="6" sm="3" md="4" class="d-flex d-sm-none d-md-flex justify-end justify-md-start">
             <p class="text-right text-sm-left text-ellipses">
@@ -48,7 +52,8 @@ import { TransferType } from '@/apollo/types'
 import { useCoinData } from '@core/composables/CoinData/coinData.composable'
 import { useNetwork } from '@/core/composables/Network/useNetwork'
 import { useDisplay } from 'vuetify/lib/framework.mjs'
-import { formatNonVariableEthValue, FormattedNumber } from '@/core/helper/number-format-helper'
+import { formatNonVariableEthValue, FormattedNumber, formatFloatingPointValue } from '@/core/helper/number-format-helper'
+import { MarketDataFragment } from '@core/composables/CoinData/getLatestPrices.generated'
 import BigNumber from 'bignumber.js'
 const { xs, sm } = useDisplay()
 const props = defineProps({
@@ -59,18 +64,32 @@ const props = defineProps({
 })
 
 const valueFormatted = computed<FormattedNumber>(() => {
-    // if (props.transfer.type === TransferType.Eth) {
-    return formatNonVariableEthValue(new BigNumber(props.transfer.value))
-    // }
+    const _value = new BigNumber(props.transfer.value)
+    if (props.transfer.type === TransferType.Erc20) {
+        return formatFloatingPointValue(_value.div(new BigNumber(10).pow(props.transfer.erc20Meta?.tokenInfo.decimals || 0)))
+    }
+    return formatNonVariableEthValue(_value)
 })
 
-const { loading: loadingMarketInfo, ethMarketInfo } = useCoinData()
+const { loading: loadingMarketInfo, ethMarketInfo, getEthereumTokenByContract } = useCoinData()
 const { currencyName, currencyNameLong } = useNetwork()
 
+const erc20MarketData = computed<MarketDataFragment | undefined>(() => {
+    if (!loadingMarketInfo.value && props.transfer.erc20Meta) {
+        const data = getEthereumTokenByContract(props.transfer.erc20Meta.contract)
+        if (data) {
+            return data
+        }
+    }
+    return undefined
+})
 const tokenImg = computed<string | undefined>(() => {
     if (!loadingMarketInfo.value) {
         if (props.transfer.type === TransferType.Eth) {
             return ethMarketInfo.value?.image
+        }
+        if (props.transfer.type === TransferType.Erc20 && props.transfer.erc20Meta) {
+            return erc20MarketData.value?.image || props.transfer.erc20Meta.tokenInfo.iconPng || undefined
         }
     }
     return undefined
@@ -80,12 +99,24 @@ const tokenSymbol = computed<string>(() => {
     if (props.transfer.type === TransferType.Eth) {
         return currencyName.value.toUpperCase()
     }
+    if (props.transfer.type === TransferType.Erc20) {
+        const symbol = erc20MarketData.value?.symbol.toUpperCase() || props.transfer.erc20Meta?.tokenInfo.symbol?.toUpperCase()
+        if (symbol) {
+            return symbol
+        }
+    }
     return 'NO NAME'
 })
 
 const tokenName = computed<string>(() => {
     if (props.transfer.type === TransferType.Eth) {
         return currencyNameLong.value
+    }
+    if (props.transfer.type === TransferType.Erc20) {
+        const name = erc20MarketData.value?.name || props.transfer.erc20Meta?.tokenInfo.name
+        if (name) {
+            return name
+        }
     }
     return 'NO NAME'
 })

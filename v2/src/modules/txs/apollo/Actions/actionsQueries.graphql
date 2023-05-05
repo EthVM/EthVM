@@ -16,4 +16,32 @@ query getEthTransfersInTx($limit: Int, $hash: String!, $nextKey: String) {
     }
 }
 
+fragment Erc20TransferInTx on ERC20Transfer {
+    transfer {
+        type
+        from             
+        to
+    }
+    value
+    ...erc20Meta
+}
+
+fragment Erc20Meta on ERC20Transfer {
+    contract
+    tokenInfo {
+        name
+        symbol
+        decimals
+        iconPng
+    }
+}
+query   getERC20TransfersInTx ($limit: Int, $hash: String!, $nextKey: String){
+  getERC20TransfersByHash(limit: $limit, hash: $hash, nextKey: $nextKey ) {
+    transfers {
+        ... Erc20TransferInTx
+    }
+    nextKey
+  }
+}
+
 

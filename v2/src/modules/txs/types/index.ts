@@ -1,5 +1,5 @@
 import { TransferType } from '@/apollo/types'
-
+import { Erc20MetaFragment } from '@module/txs/apollo/Actions/actionsQueries.generated'
 export interface Tx {
     hash: string
     block: string
@@ -27,4 +27,5 @@ export interface Action {
     from: string
     to: string
     type: TransferType
+    erc20Meta?: Erc20MetaFragment
 }
