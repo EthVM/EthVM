@@ -80,7 +80,7 @@ export const EthTransferInTxFragmentDoc = gql`
     }
 `
 export const Erc20MetaFragmentDoc = gql`
-    fragment erc20Meta on ERC20Transfer {
+    fragment Erc20Meta on ERC20Transfer {
         contract
         tokenInfo {
             name
@@ -98,7 +98,7 @@ export const Erc20TransferInTxFragmentDoc = gql`
             to
         }
         value
-        ...erc20Meta
+        ...Erc20Meta
     }
     ${Erc20MetaFragmentDoc}
 `

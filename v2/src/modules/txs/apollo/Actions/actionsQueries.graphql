@@ -23,7 +23,7 @@ fragment Erc20TransferInTx on ERC20Transfer {
         to
     }
     value
-    ...erc20Meta
+    ...Erc20Meta
 }
 
 fragment Erc20Meta on ERC20Transfer {
