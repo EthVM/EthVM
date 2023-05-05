@@ -1,3 +1,5 @@
+import { TransferType } from '@/apollo/types'
+
 export interface Tx {
     hash: string
     block: string
@@ -18,4 +20,11 @@ export interface PendingTx {
     value: string
     timestamp: number
     isMined: boolean
+}
+
+export interface Action {
+    value: string
+    from: string
+    to: string
+    type: TransferType
 }

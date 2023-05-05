@@ -1,0 +1,19 @@
+fragment EthTransferInTx on EthTransfer {
+    transfer {
+        type
+        from 
+        to
+    }
+    value
+
+}
+query getEthTransfersInTx($limit: Int, $hash: String!, $nextKey: String) {
+    getEthTransfersByHash(limit: $limit, hash: $hash, nextKey: $nextKey ) {
+        transfers {
+            ...EthTransferInTx
+        }
+        nextKey
+    }
+}
+
+

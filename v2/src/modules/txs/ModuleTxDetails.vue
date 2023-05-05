@@ -130,6 +130,7 @@
             <app-tabs v-model="state.tab" :routes="routes" :tabs="tabs" @update:modelValue="changeRoute" class="mx-n1 mt-n2 mb-4"></app-tabs>
             <tab-state v-if="state.tab === routes[0]" :tx-hash="props.txRef" :tx-status="txStatus" :loading="loadingTransactionHash" />
             <tab-more v-if="state.tab === routes[1]" :tx-data="transactionData" :loading="loadingTransactionHash" />
+            <module-tx-actions v-if="state.tab === routes[2]" :tx-hash="props.txRef"></module-tx-actions>
         </v-card>
     </template>
 </template>
@@ -140,9 +141,10 @@ import AppTransformHash from '@core/components/AppTransformHash.vue'
 import AppAddressBlockie from '@core/components/AppAddressBlockie.vue'
 import TabMore from '@module/txs/components/TabMore.vue'
 import AppTabs from '@/core/components/AppTabs.vue'
+import ModuleTxActions from './ModuleTxActions.vue'
 import { computed, onMounted, reactive, ref } from 'vue'
 import BN from 'bignumber.js'
-import { TxDetailsFragment as TxDetailsType, useGetTransactionByHashQuery, useTransactionEventSubscription } from './apollo/TxDetails.generated'
+import { TxDetailsFragment as TxDetailsType, useGetTransactionByHashQuery, useTransactionEventSubscription } from './apollo/TxDetails/TxDetails.generated'
 import { ErrorMessageTx, TitleStatus } from '@/modules/txs/models/ErrorMessagesForTx'
 import { excpTxDoNotExists } from '@/apollo/errorExceptions'
 import { formatNumber, FormattedNumber, formatVariableUnitEthValue } from '@/core/helper/number-format-helper'
@@ -169,6 +171,10 @@ const props = defineProps({
 const routes = Q_TXS_DETAILS
 
 const tabs: Tab[] = [
+    {
+        value: routes[2],
+        title: 'Actions'
+    },
     {
         value: routes[0],
         title: 'State'
