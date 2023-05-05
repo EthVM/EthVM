@@ -1,7 +1,7 @@
 <template>
     <v-tooltip top color="white" content-class="tooltip-border">
         <template #activator="{ props }">
-            <v-icon :class="iconClass" :color="componentProps.iconColor" dark small v-bind="props">{{ componentProps.iconType }}</v-icon>
+            <v-icon :class="iconClass" :color="componentProps.iconColor" dark small v-bind="props" size="18">{{ componentProps.iconType }}</v-icon>
         </template>
         <span class="black--text">{{ componentProps.text }}</span>
     </v-tooltip>

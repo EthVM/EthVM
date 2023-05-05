@@ -2,12 +2,12 @@
     <div v-if="!displayName" class="hash-container font-mono">
         <div v-if="!hasLink" :class="{ 'text-secondary': props.isBlue }">
             <div v-if="start" class="firstPart">{{ start }}</div>
-            <span v-if="props.isShort">...</span>
+            <span v-if="props.isShort" class="font-normal">...</span>
             <div class="lastPart">{{ end }}</div>
         </div>
         <router-link v-else :to="props.link || ''" :class="{ 'text-secondary': props.isBlue }">
             <div class="firstPart">{{ start }}</div>
-            <span v-if="props.isShort">...</span>
+            <span v-if="props.isShort" class="font-normal">...</span>
             <div class="lastPart">{{ end }}</div>
         </router-link>
     </div>
@@ -46,8 +46,8 @@ const props = defineProps({
     }
 })
 
-const firstPartCount = 5
-const lastPartCount = 5
+const firstPartCount = 4
+const lastPartCount = 4
 
 const start = computed<string>(() => {
     const n = props.hash?.length
