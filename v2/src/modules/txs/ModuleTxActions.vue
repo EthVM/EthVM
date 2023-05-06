@@ -4,8 +4,15 @@
             <div v-if="ethTransfers.length > 0" class="mb-13 mb-sm-10">
                 <app-expansion-panel :title="`${currencyName} Transfers`">
                     <template #visible-content>
-                        <div v-for="(transfer, index) in currentPageData.slice(0, 3)" :key="`${index}`">
-                            <tx-action-row :transfer="transfer" />
+                        <div v-if="!initialLoadingEthTransfers && !loadingEthTransfersData">
+                            <div v-for="(transfer, index) in currentPageData.slice(0, 3)" :key="`${index}`">
+                                <tx-action-row :transfer="transfer" />
+                            </div>
+                        </div>
+                        <div v-else>
+                            <div v-for="item in 3" :key="item" style="padding: 10px 0">
+                                <div class="skeleton-box rounded-xl" style="height: 40px"></div>
+                            </div>
                         </div>
                     </template>
                     <template #expand-content v-if="ethTransfers.length > 3">
@@ -17,7 +24,7 @@
                             </template>
                         </div>
                         <div v-else>
-                            <div v-for="item in LIMIT" :key="item" style="padding: 10px 0">
+                            <div v-for="item in 7" :key="item" style="padding: 10px 0">
                                 <div class="skeleton-box rounded-xl" style="height: 40px"></div>
                             </div>
                         </div>
@@ -35,8 +42,15 @@
             <div v-if="erc20Transfers.length > 0" class="mb-13 mb-sm-10">
                 <app-expansion-panel :title="`Token Transfers`">
                     <template #visible-content>
-                        <div v-for="(transfer, index) in currentPageDataErc20.slice(0, 3)" :key="`${index}`">
-                            <tx-action-row :transfer="transfer" />
+                        <div v-if="!initialLoadingErc20Transfers && !loadingErc20TransfersData">
+                            <div v-for="(transfer, index) in currentPageDataErc20.slice(0, 3)" :key="`${index}`">
+                                <tx-action-row :transfer="transfer" />
+                            </div>
+                        </div>
+                        <div v-else>
+                            <div v-for="item in 3" :key="item" style="padding: 10px 0">
+                                <div class="skeleton-box rounded-xl" style="height: 40px"></div>
+                            </div>
                         </div>
                     </template>
                     <template #expand-content v-if="erc20Transfers.length > 3">
@@ -47,9 +61,8 @@
                                 </div>
                             </template>
                         </div>
-
                         <div v-else>
-                            <div v-for="item in LIMIT" :key="item" style="padding: 10px 0">
+                            <div v-for="item in 7" :key="item" style="padding: 10px 0">
                                 <div class="skeleton-box rounded-xl" style="height: 40px"></div>
                             </div>
                         </div>
@@ -67,8 +80,15 @@
             <div v-if="nftTransfers.length > 0" class="mb-13 mb-sm-10">
                 <app-expansion-panel :title="`NFT Transfers`">
                     <template #visible-content>
-                        <div v-for="(transfer, index) in currentPageDataNFT.slice(0, 3)" :key="`${index}`">
-                            <tx-action-row :transfer="transfer" :nft-meta="getRowMeta(transfer.tokenInfo?.contract, transfer.nftId)" />
+                        <div v-if="!initialLoadingNftTransfers && !loadingNftTransfersData && !loadingMeta">
+                            <div v-for="(transfer, index) in currentPageDataNFT.slice(0, 3)" :key="`${index}`">
+                                <tx-action-row :transfer="transfer" :nft-meta="getRowMeta(transfer.tokenInfo?.contract, transfer.nftId)" />
+                            </div>
+                        </div>
+                        <div v-else>
+                            <div v-for="item in 3" :key="item" style="padding: 10px 0">
+                                <div class="skeleton-box rounded-xl" style="height: 50px"></div>
+                            </div>
                         </div>
                     </template>
                     <template #expand-content v-if="nftTransfers.length > 3">
@@ -80,7 +100,7 @@
                             </template>
                         </div>
                         <div v-else>
-                            <div v-for="item in LIMIT" :key="item" style="padding: 10px 0">
+                            <div v-for="item in 7" :key="item" style="padding: 10px 0">
                                 <div class="skeleton-box rounded-xl" style="height: 50px"></div>
                             </div>
                         </div>
