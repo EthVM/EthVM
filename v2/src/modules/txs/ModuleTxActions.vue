@@ -1,5 +1,5 @@
 <template>
-    <div class="pt-3">
+    <div class="pt-3 pb-4 pb-sm-6">
         <div v-if="!actionsLoading">
             <div v-if="ethTransfers.length > 0" class="mb-13 mb-sm-10">
                 <app-expansion-panel :title="`${currencyName} Transfers`">
@@ -64,7 +64,38 @@
                     </template>
                 </app-expansion-panel>
             </div>
-            <app-no-result v-if="!hasActions" text="There are no actions performed in this transaction" class="mt-4 mt-sm-6 mb-5"></app-no-result>
+            <div v-if="nftTransfers.length > 0" class="mb-13 mb-sm-10">
+                <app-expansion-panel :title="`NFT Transfers`">
+                    <template #visible-content>
+                        <div v-for="(transfer, index) in currentPageDataNFT.slice(0, 3)" :key="`${index}`">
+                            <tx-action-row :transfer="transfer" :nft-meta="getRowMeta(transfer.tokenInfo?.contract, transfer.nftId)" />
+                        </div>
+                    </template>
+                    <template #expand-content v-if="nftTransfers.length > 3">
+                        <div v-if="!initialLoadingNftTransfers && !loadingNftTransfersData && !loadingMeta">
+                            <template v-if="nftTransfers">
+                                <div v-for="(transfer, index) in currentPageDataNFT.slice(3, LIMIT)" :key="`${index}`">
+                                    <tx-action-row :transfer="transfer" :nft-meta="getRowMeta(transfer.tokenInfo?.contract, transfer.nftId)" />
+                                </div>
+                            </template>
+                        </div>
+                        <div v-else>
+                            <div v-for="item in LIMIT" :key="item" style="padding: 10px 0">
+                                <div class="skeleton-box rounded-xl" style="height: 50px"></div>
+                            </div>
+                        </div>
+                        <template v-if="showPaginationNFTTransfers">
+                            <app-pagination
+                                :length="numberOfPagesNFT"
+                                :has-more="hasMoreNftTransfers"
+                                @update:modelValue="loadMoreNftTransfers"
+                                :current-page="pageNumNFT"
+                            />
+                        </template>
+                    </template>
+                </app-expansion-panel>
+            </div>
+            <app-no-result v-if="!hasActions" text="There are no actions performed in this transaction" class="mx-4 mx-sm-6"></app-no-result>
         </div>
         <template v-else>
             <div v-for="item in 3" :key="item" class="px-4 px-sm-6 mb-4 mb-sm-6">
@@ -84,12 +115,18 @@ import {
     EthTransferInTxFragment as EthTransfer,
     useGetEthTransfersInTxQuery,
     useGetErc20TransfersInTxQuery,
-    Erc20TransferInTxFragment as ERC20Transfer
+    Erc20TransferInTxFragment as ERC20Transfer,
+    useGetNftTransfersInTxQuery,
+    NftTransferInTxFragment as NFTTransfer
 } from '@module/txs/apollo/Actions/actionsQueries.generated'
 import { useAppPaginate } from '@core/composables/AppPaginate/useAppPaginate.composable'
 import { Action } from './types/index'
 import { useNetwork } from '@/core/composables/Network/useNetwork'
-const LIMIT = 20
+import { useGetNftsMeta } from '@core/composables/NftMeta/useGetNftsMeta.composable'
+import { NftId, generateId, generateMapId } from '@/core/composables/NftMeta/helpers'
+import { NftMetaFragment } from '@core/composables/NftMeta/nftMeta.generated'
+
+const LIMIT = 10
 const { currencyName } = useNetwork()
 
 const props = defineProps({
@@ -195,7 +232,7 @@ const erc20Transfers = computed<Action[]>(() => {
                     to: i.transfer.to,
                     value: i.value,
                     type: i.transfer.type,
-                    erc20Meta: {
+                    tokenInfo: {
                         contract: i.contract,
                         tokenInfo: {
                             name: i.tokenInfo.name,
@@ -250,13 +287,120 @@ const loadMoreErc20Transfers = (pageNum: number): void => {
 }
 
 /** -------------------
+ * NFT Transfers
+ * --------------------*/
+
+const {
+    result: nftTransfersData,
+    loading: loadingNftTransfersData,
+    fetchMore: fetchMoreNftTransfersData
+} = useGetNftTransfersInTxQuery(
+    () => ({
+        hash: props.txHash,
+        limit: LIMIT
+    }),
+    {
+        notifyOnNetworkStatusChange: true
+    }
+)
+
+const nftTransfers = computed<Action[]>(() => {
+    return (
+        nftTransfersData.value?.getNFTTransfersByHash.transfers
+            .filter((x): x is NFTTransfer => x !== null)
+            .map(i => {
+                return {
+                    from: i.transfer.from,
+                    to: i.transfer.to,
+                    value: i.value || '0x',
+                    type: i.transfer.type,
+                    nftId: i.tokenId,
+                    tokenInfo: {
+                        contract: i.contract,
+                        tokenInfo: {
+                            name: i.tokenInfo.name,
+                            symbol: i.tokenInfo.symbol,
+                            decimals: i.tokenInfo.decimals,
+                            iconPng: i.tokenInfo.iconPng
+                        }
+                    }
+                }
+            }) || []
+    )
+})
+
+const {
+    numberOfPages: numberOfPagesNFT,
+    pageData: currentPageDataNFT,
+    pageNum: pageNumNFT,
+    setPageNum: setPageNumNFT
+} = useAppPaginate(nftTransfers, 'nftTransfers', LIMIT)
+
+/**
+ * Computed Property of token ids to fetch meta
+ */
+const tokenIDS = computed<NftId[]>(() => {
+    const _ids: NftId[] = []
+    if (!loadingNftTransfersData.value && nftTransfers.value.length > 0 && generateId) {
+        currentPageDataNFT.value.forEach(i => {
+            if (i && i.nftId && i.tokenInfo?.contract) {
+                const id = {
+                    id: generateId(i.nftId),
+                    contract: i.tokenInfo.contract
+                }
+                _ids.push(id)
+            }
+        })
+    }
+    return _ids
+})
+
+const { nftMeta, loadingMeta } = useGetNftsMeta(tokenIDS, loadingNftTransfersData)
+
+const getRowMeta = (contract: string | undefined, id: string | undefined): NftMetaFragment | undefined => {
+    return contract && id ? nftMeta.value.get(generateMapId(contract, id)) : undefined
+}
+const initialLoadingNftTransfers = computed<boolean>(() => {
+    return !nftTransfersData.value && !loadingMeta.value
+})
+
+const hasMoreNftTransfers = computed<boolean>(() => {
+    return !!nftTransfersData.value?.getNFTTransfersByHash.nextKey
+})
+
+const showPaginationNFTTransfers = computed<boolean>(() => {
+    return !initialLoadingNftTransfers.value && (nftTransfers.value.length > LIMIT || hasMoreNftTransfers.value)
+})
+
+const loadMoreNftTransfers = (pageNum: number): void => {
+    setPageNumNFT(pageNum)
+    if (pageNum > numberOfPagesNFT.value && hasMoreNftTransfers.value) {
+        fetchMoreNftTransfersData({
+            variables: {
+                hash: props.txHash,
+                nextKey: nftTransfersData.value?.getNFTTransfersByHash.nextKey
+            },
+            updateQuery: (prev, { fetchMoreResult }) => {
+                return {
+                    getNFTTransfersByHash: {
+                        nextKey: fetchMoreResult?.getNFTTransfersByHash.nextKey,
+                        transfers: [...prev.getNFTTransfersByHash.transfers, ...(fetchMoreResult?.getNFTTransfersByHash.transfers || [])],
+                        __typename: fetchMoreResult?.getNFTTransfersByHash.__typename
+                    }
+                }
+            }
+        })
+    }
+}
+
+/** -------------------
  * Actions
  * --------------------*/
 const actionsLoading = computed<boolean>(() => {
-    return initialLoadingEthTransfers.value || initialLoadingErc20Transfers.value
+    return initialLoadingEthTransfers.value || initialLoadingErc20Transfers.value || initialLoadingNftTransfers.value
 })
 
 const hasActions = computed<boolean>(() => {
-    return ethTransfers.value.length > 0 || erc20Transfers.value.length > 0
+    return ethTransfers.value.length > 0 || erc20Transfers.value.length > 0 || nftTransfers.value.length > 0
 })
 </script>

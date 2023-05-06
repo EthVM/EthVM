@@ -69,6 +69,37 @@ export type GetErc20TransfersInTxQuery = {
     }
 }
 
+export type NftTransferInTxFragment = {
+    __typename?: 'NFTTransfer'
+    value?: string | null
+    tokenId: string
+    contract: string
+    transfer: { __typename?: 'Transfer'; type: Types.TransferType; from: string; to: string }
+    tokenInfo: { __typename?: 'EthTokenInfo'; name?: string | null; symbol?: string | null; decimals?: number | null; iconPng?: string | null }
+}
+
+export type GetNftTransfersInTxQueryVariables = Types.Exact<{
+    limit?: Types.InputMaybe<Types.Scalars['Int']>
+    hash: Types.Scalars['String']
+    nextKey?: Types.InputMaybe<Types.Scalars['String']>
+}>
+
+export type GetNftTransfersInTxQuery = {
+    __typename?: 'Query'
+    getNFTTransfersByHash: {
+        __typename?: 'NFTTransfers'
+        nextKey?: string | null
+        transfers: Array<{
+            __typename?: 'NFTTransfer'
+            value?: string | null
+            tokenId: string
+            contract: string
+            transfer: { __typename?: 'Transfer'; type: Types.TransferType; from: string; to: string }
+            tokenInfo: { __typename?: 'EthTokenInfo'; name?: string | null; symbol?: string | null; decimals?: number | null; iconPng?: string | null }
+        } | null>
+    }
+}
+
 export const EthTransferInTxFragmentDoc = gql`
     fragment EthTransferInTx on EthTransfer {
         transfer {
@@ -101,6 +132,24 @@ export const Erc20TransferInTxFragmentDoc = gql`
         ...Erc20Meta
     }
     ${Erc20MetaFragmentDoc}
+`
+export const NftTransferInTxFragmentDoc = gql`
+    fragment NftTransferInTx on NFTTransfer {
+        transfer {
+            type
+            from
+            to
+        }
+        value
+        tokenId
+        contract
+        tokenInfo {
+            name
+            symbol
+            decimals
+            iconPng
+        }
+    }
 `
 export const GetEthTransfersInTxDocument = gql`
     query getEthTransfersInTx($limit: Int, $hash: String!, $nextKey: String) {
@@ -213,3 +262,57 @@ export type GetErc20TransfersInTxQueryCompositionFunctionResult = VueApolloCompo
     GetErc20TransfersInTxQuery,
     GetErc20TransfersInTxQueryVariables
 >
+export const GetNftTransfersInTxDocument = gql`
+    query getNFTTransfersInTx($limit: Int, $hash: String!, $nextKey: String) {
+        getNFTTransfersByHash(limit: $limit, hash: $hash, nextKey: $nextKey) {
+            transfers {
+                ...NftTransferInTx
+            }
+            nextKey
+        }
+    }
+    ${NftTransferInTxFragmentDoc}
+`
+
+/**
+ * __useGetNftTransfersInTxQuery__
+ *
+ * To run a query within a Vue component, call `useGetNftTransfersInTxQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetNftTransfersInTxQuery` returns an object from Apollo Client that contains result, loading and error properties
+ * you can use to render your UI.
+ *
+ * @param variables that will be passed into the query
+ * @param options that will be passed into the query, supported options are listed on: https://v4.apollo.vuejs.org/guide-composable/query.html#options;
+ *
+ * @example
+ * const { result, loading, error } = useGetNftTransfersInTxQuery({
+ *   limit: // value for 'limit'
+ *   hash: // value for 'hash'
+ *   nextKey: // value for 'nextKey'
+ * });
+ */
+export function useGetNftTransfersInTxQuery(
+    variables:
+        | GetNftTransfersInTxQueryVariables
+        | VueCompositionApi.Ref<GetNftTransfersInTxQueryVariables>
+        | ReactiveFunction<GetNftTransfersInTxQueryVariables>,
+    options:
+        | VueApolloComposable.UseQueryOptions<GetNftTransfersInTxQuery, GetNftTransfersInTxQueryVariables>
+        | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<GetNftTransfersInTxQuery, GetNftTransfersInTxQueryVariables>>
+        | ReactiveFunction<VueApolloComposable.UseQueryOptions<GetNftTransfersInTxQuery, GetNftTransfersInTxQueryVariables>> = {}
+) {
+    return VueApolloComposable.useQuery<GetNftTransfersInTxQuery, GetNftTransfersInTxQueryVariables>(GetNftTransfersInTxDocument, variables, options)
+}
+export function useGetNftTransfersInTxLazyQuery(
+    variables:
+        | GetNftTransfersInTxQueryVariables
+        | VueCompositionApi.Ref<GetNftTransfersInTxQueryVariables>
+        | ReactiveFunction<GetNftTransfersInTxQueryVariables>,
+    options:
+        | VueApolloComposable.UseQueryOptions<GetNftTransfersInTxQuery, GetNftTransfersInTxQueryVariables>
+        | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<GetNftTransfersInTxQuery, GetNftTransfersInTxQueryVariables>>
+        | ReactiveFunction<VueApolloComposable.UseQueryOptions<GetNftTransfersInTxQuery, GetNftTransfersInTxQueryVariables>> = {}
+) {
+    return VueApolloComposable.useLazyQuery<GetNftTransfersInTxQuery, GetNftTransfersInTxQueryVariables>(GetNftTransfersInTxDocument, variables, options)
+}
+export type GetNftTransfersInTxQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<GetNftTransfersInTxQuery, GetNftTransfersInTxQueryVariables>

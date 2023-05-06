@@ -44,4 +44,30 @@ query   getERC20TransfersInTx ($limit: Int, $hash: String!, $nextKey: String){
   }
 }
 
+fragment NftTransferInTx on  NFTTransfer {
+    transfer {
+        type
+        from             
+        to
+    }
+    value
+    tokenId
+    contract
+    tokenInfo {
+        name
+        symbol
+        decimals
+        iconPng
+    }
+}
 
+
+
+query   getNFTTransfersInTx ($limit: Int, $hash: String!, $nextKey: String){
+  getNFTTransfersByHash(limit: $limit, hash: $hash, nextKey: $nextKey ) {
+    transfers {
+        ... NftTransferInTx
+    }
+    nextKey
+  }
+}

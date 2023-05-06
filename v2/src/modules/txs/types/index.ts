@@ -27,5 +27,6 @@ export interface Action {
     from: string
     to: string
     type: TransferType
-    erc20Meta?: Erc20MetaFragment
+    tokenInfo?: Erc20MetaFragment
+    nftId?: string
 }
