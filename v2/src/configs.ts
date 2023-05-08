@@ -1,3 +1,4 @@
+import { isSupportedNetwork } from './core/helper/networks'
 const BROWSER_NAMES = {
     chrome: 'chrome',
     firefox: 'firefox',
@@ -16,6 +17,7 @@ const EXTENSION_LINKS = {
 }
 
 const configs = {
+    NETWORK: isSupportedNetwork(process.env.VUE_APP_NETWORK || '') ? (process.env.VUE_APP_NETWORK as string) : 'MAINNET',
     APOLLO_HTTP: process.env.VUE_APP_HTTP_LINK || '',
     APOLLO_WS: process.env.VUE_APP_WS_CLIENT || '',
     OPENSEA: process.env.VUE_APP_OPENSEA_API || '',

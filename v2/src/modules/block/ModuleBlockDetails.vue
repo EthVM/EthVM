@@ -13,12 +13,18 @@
         <block-txs
             v-show="state.tab === routes[0]"
             :max-items="10"
-            :block-ref="blockNumber"
+            :block-ref="blockNumber.toString()"
             :is-hash="isHash"
             :is-mined="state.isMined"
             page-type="blockDetails"
         />
-        <more-block-details v-show="state.tab === routes[1]" :block-details="blockDetails" :uncle-hashes="uncleHashes" :is-loading="isLoading" />
+        <module-block-withdrawals
+            v-show="state.tab === routes[1]"
+            :block-number="blockNumber"
+            :is-mined="state.isMined"
+            :block-has-withdrawals="state.hasWithdrawals"
+        />
+        <more-block-details v-show="state.tab === routes[2]" :block-details="blockDetails" :uncle-hashes="uncleHashes" :is-loading="isLoading" />
     </v-card>
 </template>
 
@@ -27,6 +33,7 @@ import AppTabs from '@/core/components/AppTabs.vue'
 // Weird ESLINT error that  'BlockDetails' is defined but never used  even though it is used.
 // eslint-disable-next-line
 import BlockDetails from '@module/block/components/BlockDetails.vue'
+import ModuleBlockWithdrawals from './ModuleBlockWithdrawals.vue'
 import MoreBlockDetails from '@module/block/components/MoreBlockDetails.vue'
 import BlockTxs from '@module/txs/ModuleTxs.vue'
 import { reactive, computed, ref, onMounted, watch } from 'vue'
@@ -39,7 +46,7 @@ import {
     useGetLastBlockNumberQuery
 } from '@/modules/block/apollo/BlockDetails/blockDetails.generated'
 import { ErrorMessageBlock } from '@/modules/block/models/ErrorMessagesForBlock'
-import { excpBlockNotMined } from '@/apollo/errorExceptions'
+import { excpBlockNotMined, isOverOrEq32Bit } from '@/apollo/errorExceptions'
 import { FormattedNumber, formatNumber, formatVariableUnitEthValue } from '@/core/helper/number-format-helper'
 import { useNewBlockFeedSubscription } from '@core/composables/NewBlock/newBlockFeed.generated'
 import { useBlockSubscription } from '@core/composables/NewBlock/newBlock.composable'
@@ -47,8 +54,11 @@ import { useQuery } from '@vue/apollo-composable'
 import { timeAgo } from '@core/helper'
 import { fromWei } from 'web3-utils'
 import { Q_BLOCK_DETAILS } from '@core/router/routesNames'
+import { useNetwork } from '@core/composables/Network/useNetwork'
+
 const routes = Q_BLOCK_DETAILS
 
+const { currencyName } = useNetwork()
 const tabs: Tab[] = [
     {
         value: routes[0],
@@ -56,6 +66,10 @@ const tabs: Tab[] = [
     },
     {
         value: routes[1],
+        title: 'Stake Withdrawals'
+    },
+    {
+        value: routes[2],
         title: 'More'
     }
 ]
@@ -95,17 +109,17 @@ const blockDetails = computed<{ [key: string]: Detail } | null>(() => {
             totalRewards: {
                 title: 'Total Rewards',
                 detail: `${rewards.value.value} ${rewards.value.unit}`,
-                tooltip: rewards.value.tooltipText ? `${rewards.value.tooltipText} ETH` : undefined
+                tooltip: rewards.value.tooltipText ? `${rewards.value.tooltipText} ${currencyName}` : undefined
             },
             txsFees: {
                 title: 'Txs Fees',
                 detail: `${transactionFees.value.value} ${transactionFees.value.unit}`,
-                tooltip: transactionFees.value.tooltipText ? `${transactionFees.value.tooltipText} ETH` : undefined
+                tooltip: transactionFees.value.tooltipText ? `${transactionFees.value.tooltipText} ${currencyName}` : undefined
             },
             uncleReward: {
                 title: 'Uncle Reward',
                 detail: `${uncleRewards.value.value} ${uncleRewards.value.unit}`,
-                tooltip: uncleRewards.value.tooltipText ? `${uncleRewards.value.tooltipText} ETH` : undefined
+                tooltip: uncleRewards.value.tooltipText ? `${uncleRewards.value.tooltipText} ${currencyName}` : undefined
             },
             transactions: {
                 title: 'Transactions',
@@ -187,13 +201,15 @@ interface ModuleState {
     tab: string
     isMined: boolean
     blockNumber: string
+    hasWithdrawals: boolean
 }
 
 const state: ModuleState = reactive({
     hasError: false,
     tab: routes[0],
-    isMined: true,
-    blockNumber: !props.isHash && props.blockRef ? props.blockRef : ''
+    isMined: false,
+    blockNumber: !props.isHash && props.blockRef ? props.blockRef : '',
+    hasWithdrawals: false
 })
 
 const subscriptionEnabled = ref(false)
@@ -227,13 +243,15 @@ onBlockDetailsLoaded(() => {
     if (blockDetailsData.value) {
         state.blockNumber = blockDetailsData.value.summary.number.toString()
         state.isMined = true
+        state.hasWithdrawals = !!blockDetailsData.value.withdrawalCount
         emitErrorState(false)
     }
 })
 
 onBlockDetailsError(error => {
     const newError = JSON.stringify(error.message)
-    if (newError.toLowerCase().includes(excpBlockNotMined) && !subscriptionEnabled.value && !props.isHash) {
+    const isOver32 = props.isHash ? false : isOverOrEq32Bit(new BN(props.blockRef || 0))
+    if ((newError.toLowerCase().includes(excpBlockNotMined) || isOver32) && !subscriptionEnabled.value && !props.isHash) {
         subscriptionEnabled.value = true
         state.isMined = false
     }
@@ -311,11 +329,11 @@ const currBlockNumber = computed<string | null>(() => {
 })
 
 // This returns the block number or the block hash depending on the url
-const blockNumber = computed<string | number>(() => {
+const blockNumber = computed<number>(() => {
     if (props.isHash) {
-        return state.blockNumber
+        return new BN(state.blockNumber).toNumber()
     }
-    return props.blockRef
+    return new BN(props.blockRef || 0).toNumber()
 })
 
 /**

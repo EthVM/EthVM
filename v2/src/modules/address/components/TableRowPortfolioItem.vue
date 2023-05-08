@@ -37,7 +37,7 @@
             -->
         <v-col v-if="(xs && state.showMore) || smAndUp" cols="6" sm="3" lg="2" class="d-block d-lg-flex align-lg-center">
             <div v-if="props.adr.eth">
-                <p v-if="xs" class="text-info mb-2">ETH Balance</p>
+                <p v-if="xs" class="text-info mb-2">{{ currencyName }} Balance</p>
                 <p>{{ props.adr.eth }}</p>
                 <p v-if="!xs && mdAndDown" class="text-info">{{ props.adr.ethUSD }}</p>
             </div>
@@ -48,7 +48,7 @@
                 hidden on (xs & !state.showMore) and SM, MD
              -->
         <v-col v-if="(xs && state.showMore) || lgAndUp" cols="6" lg="2" class="d-block d-lg-flex align-lg-center">
-            <p v-if="xs" class="text-info mb-2">ETH Value</p>
+            <p v-if="xs" class="text-info mb-2">{{ currencyName }} Value</p>
             <p v-if="props.adr.ethUSD">{{ props.adr.ethUSD }}</p>
             <div v-else class="skeleton-box rounded-xl" style="height: 20px; width: 60%"></div>
         </v-col>
@@ -69,7 +69,7 @@
             <app-transform-hash :hash="eth.toCheckSum(props.adr.hash)" :link="`address/${props.adr.hash}`" is-blue is-short :show-name="false" />
         </v-col>
     </app-table-row>
-    <app-menu min-width="180" :activator="`#list-item-menu-${props.adr.hash}`">
+    <app-menu min-width="160" :activator="`#list-item-menu-${props.adr.hash}`">
         <v-list-item title="Edit Name" class="py-2" @click="openEditDialog(true)"> </v-list-item>
         <v-list-item title="View Tokens" class="py-2" @click="viewTokens"></v-list-item>
         <v-divider class="my-1 mx-4" />
@@ -94,10 +94,10 @@ import { useStore } from '@/store'
 import { eth } from '@core/helper/eth'
 import { Q_PORTFOLIO, ROUTE_NAME } from '@core/router/routesNames'
 import { useRouter } from 'vue-router'
-
+import { useNetwork } from '@/core/composables/Network/useNetwork'
 const store = useStore()
 const { xs, mdAndDown, smAndUp, lgAndUp } = useDisplay()
-
+const { currencyName } = useNetwork()
 interface DisplayItem {
     name: string
     hash: string

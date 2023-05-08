@@ -94,6 +94,10 @@ const ROUTE_NAME: Route = {
     PORTFOLIO: {
         PATH: '/portfolio',
         NAME: 'portfolio'
+    },
+    SETTINGS: {
+        PATH: '/settings',
+        NAME: 'settings'
     }
 }
 
@@ -105,8 +109,8 @@ const ADDRESS_ROUTE_QUERY = {
 const Q_PORTFOLIO = ['address-list', 'balances']
 const Q_TOKEN_DETAILS = ['transfers', 'holders']
 const Q_BLOCKS_AND_TXS = ['blocks', 'transactions']
-const Q_BLOCK_DETAILS = ['transaction', 'more']
-const Q_ADDRESS_TRANSFERS = ['all', 'internal', 'tx-history', 'pending', 'rewards']
+const Q_BLOCK_DETAILS = ['transaction', 'stake-withdrawals', 'more']
+const Q_ADDRESS_TRANSFERS = ['all', 'internal', 'tx-history', 'pending', 'rewards', 'stake-withdrawals']
 const Q_TXS_DETAILS = ['state', 'more']
 
 export { ROUTE_NAME, ROUTE_PROP, ADDRESS_ROUTE_QUERY, Q_TOKEN_DETAILS, Q_BLOCKS_AND_TXS, Q_BLOCK_DETAILS, Q_TXS_DETAILS, Q_ADDRESS_TRANSFERS, Q_PORTFOLIO }

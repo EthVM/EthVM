@@ -179,7 +179,7 @@ const isLoadingRewards = computed<boolean>(() => {
 })
 
 const hasMore = computed<boolean>(() => {
-    return !!addressRewards.value && addressRewards?.value.nextKey !== null
+    return !!addressRewards.value && !!addressRewards?.value.nextKey
 })
 
 const showPagination = computed<boolean>(() => {

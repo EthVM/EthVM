@@ -7,7 +7,7 @@
 </template>
 
 <script setup lang="ts">
-import ModuleTokensInfo from '@module/tokens/ModuleTokensInfo'
+import ModuleTokensInfo from '@module/tokens/ModuleTokensInfo.vue'
 import { useAppViewGrid } from '@core/composables/AppViewGrid/AppViewGrid.composable'
 import { onMounted } from 'vue'
 

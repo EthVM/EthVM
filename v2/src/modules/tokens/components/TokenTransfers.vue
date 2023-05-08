@@ -23,7 +23,7 @@
 import TokenTransfersTable from '@module/tokens/components/TokenDetailsTransfer/TokenTransferTable.vue'
 import { ErrorMessageToken } from '@module/tokens/models/ErrorMessagesForTokens'
 import { excpInvariantViolation } from '@/apollo/errorExceptions'
-import { reactive, computed, defineEmits } from 'vue'
+import { reactive, computed, defineEmits, watch } from 'vue'
 import {
     useGetErc20TokenTransfersQuery,
     useGetErc721TokenTransfersQuery,
@@ -185,7 +185,7 @@ const hasNftTransfers = computed<boolean>(() => {
 const initialLoad = computed<boolean>(() => {
     return !erc721TokenTransferResult.value || !erc20TokenTransferResult.value || !erc1155TokenTransferResult.value
 })
-const transferData = computed<TokenTransferFragment[] | Erc721TransferFragment[] | Erc1155TokenTransferFragment[] | Array<null>>(() => {
+const transferData = computed<TokenTransferFragment[] | Erc721TransferFragment[] | Erc1155TokenTransferFragment[]>(() => {
     if (!initialLoad.value) {
         const data = !hasNftTransfers.value
             ? erc20TokenTransfer.value?.transfers.filter((x): x is TokenTransferFragment => x !== null)
@@ -375,4 +375,16 @@ const fetchMoreTransfers = async (page: number): Promise<boolean> => {
         return false
     }
 }
+
+watch(
+    () => props.address,
+    (newAdr, oldAdr) => {
+        if (newAdr.toLowerCase() !== oldAdr.toLowerCase()) {
+            state.isEnd = 0
+            state.page = 0
+            state.index = 0
+            state.hasError = false
+        }
+    }
+)
 </script>

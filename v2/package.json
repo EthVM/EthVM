@@ -1,12 +1,13 @@
 {
     "name": "client",
-    "version": "2.0.2",
+    "version": "2.1.1",
     "description": "",
     "main": "index.js",
     "private": true,
     "scripts": {
         "ts-serve": "run-p type-check serve",
         "serve": "vue-cli-service serve",
+        "serve-sepolia": "vue-cli-service serve --mode sepolia",
         "type-check": "vue-tsc --noEmit --watch",
         "build": "vue-cli-service build",
         "lint": "vue-cli-service lint",

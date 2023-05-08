@@ -31,7 +31,12 @@
                 />
             </v-col>
             <v-col cols="6" md="3" :class="[columnPadding, 'py-2']">
-                <BlockStatsCard title="Eth Price" :value="ethPrice" :is-loading="loadingMarketInfo" :img="require('@/assets/block-stats-icons/eth.svg')" />
+                <BlockStatsCard
+                    :title="`${currencyName} Price`"
+                    :value="ethPrice"
+                    :is-loading="loadingMarketInfo"
+                    :img="require('@/assets/block-stats-icons/eth.svg')"
+                />
             </v-col>
         </v-row>
     </v-container>
@@ -51,7 +56,9 @@ import { useAppViewGrid } from '@core/composables/AppViewGrid/AppViewGrid.compos
 import { formatUsdValue, formatFloatingPointValue } from '@core/helper/number-format-helper'
 import BN from 'bignumber.js'
 import Web3Utils from 'web3-utils'
+import { useNetwork } from '@/core/composables/Network/useNetwork'
 
+const { currencyName } = useNetwork()
 const { result: blockInfo, loading, refetch } = useGetLatestBlockInfoQuery()
 const { onNewBlockLoaded } = useBlockSubscription()
 const { columnPadding, rowMargin } = useAppViewGrid()
@@ -71,12 +78,12 @@ const ethPrice = computed<string>(() => {
     if (ethMarketInfo.value) {
         return formatUsdValue(new BN(ethMarketInfo.value.current_price || 0)).value
     }
-    return ''
+    return '$0.00'
 })
 
 const gasPrice = computed<string>(() => {
-    if (blockInfo.value) {
-        const gwei = Web3Utils.fromWei(blockInfo.value?.getLatestBlockInfo.avgGasPrice, 'Gwei')
+    if (blockInfo.value && blockInfo.value?.getLatestBlockInfo.baseFeePerGas) {
+        const gwei = Web3Utils.fromWei(blockInfo.value.getLatestBlockInfo.baseFeePerGas, 'Gwei')
         return formatFloatingPointValue(new BN(gwei)).value
     }
     return '0'

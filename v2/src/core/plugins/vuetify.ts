@@ -57,7 +57,9 @@ const mainnetLightTheme: ThemeDefinition = {
         tabActive: COLORS.blue,
         greyInputText: COLORS.greyInputText,
         snackbar: COLORS.navy,
-        darkSurface: COLORS.greyBackdroundDM
+        darkSurface: COLORS.greyBackdroundDM,
+        switchTrack: COLORS.lightGreyDM,
+        switchThumb: COLORS.lightBlue
     },
     variables: {
         'skeleton-gradient': 0.3
@@ -93,13 +95,20 @@ const mainnetDarkTheme: ThemeDefinition = {
         tabActive: COLORS.blue,
         greyInputText: COLORS.greyInputText,
         snackbar: COLORS.lightBlue,
-        darkSurface: COLORS.greyBackgroundLM
+        darkSurface: COLORS.greyBackgroundLM,
+        switchTrack: COLORS.lightGreyDM,
+        switchThumb: COLORS.lightBlue
     },
     variables: {
         'skeleton-gradient': 0.03
     }
 }
 aliases.clear = 'close'
+
+export const themes = {
+    light: 'mainnetLightTheme',
+    dark: 'mainnetDarkTheme'
+}
 
 export default createVuetify({
     icons: {
@@ -110,7 +119,7 @@ export default createVuetify({
         }
     },
     theme: {
-        defaultTheme: 'mainnetLightTheme',
+        defaultTheme: themes.light,
         themes: {
             mainnetLightTheme,
             mainnetDarkTheme

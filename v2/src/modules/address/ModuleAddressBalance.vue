@@ -5,7 +5,7 @@
         =========================
         -->
     <v-card v-if="isOverview" class="pa-4 pa-sm-6" elevation="1" rounded="xl" height="100%">
-        <address-balance-totals title="ETH Balance" :is-loading="loadingBalanceData" :balance="`${balanceFormatted} ETH`">
+        <address-balance-totals :title="`${currencyName} Balance`" :is-loading="loadingBalanceData" :balance="`${balanceFormatted} ${currencyName}`">
             <template #extra>
                 <v-col v-if="loadingMarketInfo || loadingBalanceData" cols="6" sm="4" md="6" class="pa-0">
                     <div class="skeleton-box rounded-xl mt-1" style="height: 24px"></div>
@@ -29,7 +29,7 @@
             XS & SM: Eth Balance & USD VALUE
         =========================
         -->
-        <address-balance-totals title="ETH Balance" :is-loading="loadingBalanceData" :balance="`${balanceFormatted} ETH`">
+        <address-balance-totals :title="`${currencyName} Balance`" :is-loading="loadingBalanceData" :balance="`${balanceFormatted} ${currencyName}`">
             <template #extra>
                 <v-col v-if="loadingMarketInfo || loadingBalanceData" cols="6" sm="4" md="6" class="pa-0">
                     <div class="skeleton-box rounded-xl mt-1" style="height: 24px"></div>
@@ -123,7 +123,9 @@ import { formatUsdValue, formatPercentageValue } from '@/core/helper/number-form
 import AddressBalanceTotals from './components/AddressBalanceTotals.vue'
 import { useDisplay } from 'vuetify/lib/framework.mjs'
 import AddressTokenFiatInfo from './components/AddressTokenFiatInfo.vue'
+import { useNetwork } from '@core/composables/Network/useNetwork'
 
+const { currencyName } = useNetwork()
 const props = defineProps({
     addressRef: {
         type: String,

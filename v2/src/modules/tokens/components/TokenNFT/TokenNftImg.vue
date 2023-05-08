@@ -18,9 +18,9 @@
             </div>
             <div v-if="balance" class="nft-balance text-caption text-center px-3 py-2 rounded-pill elevation-4">{{ balance }}</div>
         </v-img>
-        <app-dialog v-model="state.showDetails" @update:modelValue="setDialog" width="656" height="550">
+        <app-dialog v-model="state.showDetails" @update:modelValue="setDialog" width="656" :height="supportsNft ? '550' : '340'">
             <template v-if="state.showDetails" #no-scroll-content>
-                <v-carousel hide-delimiters :show-arrows="!xs && tokens !== undefined">
+                <v-carousel hide-delimiters :show-arrows="!xs && tokens !== undefined" :height="supportsNft ? '550' : '340'">
                     <template #prev="{ props }">
                         <app-btn-icon icon="chevron_left" @click="props.onClick" size="large" />
                     </template>
@@ -45,7 +45,10 @@ import AppBtnIcon from '@/core/components/AppBtnIcon.vue'
 import { useDisplay } from 'vuetify/lib/framework.mjs'
 import BigNumber from 'bignumber.js'
 import { formatFloatingPointValue } from '@core/helper/number-format-helper'
+import { useNetwork } from '@core/composables/Network/useNetwork'
+
 const { xs } = useDisplay()
+const { supportsNft } = useNetwork()
 
 interface PropType {
     nft: NFTDetails

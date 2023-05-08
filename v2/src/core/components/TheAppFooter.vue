@@ -66,22 +66,24 @@
                         </div>
                     </div>
                 </v-col>
-
-                <!-- <v-spacer></v-spacer> -->
-                <v-col cols="12" sm="4" class="text-lg-right mb-11 mb-sm-0" order="5" order-sm="3" order-lg="4">
-                    <!-- <a href="#" class="footer-item-title d-block text-h5 font-weight-bold mb-2 text-sm-right">
-                            Settings
-                            <v-icon class="ml-2">settings</v-icon>
-                        </a> -->
-                    <v-switch
-                        @update:modelValue="toggleTheme"
-                        v-model="isDarkMode"
-                        :label="themeSwitchLabel"
-                        hide-details
-                        color="textPrimary"
-                        class="theme-toggle mt-2"
-                    ></v-switch>
-                    <p class="mb-3 text-sm-right">{{ $t('home.footer.pricing') }}</p>
+                <v-col
+                    cols="12"
+                    sm="4"
+                    class="text-lg-right mb-11 mb-sm-0 d-flex flex-column justify-sm-start align-sm-end"
+                    order="5"
+                    order-sm="3"
+                    order-lg="4"
+                >
+                    <v-btn
+                        rounded="pill"
+                        color="primary"
+                        :to="routeSettings"
+                        :active="false"
+                        class="text-h5 font-weight-bold mb-lg-16 ml-n4 mr-auto mr-sm-n5 mt-sm-n1"
+                    >
+                        Settings <v-icon class="ml-2">settings</v-icon>
+                    </v-btn>
+                    <p class="mb-3 text-sm-right mt-2 mt-lg-12">{{ $t('home.footer.pricing') }}</p>
                     <div class="d-flex font-weight-light align-center justify-sm-end">
                         <p class="text-uppercase mb-0 mr-2 text-caption font-weight-light">{{ $t('home.footer.power') }}</p>
                         <div class="d-flex align-center">
@@ -126,10 +128,8 @@
 </template>
 
 <script setup lang="ts">
-import { useTheme } from 'vuetify'
-import { onMounted, ref, watch, computed } from 'vue'
+import { ref } from 'vue'
 import { useStore } from '@/store'
-import { usePreferredColorScheme } from '@vueuse/core'
 import { useDisplay } from 'vuetify/lib/framework.mjs'
 import { ROUTE_NAME, ROUTE_PROP } from '@core/router/routesNames'
 import configs from '@/configs'
@@ -144,6 +144,11 @@ const routeEth = {
 const routeAbout = {
     name: ROUTE_NAME.ABOUT.NAME
 }
+
+const routeSettings = {
+    name: ROUTE_NAME.SETTINGS.NAME
+}
+
 const { lgAndUp, mdAndDown } = useDisplay()
 const version = ref(configs.VERSION || '0')
 const socialIcons = [
@@ -203,39 +208,7 @@ const socialIcons = [
     }
 ]
 
-const theme = useTheme()
-const isDarkMode = ref(false)
-
 const store = useStore()
-
-const toggleTheme = () => {
-    theme.global.name.value = theme.global.current.value.dark ? 'mainnetLightTheme' : 'mainnetDarkTheme'
-    store.setDarkMode(theme.global.name.value)
-}
-
-const themeSwitchLabel = computed<string>(() => {
-    return isDarkMode.value ? 'Dark Mode On' : 'Dark Mode Off'
-})
-
-onMounted(() => {
-    const preferredColor = usePreferredColorScheme()
-    if (store.appTheme) {
-        theme.global.name.value = store.appTheme
-    } else {
-        theme.global.name.value = preferredColor.value === 'dark' ? 'mainnetDarkTheme' : 'mainnetLightTheme'
-        store.setDarkMode(theme.global.name.value)
-    }
-
-    isDarkMode.value = theme.global.name.value === 'mainnetDarkTheme'
-})
-
-watch(
-    () => store.appTheme,
-    (val: string) => {
-        theme.global.name.value = val
-        isDarkMode.value = theme.global.name.value === 'mainnetDarkTheme'
-    }
-)
 </script>
 
 <style lang="scss" scoped>
@@ -255,17 +228,5 @@ a {
 .footer-hero {
     max-width: 250px;
     max-height: 250px;
-}
-
-.theme-toggle {
-    :deep(.v-input__control) {
-        @media (min-width: 600px) {
-            justify-self: flex-end;
-        }
-    }
-
-    :deep(.v-label) {
-        opacity: 1;
-    }
 }
 </style>

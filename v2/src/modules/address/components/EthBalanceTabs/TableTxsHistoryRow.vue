@@ -13,7 +13,7 @@
                 {{ transferDirection.text }}
             </span>
         </v-col>
-        <v-col cols="6" class="text-right">{{ txValue.value }} ETH</v-col>
+        <v-col cols="6" class="text-right">{{ txValue.value }} {{ currencyName }}</v-col>
         <v-col cols="6" class="text-info text-lowercase"> {{ timestamp }} {{ transferDirection.direction }} </v-col>
         <v-col cols="6">
             <div class="d-flex align-center justify-end">
@@ -29,7 +29,7 @@
                     <v-icon :color="statusIcon.color">{{ statusIcon.icon }}</v-icon>
                 </span>
                 <div class="ml-4">
-                    {{ txValue.value }} ETH
+                    {{ txValue.value }} {{ currencyName }}
                     <div class="text-lowercase text-info">
                         {{ timestamp }}
                         <span v-if="mdAndDown">{{ transferDirection.direction }}</span>
@@ -49,7 +49,7 @@
         <v-col sm="2">
             <app-transform-hash is-short is-blue :hash="eth.toCheckSum(transfer.transfer.transactionHash)" :link="`/tx/${transfer.transfer.transactionHash}`" />
         </v-col>
-        <v-col sm="3"> {{ totalBalanceChange.value }} ETH </v-col>
+        <v-col sm="3"> {{ totalBalanceChange.value }} {{ currencyName }} </v-col>
         <template #expandable>
             <v-row v-if="showMoreDetails" justify="space-between" class="my-4 flex-column-reverse flex-sm-row">
                 <v-col cols="2" class="d-none d-md-block"></v-col>
@@ -64,28 +64,28 @@
                     <p class="font-weight-bold">Balance Change Breakdown</p>
                     <v-row class="my-5" align="center">
                         <v-col cols="6" class="text-info">Transaction Value</v-col>
-                        <span>{{ txValue.value }} ETH</span>
+                        <span>{{ txValue.value }} {{ currencyName }}</span>
                     </v-row>
                     <v-row v-if="!isIncoming" class="my-5" align="center">
                         <v-col cols="6" class="text-info">TX Fee Paid</v-col>
-                        <span class="text-error">{{ txFee.value }} ETH</span>
+                        <span class="text-error">{{ txFee.value }} {{ currencyName }}</span>
                     </v-row>
                     <v-row v-if="internalTransferValue" class="my-5" align="center">
                         <v-col cols="6" class="text-info">Internal Transfer Value</v-col>
-                        <span class="text-success">{{ internalTransferValue.value }} ETH</span>
+                        <span class="text-success">{{ internalTransferValue.value }} {{ currencyName }}</span>
                     </v-row>
                     <v-divider class="mx-n5 mx-sm-0" />
                     <v-row class="my-5" align="center">
                         <v-col cols="6" class="text-info">Total Balance Change</v-col>
-                        <span :class="totalBalanceChange.color">{{ totalBalanceChange.value }} ETH</span>
+                        <span :class="totalBalanceChange.color">{{ totalBalanceChange.value }} {{ currencyName }}</span>
                     </v-row>
                     <v-row class="my-5" align="center">
                         <v-col cols="6" class="text-info">Balance Before</v-col>
-                        <span>{{ balanceBeforeFormatted.value }} ETH</span>
+                        <span>{{ balanceBeforeFormatted.value }} {{ currencyName }}</span>
                     </v-row>
                     <v-row class="my-5" align="center">
                         <v-col cols="6" class="text-info">Balance After</v-col>
-                        <span>{{ balanceAfterFormatted.value }} ETH</span>
+                        <span>{{ balanceAfterFormatted.value }} {{ currencyName }}</span>
                     </v-row>
                 </v-col>
                 <v-col cols="1" class="d-none d-md-block"></v-col>
@@ -106,9 +106,10 @@ import { formatNonVariableEthValue, FormattedNumber } from '@core/helper/number-
 import BN from 'bignumber.js'
 import { useDisplay } from 'vuetify'
 import { TransferSubtype } from '@/apollo/types'
+import { useNetwork } from '@core/composables/Network/useNetwork'
 
 const { smAndDown, mdAndDown } = useDisplay()
-
+const { currencyName } = useNetwork()
 interface ComponentProps {
     transfer: TxsTransfersFragment
     addressRef: string
@@ -272,7 +273,7 @@ const hasInternalTransaction = computed<boolean>(() => {
 
 const txEvents = computed<string>(() => {
     const events = []
-    events.push('ETH Transfers')
+    events.push(`${currencyName.value} Transfers`)
     if (hasInternalTransaction.value) {
         events.push('Internal Transaction')
     }

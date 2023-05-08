@@ -3,9 +3,24 @@ import { useEnsResolveNameQuery } from './ensResolveName.generated'
 import { Resolution } from '@unstoppabledomains/resolution'
 import * as Sentry from '@sentry/vue'
 import namehash from '@ensdomains/eth-ens-namehash'
+import { useNetwork } from '../Network/useNetwork'
 
 export function useResolveName(name: Ref<string | undefined>) {
     const UD_SUPPORTED_TLDS = ['blockchain', 'bitcoin', 'crypto', 'nft', 'wallet', 'x', 'dao', '888', 'zil']
+    /**
+     * For Refference:
+     * https://unstoppabledomains.github.io/resolution/v1.17.0/classes/resolutionerror.html
+     */
+    const UD_ERROR_EXCEPTIONS = [
+        'is not registered',
+        'no record was found',
+        "domain resolver doesn't have any address of specified currency",
+        'domain is not owned by any address',
+        'domain has no resolver specified'
+    ]
+
+    const { ensId, unstoppableId } = useNetwork()
+
     const udResolution = new Resolution({
         sourceConfig: {
             uns: {
@@ -56,19 +71,29 @@ export function useResolveName(name: Ref<string | undefined>) {
      * Resets resolvedUD on name changed.
      */
     watch(name, (newVal, oldVal) => {
-        if (newVal && newVal !== oldVal) {
+        if (unstoppableId.value && newVal && newVal !== oldVal) {
             resolvedUD.value = undefined
             if (isValidTldUD.value) {
                 udLoading.value = true
                 udResolution
-                    .addr(newVal, 'ETH')
+                    .addr(newVal, unstoppableId.value)
                     .then(address => {
                         resolvedUD.value = address
                         udLoading.value = false
                     })
                     .catch(error => {
                         udLoading.value = false
-                        Sentry.captureException(`ERROR in useResolveName unstoppable: tried resolving ${newVal}, ${error}`)
+                        let isException = false
+                        let i = UD_ERROR_EXCEPTIONS.length
+                        while (i > 0 && !isException) {
+                            if (error.includes(UD_ERROR_EXCEPTIONS[i - 1])) {
+                                isException = true
+                            }
+                            --i
+                        }
+                        if (!isException) {
+                            Sentry.captureException(`ERROR in useResolveName unstoppable: tried resolving ${newVal}, ${error}`)
+                        }
                     })
             }
         }
@@ -79,14 +104,19 @@ export function useResolveName(name: Ref<string | undefined>) {
      * @returns {boolean} weather or not name has valid ENS TLD
      */
     const isValidTldEns = computed<boolean>(() => {
-        if (!name.value) {
+        if (!ensId.value || !name.value) {
             return false
         }
         return getTld(name.value).length > 2
     })
 
     const normalizeEns = computed<string | undefined>(() => {
-        return isValidTldEns.value ? namehash.hash(name.value) : undefined
+        try {
+            const normalized = namehash.normalize(name.value)
+            return isValidTldEns.value ? namehash.hash(normalized) : undefined
+        } catch {
+            return undefined
+        }
     })
     /**
      * Fetches Ens resolution from Graph.

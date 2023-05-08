@@ -17,12 +17,12 @@
         </v-col>
         <!-- Mined Rewards -->
         <v-col cols="5" sm="3">
-            <p class="text-right text-sm-left">+ {{ miningReward.value }} ETH</p>
+            <p class="text-right text-sm-left">+ {{ miningReward.value }} {{ currencyName }}</p>
         </v-col>
         <!-- Balance Before -->
-        <v-col md="3" class="d-none d-sm-block"> {{ getRewardBalanceBefore.value }} ETH </v-col>
+        <v-col md="3" class="d-none d-sm-block"> {{ getRewardBalanceBefore.value }} {{ currencyName }} </v-col>
         <!-- Balance After -->
-        <v-col md="3" class="d-none d-sm-block"> {{ getRewardBalanceAfter.value }} ETH </v-col>
+        <v-col md="3" class="d-none d-sm-block"> {{ getRewardBalanceAfter.value }} {{ currencyName }} </v-col>
     </app-table-row>
 </template>
 
@@ -34,8 +34,10 @@ import { formatNonVariableEthValue, FormattedNumber } from '@core/helper/number-
 import BN from 'bignumber.js'
 import { computed } from 'vue'
 import { useDisplay } from 'vuetify'
+import { useNetwork } from '@core/composables/Network/useNetwork'
 
 const { xs } = useDisplay()
+const { currencyName } = useNetwork()
 
 interface ComponentProps {
     reward: RewardTransferFragment

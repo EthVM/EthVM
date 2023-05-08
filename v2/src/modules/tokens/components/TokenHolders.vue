@@ -24,7 +24,7 @@
 import TokenHoldersTable from '@module/tokens/components/TokenDetailsHolder/TokenHolderTable.vue'
 import { ErrorMessageToken } from '@module/tokens/models/ErrorMessagesForTokens'
 import { excpInvariantViolation } from '@/apollo/errorExceptions'
-import { reactive, computed, defineEmits } from 'vue'
+import { reactive, computed, defineEmits, watch } from 'vue'
 import {
     Erc20TokenOwnersFragment as Erc20TokenOwnersType,
     Erc721TokenOwnersFragment as Erc721TokenOwnersType,
@@ -323,11 +323,11 @@ const nextKey = computed<string | null | undefined>(() => {
 })
 
 const showPagination = computed<boolean>(() => {
-    return !initialLoad.value && !!holders.value && holders.value.length > 0
+    return !initialLoad.value && !!holders.value && (holders.value.length > queryLimit.value || !!nextKey.value)
 })
 
 const hasMore = computed<boolean>(() => {
-    return hasItems.value && nextKey.value !== undefined
+    return hasItems.value && !!nextKey.value
 })
 
 /**
@@ -441,4 +441,15 @@ const fetchMoreHolders = async (page: number): Promise<boolean> => {
         return false
     }
 }
+watch(
+    () => props.address,
+    (newAdr, oldAdr) => {
+        if (newAdr.toLowerCase() !== oldAdr.toLowerCase()) {
+            state.isEnd = 0
+            state.page = 0
+            state.index = 0
+            state.hasError = false
+        }
+    }
+)
 </script>

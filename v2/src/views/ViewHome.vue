@@ -8,7 +8,10 @@
                         <p class="mt-lg-16 text-white font-weight-light text-h3 text-sm-h2 text-lg-h1 text-center text-lg-left">
                             {{ $t('home.tagline.row1') }}
                         </p>
-                        <p class="text-white font-weight-light text-h3 text-sm-h2 text-lg-h1 text-center text-lg-left">{{ $t('home.tagline.row2') }}</p>
+                        <p v-if="isETH" class="text-white font-weight-light text-h3 text-sm-h2 text-lg-h1 text-center text-lg-left">
+                            {{ $t('home.tagline.row2') }}
+                        </p>
+                        <p v-if="isSEP" class="text-white font-weight-light text-h3 text-sm-h2 text-lg-h1 text-center text-lg-left">on the Sepolia Testnet.</p>
                         <div class="ml-1">
                             <module-search class="justify-center justify-lg-start mt-5 mt-lg-10" />
                         </div>
@@ -40,12 +43,12 @@
                                 <app-btn v-if="!xs" text="More" isSmall icon="east" @click="goToPortfolio"></app-btn>
                                 <app-btn-icon v-else icon="east" @click="goToPortfolio"></app-btn-icon>
                             </v-card-title>
-                            <module-portfolio-list /> </v-card
+                            <module-portfolio-list is-home-page /> </v-card
                     ></v-col>
-                    <v-col cols="12" lg="6" :class="columnPadding">
+                    <v-col v-if="supportsFiat" cols="12" lg="6" :class="columnPadding">
                         <module-tokens-info :home-page="TOKENS_VIEW.ALL" />
                     </v-col>
-                    <v-col v-if="showFavToknes || (!showFavToknes && lgAndUp)" cols="12" lg="6" :class="columnPadding">
+                    <v-col v-if="supportsFiat && (showFavToknes || (!showFavToknes && lgAndUp))" cols="12" lg="6" :class="columnPadding">
                         <module-tokens-info v-if="showFavToknes" :home-page="TOKENS_VIEW.FAV" />
                         <v-card
                             v-if="!showFavToknes && lgAndUp"
@@ -66,7 +69,13 @@
                             />
                         </v-card>
                     </v-col>
-                    <v-col v-if="showFavToknes || (!showFavToknes && mdAndDown)" cols="12" sm="6" md="4" :class="columnPadding">
+                    <v-col
+                        v-if="(supportsFiat && (showFavToknes || (!showFavToknes && mdAndDown))) || !supportsFiat"
+                        cols="12"
+                        sm="6"
+                        md="4"
+                        :class="columnPadding"
+                    >
                         <v-card elevation="1" rounded="xl" class="enkrypt-promo-bg-sm" max-height="200" :href="downloadEnkrypt" target="_blank">
                             <v-img
                                 :src="require('@/assets/promo/enkrypt-text-sm.png')"
@@ -78,8 +87,14 @@
                             />
                         </v-card>
                     </v-col>
-                    <v-col v-if="showFavToknes || (!showFavToknes && mdAndDown)" cols="12" sm="6" md="8" :class="columnPadding">
-                        <v-card elevation="1" rounded="xl" max-height="200" class="promo pa-4 pa-sm-6">
+                    <v-col
+                        v-if="(supportsFiat && (showFavToknes || (!showFavToknes && mdAndDown))) || !supportsFiat"
+                        cols="12"
+                        sm="6"
+                        md="8"
+                        :class="columnPadding"
+                    >
+                        <v-card elevation="1" rounded="xl" min-height="150" max-height="200" class="promo pa-4 pa-sm-6">
                             <v-row align="end" justify="space-around" class="fill-height">
                                 <a class="d-flex align-center justify-center flex-column" href="https://www.myetherwallet.com/" target="_blank">
                                     <v-img :src="require('@/assets/promo/mew.png')" cover height="40" width="88" />
@@ -92,7 +107,7 @@
                                 >
                                     <v-img :src="require('@/assets/promo/buy-crypto.png')" contain height="44" width="48" class="mb-2" />
 
-                                    <app-btn text="Buy Crypto" href="https://ccswap.myetherwallet.com/?platform=ethvm"></app-btn>
+                                    <app-btn text="Buy Crypto"></app-btn>
                                 </a>
                                 <a
                                     v-if="mdAndUp"
@@ -136,9 +151,13 @@ import { useRouter } from 'vue-router'
 import { computed } from 'vue'
 import { useStore } from '@/store'
 import { onMounted } from 'vue'
+import { useNetwork } from '@core/composables/Network/useNetwork'
 import configs from '@/configs'
+
 const { lgAndUp, mdAndDown, mdAndUp, xs } = useDisplay()
 const { columnPadding, rowMargin } = useAppViewGrid()
+const { supportsFiat, isETH, isSEP } = useNetwork()
+
 onMounted(() => {
     window.scrollTo(0, 0)
 })
@@ -154,7 +173,7 @@ const goToPortfolio = async (): Promise<void> => {
     })
 }
 const showFavToknes = computed<boolean>(() => {
-    return store.favTokens.length > 0
+    return supportsFiat.value && store.favTokens.length > 0
 })
 
 const detect = (): string => {

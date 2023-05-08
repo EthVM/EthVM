@@ -1,5 +1,5 @@
 <template>
-    <v-card :variant="isHome ? 'elevated' : 'flat'" :elevation="isHome ? 1 : 0" rounded="xl" class="pa-4 pa-sm-6">
+    <v-card variant="elevated" :elevation="1" rounded="xl" class="pa-4 pa-sm-6">
         <v-card-title :class="[isHome ? 'mb-2 mb-sm-4' : 'mb-2 mb-sm-5', 'px-0  py-0 d-flex align-center justify-space-between']">
             <div class="d-flex align-center">
                 <h1 class="text-h6 font-weight-bold">{{ getTitle }}</h1>
@@ -48,6 +48,18 @@ import { useI18n } from 'vue-i18n'
 const { t } = useI18n()
 
 const { xs } = useDisplay()
+
+const props = defineProps({
+    pageType: {
+        type: String,
+        default: 'home'
+    }
+})
+
+const isHome = computed<boolean>(() => {
+    return props.pageType === 'home'
+})
+
 interface BlockMap {
     [key: number]: TypeBlocks
 }
@@ -68,24 +80,11 @@ const state: ComponentState = reactive({
     startBlock: 0
 })
 
-const props = defineProps({
-    pageType: {
-        type: String,
-        default: 'home'
-    }
-})
-
 /*
  * =======================================================
  * COMPUTED
  * =======================================================
  */
-const blocks = computed<Array<BlockSummaryFragment | null> | []>(() => {
-    if (blockArrays.value && !state.initialLoad) {
-        return blockArrays.value.getBlocksArrayByNumber
-    }
-    return []
-})
 
 const message = computed<string>(() => {
     return ''
@@ -98,30 +97,6 @@ const getTitle = computed<string>(() => {
         home: t('home.table.lastBlockTitle')
     }
     return titles[props.pageType]
-})
-
-const loading = computed<boolean>(() => {
-    if (state.hasError) {
-        return true
-    }
-    if (isHome.value) {
-        return state.initialLoad
-    }
-    return loadingBlocks.value
-})
-
-const isHome = computed<boolean>(() => {
-    return props.pageType === 'home'
-})
-
-const { numberOfPages, pageData: currentPageData, setPageNum, pageNum } = useAppPaginate(blocks)
-
-const showPagination = computed<boolean>(() => {
-    return !state.initialLoad && !isHome.value && blocks.value.length > 0
-})
-
-const hasMore = computed<boolean>(() => {
-    return state.startBlock - ITEMS_PER_PAGE > 0
 })
 
 /*
@@ -168,6 +143,33 @@ function subscribeToMoreHandler() {
         }
     }
 }
+
+const blocks = computed<Array<BlockSummaryFragment | null> | []>(() => {
+    if (blockArrays.value && !state.initialLoad) {
+        return blockArrays.value.getBlocksArrayByNumber
+    }
+    return []
+})
+
+const loading = computed<boolean>(() => {
+    if (state.hasError) {
+        return true
+    }
+    if (isHome.value) {
+        return state.initialLoad
+    }
+    return loadingBlocks.value
+})
+
+const { numberOfPages, pageData: currentPageData, setPageNum, pageNum } = useAppPaginate(blocks)
+
+const showPagination = computed<boolean>(() => {
+    return !state.initialLoad && !isHome.value && blocks.value.length > 0
+})
+
+const hasMore = computed<boolean>(() => {
+    return state.startBlock - ITEMS_PER_PAGE > 0
+})
 
 /*
  * =======================================================

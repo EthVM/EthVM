@@ -1,0 +1,16 @@
+fragment AdrWithdrawal on ETHWithdrawalTransfer {
+    validatorIndex
+    value
+    transfer {
+        block
+        timestamp
+    }
+}
+query getAdrWithdrawals($address: String!,  $nextKey: String, $limit: Int!) {
+    getEthWithdrawalTransfers(address: $address, limit: $limit, nextKey: $nextKey){
+        transfers{
+            ...AdrWithdrawal
+        }
+        nextKey
+    }
+}

@@ -21,6 +21,7 @@ export type AllTransfersFragment = {
     to: string
     txFee: string
     status?: boolean | null
+    validatorIndex?: string | null
 }
 
 export type AllEthTransfersFragment = {
@@ -37,6 +38,7 @@ export type AllEthTransfersFragment = {
         to: string
         txFee: string
         status?: boolean | null
+        validatorIndex?: string | null
     }
     stateDiff?: {
         __typename?: 'StateDiffChange'
@@ -70,6 +72,7 @@ export type GetAllEthTransfersQuery = {
                 to: string
                 txFee: string
                 status?: boolean | null
+                validatorIndex?: string | null
             }
             stateDiff?: {
                 __typename?: 'StateDiffChange'
@@ -91,6 +94,7 @@ export const AllTransfersFragmentDoc = gql`
         to
         txFee
         status
+        validatorIndex
     }
 `
 export const AllEthTransfersFragmentDoc = gql`

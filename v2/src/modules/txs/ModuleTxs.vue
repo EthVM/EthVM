@@ -1,5 +1,5 @@
 <template>
-    <v-card :variant="isHome ? 'elevated' : 'flat'" :elevation="isHome ? 1 : 0" rounded="xl" class="pa-4 pa-sm-6">
+    <v-card :variant="isBlock ? 'flat' : 'elevated'" :elevation="isBlock ? 0 : 1" rounded="xl" class="pa-4 pa-sm-6">
         <v-card-title
             v-if="(isHome || state.newMinedTransfers || tableTitle) && !isBlock"
             :class="[isHome ? 'mb-2 mb-sm-4' : 'mb-2 mb-sm-5', 'px-0  py-0 d-flex align-center justify-space-between']"
@@ -22,7 +22,6 @@
         </v-card-title>
         <txs-table
             :max-items="props.maxItems"
-            :index="state.index"
             :initial-load="initialLoad"
             :is-loading="isLoading"
             :table-message="message"
@@ -46,7 +45,9 @@ import {
     useNewTransfersCompleteFeedSubscription,
     useGetBlockTransfersQuery,
     TransferFragment,
-    EthTransfersFragment
+    EthTransfersFragment,
+    BlockTransactionsFragment,
+    BlockTransactionFragment
 } from './apollo/transfersQuery.generated'
 import { computed, onMounted, reactive, watch } from 'vue'
 import TxsTable from '@module/txs/components/TxsTable.vue'
@@ -140,16 +141,16 @@ const allEthTransfers = computed<EthTransfersFragment | undefined>(() => {
     return getEthTransactionTransfers.value?.getEthTransactionTransfers
 })
 
-const allBlockTransfersResult = computed<EthTransfersFragment | undefined>(() => {
+const allBlockTransfersResult = computed<BlockTransactionsFragment | undefined>(() => {
     return getAllBlockTransfersResult.value?.getBlockTransfers
 })
 
-const transactions = computed<Array<TransferFragment | null>>(() => {
+const transactions = computed<Array<TransferFragment | BlockTransactionFragment>>(() => {
     if (!isBlock.value && allEthTransfers.value && allEthTransfers.value.transfers !== null) {
         return allEthTransfers.value.transfers
     }
     if (isBlock.value && allBlockTransfersResult.value && allBlockTransfersResult.value.transfers !== null) {
-        return allBlockTransfersResult.value.transfers
+        return allBlockTransfersResult.value.transfers.filter((x): x is BlockTransactionFragment => x !== null)
     }
     return []
 })
@@ -191,7 +192,7 @@ const showPagination = computed<boolean>(() => {
 })
 
 const isLoading = computed<boolean>(() => {
-    return loadingTxs.value || loadingBlockTransfers.value
+    return enableBlockTranfersQuery.value ? loadingTxs.value || loadingBlockTransfers.value : true
 })
 
 const initialLoad = computed<boolean>(() => {
@@ -204,7 +205,7 @@ const initialLoad = computed<boolean>(() => {
 const { onResult: onNewTransferLoaded } = useNewTransfersCompleteFeedSubscription()
 
 onNewTransferLoaded(result => {
-    if (result?.data.newTransfersCompleteFeed.type === 'ETH') {
+    if (result?.data?.newTransfersCompleteFeed.type === 'ETH') {
         if (isHome.value) {
             refetchTxArray()
         } else {

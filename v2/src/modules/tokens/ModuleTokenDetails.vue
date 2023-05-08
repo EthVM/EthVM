@@ -12,19 +12,15 @@
                     <v-col cols="12" sm="7" lg="8">
                         <div class="d-flex align-center justify-start mb-5 mb-sm-0 pr-sm-10">
                             <app-address-blockie :address="props.addressRef" :size="8" key="identicon" class="mr-3" />
-                            <app-transform-hash
-                                :hash="eth.toCheckSum(props.addressRef)"
-                                :show-name="false"
-                                is-blue
-                                :link="`/address/${props.addressRef}`"
-                            /></div
+                            <app-transform-hash :hash="eth.toCheckSum(props.addressRef)" :show-name="false" is-blue :link="`/address/${props.addressRef}`" />
+                            <app-copy-to-clip :value-to-copy="eth.toCheckSum(props.addressRef)" class="mx-3" /></div
                     ></v-col>
                     <v-col cols="6" sm="3" lg="2">
                         <p v-if="state.standard !== ''" class="font-weight-bold">Token Standard</p>
                         <p v-if="state.standard !== ''">{{ state.standard }}</p>
                         <div v-else class="skeleton-box rounded-xl mr-10" style="height: 40px; width: 120px"></div>
                     </v-col>
-                    <v-col cols="6" sm="2">
+                    <v-col cols="6" sm="2" v-if="showLeftText">
                         <p v-if="leftText !== ''" class="font-weight-bold">{{ leftTitle }}</p>
                         <p v-if="leftText !== ''" class="text-body">{{ leftText }}</p>
                         <div v-else class="skeleton-box rounded-xl mr-10" style="height: 40px; width: 120px"></div>
@@ -37,7 +33,7 @@
         Contract Details
         =====================================================================================
         -->
-        <v-col cols="12" :class="columnPadding">
+        <v-col cols="12" :class="columnPadding" v-if="showContractDetails">
             <v-card elevation="1" rounded="xl" class="h-100 pa-4 pa-sm-6">
                 <div v-if="showLoading" class="skeleton-box rounded-xl my-2" style="height: 280px"></div>
                 <div v-else>
@@ -99,6 +95,7 @@
 <script setup lang="ts">
 import { reactive, computed, onMounted, watch } from 'vue'
 import AppBtnIcon from '@core/components/AppBtnIcon.vue'
+import AppCopyToClip from '@/core/components/AppCopyToClip.vue'
 import TokenDetailsErc20 from '@module/tokens/components/TokenDetails/TokenDetailsERC20.vue'
 import TokenDetailsNft from '@module/tokens/components/TokenDetails/TokenDetailsNFT.vue'
 import TokenTransfers from '@module/tokens/components/TokenTransfers.vue'
@@ -120,6 +117,8 @@ import AppAddressBlockie from '@core/components/AppAddressBlockie.vue'
 import AppTransformHash from '@/core/components/AppTransformHash.vue'
 import { TransferType } from '@/apollo/types'
 import { useCoinData } from '@core/composables/CoinData/coinData.composable'
+import { useNetwork } from '@/core/composables/Network/useNetwork'
+const { supportsNft } = useNetwork()
 
 const { columnPadding, rowMargin } = useAppViewGrid()
 const { loading: loadingCoinData } = useCoinData()
@@ -313,12 +312,26 @@ const leftText = computed<string>(() => {
     return ''
 })
 
+const showLeftText = computed<boolean>(() => {
+    return supportsNft.value ? true : state.standard === TransferType.Erc20
+})
+
 const showLoading = computed<boolean>(() => {
     if (state.standard === TransferType.Erc20) {
         return loadingCoinData.value || tokenDetails.value === null
     }
     if (state.standard === TransferType.Erc1155 || state.standard === TransferType.Erc721) {
         return loadingNftMeta.value || nftDetails.value === undefined
+    }
+    return true
+})
+
+const showContractDetails = computed<boolean>(() => {
+    if (state.standard === TransferType.Erc20) {
+        return true
+    }
+    if (state.standard === TransferType.Erc1155 || state.standard === TransferType.Erc721) {
+        return supportsNft.value
     }
     return true
 })

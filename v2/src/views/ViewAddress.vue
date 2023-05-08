@@ -6,7 +6,7 @@
     <div v-if="isValid && props.addressRef" :class="[xs ? 'adr-core-background-mobile' : 'adr-core-background', 'pb-6']">
         <v-card class="px-xl-auto mx-0" flat rounded="0" :min-height="smAndDown ? '100%' : '92px'">
             <v-container class="core-container px-3 px-sm-6 pb-4 pb-sm-6 px-md-16 pt-4 pt-sm-10">
-                <v-row align="center" justify="center" class="px-3 px-sm-0 px-md-16 flex-nowrap" no-gutters>
+                <v-row align="center" justify="center" class="px-3 px-sm-0 px-md-16 flex-nowrap" no-gutters style="min-height: 48px">
                     <app-address-blockie :address="props.addressRef || ''" :size="xs ? 9 : 10" />
                     <v-col cols="6" sm="7" :md="store.getAddressName(props.addressRef) ? '8' : 'auto'" lg="auto" class="pl-2 pl-sm-4 pr-sm-0">
                         <div v-if="store.getAddressName(props.addressRef)" class="text-h4 font-weight-bold text-ellipses">
@@ -56,7 +56,7 @@
                 <v-icon class="ml-3">expand_more</v-icon>
             </v-btn>
             <v-menu activator="#address-core-menu" :items="tabs">
-                <v-list bg-color="primary" class="rounded-xl">
+                <v-list bg-color="primary" class="rounded-xl" min-width="160">
                     <template v-for="(item, j) in tabs" :key="j">
                         <v-list-item @click="navigateTo(item.routeName, item.secondaryTab)" :value="item.routeName" :title="item.text" class="text-right">
                         </v-list-item>
@@ -70,7 +70,7 @@
             Desktop Menu
         =========================
         -->
-        <v-tabs v-if="!smAndDown" v-model="state.tab" color="primary" hide-slider align-tabs="center">
+        <v-tabs v-if="!smAndDown" v-model="state.tab" bg-color="primary" hide-slider align-tabs="center">
             <v-tab
                 v-for="i in tabs"
                 @click="navigateTo(i.routeName, i.secondaryTab)"
@@ -131,9 +131,10 @@ import ModulePorfolioHandleAdr from '@module/address/ModulePorfolioHandleAdr.vue
 import { useDisplay } from 'vuetify/lib/framework.mjs'
 import { useStore } from '@/store'
 import { useIsAddressMiner } from '@core/composables/IsAddressMiner/isAddressMiner.composable'
+import { useNetwork } from '@/core/composables/Network/useNetwork'
 
 const { smAndDown, xs } = useDisplay()
-
+const { currencyName } = useNetwork()
 const store = useStore()
 const tabs = reactive([
     {
@@ -143,7 +144,7 @@ const tabs = reactive([
     },
     {
         id: 1,
-        text: 'ETH Balance',
+        text: `${currencyName.value} Balance`,
         routeName: ROUTE_NAME.ADDRESS_BALANCE.NAME
     },
     {
@@ -299,10 +300,6 @@ if (!isValid.value) {
 .v-btn--mobile-menu {
     justify-content: end;
 }
-div.v-overlay__content {
-    // left: 0px !important;
-}
-
 .background-mobile {
     background-color: rgb(var(--v-theme-primary));
 }

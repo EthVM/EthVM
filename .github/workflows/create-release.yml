@@ -1,4 +1,4 @@
-name: deploy live
+name: deploy production
 
 on:
   push:
@@ -48,7 +48,6 @@ jobs:
         env:
           VUE_APP_SENTRY_SECURITY_TOKEN: ${{ secrets.VUE_APP_SENTRY_SECURITY_TOKEN }}
           VUE_APP_SENTRY_SECURITY_DSN: ${{ secrets.VUE_APP_SENTRY_SECURITY_DSN }}
-          VUE_APP_ETH_NETWORK: ${{ secrets.VUE_APP_ETH_NETWORK }}
           VUE_APP_PUBLIC_URL: ${{ secrets.VUE_APP_PUBLIC_URL }}
           VUE_APP_HTTP_LINK: ${{ secrets.VUE_APP_HTTP_LINK }}
           VUE_APP_WS_CLIENT: ${{ secrets.VUE_APP_WS_CLIENT }}
@@ -58,15 +57,15 @@ jobs:
         if: github.base_ref == ''
         env:
           AWS_DEFAULT_REGION: ${{secrets.AWS_DEFAULT_REGION}}
-          AWS_ACCESS_KEY_ID: ${{secrets.AWS_ACCESS_KEY_ID}}
-          AWS_SECRET_ACCESS_KEY: ${{secrets.AWS_SECRET_ACCESS_KEY}}
+          AWS_ACCESS_KEY_ID: ${{secrets.AWS_KEY}}
+          AWS_SECRET_ACCESS_KEY: ${{secrets.AWS_SECRET}}
           VIRUS_TOTAL_API_KEY: ${{secrets.VIRUS_TOTAL_API_KEY}}
           GITHUB_TOKEN: ${{secrets.MEW_BOT_API_KEY}}
         run: |
           cd ./v2
           pip install --user awscli
-          aws s3 sync --delete --acl public-read dist/ s3://ethvm-mainnet-web/live
-          aws s3 cp s3://ethvm-mainnet-web/live/index.html s3://ethvm-mainnet-web/live/index.html \
+          aws s3 sync --delete --acl public-read dist/ s3://ethvm-front-end-builds/production
+          aws s3 cp s3://ethvm-front-end-builds/production/index.html s3://ethvm-front-end-builds/production/index.html \
             --metadata-directive REPLACE --cache-control max-age=0,no-cache,no-store,must-revalidate \
             --content-type text/html --acl public-read
           cd dist && zip -r ../ethVM-$GITHUB_SHA.zip * && cd ..
@@ -76,21 +75,16 @@ jobs:
                             Virus Total analysis <br/> \
                             $VIRUS_TOTAL_URL\"}" \
                             "https://api.github.com/repos/${GITHUB_REPOSITORY}/commits/${GITHUB_SHA}/comments"
-      #Get Release Tag
-      - name: Get release tag
-        id: get_release_tag
-        run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
-
       - name: deploy to sentry
         env:
           SENTRY_AUTH_TOKEN: ${{secrets.VUE_APP_SENTRY_SECURITY_TOKEN}}
           SENTRY_ORG: myetherwallet-inc
         run: |
           curl -sL https://sentry.io/get-cli/ | bash
-          TAG=${{ steps.get_release_tag.outputs.VERSION }}
+          TAG=${{ github.ref_name }}
           RELEASE=${TAG//v/}
-          sentry-cli releases new -p ethvm-web $RELEASE
-          sentry-cli releases -p ethvm-web files $RELEASE upload-sourcemaps ./v2/dist/sourcemaps --url-prefix 'https://www.ethvm.com/sourcemaps' --rewrite --validate
+          sentry-cli releases new -p ethvm-eth-front-end $RELEASE
+          sentry-cli releases -p ethvm-eth-front-end files $RELEASE upload-sourcemaps ./v2/dist/sourcemaps --url-prefix 'https://www.ethvm.com/sourcemaps' --rewrite --validate
           sentry-cli releases set-commits $RELEASE --auto
           sentry-cli releases finalize $RELEASE
       #Create Release
@@ -98,4 +92,4 @@ jobs:
         env:
           GITHUB_TOKEN: ${{secrets.MEW_BOT_API_KEY}}
         run: |
-          bash ./release.sh ${{ steps.get_release_tag.outputs.VERSION }} $GITHUB_TOKEN $GITHUB_REPOSITORY true
+          bash ./release.sh ${{ github.ref_name }} $GITHUB_TOKEN $GITHUB_REPOSITORY true

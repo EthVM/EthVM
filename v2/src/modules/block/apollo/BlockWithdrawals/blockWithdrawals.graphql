@@ -1,0 +1,15 @@
+fragment blockWithdrawal on ETHWithdrawalTransfer{
+    validatorIndex
+    value
+    transfer {
+        to
+    }
+}
+query getBlockWithdrawals($blockNumber: Int!,  $nextKey: String) {
+    getEthWithdrawalTransfers(blockNumber: $blockNumber, limit: 10, nextKey: $nextKey){
+        transfers{
+            ...blockWithdrawal
+        }
+        nextKey
+    }
+}
