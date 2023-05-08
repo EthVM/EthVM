@@ -5,7 +5,7 @@
             <div class="lastPart">{{ end }}</div>
         </component>
     </div>
-    <div v-else class="text-ellipses">
+    <div v-else :class="['text-ellipses', { 'hash-container-short': props.isShort }]">
         <div v-if="!hasLink" :class="{ 'text-secondary': props.isBlue }">{{ displayName }}</div>
         <router-link v-else :to="props.link || ''" class="text-secondary">{{ displayName }}</router-link>
     </div>
@@ -99,6 +99,10 @@ $endWidth: 1em * $fontFaceScaleFactor * $endFixedChars;
 .hash-container {
     white-space: nowrap;
     overflow: hidden;
+}
+
+.hash-container-short {
+    width: 100px;
 }
 
 .text-overflow-ellipsis {
