@@ -1,5 +1,5 @@
 <template>
-    <v-tooltip top color="white" content-class="tooltip-border">
+    <v-tooltip v-if="componentProps.text && componentProps.text !== ''">
         <template #activator="{ props }">
             <v-icon :class="iconClass" :color="componentProps.iconColor" dark small v-bind="props" size="18">{{ componentProps.iconType }}</v-icon>
         </template>
