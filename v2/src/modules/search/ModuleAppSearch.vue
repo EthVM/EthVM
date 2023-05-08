@@ -8,7 +8,7 @@
         @menuArrowPress="selectItems"
     >
         <template #search-results>
-            <v-list lines="one" style="overflow: scroll">
+            <v-list lines="one">
                 <!--
                     Search has Address result
                 -->
