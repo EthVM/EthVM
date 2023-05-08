@@ -1,15 +1,9 @@
 <template>
     <div v-if="!displayName" class="hash-container font-mono">
-        <div v-if="!hasLink" :class="{ 'text-secondary': props.isBlue }">
-            <div v-if="start" class="firstPart">{{ start }}</div>
-            <span v-if="props.isShort" class="font-normal">...</span>
+        <component :is="!hasLink ? 'div' : 'router-link'" :to="props.link || ''" :class="{ 'text-secondary': props.isBlue }">
+            <div v-if="start" :class="props.isShort ? 'firstPartShort' : 'firstPart'">{{ start }}</div>
             <div class="lastPart">{{ end }}</div>
-        </div>
-        <router-link v-else :to="props.link || ''" :class="{ 'text-secondary': props.isBlue }">
-            <div class="firstPart">{{ start }}</div>
-            <span v-if="props.isShort" class="font-normal">...</span>
-            <div class="lastPart">{{ end }}</div>
-        </router-link>
+        </component>
     </div>
     <div v-else class="text-ellipses">
         <div v-if="!hasLink" :class="{ 'text-secondary': props.isBlue }">{{ displayName }}</div>
@@ -46,24 +40,15 @@ const props = defineProps({
     }
 })
 
-const firstPartCount = 4
-const lastPartCount = 4
-
 const start = computed<string>(() => {
     const n = props.hash?.length
-    if (props.isShort) {
-        return props.hash?.slice(0, firstPartCount)
-    }
     const sliceStop = n - 4 > 4 ? n - 4 : 4
     return props.hash?.slice(0, sliceStop)
 })
 
 const end = computed<string>(() => {
     const n = props.hash?.length
-    if (props.isShort) {
-        return props.hash?.slice(n - lastPartCount, n)
-    }
-    const sliceStart = n - 4 > 4 ? n - 4 : 4
+    const sliceStart = n - 5 > 5 ? n - 5 : 5
     return props.hash?.slice(sliceStart, n)
 })
 
@@ -89,6 +74,7 @@ $startWidth: 1em * $fontFaceScaleFactor * ($startFixedChars + 3);
 $endWidth: 1em * $fontFaceScaleFactor * $endFixedChars;
 
 .firstPart,
+.firstPartShort,
 .lastPart {
     display: inline-block;
     white-space: nowrap;
@@ -97,6 +83,12 @@ $endWidth: 1em * $fontFaceScaleFactor * $endFixedChars;
 }
 .firstPart {
     max-width: calc(100% - #{$endWidth});
+    min-width: $startWidth;
+    text-overflow: ellipsis;
+}
+
+.firstPartShort {
+    max-width: 55px;
     min-width: $startWidth;
     text-overflow: ellipsis;
 }
