@@ -11,7 +11,9 @@
                         <p v-if="isETH" class="text-white font-weight-light text-h3 text-sm-h2 text-lg-h1 text-center text-lg-left">
                             {{ $t('home.tagline.row2') }}
                         </p>
-                        <p v-if="isSEP" class="text-white font-weight-light text-h3 text-sm-h2 text-lg-h1 text-center text-lg-left">on the Sepolia Testnet.</p>
+                        <p v-if="isSEP" class="text-white font-weight-light text-h3 text-sm-h2 text-lg-h1 text-center text-lg-left">
+                            {{ $t('home.tagline.row3') }}
+                        </p>
                         <div class="ml-1">
                             <module-search class="justify-center justify-lg-start mt-5 mt-lg-10" />
                         </div>

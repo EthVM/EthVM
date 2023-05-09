@@ -32,13 +32,13 @@
         "to": "To",
         "amount": "Amount",
         "fee": "Tx Fee",
-        "status": "Status",
-        "mew": "MEW"
+        "status": "Status"
     },
     "home": {
         "tagline": {
             "row1": "Track, analyze and explore",
-            "row2": "on the Ethereum blockchain."
+            "row2": "on the Ethereum blockchain.",
+            "row3": "on the Sepolia Testnet."
         },
         "table": {
             "lastBlockTitle": "Last Blocks",
@@ -67,8 +67,7 @@
             "pricing": "Pricing from Coingecko",
             "power": "Powered by",
             "rights": "All rights reserved.",
-            "evmV": "ethVM v",
-            "mew": "MyEtherWallet Inc."
+            "settings": "Settings"
         }
     }
 }

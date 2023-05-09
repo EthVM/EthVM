@@ -81,14 +81,14 @@
                         :active="false"
                         class="text-h5 font-weight-bold mb-lg-16 ml-n4 mr-auto mr-sm-n5 mt-sm-n1"
                     >
-                        Settings <v-icon class="ml-2">settings</v-icon>
+                        {{ $t('home.footer.settings') }} <v-icon class="ml-2">settings</v-icon>
                     </v-btn>
                     <p class="mb-3 text-sm-right mt-2 mt-lg-12">{{ $t('home.footer.pricing') }}</p>
                     <div class="d-flex font-weight-light align-center justify-sm-end">
                         <p class="text-uppercase mb-0 mr-2 text-caption font-weight-light">{{ $t('home.footer.power') }}</p>
                         <div class="d-flex align-center">
                             <v-img :src="require('@/assets/logo/mew.svg')" width="24" height="24" contain class="mr-1" />
-                            <p class="text-uppercase text-h3">{{ $t('common.mew') }}</p>
+                            <p class="text-uppercase text-h3">MEW</p>
                         </div>
                     </div>
                 </v-col>
@@ -117,9 +117,7 @@
         <div class="copyright bg-tabActive w-100">
             <v-container class="py-2 px-0">
                 <div class="d-flex flex-column flex-wrap">
-                    <p class="px-4 px-sm-6 pt-6 text-center text-sm-right">
-                        {{ $t('home.footer.evmV') }} {{ version }} {{ new Date().getFullYear() }} {{ $t('home.footer.mew') }}
-                    </p>
+                    <p class="px-4 px-sm-6 pt-6 text-center text-sm-right">ethVM v {{ version }} {{ new Date().getFullYear() }} MyEtherWallet Inc.</p>
                     <p class="px-4 px-sm-6 pb-6 text-center text-sm-right">{{ $t('home.footer.rights') }}</p>
                 </div>
             </v-container>
