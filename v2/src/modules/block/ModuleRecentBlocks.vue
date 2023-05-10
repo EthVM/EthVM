@@ -92,9 +92,9 @@ const message = computed<string>(() => {
 
 const getTitle = computed<string>(() => {
     const titles = {
-        blocks: t('home.table.allBlockTitle'),
-        address: t('home.table.addressBlockTitle'),
-        home: t('home.table.lastBlockTitle')
+        blocks: t('block.allBlockTitle'),
+        address: t('block.addressBlockTitle'),
+        home: t('block.lastBlockTitle')
     }
     return titles[props.pageType]
 })

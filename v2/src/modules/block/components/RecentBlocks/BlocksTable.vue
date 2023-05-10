@@ -6,11 +6,11 @@
             =====================================================================================
         -->
         <v-row v-if="!xs" align="center" justify="start" class="text-body-1 text-info">
-            <v-col> {{ $t('home.table.header.blockNumber') }} </v-col>
-            <v-col v-if="!mdAndDown" sm="2"> {{ $t('home.table.header.time') }} </v-col>
-            <v-col sm="3" lg="2"> {{ $t('home.table.header.transactions') }} </v-col>
-            <v-col sm="4" lg="3"> {{ $t('home.table.header.miner') }} </v-col>
-            <v-col sm="3"> {{ $t('home.table.header.reward') }} </v-col>
+            <v-col> {{ $t('block.header.blockNumber') }} </v-col>
+            <v-col v-if="!mdAndDown" sm="2"> {{ $t('block.header.time') }} </v-col>
+            <v-col sm="3" lg="2"> {{ $t('block.header.transactions') }} </v-col>
+            <v-col sm="4" lg="3"> {{ $t('block.header.miner') }} </v-col>
+            <v-col sm="3"> {{ $t('block.header.reward') }} </v-col>
         </v-row>
         <v-divider class="my-0 mt-sm-4 mx-n4 mx-sm-n6" />
         <!--

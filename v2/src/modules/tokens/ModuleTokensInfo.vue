@@ -289,10 +289,10 @@ const showLoadingRows = computed<number>(() => {
 
 const title = computed<string>(() => {
     return props.homePage === TOKENS_VIEW.ALL
-        ? t('home.table.topTokenTitle')
+        ? t('block.topTokenTitle')
         : props.homePage === TOKENS_VIEW.FAV || !supportsFiat.value
-        ? t('home.table.favoriteTokenTitle')
-        : t('home.table.marketTokenTitle')
+        ? t('block.favoriteTokenTitle')
+        : t('block.marketTokenTitle')
 })
 
 const router = useRouter()
