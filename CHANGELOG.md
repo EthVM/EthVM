@@ -1,3 +1,10 @@
+
+### Release v2.1.2
+
+### Devop
+- refactor Home View for i18n [#1142](https://github.com/EthVM/EthVM/pull/1142)
+
+======================================================================
 ### Release v2.1.1
 
 ### Devop
