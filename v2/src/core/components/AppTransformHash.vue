@@ -42,7 +42,7 @@ const props = defineProps({
 
 const start = computed<string>(() => {
     const n = props.hash?.length
-    const sliceStop = n - 4 > 4 ? n - 4 : 4
+    const sliceStop = n - 5 > 5 ? n - 5 : 5
     return props.hash?.slice(0, sliceStop)
 })
 
