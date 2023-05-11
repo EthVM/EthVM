@@ -17,7 +17,10 @@
                 <v-col cols="12" lg="6">
                     <div class="tx-info">
                         <p class="text-button mb-1">Tx Hash</p>
-                        <app-transform-hash :hash="props.txRef" class="text-body-1" />
+                        <div class="d-flex align-center justify-start">
+                            <app-transform-hash :hash="props.txRef" class="text-body-1" />
+                            <app-copy-to-clip :value-to-copy="eth.toCheckSum(props.txRef)" class="mx-3" />
+                        </div>
                         <template v-if="loadingTransactionHash">
                             <div class="skeleton-box rounded-xl mt-1" style="height: 18px; max-width: 300px"></div>
                         </template>
@@ -69,6 +72,7 @@
                                         :link="`/address/${transactionData.from}`"
                                         class="text-body-1"
                                     />
+                                    <app-copy-to-clip :value-to-copy="eth.toCheckSum(transactionData.from)" class="mx-3" />
                                 </div>
                             </template>
                         </div>
@@ -98,6 +102,11 @@
                                         :hash="eth.toCheckSum(transactionData.to || transactionData.contractAddress || '')"
                                         :link="`/address/${transactionData.to || transactionData.contractAddress || ''}`"
                                         class="text-body-1"
+                                    />
+                                    <app-copy-to-clip
+                                        v-if="transactionData.to || transactionData.contractAddress"
+                                        :value-to-copy="eth.toCheckSum(transactionData.to || transactionData.contractAddress)"
+                                        class="mx-3"
                                     />
                                 </div>
                             </template>
@@ -142,6 +151,7 @@ import AppAddressBlockie from '@core/components/AppAddressBlockie.vue'
 import TabMore from '@module/txs/components/TabMore.vue'
 import AppTabs from '@/core/components/AppTabs.vue'
 import ModuleTxActions from './ModuleTxActions.vue'
+import AppCopyToClip from '@/core/components/AppCopyToClip.vue'
 import { computed, onMounted, reactive, ref } from 'vue'
 import BN from 'bignumber.js'
 import { TxDetailsFragment as TxDetailsType, useGetTransactionByHashQuery, useTransactionEventSubscription } from './apollo/TxDetails/TxDetails.generated'
