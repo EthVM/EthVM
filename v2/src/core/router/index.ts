@@ -28,6 +28,8 @@ const ViewPortfolio = () => import(/* webpackChunkName: "ViewPortfolio" */ '@vie
 const ViewNotFound = () => import(/* webpackChunkName: "View404" */ '@view/ViewNotFound.vue')
 const ViewAbout = () => import(/* webpackChunkName: "ViewAbout" */ '@view/ViewAbout.vue')
 const ViewSettings = () => import(/* webpackChunkName: "ViewSettings" */ '@view/ViewSettings.vue')
+const ViewAdvertise = () => import(/* webpackChunkName: "ViewAdvertise" */ '@view/ViewAdWithUs.vue')
+
 const routes: Array<RouteRecordRaw> = [
     {
         path: ROUTE_NAME.HOME.PATH,
@@ -152,6 +154,11 @@ const routes: Array<RouteRecordRaw> = [
         path: '/:pathMatch(.*)*',
         redirect: ROUTE_NAME.NOT_FOUND.PATH,
         beforeEnter: loadImages()
+    },
+    {
+        path: ROUTE_NAME.ADVERTISE.PATH,
+        component: ViewAdvertise,
+        name: ROUTE_NAME.ADVERTISE.NAME
     }
 ]
 

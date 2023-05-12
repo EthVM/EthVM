@@ -98,6 +98,10 @@ const ROUTE_NAME: Route = {
     SETTINGS: {
         PATH: '/settings',
         NAME: 'settings'
+    },
+    ADVERTISE: {
+        PATH: '/advertise-with-us',
+        NAME: 'advertise'
     }
 }
 
