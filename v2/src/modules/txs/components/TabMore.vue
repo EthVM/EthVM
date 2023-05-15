@@ -83,7 +83,7 @@
 <script setup lang="ts">
 import AppNoResult from '@core/components/AppNoResult.vue'
 import AppTransformHash from '@core/components/AppTransformHash.vue'
-import { TxDetailsFragment as TxDetailsType } from '../apollo/TxDetails.generated'
+import { TxDetailsFragment as TxDetailsType } from '../apollo/TxDetails/TxDetails.generated'
 import { computed } from 'vue'
 import { formatNonVariableGWeiValue, formatNumber, FormattedNumber } from '@core/helper/number-format-helper'
 import BN from 'bignumber.js'

@@ -1,3 +1,5 @@
+import { TransferType } from '@/apollo/types'
+import { Erc20MetaFragment } from '@module/txs/apollo/Actions/actionsQueries.generated'
 export interface Tx {
     hash: string
     block: string
@@ -18,4 +20,13 @@ export interface PendingTx {
     value: string
     timestamp: number
     isMined: boolean
+}
+
+export interface Action {
+    value: string
+    from: string
+    to: string
+    type: TransferType
+    tokenInfo?: Erc20MetaFragment
+    nftId?: string
 }

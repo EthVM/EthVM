@@ -6,14 +6,32 @@
 
 ======================================================================
 ### Release v2.1.1
+Adds Transaction Actions to the txs details:
+- ETH Transfers
+- ERC20 Transfers
+- NFT Transfers
+
+### Feature
+- ability to search by saved address names [#1152](https://github.com/EthVM/EthVM/pull/1152)
+- allow block search with separators [#1152](https://github.com/EthVM/EthVM/pull/1152)
+- add select items by arrow keys [#1152](https://github.com/EthVM/EthVM/pull/1152)
+- add ETH Transfers , ERC20 Transfers NFT Transfers to the tx detail page [#1153](https://github.com/EthVM/EthVM/pull/1153)
+- Add ability to copy full hash when isShort prop is used in TransformHash component [#1153](https://github.com/EthVM/EthVM/pull/1153)
 
 ### Devop
 - update sentry object for logging release version, chain env [#1150](https://github.com/EthVM/EthVM/pull/1150)
 - add graphql int exception and handler in block details [#1150](https://github.com/EthVM/EthVM/pull/1150)
 - add unstopable exception to sentry  [#1150](https://github.com/EthVM/EthVM/pull/1150)
+- prevent fetching isMiner on onvalid addressHash [#1151](https://github.com/EthVM/EthVM/pull/1151)
+- update Vuetify and VueRouter versions [#1153](https://github.com/EthVM/EthVM/pull/1153)
 
 ### BUG
 - fix empty withdrawals list on new block subscription [#1150](https://github.com/EthVM/EthVM/pull/1150)
+- remove prevent navigation change when snackbar is opened. [#1153](https://github.com/EthVM/EthVM/pull/1153)
+- 
+
+### UI
+- add icons to block and tx search results [#1152](https://github.com/EthVM/EthVM/pull/1152)
 ======================================================================
 
 ### Release v2.1.0
