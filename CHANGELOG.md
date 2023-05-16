@@ -4,6 +4,8 @@
 
 -   refactor Home View for i18n [#1142](https://github.com/EthVM/EthVM/pull/1142)
 -   Added Portfolio View for i18n [#1155](https://github.com/EthVM/EthVM/pull/1155)
+-   Added setting View for i18n [#1158](https://github.com/EthVM/EthVM/pull/1158)
+
 
 ======================================================================
 
