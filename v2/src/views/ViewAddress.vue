@@ -114,7 +114,7 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, computed, onMounted } from 'vue'
+import { reactive, computed, onMounted, toRef } from 'vue'
 import AppError from '@/core/components/AppError.vue'
 import AddressQr from '@/modules/address/components/AddressQr.vue'
 import AppDialog from '@core/components/AppDialog.vue'
@@ -185,7 +185,8 @@ const state: ComponentState = reactive({
     showQR: false
 })
 
-const { isAddressMiner } = useIsAddressMiner(props.addressRef)
+const addressString = toRef(props, 'addressRef')
+const { isAddressMiner } = useIsAddressMiner(addressString)
 
 const openEditDialog = (_value: boolean) => {
     state.showEdit = _value

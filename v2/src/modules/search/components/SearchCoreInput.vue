@@ -16,6 +16,8 @@
                 @focus="search.focus = true"
                 @blur="onBlur"
                 @keyup.enter="onSearchEnter"
+                @keydown.up="menuArrow('up')"
+                @keydown.down="menuArrow('down')"
             >
                 <template v-slot:prepend-inner v-if="!xs">
                     <v-icon :color="search.value ? (props.hasError ? 'error' : 'secondary') : 'greyInputText'" icon="search" />
@@ -63,6 +65,7 @@ const props = defineProps({
 const emit = defineEmits<{
     (e: 'onUserInput', searchValue: string): void
     (e: 'onSearchEnter', searchValue: string): void
+    (e: 'menuArrowPress', direction: string): void
 }>()
 
 /*
@@ -106,6 +109,10 @@ const onSearchEnter = (): void => {
     search.timeoutEnter = window.setTimeout(() => {
         emit('onSearchEnter', search.value)
     }, 800)
+}
+
+const menuArrow = (_val: string) => {
+    emit('menuArrowPress', _val)
 }
 
 /**

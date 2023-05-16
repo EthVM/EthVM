@@ -28,6 +28,7 @@ fragment BlockDetails on Block {
     gasLimit
     gasUsed
     transactions
+    withdrawalCount
 }
 
 query getBlockByNumber($blockRef: Int!) {

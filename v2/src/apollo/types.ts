@@ -431,6 +431,7 @@ export type Block = {
     totalDifficulty: Scalars['String']
     transactions: Array<Maybe<Scalars['String']>>
     transactionsRoot: Scalars['String']
+    withdrawalCount: Scalars['Int']
 }
 
 export type BlockChangedFilter = {
@@ -2747,6 +2748,7 @@ export type Query = {
     getERC20TokenOwners: Erc20TokenOwners
     getERC20TokenTransfers: Erc20Transfers
     getERC20Transfers: Erc20Transfers
+    getERC20TransfersByHash: Erc20Transfers
     /** Get the count of ERC721 tokens of a contract that are owned by the address */
     getERC721TokenBalance: Erc721TokenBalance
     /** Get addresses owning a contract's ERC721 tokens */
@@ -2775,6 +2777,7 @@ export type Query = {
     getNFTContractMeta?: Maybe<RespCollections>
     getNFTTokensMeta?: Maybe<RespTokens>
     getNFTTransfers: NftTransfers
+    getNFTTransfersByHash: NftTransfers
     getNFTcontractsMeta: AddressNfTcontracts
     /** Get ERC20 tokens owned by an address */
     getOwnersERC20Tokens: Erc20TokenOwners
@@ -3075,6 +3078,14 @@ export type QueryGetErc20TransfersArgs = {
     owner: Scalars['String']
 }
 
+export type QueryGetErc20TransfersByHashArgs = {
+    direction?: InputMaybe<TransferDirection>
+    hash: Scalars['String']
+    limit?: InputMaybe<Scalars['Int']>
+    nextKey?: InputMaybe<Scalars['String']>
+    owner?: InputMaybe<Scalars['String']>
+}
+
 export type QueryGetErc721TokenBalanceArgs = {
     contract: Scalars['String']
     owner: Scalars['String']
@@ -3198,6 +3209,14 @@ export type QueryGetNftTransfersArgs = {
     direction?: InputMaybe<TransferDirection>
     limit?: InputMaybe<Scalars['Int']>
     nextKey?: InputMaybe<Scalars['String']>
+}
+
+export type QueryGetNftTransfersByHashArgs = {
+    direction?: InputMaybe<TransferDirection>
+    hash: Scalars['String']
+    limit?: InputMaybe<Scalars['Int']>
+    nextKey?: InputMaybe<Scalars['String']>
+    owner?: InputMaybe<Scalars['String']>
 }
 
 export type QueryGetNfTcontractsMetaArgs = {
