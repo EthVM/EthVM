@@ -56,6 +56,23 @@
             "name": "Enter Name"
         }
     },
+    "settings": {
+        "emptyList": "This list is empty",
+        "header": {
+            "general": "General Settings",
+            "addressName": "Address Names"
+        },
+        "placeholder": {
+            "search": "Search by hash or name"
+        },
+        "tagline": {
+            "addressName": "Add custom names to addresses in order to easily track them through ethVM"
+        },
+        "button": {
+            "export": "Export",
+            "import": "Import"
+        }
+    },
     "block": {
         "lastBlockTitle": "Last Blocks",
         "addressBlockTitle": "Mined Blocks",
