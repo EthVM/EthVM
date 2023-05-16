@@ -19,7 +19,7 @@
                         <v-card class="mt-md-16 py-5 px-3 text-center text-white contact-us text-caption" rounded="xl" min-width="211" max-width="221">
                             <p>Let's work together to achieve</p>
                             <p class="mb-3">your marketing goals!</p>
-                            <v-btn color="secondary" min-width="134" height="26" rounded="pill" class="contact-us-btn">Contact Us</v-btn>
+                            <v-btn color="secondary" min-width="134" height="26" rounded="pill" class="contact-us-btn" @click="scrollToForm">Contact Us</v-btn>
                         </v-card>
                     </div>
                 </div>
@@ -121,7 +121,7 @@
                         </v-card>
                     </v-col>
                     <v-col cols="12" :class="columnPadding">
-                        <v-card variant="elevated" elevation="1" rounded="xl">
+                        <v-card variant="elevated" elevation="1" rounded="xl" id="contact-form">
                             <v-img class="align-start text-white" height="100%" :src="require('/src/assets/nebula/nebula-bg-lg.png')" cover eager>
                                 <div class="mx-auto pa-4 pa-sm-6 px-lg-0" color="none" style="max-width: 496px">
                                     <v-row class="flex-column align-center justify-center mt-0 mt-sm-11 pt-1">
@@ -227,7 +227,7 @@ import AppBtn from '@core/components/AppBtn.vue'
 import { useAppViewGrid } from '@core/composables/AppViewGrid/AppViewGrid.composable'
 import { useDisplay } from 'vuetify/lib/framework.mjs'
 import { computed, reactive } from 'vue'
-import { onMounted } from 'vue'
+import { onMounted, nextTick } from 'vue'
 
 const { lgAndUp, mdAndUp, md, sm } = useDisplay()
 const { columnPadding, rowMargin } = useAppViewGrid()
@@ -293,6 +293,15 @@ const rules = {
         const pattern =
             /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
         return pattern.test(value) || 'Invalid e-mail.'
+    }
+}
+
+const scrollToForm = () => {
+    const el = document.getElementById('contact-form')
+    if (el) {
+        nextTick(() => {
+            el.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'nearest' })
+        })
     }
 }
 </script>
