@@ -98,7 +98,7 @@ const tabs: Tab[] = [
     },
     {
         value: routes[1],
-        title: t('block.header.balance')
+        title: t('common.balance', 2)
     }
 ]
 

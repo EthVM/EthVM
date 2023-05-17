@@ -37,7 +37,7 @@
         "status": "Status",
         "address": "Address",
         "total": "Total",
-        "balance": "Balance",
+        "balance": "Balance | Balances",
         "value": "Value",
         "token": "Token",
         "price": "Price",
@@ -74,7 +74,6 @@
             "time": "Timestamp",
             "transactions": "Transactions",
             "miner": "Miner",
-            "balance": "Balances",
             "reward": "Reward"
         }
     },
