@@ -42,7 +42,7 @@ jobs:
           VUE_APP_PUBLIC_URL: 'sepolia.ethvm.com/'
           VUE_APP_HTTP_LINK: https://sepolia-api-v2.ethvm.dev
           VUE_APP_WS_CLIENT: wss://sepolia-apiws-v2.ethvm.dev
-          VUE_APP_FORMSPREE_CONTACT : $${{secrets.VUE_APP_FORMSPREE_CONTACT}}
+          VUE_APP_FORMSPREE_CONTACT : ${{secrets.VUE_APP_FORMSPREE_CONTACT}}
       # Deploy to S3
       - name: Deploy to S3
         if: github.base_ref == ''
