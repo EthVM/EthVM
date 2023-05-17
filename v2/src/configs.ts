@@ -26,6 +26,7 @@ const configs = {
     ROUTER_MODE: process.env.VUE_APP_ROUTER_MODE || 'history',
     BROWSER_NAMES: BROWSER_NAMES,
     EXTENSION_LINKS: EXTENSION_LINKS,
-    SENTRY: process.env.VUE_APP_SENTRY_SECURITY_DSN
+    SENTRY: process.env.VUE_APP_SENTRY_SECURITY_DSN,
+    FORMSPREE: process.env.VUE_APP_FORMSPREE_CONTACT || ''
 }
 export default configs

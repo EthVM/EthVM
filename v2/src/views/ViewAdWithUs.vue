@@ -209,7 +209,7 @@
                                                 ></v-text-field>
                                             </v-form>
                                         </v-col>
-                                        <app-btn text="Submit" class="mt-1 mb-3 mb-sm-15" min-width="206" />
+                                        <app-btn text="Submit" class="mt-1 mb-3 mb-sm-15" min-width="206" :loading="submissionInProcess" @click="submit" />
                                     </v-row>
                                 </div>
                             </v-img>
@@ -227,7 +227,9 @@ import AppBtn from '@core/components/AppBtn.vue'
 import { useAppViewGrid } from '@core/composables/AppViewGrid/AppViewGrid.composable'
 import { useDisplay } from 'vuetify/lib/framework.mjs'
 import { computed, reactive } from 'vue'
-import { onMounted, nextTick } from 'vue'
+import { onMounted, nextTick, ref } from 'vue'
+import configs from '@/configs'
+import * as Sentry from '@sentry/vue'
 
 const { lgAndUp, mdAndUp, md, sm } = useDisplay()
 const { columnPadding, rowMargin } = useAppViewGrid()
@@ -277,11 +279,19 @@ const universeHeight = computed<string>(() => {
     return '300'
 })
 
-const formState = reactive({
+interface FormData {
+    name: string
+    company: string
+    website: string
+    contactNumber: string
+    email: string
+    message: string
+}
+const formState = reactive<FormData>({
     name: '',
     company: '',
     website: '',
-    contactNumber: undefined,
+    contactNumber: '',
     email: '',
     message: ''
 })
@@ -303,6 +313,33 @@ const scrollToForm = () => {
             el.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'nearest' })
         })
     }
+}
+
+const submissionInProcess = ref(false)
+
+const submit = () => {
+    const formData = new FormData()
+    const keys = Object.keys(formState)
+    keys.forEach(key => {
+        formData
+        formData.append(key, formState[key as keyof FormData])
+    })
+    submissionInProcess.value = true
+    fetch(configs.FORMSPREE, {
+        method: 'POST',
+        body: formData,
+        headers: {
+            Accept: 'application/json'
+        }
+    })
+        .then(response => {
+            if (response.ok) {
+                submissionInProcess.value = false
+            }
+        })
+        .catch(error => {
+            Sentry.captureException(`ERROR in form submisssion: ${error}. DATA: ${formData}`)
+        })
 }
 </script>
 
