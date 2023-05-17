@@ -196,7 +196,7 @@
                                                     clearable
                                                     class="mb-1"
                                                 ></v-text-field>
-                                                <v-text-field
+                                                <v-textarea
                                                     v-model="formState.message"
                                                     label="Message"
                                                     :rules="[rules.required]"
@@ -206,7 +206,7 @@
                                                     flat
                                                     clearable
                                                     class="mb-1"
-                                                ></v-text-field>
+                                                ></v-textarea>
                                             </v-form>
                                         </v-col>
                                         <app-btn text="Submit" class="mt-1 mb-3 mb-sm-15" min-width="206" :loading="submissionInProcess" @click="submit" />
