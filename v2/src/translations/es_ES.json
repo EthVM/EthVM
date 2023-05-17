@@ -23,15 +23,53 @@
         "more": "More",
         "header": "All Transactions",
         "isHomeHeader": "Last Transactions",
-        "refresh": "New Txs Found, Refresh"
+        "refresh": "New Txs Found, Refresh",
+        "name": "Transactions"
     },
     "common": {
         "block": "Block / Timestamp",
+        "timestamp": "Timestamp",
         "hash": "Hash",
         "from": "From",
         "to": "To",
         "amount": "Amount",
         "fee": "Tx Fee",
         "status": "Status"
+    },
+    "block": {
+        "lastBlockTitle": "Last Blocks",
+        "addressBlockTitle": "Mined Blocks",
+        "allBlockTitle": "All Blocks",
+        "topTokenTitle": "Top Tokens",
+        "favoriteTokenTitle": "Favorite Tokens",
+        "marketTokenTitle": "Token Market",
+        "header": {
+            "blockNumber": "Block #",
+            "time": "Timestamp",
+            "transactions": "Transactions",
+            "miner": "Miner",
+            "reward": "Reward"
+        }
+    },
+    "home": {
+        "tagline": {
+            "row1": "Track, analyze and explore",
+            "row2": "on the Ethereum blockchain.",
+            "row3": "on the Sepolia Testnet."
+        },
+        "footer": {
+            "discover": "Discover",
+            "about": "About Us",
+            "policy": "Privacy Policy",
+            "help": "Help Center",
+            "love": "Love ethVM?",
+            "free": "Help us keep ethVM free and open-source, your donations go a long way towards making that possible.",
+            "eDonate": "Ethereum Donation",
+            "bDonate": "Bitcoin Donation",
+            "pricing": "Pricing from Coingecko",
+            "power": "Powered by",
+            "rights": "All rights reserved.",
+            "settings": "Settings"
+        }
     }
 }
