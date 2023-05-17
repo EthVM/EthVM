@@ -4,6 +4,8 @@
 ### Devop
 - refactor Home View for i18n [#1142](https://github.com/EthVM/EthVM/pull/1142)
 
+### Feature
+- advertise with us page [#1156](https://github.com/EthVM/EthVM/pull/1156)
 ======================================================================
 ### Release v2.1.1
 Adds Transaction Actions to the txs details:
