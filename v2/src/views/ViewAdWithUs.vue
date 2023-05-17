@@ -1,5 +1,10 @@
 <template>
     <div>
+        <!--
+        ========================
+          Header
+        =========================
+        -->
         <div class="nebula px-2 px-sm-6 mx-xl-auto mt-n16 pt-16">
             <v-container :class="['px-7 px-lg-12 pt-5 pt-lg-10 pb-16']">
                 <div class="pl-lg-14 mt-16">
@@ -25,9 +30,19 @@
                 </div>
             </v-container>
         </div>
+        <!--
+        ========================
+          Info
+        =========================
+        -->
         <div class="mx-2 mx-sm-6 mx-xl-auto">
             <v-container class="pt-3 px-0">
                 <v-row :class="rowMargin">
+                    <!--
+                    ========================
+                        Ad Options Visuals
+                    =========================
+                    -->
                     <v-col cols="12" :class="columnPadding">
                         <v-card variant="elevated" elevation="1" rounded="xl" class="px-4 px-sm-6 pt-4 pt-sm-6">
                             <v-row>
@@ -58,6 +73,11 @@
                             <v-img :src="require('@/assets/promo/ad-guide.png')" contain cover :min-height="guideHeight" eager class="mx-lg-8" />
                         </v-card>
                     </v-col>
+                    <!--
+                    ========================
+                        Ad Options Info
+                    =========================
+                    -->
                     <v-col cols="12" :class="columnPadding">
                         <v-card variant="elevated" elevation="1" rounded="xl" class="pa-4 pa-sm-6">
                             <v-row no-gutters class="mx-n3 mx-md-n5 my-n3">
@@ -120,6 +140,11 @@
                             </v-row>
                         </v-card>
                     </v-col>
+                    <!--
+                    ========================
+                    Form
+                    =========================
+                    -->
                     <v-col cols="12" :class="columnPadding">
                         <v-card variant="elevated" elevation="1" rounded="xl" id="contact-form">
                             <v-img class="align-start text-white" height="100%" :src="require('/src/assets/nebula/nebula-bg-lg.png')" cover eager>
@@ -142,7 +167,7 @@
                                                 eager
                                                 class="floating-messanger"
                                             />
-                                            <v-form validate-on="input">
+                                            <v-form validate-on="input" @update:model-value="onInput">
                                                 <v-text-field
                                                     v-model="formState.name"
                                                     label="Name"
@@ -209,7 +234,14 @@
                                                 ></v-textarea>
                                             </v-form>
                                         </v-col>
-                                        <app-btn text="Submit" class="mt-1 mb-3 mb-sm-15" min-width="206" :loading="submissionInProcess" @click="submit" />
+                                        <app-btn
+                                            text="Submit"
+                                            class="mt-1 mb-3 mb-sm-15"
+                                            min-width="206"
+                                            :loading="submissionInProcess"
+                                            :disabled="!enableSubmission"
+                                            @click="submit"
+                                        />
                                     </v-row>
                                 </div>
                             </v-img>
@@ -238,6 +270,9 @@ onMounted(() => {
     window.scrollTo(0, 0)
 })
 
+/**------------------------
+ * Images Dimensions
+ -------------------------*/
 const guideHeight = computed<string>(() => {
     if (lgAndUp.value) {
         return '553'
@@ -278,7 +313,9 @@ const universeHeight = computed<string>(() => {
     }
     return '300'
 })
-
+/**------------------------
+ * Form Data
+ -------------------------*/
 interface FormData {
     name: string
     company: string
@@ -305,7 +342,6 @@ const rules = {
         return pattern.test(value) || 'Invalid e-mail.'
     }
 }
-
 const scrollToForm = () => {
     const el = document.getElementById('contact-form')
     if (el) {
@@ -315,31 +351,47 @@ const scrollToForm = () => {
     }
 }
 
+const enableSubmission = ref(false)
 const submissionInProcess = ref(false)
 
+/**
+ * Checks if form is valid
+ */
+const onInput = (newValue: boolean) => {
+    if (newValue) {
+        enableSubmission.value = true
+    } else {
+        enableSubmission.value = false
+    }
+}
+/**
+ * Submits info to Form Spree
+ */
 const submit = () => {
-    const formData = new FormData()
-    const keys = Object.keys(formState)
-    keys.forEach(key => {
-        formData
-        formData.append(key, formState[key as keyof FormData])
-    })
-    submissionInProcess.value = true
-    fetch(configs.FORMSPREE, {
-        method: 'POST',
-        body: formData,
-        headers: {
-            Accept: 'application/json'
-        }
-    })
-        .then(response => {
-            if (response.ok) {
-                submissionInProcess.value = false
+    if (!submissionInProcess.value && enableSubmission.value) {
+        const formData = new FormData()
+        const keys = Object.keys(formState)
+        keys.forEach(key => {
+            formData
+            formData.append(key, formState[key as keyof FormData])
+        })
+        submissionInProcess.value = true
+        fetch(configs.FORMSPREE, {
+            method: 'POST',
+            body: formData,
+            headers: {
+                Accept: 'application/json'
             }
         })
-        .catch(error => {
-            Sentry.captureException(`ERROR in form submisssion: ${error}. DATA: ${formData}`)
-        })
+            .then(response => {
+                if (response.ok) {
+                    submissionInProcess.value = false
+                }
+            })
+            .catch(error => {
+                Sentry.captureException(`ERROR in form submisssion: ${error}. DATA: ${formData}`)
+            })
+    }
 }
 </script>
 
