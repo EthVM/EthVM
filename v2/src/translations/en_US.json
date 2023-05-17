@@ -43,7 +43,11 @@
         "price": "Price",
         "24h": "24h",
         "usdValue": "USD Value",
-        "name": "Name"
+        "name": "Name",
+        "button": {
+            "export": "Export",
+            "import": "Import"
+        }
     },
     "portfolio": {
         "addAddressIcon": "Add Address",
@@ -67,10 +71,6 @@
         },
         "tagline": {
             "addressName": "Add custom names to addresses in order to easily track them through ethVM"
-        },
-        "button": {
-            "export": "Export",
-            "import": "Import"
         }
     },
     "block": {

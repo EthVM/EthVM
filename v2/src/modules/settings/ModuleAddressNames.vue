@@ -6,8 +6,8 @@
                 <p class="">{{ $t('settings.tagline.addressName') }}</p>
             </v-col>
             <v-col cols="2" md="4" lg="6" class="d-flex align-center justify-end">
-                <app-btn v-if="!smAndDown" :text="$t('settings.button.import')" class="mr-5" @click="state.openImport = true"></app-btn>
-                <app-btn v-if="!smAndDown" :text="$t('settings.button.export')" @click="exportNames"></app-btn>
+                <app-btn v-if="!smAndDown" :text="$t('common.button.import')" class="mr-5" @click="state.openImport = true"></app-btn>
+                <app-btn v-if="!smAndDown" :text="$t('common.button.export')" @click="exportNames"></app-btn>
                 <app-btn-icon v-else icon="more_vert" id="activator-mobile-names-menu" btn-color="secondary"></app-btn-icon>
             </v-col>
             <!--
