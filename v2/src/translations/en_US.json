@@ -62,6 +62,8 @@
     },
     "settings": {
         "emptyList": "This list is empty",
+        "darkModeOn": "Dark Mode On",
+        "darkModeOff": "Dark Mode Off",
         "header": {
             "general": "General Settings",
             "addressName": "Address Names"

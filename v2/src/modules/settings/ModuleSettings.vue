@@ -41,7 +41,7 @@ const toggleTheme = () => {
 }
 
 const themeSwitchLabel = computed<string>(() => {
-    return isDarkMode.value ? 'Dark Mode On' : 'Dark Mode Off'
+    return isDarkMode.value ? t('settings.darkModeOn') : t('settings.darkModeOff')
 })
 
 watch(
