@@ -17,6 +17,13 @@ export function useNetwork() {
     })
 
     /**
+     * Returns long currency name of the network
+     */
+    const currencyNameLong = computed<string>(() => {
+        return NETWORKS[Configs.NETWORK].currLong
+    })
+
+    /**
      * Returns if network has Fiat Values
      */
     const supportsFiat = computed<boolean>(() => {
@@ -75,6 +82,7 @@ export function useNetwork() {
         unstoppableId,
         networkName,
         isETH,
-        isSEP
+        isSEP,
+        currencyNameLong
     }
 }
