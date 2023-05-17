@@ -19,22 +19,22 @@
                     />
                 </v-col>
                 <v-col cols="6" sm="6" lg="2" class="mb-11 mb-lg-0" order="2">
-                    <p class="footer-item-title text-h5 font-weight-bold mb-2">Discover</p>
+                    <p class="footer-item-title text-h5 font-weight-bold mb-2">{{ $t('home.footer.discover') }}</p>
                     <ul class="footer-item-lists pa-0 surf text-capitalize">
                         <li class="mb-2">
-                            <router-link :to="routeAbout" class="text-link">About us</router-link>
+                            <router-link :to="routeAbout" class="text-link">{{ $t('home.footer.about') }}</router-link>
                         </li>
                         <li class="mb-2">
-                            <a href="https://www.myetherwallet.com/privacy-policy" target="_blank" class="text-link">Privacy Policy</a>
+                            <a href="https://www.myetherwallet.com/privacy-policy" target="_blank" class="text-link">{{ $t('home.footer.policy') }}</a>
                         </li>
                         <li class="mb-2" target="_blank">
-                            <a href="https://help.myetherwallet.com/en/" class="text-link">Help Center</a>
+                            <a href="https://help.myetherwallet.com/en/" class="text-link">{{ $t('home.footer.help') }}</a>
                         </li>
                     </ul>
                 </v-col>
                 <v-col cols="12" sm="6" lg="3" class="mb-11 mb-lg-0" order="4" order-sm="4" order-lg="3">
-                    <p class="footer-item-title text-h5 font-weight-bold mb-2">Love ethVM?</p>
-                    <p class="footer-item-text">Help us keep ethVM free and open-source, your donations go a long way towards making that possible.</p>
+                    <p class="footer-item-title text-h5 font-weight-bold mb-2">{{ $t('home.footer.love') }}</p>
+                    <p class="footer-item-text">{{ $t('home.footer.free') }}</p>
                     <div class="mt-5">
                         <div class="mb-2">
                             <router-link :to="routeEth" target="_blank" class="d-inline-flex align-center primary--text">
@@ -45,7 +45,7 @@
                                     height="32"
                                     class="mr-3"
                                 />
-                                <p>Ethereum Donation</p>
+                                <p>{{ $t('home.footer.eDonate') }}</p>
                             </router-link>
                         </div>
                         <div>
@@ -61,7 +61,7 @@
                                     height="32"
                                     class="mr-3"
                                 />
-                                <p>Bitcoin Donation</p>
+                                <p>{{ $t('home.footer.bDonate') }}</p>
                             </a>
                         </div>
                     </div>
@@ -81,11 +81,11 @@
                         :active="false"
                         class="text-h5 font-weight-bold mb-lg-16 ml-n4 mr-auto mr-sm-n5 mt-sm-n1"
                     >
-                        Settings <v-icon class="ml-2">settings</v-icon>
+                        {{ $t('home.footer.settings') }} <v-icon class="ml-2">settings</v-icon>
                     </v-btn>
-                    <p class="mb-3 text-sm-right mt-2 mt-lg-12">Pricing from Coingecko</p>
+                    <p class="mb-3 text-sm-right mt-2 mt-lg-12">{{ $t('home.footer.pricing') }}</p>
                     <div class="d-flex font-weight-light align-center justify-sm-end">
-                        <p class="text-uppercase mb-0 mr-2 text-caption font-weight-light">Powered by</p>
+                        <p class="text-uppercase mb-0 mr-2 text-caption font-weight-light">{{ $t('home.footer.power') }}</p>
                         <div class="d-flex align-center">
                             <v-img :src="require('@/assets/logo/mew.svg')" width="24" height="24" contain class="mr-1" />
                             <p class="text-uppercase text-h3">MEW</p>
@@ -117,8 +117,8 @@
         <div class="copyright bg-tabActive w-100">
             <v-container class="py-2 px-0">
                 <div class="d-flex flex-column flex-wrap">
-                    <p class="px-4 px-sm-6 pt-6 text-center text-sm-right">ethVM v{{ version }} {{ new Date().getFullYear() }} MyEtherWallet Inc.</p>
-                    <p class="px-4 px-sm-6 pb-6 text-center text-sm-right">All rights reserved.</p>
+                    <p class="px-4 px-sm-6 pt-6 text-center text-sm-right">ethVM v {{ version }} {{ new Date().getFullYear() }} MyEtherWallet Inc.</p>
+                    <p class="px-4 px-sm-6 pb-6 text-center text-sm-right">{{ $t('home.footer.rights') }}</p>
                 </div>
             </v-container>
         </div>
