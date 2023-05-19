@@ -34,7 +34,27 @@
         "to": "To",
         "amount": "Amount",
         "fee": "Tx Fee",
-        "status": "Status"
+        "status": "Status",
+        "address": "Address",
+        "total": "Total",
+        "balance": "Balance | Balances",
+        "value": "Value",
+        "token": "Token",
+        "price": "Price",
+        "24h": "24h",
+        "usdValue": "USD Value",
+        "name": "Name"
+    },
+    "portfolio": {
+        "addAddressIcon": "Add Address",
+        "limit": "You can only store 10 addresses in your portfolio",
+        "errorDuplicateName": "This name is already saved",
+        "tokenName": "Token Name",
+        "placeholder": {
+            "addAddress": "Enter Address Hash / Domain Name",
+            "searchTokenName": "Search token name",
+            "name": "Enter Name"
+        }
     },
     "block": {
         "lastBlockTitle": "Last Blocks",
@@ -43,8 +63,14 @@
         "topTokenTitle": "Top Tokens",
         "favoriteTokenTitle": "Favorite Tokens",
         "marketTokenTitle": "Token Market",
+        "totalAddress": "Total Addresses",
+        "tokenBalance": "Token Balance",
+        "tokenTotal": "total tokens",
+        "portfolioEmpty": "Your portfolio is empty",
+        "portfolioValue": "Portfolio Value",
         "header": {
             "blockNumber": "Block #",
+            "watchList": "Watchlist",
             "time": "Timestamp",
             "transactions": "Transactions",
             "miner": "Miner",
