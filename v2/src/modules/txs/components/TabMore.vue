@@ -4,14 +4,14 @@
         <v-row class="mt-5">
             <v-col lg="2">
                 <div class="tx-info">
-                    <p class="text-button mb-1">Gas limit</p>
+                    <p class="text-button mb-1">{{ $t('common.gasLimit') }}</p>
                     <div v-if="props.loading" class="skeleton-box rounded-xl" style="height: 24px"></div>
                     <p v-else class="text-no-wrap">{{ gasLimit }}</p>
                 </div>
             </v-col>
             <v-col lg="2">
                 <div class="tx-info">
-                    <p class="text-button mb-1">Gas used</p>
+                    <p class="text-button mb-1">{{ $t('txs.details.more.gasUsed') }}</p>
                     <div v-if="props.loading" class="skeleton-box rounded-xl" style="height: 24px"></div>
                     <p v-else class="text-no-wrap">{{ gasUsed }} ({{ percentageOfGasUsed }})</p>
                 </div>
@@ -20,35 +20,35 @@
         <v-row class="mt-5">
             <v-col lg="2">
                 <div class="tx-info">
-                    <p class="text-button mb-1">Base fee</p>
+                    <p class="text-button mb-1">{{ $t('txs.details.more.baseFee') }}</p>
                     <div v-if="props.loading" class="skeleton-box rounded-xl" style="height: 24px"></div>
                     <p v-else class="text-no-wrap">{{ baseFeePerGas.value }} {{ baseFeePerGas.unit }}</p>
                 </div>
             </v-col>
             <v-col lg="2">
                 <div class="tx-info">
-                    <p class="text-button mb-1">Max fee per gas</p>
+                    <p class="text-button mb-1">{{ $t('txs.details.more.maxFee') }}</p>
                     <div v-if="props.loading" class="skeleton-box rounded-xl" style="height: 24px"></div>
                     <p v-else class="text-no-wrap">{{ maxFeePerGas.value }} {{ maxFeePerGas.unit }}</p>
                 </div>
             </v-col>
         </v-row>
         <div class="rounded-lg bg-tableGrey pa-5 mt-5 border-sm">
-            <p class="text-button mb-1">Input</p>
+            <p class="text-button mb-1">{{ $t('common.input') }}</p>
             <div v-if="props.loading" class="skeleton-box rounded-xl" style="height: 80px"></div>
             <p v-else class="">{{ props.txData.input }}</p>
         </div>
         <v-row class="mt-5">
             <v-col lg="2">
                 <div class="tx-info">
-                    <p class="text-button mb-1">Nonce</p>
+                    <p class="text-button mb-1">{{ $t('common.nonce') }}</p>
                     <div v-if="props.loading" class="skeleton-box rounded-xl" style="height: 24px"></div>
                     <p v-else class="text-no-wrap">{{ props.txData.nonce }}</p>
                 </div>
             </v-col>
             <v-col lg="2">
                 <div class="tx-info">
-                    <p class="text-button mb-1">TX Index</p>
+                    <p class="text-button mb-1">{{ $t('txs.details.more.index') }}</p>
                     <div v-if="props.loading" class="skeleton-box rounded-xl" style="height: 24px"></div>
                     <p v-else class="text-no-wrap">{{ props.txData.transactionIndex }}</p>
                 </div>
@@ -57,21 +57,21 @@
         <v-row class="mt-5">
             <v-col v-if="!hideR" cols="12">
                 <div class="tx-info">
-                    <p class="text-button mb-1">R</p>
+                    <p class="text-button mb-1">{{ $t('txs.details.more.r') }}</p>
                     <div v-if="props.loading" class="skeleton-box rounded-xl" style="height: 24px"></div>
                     <app-transform-hash v-else :hash="eth.toCheckSum(props.txData.r)" />
                 </div>
             </v-col>
             <v-col v-if="!hideS" cols="12">
                 <div class="tx-info">
-                    <p class="text-button mb-1">S</p>
+                    <p class="text-button mb-1">{{ $t('txs.details.more.s') }}</p>
                     <div v-if="props.loading" class="skeleton-box rounded-xl" style="height: 24px"></div>
                     <app-transform-hash v-else :hash="eth.toCheckSum(props.txData.s)" />
                 </div>
             </v-col>
             <v-col v-if="!hideV" cols="12">
                 <div class="tx-info">
-                    <p class="text-button mb-1">V</p>
+                    <p class="text-button mb-1">{{ $t('txs.details.more.v') }}</p>
                     <div v-if="props.loading" class="skeleton-box rounded-xl" style="height: 24px"></div>
                     <app-transform-hash v-else :hash="eth.toCheckSum(props.txData.v)" />
                 </div>

@@ -2,7 +2,7 @@
     <template v-if="!state.hasError">
         <v-card variant="elevated" elevation="1" rounded="xl" class="pa-4 pa-sm-6">
             <div class="d-flex">
-                <h2 class="text-h6 font-weight-bold mr-10">Transaction Summary</h2>
+                <h2 class="text-h6 font-weight-bold mr-10">{{ $t('txs.details.header') }}</h2>
                 <template v-if="loadingTransactionHash">
                     <div class="skeleton-box rounded-xl" style="height: 24px; width: 100px"></div>
                 </template>
@@ -16,7 +16,7 @@
             <v-row class="mt-5">
                 <v-col cols="12" lg="6">
                     <div class="tx-info">
-                        <p class="text-button mb-1">Tx Hash</p>
+                        <p class="text-button mb-1">{{ $t('txs.details.txHash') }}</p>
                         <app-transform-hash :hash="props.txRef" class="text-body-1" />
                         <template v-if="loadingTransactionHash">
                             <div class="skeleton-box rounded-xl mt-1" style="height: 18px; max-width: 300px"></div>
@@ -29,7 +29,7 @@
                 <template v-if="txStatus !== TxStatus.pending && !isReplaced">
                     <v-col cols="12" lg="2">
                         <div class="tx-info">
-                            <p class="text-button mb-1">Block Mined</p>
+                            <p class="text-button mb-1">{{ $t('common.blockMined') }}</p>
                             <template v-if="loadingTransactionHash">
                                 <div class="skeleton-box rounded-xl mt-1" style="height: 24px"></div>
                             </template>
@@ -40,7 +40,7 @@
                     </v-col>
                     <v-col cols="12" lg="2">
                         <div class="tx-info">
-                            <p class="text-button mb-1">Confirmations</p>
+                            <p class="text-button mb-1">{{ $t('common.confirmations') }}</p>
                             <p v-if="!loadingBlockInfo" class="text-body-1 text-secondary mt-1">
                                 {{ confirmations }}
                             </p>
@@ -53,7 +53,7 @@
                 <v-col cols="12" lg="5">
                     <div class="rounded-lg bg-tableGrey pa-6">
                         <div class="tx-info">
-                            <p class="text-button mb-1">From</p>
+                            <p class="text-button mb-1">{{ $t('common.from') }}</p>
                             <template v-if="loadingTransactionHash || !transactionData">
                                 <div class="d-flex align-center">
                                     <div class="skeleton-box rounded-circle mr-1 mr-sm-2 flex-shrink-0" style="height: 32px; width: 32px"></div>
@@ -78,8 +78,8 @@
                 <v-col cols="12" lg="5">
                     <div class="rounded-lg bg-tableGrey pa-6">
                         <div class="tx-info">
-                            <p v-if="transactionData && transactionData.contractAddress" class="text-button mb-1">Created Contract</p>
-                            <p v-else class="text-button mb-1">To</p>
+                            <p v-if="transactionData && transactionData.contractAddress" class="text-button mb-1">{{ $t('txs.details.createdContract') }}</p>
+                            <p v-else class="text-button mb-1">{{ $t('common.to') }}</p>
                             <template v-if="loadingTransactionHash || !transactionData">
                                 <div class="d-flex align-center">
                                     <div class="skeleton-box rounded-circle mr-1 mr-sm-2 flex-shrink-0" style="height: 32px; width: 32px"></div>
@@ -109,7 +109,7 @@
                 <v-col cols="12" sm="6" md="4" lg="2" class="flex-grow-0 mr-lg-6">
                     <div class="rounded-lg bg-tableGrey pa-6">
                         <div class="tx-info">
-                            <p class="text-button mb-1">Value</p>
+                            <p class="text-button mb-1">{{ $t('common.value') }}</p>
                             <div v-if="loadingTransactionHash" class="skeleton-box rounded-xl" style="height: 21px"></div>
                             <p v-else class="text-no-wrap">{{ txAmount.value }} {{ currencyName }}</p>
                         </div>
@@ -118,7 +118,7 @@
                 <v-col cols="12" sm="6" md="4" lg="2" class="flex-grow-0">
                     <div class="rounded-lg bg-tableGrey pa-6">
                         <div class="tx-info">
-                            <p class="text-button mb-1">Fee</p>
+                            <p class="text-button mb-1">{{ $t('common.fee') }}</p>
                             <div v-if="loadingTransactionHash" class="skeleton-box rounded-xl" style="height: 21px"></div>
                             <p v-else class="text-no-wrap">{{ txFee.value }} {{ currencyName }}</p>
                         </div>
@@ -156,6 +156,9 @@ import { useDisplay } from 'vuetify'
 import { TxStatus } from '@module/txs/models/ErrorMessagesForTx'
 import { Tab } from '@core/components/props'
 import { useNetwork } from '@core/composables/Network/useNetwork'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 
 const { currencyName } = useNetwork()
 const props = defineProps({
@@ -171,11 +174,11 @@ const routes = Q_TXS_DETAILS
 const tabs: Tab[] = [
     {
         value: routes[0],
-        title: 'State'
+        title: t('txs.details.state.header')
     },
     {
         value: routes[1],
-        title: 'More'
+        title: t('txs.details.more.header')
     }
 ]
 
