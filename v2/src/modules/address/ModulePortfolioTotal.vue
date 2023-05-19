@@ -2,11 +2,11 @@
     <v-card fluid class="pa-4 pa-sm-6" elevation="1" rounded="xl" height="100%">
         <v-row align="center" :class="['fill-height', { 'flex-sm-nowrap': !props.addressRef }]" justify="space-between" class="mt-0">
             <v-col cols="12" :sm="props.addressRef ? '12' : 'auto'" align-self="start" class="py-0 pr-sm-0">
-                <address-balance-totals title="Portfolio Value" :is-loading="isLoading" :balance="portfolioValue"> </address-balance-totals>
+                <address-balance-totals :title="$t('block.portfolioValue')" :is-loading="isLoading" :balance="portfolioValue"> </address-balance-totals>
                 <v-divider v-if="!props.addressRef && !xs" class="mt-10 mb-6" length="154"></v-divider>
                 <address-balance-totals
                     v-if="!props.addressRef"
-                    :title="`${currencyName} Balance`"
+                    :title="`${currencyName} ${$t('block.portfolioValue')}`"
                     :is-loading="!store.portfolioEthIsLoaded()"
                     :balance="`${ethBalancePortfolio} ${currencyName}`"
                     class="mt-7"
