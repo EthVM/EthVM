@@ -64,6 +64,9 @@
                 </div>
             </v-card>
         </v-col>
+        <v-col cols="12" :class="columnPadding">
+            <app-ad-buttons-large />
+        </v-col>
         <!--
         =====================================================================================
         Contract Holders and Transfers
@@ -94,6 +97,7 @@
 
 <script setup lang="ts">
 import { reactive, computed, onMounted, watch } from 'vue'
+import AppAdButtonsLarge from '@/core/components/AppAdButtonsLarge.vue'
 import AppBtnIcon from '@core/components/AppBtnIcon.vue'
 import AppCopyToClip from '@/core/components/AppCopyToClip.vue'
 import TokenDetailsErc20 from '@module/tokens/components/TokenDetails/TokenDetailsERC20.vue'

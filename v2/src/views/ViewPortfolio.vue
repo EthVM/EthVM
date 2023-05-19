@@ -48,6 +48,9 @@
                 <app-token-icon-row v-if="store.portfolioTokensIsLoaded()" :tokens="tokenIcons" class="mt-3"></app-token-icon-row>
             </v-card>
         </v-col>
+        <v-col cols="12" :class="columnPadding" order="3">
+            <app-ad-buttons-large />
+        </v-col>
         <v-col cols="12" :class="columnPadding" order="last">
             <v-card elevation="1" rounded="xl" class="pt-4 pt-sm-6">
                 <app-tabs v-model="state.tab" :routes="routes" :tabs="tabs" class="mx-n1 mt-n2 mb-4"></app-tabs>
@@ -58,6 +61,7 @@
 </template>
 
 <script setup lang="ts">
+import AppAdButtonsLarge from '@/core/components/AppAdButtonsLarge.vue'
 import AddressBalanceTotals from '@/modules/address/components/AddressBalanceTotals.vue'
 import ModuleAddAdressToPorfolio from '@module/address/ModulePorfolioHandleAdr.vue'
 import ModulePortfolioTotal from '@/modules/address/ModulePortfolioTotal.vue'
