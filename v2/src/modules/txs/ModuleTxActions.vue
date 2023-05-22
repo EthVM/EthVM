@@ -78,7 +78,7 @@
                 </app-expansion-panel>
             </div>
             <div v-if="nftTransfers.length > 0" class="mb-13 mb-sm-10">
-                <app-expansion-panel :title="`NFT Transfers`">
+                <app-expansion-panel :title="$t('txs.details.actions.nftTransfers')">
                     <template #visible-content>
                         <div v-if="!initialLoadingNftTransfers && !loadingNftTransfersData && !loadingMeta">
                             <div v-for="(transfer, index) in currentPageDataNFT.slice(0, 3)" :key="`${index}`">

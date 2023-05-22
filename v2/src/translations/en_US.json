@@ -52,7 +52,8 @@
                 "difference": "State"
             },
             "actions": {
-                "tokenTransfers": "Token Transfers"
+                "tokenTransfers": "Token Transfers",
+                "nftTransfers": "NFT Transfers"
             }
         }
     },
@@ -60,6 +61,7 @@
         "block": "Block / Timestamp",
         "blockMined": "Block Mined",
         "confirmations": "Confirmations",
+        "copy": "copy | copies",
         "timestamp": "Timestamp",
         "hash": "Hash",
         "from": "From",
