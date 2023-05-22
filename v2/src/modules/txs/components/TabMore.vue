@@ -57,21 +57,21 @@
         <v-row class="mt-5">
             <v-col v-if="!hideR" cols="12">
                 <div class="tx-info">
-                    <p class="text-button mb-1">{{ $t('txs.details.more.r') }}</p>
+                    <p class="text-button mb-1">R</p>
                     <div v-if="props.loading" class="skeleton-box rounded-xl" style="height: 24px"></div>
                     <app-transform-hash v-else :hash="eth.toCheckSum(props.txData.r)" />
                 </div>
             </v-col>
             <v-col v-if="!hideS" cols="12">
                 <div class="tx-info">
-                    <p class="text-button mb-1">{{ $t('txs.details.more.s') }}</p>
+                    <p class="text-button mb-1">S</p>
                     <div v-if="props.loading" class="skeleton-box rounded-xl" style="height: 24px"></div>
                     <app-transform-hash v-else :hash="eth.toCheckSum(props.txData.s)" />
                 </div>
             </v-col>
             <v-col v-if="!hideV" cols="12">
                 <div class="tx-info">
-                    <p class="text-button mb-1">{{ $t('txs.details.more.v') }}</p>
+                    <p class="text-button mb-1">V</p>
                     <div v-if="props.loading" class="skeleton-box rounded-xl" style="height: 24px"></div>
                     <app-transform-hash v-else :hash="eth.toCheckSum(props.txData.v)" />
                 </div>

@@ -49,9 +49,6 @@
                 "maxFee": "Max fee per gas",
                 "notFound": "No transaction state difference avaialble",
                 "index": "TX Index",
-                "r": "R",
-                "s": "S",
-                "v": "V",
                 "difference": "State"
             },
             "actions": {
