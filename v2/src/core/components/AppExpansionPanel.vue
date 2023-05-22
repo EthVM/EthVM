@@ -1,5 +1,5 @@
 <template>
-    <v-row v-bind="$attrs" class="ml-6 mb-3 align-center justify-start">
+    <v-row v-bind="$attrs" class="ml-4 ml-sm-6 mb-3 align-center justify-start">
         <!--
             Use title-content slot to insert image before title
         -->
@@ -15,14 +15,14 @@
         <p v-else class="text-h6 mr-3 font-weight-bold">{{ props.title }}</p>
     </v-row>
     <v-divider></v-divider>
-    <v-card fluid width="auto" flat class="mx-6">
+    <v-card fluid width="auto" flat class="px-4 px-sm-6">
         <!--
             Use visible-content slot to show items that a visible when expansion panel is closed
         -->
         <slot name="visible-content"></slot>
     </v-card>
     <v-expand-transition>
-        <v-card fluid v-if="expand" width="auto" flat class="mx-6">
+        <v-card fluid v-if="expand" width="auto" flat class="px-4 px-sm-6">
             <!--
                 Use expand-content slot to show items that a visible when expansion panel is opened
             -->

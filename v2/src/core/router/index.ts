@@ -77,7 +77,7 @@ const routes: Array<RouteRecordRaw> = [
         name: ROUTE_NAME.TX_HASH.NAME,
         component: ViewTxDetails,
         props: route => ({ tab: route.query.t, txRef: route.params.txRef }),
-        beforeEnter: tabViewRouteGuard(Q_TXS_DETAILS[0])
+        beforeEnter: tabViewRouteGuard(Q_TXS_DETAILS[2])
     },
     {
         path: ROUTE_NAME.TOKEN.PATH,

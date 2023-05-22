@@ -9,6 +9,7 @@
         transition="slide-y-reverse-transition"
         mode="in-out"
         rounded="lg"
+        :close-on-back="false"
     >
         <div v-if="state.notification" class="text-body-1 text-break-new-line">
             <!-- TYPE: DELETE ADDRESS -->

@@ -1,0 +1,73 @@
+fragment EthTransferInTx on EthTransfer {
+    transfer {
+        type
+        from 
+        to
+    }
+    value
+
+}
+query getEthTransfersInTx($limit: Int, $hash: String!, $nextKey: String) {
+    getEthTransfersByHash(limit: $limit, hash: $hash, nextKey: $nextKey ) {
+        transfers {
+            ...EthTransferInTx
+        }
+        nextKey
+    }
+}
+
+fragment Erc20TransferInTx on ERC20Transfer {
+    transfer {
+        type
+        from             
+        to
+    }
+    value
+    ...Erc20Meta
+}
+
+fragment Erc20Meta on ERC20Transfer {
+    contract
+    tokenInfo {
+        name
+        symbol
+        decimals
+        iconPng
+    }
+}
+query   getERC20TransfersInTx ($limit: Int, $hash: String!, $nextKey: String){
+  getERC20TransfersByHash(limit: $limit, hash: $hash, nextKey: $nextKey ) {
+    transfers {
+        ... Erc20TransferInTx
+    }
+    nextKey
+  }
+}
+
+fragment NftTransferInTx on  NFTTransfer {
+    transfer {
+        type
+        from             
+        to
+    }
+    value
+    tokenId
+    contract
+    tokenInfo {
+        name
+        symbol
+        decimals
+        iconPng
+    }
+}
+
+
+
+query   getNFTTransfersInTx ($limit: Int, $hash: String!, $nextKey: String){
+  getNFTTransfersByHash(limit: $limit, hash: $hash, nextKey: $nextKey ) {
+    transfers {
+        ... NftTransferInTx
+    }
+    nextKey
+  }
+}

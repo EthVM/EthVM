@@ -53,6 +53,9 @@
                 "s": "S",
                 "v": "V",
                 "difference": "State"
+            },
+            "actions": {
+                "tokenTransfers": "Token Transfers"
             }
         }
     },
@@ -73,7 +76,8 @@
         "status": "Status",
         "address": "Address",
         "total": "Total",
-        "balance": "Balance",
+        "transfer": "Transfers",
+        "balance": "Balance | Balances",
         "value": "Value",
         "token": "Token",
         "price": "Price",
@@ -129,7 +133,6 @@
             "time": "Timestamp",
             "transactions": "Transactions",
             "miner": "Miner",
-            "balance": "Balances",
             "reward": "Reward"
         }
     },
