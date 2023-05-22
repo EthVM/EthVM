@@ -52,6 +52,7 @@
                 "difference": "State"
             },
             "actions": {
+                "header": "Actions",
                 "tokenTransfers": "Token Transfers",
                 "nftTransfers": "NFT Transfers"
             }

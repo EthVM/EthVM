@@ -186,7 +186,7 @@ const routes = Q_TXS_DETAILS
 const tabs: Tab[] = [
     {
         value: routes[2],
-        title: 'Actions'
+        title: t('txs.details.actions.header')
     },
     {
         value: routes[0],
