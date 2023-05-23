@@ -2,24 +2,38 @@
     <v-row v-if="!state.hasError" :class="rowMargin">
         <v-col cols="12" :class="columnPadding">
             <v-card variant="elevated" elevation="1" rounded="xl" class="pa-4 pa-sm-6">
-                <div class="d-flex align-center justify-start">
-                    <h2 class="text-h6 font-weight-bold mr-2 mr-sm-10">Transaction Summary</h2>
-                    <template v-if="loadingTransactionHash">
-                        <div class="skeleton-box rounded-xl" style="height: 24px; width: 100px"></div>
-                    </template>
-                    <div v-else>
-                        <app-chip :bg="titleBg" rounded="xl" text="" class="">
-                            <p>
-                                {{ titleStatus }}
-                                <span>
-                                    <v-progress-circular v-if="txStatus === TxStatus.pending" indeterminate color="white" size="15" width="3" class="ml-2" />
-                                </span>
-                            </p>
-                        </app-chip>
-                    </div>
-                </div>
-
-                <v-row class="mt-5">
+                <v-row no-gutters>
+                    <v-col cols="12" md="auto" lg="4" order="last" order-md="first">
+                        <div class="d-flex align-center justify-start">
+                            <h2 class="text-h6 font-weight-bold mr-2 mr-sm-6">Transaction Summary</h2>
+                            <template v-if="loadingTransactionHash">
+                                <div class="skeleton-box rounded-xl" style="height: 24px; width: 100px"></div>
+                            </template>
+                            <div v-else>
+                                <app-chip :bg="titleBg" rounded="xl" text="" class="">
+                                    <p>
+                                        {{ titleStatus }}
+                                        <span>
+                                            <v-progress-circular
+                                                v-if="txStatus === TxStatus.pending"
+                                                indeterminate
+                                                color="white"
+                                                size="15"
+                                                width="3"
+                                                class="ml-2"
+                                            />
+                                        </span>
+                                    </p>
+                                </app-chip>
+                            </div>
+                        </div>
+                    </v-col>
+                    <v-spacer />
+                    <v-col cols="12" md="auto" lg="8" order="first" order-md="last" class="mb-6 mb-md-0 pa-0">
+                        <app-ad-buttons-small />
+                    </v-col>
+                </v-row>
+                <v-row class="mt-md-5">
                     <v-col cols="12" lg="6">
                         <div class="tx-info">
                             <p class="text-button mb-1">Tx Hash</p>
@@ -161,6 +175,7 @@ import AppAdButtonsLarge from '@/core/components/AppAdButtonsLarge.vue'
 import AppChip from '@core/components/AppChip.vue'
 import AppTransformHash from '@core/components/AppTransformHash.vue'
 import AppAddressBlockie from '@core/components/AppAddressBlockie.vue'
+import AppAdButtonsSmall from '@/core/components/AppAdButtonsSmall.vue'
 import TabMore from '@module/txs/components/TabMore.vue'
 import AppTabs from '@/core/components/AppTabs.vue'
 import ModuleTxActions from './ModuleTxActions.vue'
