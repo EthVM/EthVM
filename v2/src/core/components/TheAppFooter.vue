@@ -90,8 +90,7 @@
                     <div class="d-flex font-weight-light align-center justify-sm-end">
                         <p class="text-uppercase mb-0 mr-2 text-caption font-weight-light">{{ $t('home.footer.power') }}</p>
                         <div class="d-flex align-center">
-                            <v-img :src="require('@/assets/logo/mew.svg')" width="24" height="24" contain class="mr-1" />
-                            <p class="text-uppercase text-h3">MEW</p>
+                            <v-img :src="require('@/assets/logo/mew-long-white.png')" width="80" min-height="24" contain />
                         </div>
                     </div>
                 </v-col>
