@@ -1,7 +1,7 @@
 <template>
     <v-card class="pa-4 pa-sm-6" elevation="1" rounded="xl">
         <v-row align="start" justify="start" no-gutters class="ma-0">
-            <p class="font-weight-bold text-h5">General Settings</p>
+            <p class="font-weight-bold text-h5">{{ $t('settings.header.general') }}</p>
             <v-col cols="12" class="d-flex align-center justify-space-between mt-5">
                 <p>{{ themeSwitchLabel }}</p>
                 <v-spacer />
@@ -23,6 +23,9 @@ import { onMounted, computed, watch, ref } from 'vue'
 import { useStore } from '@/store'
 import { useTheme } from 'vuetify'
 import { themes } from '@core/plugins/vuetify'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 
 const store = useStore()
 
@@ -38,7 +41,7 @@ const toggleTheme = () => {
 }
 
 const themeSwitchLabel = computed<string>(() => {
-    return isDarkMode.value ? 'Dark Mode On' : 'Dark Mode Off'
+    return isDarkMode.value ? t('settings.darkModeOn') : t('settings.darkModeOff')
 })
 
 watch(

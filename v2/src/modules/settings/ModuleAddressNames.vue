@@ -2,19 +2,19 @@
     <v-card class="pa-4 pa-sm-6" elevation="1" rounded="xl">
         <v-row align="start" justify="start">
             <v-col cols="10" md="8" lg="6">
-                <p class="font-weight-bold text-h5">Address Names</p>
-                <p class="">Add custom names to addresses in order to easily track them through ethVM</p>
+                <p class="font-weight-bold text-h5">{{ $t('settings.header.addressName') }}</p>
+                <p class="">{{ $t('settings.tagline.addressName') }}</p>
             </v-col>
             <v-col cols="2" md="4" lg="6" class="d-flex align-center justify-end">
-                <app-btn v-if="!smAndDown" text="import" class="mr-5" @click="state.openImport = true"></app-btn>
-                <app-btn v-if="!smAndDown" text="export" @click="exportNames"></app-btn>
+                <app-btn v-if="!smAndDown" :text="$t('common.button.import')" class="mr-5" @click="state.openImport = true"></app-btn>
+                <app-btn v-if="!smAndDown" :text="$t('common.button.export')" @click="exportNames"></app-btn>
                 <app-btn-icon v-else icon="more_vert" id="activator-mobile-names-menu" btn-color="secondary"></app-btn-icon>
             </v-col>
             <!--
                 FILTER
             -->
             <v-col cols="12" class="d-flex align-center justify-start mt-2 mb-4">
-                <app-input place-holder="Search by hash or name" v-model="state.searchParams" class="w-100 mr-5" />
+                <app-input :place-holder="$t('settings.placeholder.search')" v-model="state.searchParams" class="w-100 mr-5" />
                 <module-porfolio-handle-adr is-add-name-mode></module-porfolio-handle-adr>
             </v-col>
             <!--
@@ -23,13 +23,13 @@
             <v-row :dense="xs" class="d-flex text-body-1 text-info mb-0" :justify="xs ? 'end' : 'start'">
                 <v-col cols sm="6" lg="6" class="py-0 d-none d-sm-block">
                     <v-btn variant="text" color="info" class="font-weight-regular ml-n1" rounded="pill" size="small" @click="sortTable(SORT_KEY.HASH)">
-                        Address
+                        {{ $t('common.address') }}
                         <v-icon v-if="isActiveSort(SORT_KEY.HASH)" class="ml-1" :size="14">{{ sortIcon }}</v-icon></v-btn
                     >
                 </v-col>
                 <v-col sm="6" lg="6" class="py-0 d-none d-sm-block">
                     <v-btn variant="text" color="info" class="font-weight-regular ml-n3" rounded="pill" size="small" @click="sortTable(SORT_KEY.NAME)">
-                        Name
+                        {{ $t('common.name') }}
                         <v-icon v-if="isActiveSort(SORT_KEY.NAME)" class="ml-1" :size="14">{{ sortIcon }}</v-icon></v-btn
                     >
                 </v-col>
@@ -45,12 +45,12 @@
                         <v-icon class="ml-1" :size="14">{{ sortIcon }}</v-icon></v-btn
                     >
                     <app-menu min-width="140" activator="#activator-mobile-sort" :close-on-content-click="false">
-                        <v-list-item title="Name" class="py-2" @click="sortTable(SORT_KEY.NAME)">
+                        <v-list-item :title="$t('common.name')" class="py-2" @click="sortTable(SORT_KEY.NAME)">
                             <template #append>
                                 <v-icon v-if="isActiveSort(SORT_KEY.NAME)" class="ml-1" :size="14">{{ sortIcon }}</v-icon>
                             </template>
                         </v-list-item>
-                        <v-list-item title="Address" class="py-2" @click="sortTable(SORT_KEY.HASH)">
+                        <v-list-item :title="$t('common.address')" class="py-2" @click="sortTable(SORT_KEY.HASH)">
                             <template #append>
                                 <v-icon v-if="isActiveSort(SORT_KEY.HASH)" class="ml-1" :size="14">{{ sortIcon }}</v-icon>
                             </template>
@@ -66,7 +66,7 @@
                     </div>
                 </template>
                 <template v-else>
-                    <app-no-result :text="`This list is empty`" class="mt-3"></app-no-result>
+                    <app-no-result :text="$t('settings.emptyList')" class="mt-3"></app-no-result>
                 </template>
                 <template v-if="showPagination">
                     <app-pagination :length="numberOfPages" @update:modelValue="setPage" :current-page="pageNum" />
