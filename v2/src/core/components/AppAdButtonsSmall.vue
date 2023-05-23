@@ -1,14 +1,14 @@
 <template>
-    <v-row align="start" class="justify-center justify-sm-end">
+    <v-row align="center" class="justify-start justify-lg-end">
         <v-col cols="auto" style="position: relative">
             <v-btn
                 rounded="pill"
                 elevation="0"
-                color="secondary"
                 :height="xs ? 22 : 30"
                 :min-width="xs ? 68 : 151"
                 href="https://www.myetherwallet.com/"
                 target="_blank"
+                class="promo-btn text-white"
             >
                 <div class="d-flex flex-row flex-sm-row align-center justify-center">
                     <v-img v-if="!xs" :src="require('@/assets/logo/mew-long-white.png')" eager contain alt="MyEtherWallet button icon" height="14" width="50" />
@@ -28,6 +28,7 @@
                 :min-width="xs ? 68 : 151"
                 href="https://ccswap.myetherwallet.com/?platform=ethvm"
                 target="_blank"
+                class="promo-btn text-white"
             >
                 <div class="d-flex flex-row flex-sm-row align-center justify-center">
                     <v-img
@@ -53,6 +54,7 @@
                 :min-width="xs ? 68 : 151"
                 href="https://rarible.com/?ref=0x5bA9576c214FC7C6649f6F3C73dcbC2769b1761"
                 target="_blank"
+                class="promo-btn text-white"
             >
                 <div class="d-flex flex-row flex-sm-row align-center justify-center">
                     <v-img v-if="!xs" :src="require('@/assets/promo/rarible-icon.png')" eager contain alt="MEW logo button icon" height="16" width="16" />
@@ -90,5 +92,12 @@ const { xs } = useDisplay()
     position: absolute;
     top: 34px;
     left: 12px;
+}
+.promo-btn {
+    background: -webkit-linear-gradient(273deg, rgb(197, 73, 255) 0%, rgb(150, 74, 255) 81%, rgb(138, 74, 255) 100%);
+    background: -o-linear-gradient(273deg, rgb(197, 73, 255) 0%, rgb(150, 74, 255) 81%, rgb(138, 74, 255) 100%);
+    background: -ms-linear-gradient(273deg, rgb(197, 73, 255) 0%, rgb(150, 74, 255) 81%, rgb(138, 74, 255) 100%);
+    background: -moz-linear-gradient(273deg, rgb(197, 73, 255) 0%, rgb(150, 74, 255) 81%, rgb(138, 74, 255) 100%);
+    background: linear-gradient(177deg, rgb(197, 73, 255) 0%, rgb(150, 74, 255) 81%, rgb(138, 74, 255) 100%);
 }
 </style>

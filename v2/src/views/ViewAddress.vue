@@ -4,36 +4,40 @@
     </v-container>
 
     <div v-if="isValid && props.addressRef" :class="[xs ? 'adr-core-background-mobile' : 'adr-core-background', 'pb-6']">
-        <v-card class="px-xl-auto mx-0" flat rounded="0" :min-height="smAndDown ? '100%' : '92px'">
-            <v-container class="core-container px-3 px-sm-6 pb-4 pb-sm-6 px-md-16 pt-4 pt-sm-10">
-                <v-row align="center" justify="center" class="px-3 px-sm-0 px-md-16 flex-nowrap" no-gutters style="min-height: 48px">
-                    <app-address-blockie :address="props.addressRef || ''" :size="xs ? 9 : 10" />
-                    <v-col cols="6" sm="7" :md="store.getAddressName(props.addressRef) ? '8' : 'auto'" lg="auto" class="pl-2 pl-sm-4 pr-sm-0">
-                        <div v-if="store.getAddressName(props.addressRef)" class="text-h4 font-weight-bold text-ellipses">
-                            {{ store.getAddressName(props.addressRef) }}
-                        </div>
-                        <div>
-                            <app-transform-hash
-                                v-if="(xs && store.getAddressName(props.addressRef)) || (smAndDown && !store.getAddressName(props.addressRef))"
-                                :hash="eth.toCheckSum(props.addressRef)"
-                                :class="['font-weight-regular font-mono', { 'text-h4': !store.getAddressName(props.addressRef) }]"
-                                :show-name="false"
-                                :is-short="xs"
-                            ></app-transform-hash>
-                            <p v-else :class="[{ 'text-h4 font-mono': !store.getAddressName(props.addressRef) }]">
-                                {{ eth.toCheckSum(props.addressRef) }}
-                            </p>
-                        </div>
+        <v-card class="px-sm-6 px-xl-auto mx-0" flat rounded="0" :min-height="smAndDown ? '100%' : '92px'">
+            <v-container class="core-container px-2 px-sm-0 pb-4 pb-sm-6 pt-4 pt-sm-10">
+                <v-row no-gutters align="center">
+                    <v-col cols="12" lg="7" order="last" order-lg="first">
+                        <v-row align="center" justify="start" class="px-0 px-sm-0 flex-nowrap" no-gutters style="min-height: 48px">
+                            <app-address-blockie :address="props.addressRef || ''" :size="xs ? 9 : 10" />
+                            <v-col cols="6" sm="7" :md="store.getAddressName(props.addressRef) ? '8' : 'auto'" lg="auto" class="pl-2 pl-sm-4 pr-sm-0">
+                                <div v-if="store.getAddressName(props.addressRef)" class="text-h4 font-weight-bold text-ellipses">
+                                    {{ store.getAddressName(props.addressRef) }}
+                                </div>
+                                <div>
+                                    <app-transform-hash
+                                        v-if="(xs && store.getAddressName(props.addressRef)) || (smAndDown && !store.getAddressName(props.addressRef))"
+                                        :hash="eth.toCheckSum(props.addressRef)"
+                                        :class="['font-weight-regular font-mono', { 'text-h4': !store.getAddressName(props.addressRef) }]"
+                                        :show-name="false"
+                                        :is-short="xs"
+                                    ></app-transform-hash>
+                                    <p v-else :class="[{ 'text-h4 font-mono': !store.getAddressName(props.addressRef) }]">
+                                        {{ eth.toCheckSum(props.addressRef) }}
+                                    </p>
+                                </div>
+                            </v-col>
+                            <v-col cols="6" sm="auto" md="6" lg="auto" class="d-flex flex-grow-0 flex-shrink-1 ml-sm-auto ml-lg-16 justify-end">
+                                <app-copy-to-clip :value-to-copy="props.addressRef || ''" />
+                                <module-add-adress-to-porfolio :address="props.addressRef" :name="store.getAddressName(props.addressRef)" />
+                                <app-btn-icon icon="qr_code" @click="setQr(true)"></app-btn-icon>
+                                <app-btn-icon icon="edit" @click="openEditDialog(true)"></app-btn-icon>
+                            </v-col>
+                        </v-row>
                     </v-col>
-
-                    <v-col cols="6" sm="auto" md="6" lg="auto" class="d-flex flex-grow-0 flex-shrink-1 ml-sm-6 ml-lg-16 justify-end">
-                        <app-copy-to-clip :value-to-copy="props.addressRef || ''" />
-                        <module-add-adress-to-porfolio :address="props.addressRef" :name="store.getAddressName(props.addressRef)" />
-                        <app-btn-icon icon="qr_code" @click="setQr(true)"></app-btn-icon>
-                        <app-btn-icon icon="edit" @click="openEditDialog(true)"></app-btn-icon>
+                    <v-col cols="12" lg="5" order="first" order-lg="last" class="mb-6 mb-sm-8 mb-lg-0">
+                        <app-ad-buttons-small />
                     </v-col>
-                    <!-- <v-divider :vertical="!smAndDown" class="my-1 my-sm-3 mx-n1 mx-sm-n3 mx-md-none"></v-divider>
-                    <v-col cols="12" md="4" lg="3" class="d-flex align-center"> </v-col> -->
                 </v-row>
             </v-container>
         </v-card>
@@ -70,21 +74,25 @@
             Desktop Menu
         =========================
         -->
-        <v-tabs v-if="!smAndDown" v-model="state.tab" bg-color="primary" hide-slider align-tabs="center">
-            <v-tab
-                v-for="i in tabs"
-                @click="navigateTo(i.routeName, i.secondaryTab)"
-                :value="i.routeName"
-                :key="i.routeName"
-                min-width="160"
-                class="py-3 text-h6 text-capitalize rounded-b-xl font-weight-light"
-                color="text-textPrimary"
-                selected-class="bg-surface"
-                ><p :class="activeTabText === i.text ? 'font-weight-regular' : 'text-white'">
-                    {{ i.text }}
-                </p></v-tab
-            >
-        </v-tabs>
+        <v-card v-if="!smAndDown" class="px-lg-6 px-xl-auto mx-0" flat rounded="0" color="primary">
+            <v-container class="core-container px-3 px-sm-0 py-0">
+                <v-tabs v-model="state.tab" bg-color="primary" hide-slider align-tabs="start">
+                    <v-tab
+                        v-for="i in tabs"
+                        @click="navigateTo(i.routeName, i.secondaryTab)"
+                        :value="i.routeName"
+                        :key="i.routeName"
+                        min-width="160"
+                        class="py-3 text-h6 text-capitalize rounded-t-0 rounded-b-xl font-weight-light"
+                        color="text-textPrimary"
+                        selected-class="bg-surface"
+                        ><p :class="activeTabText === i.text ? 'font-weight-regular' : 'text-white'">
+                            {{ i.text }}
+                        </p></v-tab
+                    >
+                </v-tabs>
+            </v-container>
+        </v-card>
         <!--
         ========================
             Router View
@@ -115,6 +123,7 @@
 
 <script setup lang="ts">
 import { reactive, computed, onMounted, toRef } from 'vue'
+import AppAdButtonsSmall from '@/core/components/AppAdButtonsSmall.vue'
 import AppError from '@/core/components/AppError.vue'
 import AddressQr from '@/modules/address/components/AddressQr.vue'
 import AppDialog from '@core/components/AppDialog.vue'
