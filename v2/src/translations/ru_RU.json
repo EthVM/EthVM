@@ -43,7 +43,11 @@
         "price": "Price",
         "24h": "24h",
         "usdValue": "USD Value",
-        "name": "Name"
+        "name": "Name",
+        "button": {
+            "export": "Export",
+            "import": "Import"
+        }
     },
     "portfolio": {
         "addAddressIcon": "Add Address",
@@ -54,6 +58,21 @@
             "addAddress": "Enter Address Hash / Domain Name",
             "searchTokenName": "Search token name",
             "name": "Enter Name"
+        }
+    },
+    "settings": {
+        "emptyList": "This list is empty",
+        "darkModeOn": "Dark Mode On",
+        "darkModeOff": "Dark Mode Off",
+        "header": {
+            "general": "General Settings",
+            "addressName": "Address Names"
+        },
+        "placeholder": {
+            "search": "Search by hash or name"
+        },
+        "tagline": {
+            "addressName": "Add custom names to addresses in order to easily track them through ethVM"
         }
     },
     "block": {
