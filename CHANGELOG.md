@@ -7,7 +7,6 @@
 -   Added setting View for i18n [#1158](https://github.com/EthVM/EthVM/pull/1158)
 -   Added Transaction details View for i18n [#1159](https://github.com/EthVM/EthVM/pull/1159)
 
-
 ======================================================================
 
 ### Release v2.1.1
