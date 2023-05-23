@@ -1,6 +1,6 @@
 <template>
-    <v-row align="center" class="justify-center justify-sm-end">
-        <v-col cols="auto">
+    <v-row align="start" class="justify-center justify-sm-end">
+        <v-col cols="auto" style="position: relative">
             <v-btn
                 rounded="pill"
                 elevation="0"
@@ -15,6 +15,9 @@
                     <p class="font-tiny-xs ml-sm-1 text-break-new-line">Swap Assets</p>
                 </div>
             </v-btn>
+            <router-link :to="ROUTE_NAME.ADVERTISE.PATH" class="ad-here-link">
+                <div class="font-ad-here text-info">advertise here</div>
+            </router-link>
         </v-col>
         <v-col cols="auto">
             <v-btn
@@ -41,7 +44,6 @@
                 </div>
             </v-btn>
         </v-col>
-
         <v-col cols="auto">
             <v-btn
                 rounded="pill"
@@ -63,7 +65,7 @@
 
 <script setup lang="ts">
 import { useDisplay } from 'vuetify/lib/framework.mjs'
-
+import { ROUTE_NAME } from '@core/router/routesNames'
 const { xs } = useDisplay()
 </script>
 <style>
@@ -73,5 +75,20 @@ const { xs } = useDisplay()
     }
     font-size: 11px;
     font-weight: 400 !important;
+}
+.font-ad-here {
+    font-size: 10px;
+}
+.font-ad-here:hover {
+    color: rgb(var(--v-theme-secondary)) !important;
+}
+
+.ad-here-link {
+    @media (max-width: 599px) {
+        top: 26px;
+    }
+    position: absolute;
+    top: 34px;
+    left: 12px;
 }
 </style>
