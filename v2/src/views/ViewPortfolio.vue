@@ -53,7 +53,15 @@
         </v-col>
         <v-col cols="12" :class="columnPadding" order="last">
             <v-card elevation="1" rounded="xl" class="pt-4 pt-sm-6">
-                <app-tabs v-model="state.tab" :routes="routes" :tabs="tabs" class="mx-n1 mt-n2 mb-4"></app-tabs>
+                <v-row no-gutters>
+                    <v-col cols="12" md="auto" lg="4" order="last" order-md="first">
+                        <app-tabs v-model="state.tab" :routes="routes" :tabs="tabs" class="mx-n1 mt-n2 mb-4"></app-tabs>
+                    </v-col>
+                    <v-spacer />
+                    <v-col cols="12" md="auto" lg="8" order="first" order-md="last" class="mb-8 pl-4 pl-sm-6 pr-md-6">
+                        <app-ad-buttons-small />
+                    </v-col>
+                </v-row>
                 <module-portfolio-list v-if="state.tab === routes[0]" />
                 <module-portfolio-token-balance v-if="state.tab === routes[1]" :address-ref="state.addressRef" /> </v-card
         ></v-col>
@@ -62,6 +70,7 @@
 
 <script setup lang="ts">
 import AppAdButtonsLarge from '@/core/components/AppAdButtonsLarge.vue'
+import AppAdButtonsSmall from '@/core/components/AppAdButtonsSmall.vue'
 import AddressBalanceTotals from '@/modules/address/components/AddressBalanceTotals.vue'
 import ModuleAddAdressToPorfolio from '@module/address/ModulePorfolioHandleAdr.vue'
 import ModulePortfolioTotal from '@/modules/address/ModulePortfolioTotal.vue'

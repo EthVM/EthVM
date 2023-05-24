@@ -7,7 +7,7 @@
         <v-card class="px-sm-6 px-xl-auto mx-0" flat rounded="0" :min-height="smAndDown ? '100%' : '92px'">
             <v-container class="core-container px-2 px-sm-0 pb-4 pb-sm-6 pt-4 pt-sm-10">
                 <v-row no-gutters align="center">
-                    <v-col cols="12" lg="7" order="last" order-lg="first">
+                    <v-col cols="12" lg="6" order="last" order-lg="first">
                         <v-row align="center" justify="start" class="px-0 px-sm-0 flex-nowrap" no-gutters style="min-height: 48px">
                             <app-address-blockie :address="props.addressRef || ''" :size="xs ? 9 : 10" />
                             <v-col cols="6" sm="7" :md="store.getAddressName(props.addressRef) ? '8' : 'auto'" lg="auto" class="pl-2 pl-sm-4 pr-sm-0">
@@ -27,7 +27,7 @@
                                     </p>
                                 </div>
                             </v-col>
-                            <v-col cols="6" sm="auto" md="6" lg="auto" class="d-flex flex-grow-0 flex-shrink-1 ml-sm-auto ml-lg-16 justify-end">
+                            <v-col cols="6" sm="auto" md="6" lg="auto" class="d-flex flex-grow-0 flex-shrink-1 ml-sm-auto ml-lg-9 justify-end">
                                 <app-copy-to-clip :value-to-copy="props.addressRef || ''" />
                                 <module-add-adress-to-porfolio :address="props.addressRef" :name="store.getAddressName(props.addressRef)" />
                                 <app-btn-icon icon="qr_code" @click="setQr(true)"></app-btn-icon>
@@ -35,7 +35,7 @@
                             </v-col>
                         </v-row>
                     </v-col>
-                    <v-col cols="12" lg="5" order="first" order-lg="last" class="mb-6 mb-sm-8 mb-lg-0">
+                    <v-col cols="12" lg="6" order="first" order-lg="last" class="mb-6 mb-sm-8 mb-lg-0">
                         <app-ad-buttons-small />
                     </v-col>
                 </v-row>
