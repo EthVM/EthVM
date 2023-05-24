@@ -7,17 +7,17 @@
     >
         <v-card-title v-if="props.isOverview" class="d-none d-sm-flex justify-space-between align-center pa-0 mb-5">
             <div>
-                <span v-if="props.isOverview" class="text-h6 font-weight-bold">Token Balance</span>
+                <span v-if="props.isOverview" class="text-h6 font-weight-bold">{{ $t('block.tokenBalance') }}</span>
                 <!-- Notice new update-->
                 <app-new-update
                     :icon-only="props.isOverview"
-                    text="Token's Balance Changed, Refresh"
+                    :text="$t('block.tokenBalanceRefresh')"
                     :update-count="props.newErc20Transfer"
                     @reload="resetCount"
                 />
             </div>
             <template v-if="props.isOverview">
-                <app-btn text="More" is-small icon="east" @click="goToTokensBalancePage"></app-btn>
+                <app-btn :text="$t('txs.more')" is-small icon="east" @click="goToTokensBalancePage"></app-btn>
             </template>
         </v-card-title>
         <div v-if="!props.isOverview || (props.isOverview && xs)" class="d-flex align-center flex-wrap">
@@ -26,7 +26,7 @@
                     title="Token Balance"
                     :is-loading="loadingTokens || loadingCoinData"
                     :balance="tokenBalance"
-                    :subtext="`${tokensLength} total tokens`"
+                    :subtext="`${tokensLength} ${$t('block.tokenTotal')}`"
                     :class="{ 'd-sm-none': props.isOverview }"
                 >
                 </address-balance-totals>
@@ -52,7 +52,7 @@
              -->
             <v-col sm="4" :lg="props.isOverview ? 4 : 3" class="py-0 d-none d-sm-block">
                 <v-btn variant="text" color="info" class="font-weight-regular ml-n3" rounded="pill" size="small" @click="sortTable(SORT_KEY.NAME)">
-                    Token
+                    {{ $t('common.token') }}
                     <v-icon v-if="isActiveSort(SORT_KEY.NAME)" class="ml-1" :size="14">{{ sortIcon }}</v-icon></v-btn
                 >
             </v-col>
@@ -71,7 +71,7 @@
                     <!--PRICE -->
                     <v-col sm="4" :lg="props.isOverview ? 4 : 3" class="py-0 text-right text-sm-left">
                         <v-btn variant="text" color="info" class="font-weight-regular ml-n3" rounded="pill" size="small" @click="sortTable(SORT_KEY.PRICE)">
-                            Price
+                            {{ $t('common.price') }}
                             <v-icon v-if="isActiveSort(SORT_KEY.PRICE)" class="ml-1" :size="14">{{ sortIcon }}</v-icon></v-btn
                         ></v-col
                     >
@@ -84,18 +84,18 @@
                             size="small"
                             @click="sortTable(SORT_KEY.PERCENTAGE_CHANGE)"
                         >
-                            24h<v-icon v-if="isActiveSort(SORT_KEY.PERCENTAGE_CHANGE)" class="ml-1" :size="14">{{ sortIcon }}</v-icon></v-btn
+                            {{ $t('common.24h') }}<v-icon v-if="isActiveSort(SORT_KEY.PERCENTAGE_CHANGE)" class="ml-1" :size="14">{{ sortIcon }}</v-icon></v-btn
                         ></v-col
                     >
                     <v-col sm="4" :lg="props.isOverview ? 4 : 3" class="py-0 d-none d-sm-block">
                         <v-btn variant="text" color="info" class="font-weight-regular ml-n3" rounded="pill" size="small" @click="sortTable(SORT_KEY.USD)">
-                            USD Value
+                            {{ $t('common.usdValue') }}
                             <v-icon v-if="isActiveSort(SORT_KEY.USD)" class="ml-1" :size="14">{{ sortIcon }}</v-icon></v-btn
                         ></v-col
                     >
                     <v-col sm="4" :lg="props.isOverview ? 4 : 3" class="py-0 d-none d-sm-flex justify-space-between">
                         <v-btn variant="text" color="info" class="font-weight-regular ml-n3" rounded="pill" size="small" @click="sortTable(SORT_KEY.BALANCE)">
-                            Balance
+                            {{ $t('common.balance') }}
                             <v-icon v-if="isActiveSort(SORT_KEY.BALANCE)" class="ml-1" :size="14">{{ sortIcon }}</v-icon></v-btn
                         >
                     </v-col>
@@ -113,27 +113,27 @@
                     <v-icon class="ml-1" :size="14">{{ sortIcon }}</v-icon></v-btn
                 >
                 <app-menu min-width="140" activator="#activator-mobile-sort" :close-on-content-click="false">
-                    <v-list-item title="Token Name" class="py-2" @click="sortTable(SORT_KEY.NAME)">
+                    <v-list-item :title="$t('portfolio.tokenName')" class="py-2" @click="sortTable(SORT_KEY.NAME)">
                         <template #append>
                             <v-icon v-if="isActiveSort(SORT_KEY.NAME)" class="ml-1" :size="14">{{ sortIcon }}</v-icon>
                         </template>
                     </v-list-item>
-                    <v-list-item title="USD Value" class="py-2" @click="sortTable(SORT_KEY.USD)">
+                    <v-list-item :title="$t('common.usdValue')" class="py-2" @click="sortTable(SORT_KEY.USD)">
                         <template #append>
                             <v-icon v-if="isActiveSort(SORT_KEY.USD)" class="ml-1" :size="14">{{ sortIcon }}</v-icon>
                         </template>
                     </v-list-item>
-                    <v-list-item title="Balance" class="py-2" @click="sortTable(SORT_KEY.BALANCE)">
+                    <v-list-item :title="$t('common.balance')" class="py-2" @click="sortTable(SORT_KEY.BALANCE)">
                         <template #append>
                             <v-icon v-if="isActiveSort(SORT_KEY.BALANCE)" class="ml-1" :size="14">{{ sortIcon }}</v-icon></template
                         >
                     </v-list-item>
-                    <v-list-item title="Price" class="py-2" @click="sortTable(SORT_KEY.PRICE)">
+                    <v-list-item :title="$t('common.price')" class="py-2" @click="sortTable(SORT_KEY.PRICE)">
                         <template #append>
                             <v-icon v-if="isActiveSort(SORT_KEY.PRICE)" class="ml-1" :size="14">{{ sortIcon }}</v-icon>
                         </template>
                     </v-list-item>
-                    <v-list-item title="24h" class="py-2" @click="sortTable(SORT_KEY.PERCENTAGE_CHANGE)">
+                    <v-list-item :title="$t('common.24h')" class="py-2" @click="sortTable(SORT_KEY.PERCENTAGE_CHANGE)">
                         <template #append>
                             <v-icon v-if="isActiveSort(SORT_KEY.PERCENTAGE_CHANGE)" class="ml-1" :size="14">{{ sortIcon }}</v-icon></template
                         >
@@ -166,7 +166,7 @@
                     </table-row-token-balance>
                 </div>
             </div>
-            <app-no-result v-else text="This address does not hold any tokens" class="mt-3 mt-sm-1"></app-no-result>
+            <app-no-result v-else :title="$t('address.tagline.noToken')" class="mt-3 mt-sm-1"></app-no-result>
             <template v-if="showPagination">
                 <app-pagination :length="numberOfPages" @update:modelValue="loadMoreData" :current-page="pageNum" />
             </template>

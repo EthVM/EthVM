@@ -5,7 +5,11 @@
         =========================
         -->
     <v-card v-if="isOverview" class="pa-4 pa-sm-6" elevation="1" rounded="xl" height="100%">
-        <address-balance-totals :title="`${currencyName} Balance`" :is-loading="loadingBalanceData" :balance="`${balanceFormatted} ${currencyName}`">
+        <address-balance-totals
+            :title="`${currencyName} ${$t('common.balance')}`"
+            :is-loading="loadingBalanceData"
+            :balance="`${balanceFormatted} ${currencyName}`"
+        >
             <template #extra>
                 <v-col v-if="loadingMarketInfo || loadingBalanceData" cols="6" sm="4" md="6" class="pa-0">
                     <div class="skeleton-box rounded-xl mt-1" style="height: 24px"></div>
@@ -29,7 +33,11 @@
             XS & SM: Eth Balance & USD VALUE
         =========================
         -->
-        <address-balance-totals :title="`${currencyName} Balance`" :is-loading="loadingBalanceData" :balance="`${balanceFormatted} ${currencyName}`">
+        <address-balance-totals
+            :title="`${currencyName} ${$t('common.balance')}`"
+            :is-loading="loadingBalanceData"
+            :balance="`${balanceFormatted} ${currencyName}`"
+        >
             <template #extra>
                 <v-col v-if="loadingMarketInfo || loadingBalanceData" cols="6" sm="4" md="6" class="pa-0">
                     <div class="skeleton-box rounded-xl mt-1" style="height: 24px"></div>
@@ -75,7 +83,7 @@
             =========================
             -->
             <v-col cols="6" md="4" lg="3" class="mt-4">
-                <p class="'text-caption mb-1 text-info">Price</p>
+                <p class="'text-caption mb-1 text-info">{{ $t('common.price') }}</p>
                 <div v-if="loadingMarketInfo" class="skeleton-box rounded-xl" style="height: 20px"></div>
                 <p v-else :class="'text-body-1'">
                     {{ priceFiatFormatted }}
@@ -87,7 +95,7 @@
             =========================
             -->
             <v-col cols="6" md="4" lg="3" class="mt-4">
-                <p class="text-caption mb-1 text-info">24h Change</p>
+                <p class="text-caption mb-1 text-info">{{ $t('address.24h.change') }}</p>
                 <div v-if="loadingMarketInfo" class="skeleton-box rounded-xl" style="height: 20px"></div>
                 <p v-else :class="['text-body-1', percentageClass]">{{ percentageFormatted }}%</p>
             </v-col>
@@ -124,7 +132,9 @@ import AddressBalanceTotals from './components/AddressBalanceTotals.vue'
 import { useDisplay } from 'vuetify/lib/framework.mjs'
 import AddressTokenFiatInfo from './components/AddressTokenFiatInfo.vue'
 import { useNetwork } from '@core/composables/Network/useNetwork'
+import { useI18n } from 'vue-i18n'
 
+const { t } = useI18n()
 const { currencyName } = useNetwork()
 const props = defineProps({
     addressRef: {
@@ -191,27 +201,27 @@ interface FiatInfo {
 const fiatInfo = computed<FiatInfo[]>(() => {
     return [
         {
-            text: 'Market Cap',
+            text: t('address.24h.change'),
             fiat: new BN(ethMarketInfo.value?.market_cap || 0)
         },
         {
-            text: 'Circulating Supply',
+            text: t('address.circulatingSupply'),
             fiat: new BN(ethMarketInfo.value?.circulating_supply || 0)
         },
         {
-            text: '24h Trading Volume',
+            text: t('address.24hTradingVolume'),
             fiat: new BN(ethMarketInfo.value?.total_volume || 0)
         },
         {
-            text: 'Total Supply',
+            text: t('address.totalSupply'),
             fiat: new BN(ethMarketInfo?.value?.total_supply || 0)
         },
         {
-            text: '24h High',
+            text: t('address.24h.high'),
             fiat: new BN(ethMarketInfo.value?.high_24h || 0)
         },
         {
-            text: '24h low',
+            text: t('address.24h.low'),
             fiat: new BN(ethMarketInfo.value?.low_24h || 0)
         }
     ]

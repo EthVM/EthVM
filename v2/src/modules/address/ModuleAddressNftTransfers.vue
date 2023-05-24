@@ -8,27 +8,22 @@
         <v-card-title v-if="props.isOverview" class="d-flex justify-space-between align-center pa-0 mb-5">
             <div>
                 <v-row align="center" class="my-0 mx-0">
-                    <span class="text-h6 font-weight-bold">NFT History</span>
-                    <app-new-update
-                        :icon-only="props.isOverview"
-                        text="New ERC20 Transfers"
-                        :update-count="props.newErc721Transfer"
-                        @reload="setPage(0, true)"
-                    />
+                    <span class="text-h6 font-weight-bold">NFT {{ $t('common.history') }}</span>
+                    <app-new-update :icon-only="props.isOverview" :text="$t('txs.newNft')" :update-count="props.newErc721Transfer" @reload="setPage(0, true)" />
                 </v-row>
             </div>
-            <app-btn v-if="props.isOverview && !xs" text="More" isSmall icon="east" @click="goToNftTransfersPage"></app-btn>
+            <app-btn v-if="props.isOverview && !xs" :text="$t('txs.more')" isSmall icon="east" @click="goToNftTransfersPage"></app-btn>
             <app-btn-icon v-if="props.isOverview && xs" icon="east" @click="goToNftTransfersPage"></app-btn-icon>
         </v-card-title>
         <div>
             <!-- Table Header -->
             <v-row v-if="!mdAndDown" class="my-0 text-body-1 text-info">
-                <v-col :cols="props.isOverview ? 4 : 3" class="py-0"> Name/Id </v-col>
-                <v-col :cols="props.isOverview ? 2 : 1" class="py-0"> Copies </v-col>
-                <v-col :cols="props.isOverview ? 2 : 1" class="py-0"> From/To </v-col>
-                <v-col :cols="props.isOverview ? 4 : 3" class="py-0"> Address </v-col>
-                <v-col v-if="!props.isOverview" cols="2" class="py-0"> Hash </v-col>
-                <v-col v-if="!props.isOverview" cols="2" class="py-0"> Timestamp </v-col>
+                <v-col :cols="props.isOverview ? 4 : 3" class="py-0">{{ $t('common.name') }}/{{ $t('common.id') }} </v-col>
+                <v-col :cols="props.isOverview ? 2 : 1" class="py-0"> {{ $t('common.copy', 2) }} </v-col>
+                <v-col :cols="props.isOverview ? 2 : 1" class="py-0"> {{ $t('common.from') }}/{{ $t('common.to') }} </v-col>
+                <v-col :cols="props.isOverview ? 4 : 3" class="py-0"> {{ $t('common.address') }} </v-col>
+                <v-col v-if="!props.isOverview" cols="2" class="py-0"> {{ $t('common.hash') }} </v-col>
+                <v-col v-if="!props.isOverview" cols="2" class="py-0"> {{ $t('common.timestamp') }} </v-col>
             </v-row>
             <v-divider class="my-0 mt-sm-4 mx-n4 mx-sm-n6" />
             <div v-if="initialLoad || loadingMeta || loadingTransfers" class="p-ten-top">
@@ -38,7 +33,7 @@
             </div>
             <template v-else>
                 <template v-if="transfers.length < 1">
-                    <app-no-result text="This address does not have any NFT transfer history" class="mt-4 mt-sm-6"></app-no-result>
+                    <app-no-result :text="$t('address.tagline.noNFTTransfer')" class="mt-4 mt-sm-6"></app-no-result>
                 </template>
                 <div v-else-if="transfers.length > 0" class="p-ten-top">
                     <div v-for="(transfer, index) in currentPageData" :key="`${transfer?.transfer.transactionHash} - ${index}`">

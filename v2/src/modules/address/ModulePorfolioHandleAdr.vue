@@ -13,13 +13,13 @@
                             icon="add"
                         ></app-btn>
                         <v-btn v-else icon flat color="secondary" height="34px" width="34px" @click="state.openDialog = true">
-                            <v-icon>add</v-icon>
+                            <v-icon>{{ $t('common.add') }}</v-icon>
                         </v-btn>
                     </div>
                 </template>
             </v-tooltip>
             <v-btn v-else icon flat color="secondary" height="34px" width="34px" @click="state.openDialog = true">
-                <v-icon>add</v-icon>
+                <v-icon>{{ $t('common.add') }}</v-icon>
             </v-btn>
         </div>
         <app-dialog v-model="state.openDialog" :title="title" height="290" width="480" @update:model-value="closeModule">
@@ -70,7 +70,7 @@
                     <app-btn :text="buttonText" @click="addAddressToPortfolio" :disabled="!isValidInput"></app-btn>
                     <v-col v-if="props.isEditMode && !props.hideSettingsLink" cols="12" class="d-flex align-centet justify-center">
                         <v-btn class="rounded-pill mt-3 text-body-1" :to="routeSettings">
-                            View in Settings <span><v-icon icon="east" size="16"></v-icon></span>
+                            {{ $t('portfolio.viewInSetting') }} <span><v-icon icon="east" size="16"></v-icon></span>
                         </v-btn>
                     </v-col>
                 </v-row>

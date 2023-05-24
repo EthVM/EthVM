@@ -2,16 +2,16 @@
     <v-card fluid class="pa-4 pa-sm-6 fill-height" elevation="1" rounded="xl">
         <div class="d-flex flex-nowrap align-center">
             <address-balance-totals
-                title="Token Balance"
+                :title="$t('block.tokenBalance')"
                 :is-loading="initialLoad || loadingMarketInfo"
                 :balance="tokenBalanceValue"
-                :subtext="`${tokenCount} total tokens`"
+                :subtext="`${tokenCount} ${$t('block.tokenTotal')}`"
             >
             </address-balance-totals>
             <app-token-icon-row v-if="!loadingMarketInfo && !initialLoad" :tokens="tokenIcons"></app-token-icon-row>
         </div>
         <v-divider class="my-6" />
-        <address-balance-totals title="Total NFT's" :is-loading="loadingNftCount" :balance="nftCount"> </address-balance-totals>
+        <address-balance-totals :title="$t('block.nftTotal')" :is-loading="loadingNftCount" :balance="nftCount"> </address-balance-totals>
     </v-card>
 </template>
 

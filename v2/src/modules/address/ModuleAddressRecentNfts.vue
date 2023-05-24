@@ -6,14 +6,14 @@
         :class="[props.isOverview ? 'pt-4 pt-sm-6' : '', 'px-4 px-sm-6 pb-4 pb-sm-6 h-100']"
     >
         <v-card-title v-if="props.isOverview" class="card-title d-flex justify-space-between align-center mb-5 pa-0">
-            <span class="text-h6 font-weight-bold">NFT Collection</span>
-            <app-btn v-if="!xs" text="More" isSmall icon="east" @click="goToNftsPage"></app-btn>
+            <span class="text-h6 font-weight-bold">{{ $t('block.nftCollection') }}</span>
+            <app-btn v-if="!xs" :text="$t('txs.more')" isSmall icon="east" @click="goToNftsPage"></app-btn>
             <app-btn-icon v-else icon="east" @click="goToNftsPage"></app-btn-icon>
         </v-card-title>
         <div>
             <template v-if="loadingBalance === false && loadingMeta === false">
                 <template v-if="!tokens || tokens.length < 1">
-                    <app-no-result text="This address does not have any NFTs" class="mt-4 mt-sm-6"></app-no-result>
+                    <app-no-result :text="$t('address.tagline.noNFT')" class="mt-4 mt-sm-6"></app-no-result>
                 </template>
                 <template v-else>
                     <v-row :dense="xs">
@@ -29,7 +29,7 @@
                             <p v-if="!props.isOverview && token.meta && token.meta.name" class="my-1 text-info">
                                 {{ token.meta.name }}
                             </p>
-                            <p v-if="!props.isOverview && (!token.meta || !token.meta.name)" class="my-1">Unknown-{{ token.type }}</p>
+                            <p v-if="!props.isOverview && (!token.meta || !token.meta.name)" class="my-1">{{ $t('block.unknown') }}-{{ token.type }}</p>
                         </v-col>
                     </v-row>
                 </template>
