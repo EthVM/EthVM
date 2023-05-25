@@ -1,13 +1,13 @@
 <template>
     <div>
         <div v-if="!props.isEditMode">
-            <v-tooltip v-if="!props.isAddNameMode" text="You can only store 10 addresses in your portfolio" :disabled="!isDisabled">
+            <v-tooltip v-if="!props.isAddNameMode" :text="$t('portfolio.limit')" :disabled="!isDisabled">
                 <template v-slot:activator="{ props }">
                     <div v-bind="props" class="d-inline-block">
                         <app-btn-icon v-if="addressPropIsValid" :icon="icon" @click="starClick" :disabled="isDisabled"></app-btn-icon>
                         <app-btn
                             v-else-if="!addressPropIsValid && !smAndDown"
-                            text="Add Address"
+                            :text="$t('portfolio.addAddressIcon')"
                             @click="state.openDialog = true"
                             :disabled="isDisabled"
                             icon="add"
@@ -35,7 +35,7 @@
                         <app-input
                             v-model="state.adrInput"
                             :has-error="hasAddressError"
-                            place-holder="Enter Address Hash / Domain Name"
+                            :place-holder="$t('portfolio.placeholder.addAddress')"
                             show-error-message
                             class="mb-1"
                             :error-message="addressErrorMes"
@@ -59,8 +59,8 @@
                             v-model="state.nameInput"
                             :has-error="hasNameError"
                             show-error-message
-                            error-message="This name is already saved"
-                            place-holder="Enter Name"
+                            :error-message="$t('portfolio.errorDuplicateName')"
+                            :place-holder="$t('portfolio.placeholder.name')"
                             :has-preppend-inner="false"
                             :is-required="isRequiredName"
                             class="mb-1"

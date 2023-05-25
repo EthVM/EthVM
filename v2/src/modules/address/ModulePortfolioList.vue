@@ -4,7 +4,7 @@
         <v-row :dense="xs" :class="'d-flex text-body-1 text-info mb-0'" :justify="xs ? 'end' : 'start'">
             <v-col sm="6" lg="3" class="py-0 d-none d-sm-block">
                 <v-btn variant="text" color="info" class="font-weight-regular ml-n3" rounded="pill" size="small" @click="sortTable(KEY.HASH)">
-                    Address
+                    {{ $t('common.address') }}
                     <v-icon v-if="isActiveSort(KEY.HASH)" class="ml-1" :size="14">{{ sortIcon }}</v-icon></v-btn
                 >
             </v-col>
@@ -14,7 +14,7 @@
                     -->
             <v-col lg="3" class="py-0 d-none d-lg-block">
                 <v-btn variant="text" color="info" class="font-weight-regular ml-n3" rounded="pill" size="small" @click="sortTable(KEY.NAME)">
-                    Name
+                    {{ $t('common.name') }}
                     <v-icon v-if="isActiveSort(KEY.NAME)" class="ml-1" :size="14">{{ sortIcon }}</v-icon></v-btn
                 >
             </v-col>
@@ -24,7 +24,7 @@
                     -->
             <v-col sm="3" lg="2" class="py-0 d-none d-sm-block">
                 <v-btn variant="text" color="info" class="font-weight-regular ml-n3" rounded="pill" size="small" @click="sortTable(KEY.ETH)">
-                    {{ currencyName }} Balance <v-icon v-if="isActiveSort(KEY.ETH)" class="ml-1" :size="14">{{ sortIcon }}</v-icon></v-btn
+                    {{ currencyName }} {{ $t('common.balance') }} <v-icon v-if="isActiveSort(KEY.ETH)" class="ml-1" :size="14">{{ sortIcon }}</v-icon></v-btn
                 >
             </v-col>
             <!--
@@ -33,7 +33,7 @@
                     -->
             <v-col lg="2" class="py-0 d-none d-lg-block">
                 <v-btn variant="text" color="info" class="font-weight-regular ml-n3" rounded="pill" size="small" @click="sortTable(KEY.ETH_USD)">
-                    {{ currencyName }} Value <v-icon v-if="isActiveSort(KEY.ETH_USD)" class="ml-1" :size="14">{{ sortIcon }}</v-icon></v-btn
+                    {{ currencyName }} {{ $t('common.value') }} <v-icon v-if="isActiveSort(KEY.ETH_USD)" class="ml-1" :size="14">{{ sortIcon }}</v-icon></v-btn
                 >
             </v-col>
             <!--
@@ -42,7 +42,7 @@
                     -->
             <v-col sm="3" lg="2" class="py-0 d-none d-sm-block">
                 <v-btn variant="text" color="info" class="font-weight-regular ml-n3" rounded="pill" size="small" @click="sortTable(KEY.TOTAL)">
-                    Total
+                    {{ $t('common.total') }}
                     <v-icon v-if="isActiveSort(KEY.TOTAL)" class="ml-1" :size="14">{{ sortIcon }}</v-icon></v-btn
                 >
             </v-col>
@@ -58,27 +58,27 @@
                     <v-icon class="ml-1" :size="14">{{ sortIcon }}</v-icon></v-btn
                 >
                 <app-menu min-width="140" activator="#activator-mobile-sort" :close-on-content-click="false">
-                    <v-list-item title="Name" class="py-2" @click="sortTable(KEY.NAME)">
+                    <v-list-item :title="$t('common.name')" class="py-2" @click="sortTable(KEY.NAME)">
                         <template #append>
                             <v-icon v-if="isActiveSort(KEY.NAME)" class="ml-1" :size="14">{{ sortIcon }}</v-icon>
                         </template>
                     </v-list-item>
-                    <v-list-item title="Address" class="py-2" @click="sortTable(KEY.HASH)">
+                    <v-list-item :title="$t('common.address')" class="py-2" @click="sortTable(KEY.HASH)">
                         <template #append>
                             <v-icon v-if="isActiveSort(KEY.HASH)" class="ml-1" :size="14">{{ sortIcon }}</v-icon>
                         </template>
                     </v-list-item>
-                    <v-list-item title="ETH Balance" class="py-2" @click="sortTable(KEY.ETH)">
+                    <v-list-item :title="$t('common.balance')" class="py-2" @click="sortTable(KEY.ETH)">
                         <template #append>
                             <v-icon v-if="isActiveSort(KEY.ETH)" class="ml-1" :size="14">{{ sortIcon }}</v-icon></template
                         >
                     </v-list-item>
-                    <v-list-item title="ETH Value" class="py-2" @click="sortTable(KEY.ETH_USD)">
+                    <v-list-item :title="$t('common.value')" class="py-2" @click="sortTable(KEY.ETH_USD)">
                         <template #append>
                             <v-icon v-if="isActiveSort(KEY.ETH_USD)" class="ml-1" :size="14">{{ sortIcon }}</v-icon>
                         </template>
                     </v-list-item>
-                    <v-list-item title="Total" class="py-2" @click="sortTable(KEY.TOTAL)">
+                    <v-list-item :title="$t('common.total')" class="py-2" @click="sortTable(KEY.TOTAL)">
                         <template #append>
                             <v-icon v-if="isActiveSort(KEY.TOTAL)" class="ml-1" :size="14">{{ sortIcon }}</v-icon></template
                         >
@@ -96,7 +96,7 @@
             </div>
         </template>
         <template v-else>
-            <app-no-result :text="`Your portfolio is empty`" class="mt-3"></app-no-result>
+            <app-no-result :text="$t('block.portfolioEmpty')" class="mt-3"></app-no-result>
         </template>
     </div>
 </template>

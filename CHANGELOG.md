@@ -1,12 +1,16 @@
-
 ### Release v2.1.2
 
 ### Devop
-- refactor Home View for i18n [#1142](https://github.com/EthVM/EthVM/pull/1142)
+
+-   refactor Home View for i18n [#1142](https://github.com/EthVM/EthVM/pull/1142)
+-   Added Portfolio View for i18n [#1155](https://github.com/EthVM/EthVM/pull/1155)
+-   Added setting View for i18n [#1158](https://github.com/EthVM/EthVM/pull/1158)
+
 
 ### Feature
 - advertise with us page [#1156](https://github.com/EthVM/EthVM/pull/1156)
 ======================================================================
+
 ### Release v2.1.1
 Adds Transaction Actions to the txs details:
 - ETH Transfers
@@ -37,42 +41,48 @@ Adds Transaction Actions to the txs details:
 ======================================================================
 
 ### Release v2.1.0
+
 This release includes:
-- App Settings with ability to browse created local names
-- Ability to support multiple networks
-- Ability to view stake withdrawals in block details and address pages
+
+-   App Settings with ability to browse created local names
+-   Ability to support multiple networks
+-   Ability to view stake withdrawals in block details and address pages
 
 ### Feature
-- app settings [#1141](https://github.com/EthVM/EthVM/pull/1141)
-- app address names with import/export features [#1141](https://github.com/EthVM/EthVM/pull/1141)
-- added crowdin support in about, txs, notfound [#1140](https://github.com/EthVM/EthVM/pull/1140)
-- add table sorting on mobile [#1137](https://github.com/EthVM/EthVM/pull/1137)
-- multiple networks support [#1143](https://github.com/EthVM/EthVM/pull/1143)
-- withdrawals tables [#1144](https://github.com/EthVM/EthVM/pull/1144)
-- change network [#1145](https://github.com/EthVM/EthVM/pull/1145)
-- display current ETH Price and Gas Price in app header [#1145](https://github.com/EthVM/EthVM/pull/1145)
+
+-   app settings [#1141](https://github.com/EthVM/EthVM/pull/1141)
+-   app address names with import/export features [#1141](https://github.com/EthVM/EthVM/pull/1141)
+-   added crowdin support in about, txs, notfound [#1140](https://github.com/EthVM/EthVM/pull/1140)
+-   add table sorting on mobile [#1137](https://github.com/EthVM/EthVM/pull/1137)
+-   multiple networks support [#1143](https://github.com/EthVM/EthVM/pull/1143)
+-   withdrawals tables [#1144](https://github.com/EthVM/EthVM/pull/1144)
+-   change network [#1145](https://github.com/EthVM/EthVM/pull/1145)
+-   display current ETH Price and Gas Price in app header [#1145](https://github.com/EthVM/EthVM/pull/1145)
 
 ### BUG
-- fix error on url enter in search bar [#1138](https://github.com/EthVM/EthVM/pull/1138)
-- reset pagination to page 1 when filter is active [#1141](https://github.com/EthVM/EthVM/pull/1141)
-- remove checksumed address requirement in url [#1141](https://github.com/EthVM/EthVM/pull/1141)
-- show contract creation details in tx details page [#1143]https://github.com/EthVM/EthVM/pull/1143)
-- reset pagination on token view on contract change [#1144](https://github.com/EthVM/EthVM/pull/1144)
-- check for proper nexKey in token holders table pagination [#1144](https://github.com/EthVM/EthVM/pull/1144)
+
+-   fix error on url enter in search bar [#1138](https://github.com/EthVM/EthVM/pull/1138)
+-   reset pagination to page 1 when filter is active [#1141](https://github.com/EthVM/EthVM/pull/1141)
+-   remove checksumed address requirement in url [#1141](https://github.com/EthVM/EthVM/pull/1141)
+-   show contract creation details in tx details page [#1143]https://github.com/EthVM/EthVM/pull/1143)
+-   reset pagination on token view on contract change [#1144](https://github.com/EthVM/EthVM/pull/1144)
+-   check for proper nexKey in token holders table pagination [#1144](https://github.com/EthVM/EthVM/pull/1144)
 
 ### UI
-- ui jump on add address name on desktop view [#1138](https://github.com/EthVM/EthVM/pull/1138)
-- add hover states to address menu [#1138](https://github.com/EthVM/EthVM/pull/1138)
-- fix txs table responsiveness [#1144](https://github.com/EthVM/EthVM/pull/1144)
-- fix container elevation in Txs and Blocks views [#1145](https://github.com/EthVM/EthVM/pull/1145)
-- fix basic views paddings [#1145](https://github.com/EthVM/EthVM/pull/1145)
+
+-   ui jump on add address name on desktop view [#1138](https://github.com/EthVM/EthVM/pull/1138)
+-   add hover states to address menu [#1138](https://github.com/EthVM/EthVM/pull/1138)
+-   fix txs table responsiveness [#1144](https://github.com/EthVM/EthVM/pull/1144)
+-   fix container elevation in Txs and Blocks views [#1145](https://github.com/EthVM/EthVM/pull/1145)
+-   fix basic views paddings [#1145](https://github.com/EthVM/EthVM/pull/1145)
 
 ### Devop
-- add dynamic route imports [#1135](https://github.com/EthVM/EthVM/pull/1135)
-- add proper vuetify tree-shaking [#1135](https://github.com/EthVM/EthVM/pull/1135)
-- replace font loader with local font face [#1135](https://github.com/EthVM/EthVM/pull/1135)
-- adjust webpack optimization [#1135](https://github.com/EthVM/EthVM/pull/1135)
-- reduce sentry sample in production [#1138](https://github.com/EthVM/EthVM/pull/1138)
+
+-   add dynamic route imports [#1135](https://github.com/EthVM/EthVM/pull/1135)
+-   add proper vuetify tree-shaking [#1135](https://github.com/EthVM/EthVM/pull/1135)
+-   replace font loader with local font face [#1135](https://github.com/EthVM/EthVM/pull/1135)
+-   adjust webpack optimization [#1135](https://github.com/EthVM/EthVM/pull/1135)
+-   reduce sentry sample in production [#1138](https://github.com/EthVM/EthVM/pull/1138)
 
 ======================================================================
 
