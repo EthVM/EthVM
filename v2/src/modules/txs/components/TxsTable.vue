@@ -23,7 +23,7 @@
                     {{ $t('common.amount') }}
                 </p>
             </v-col>
-            <v-col sm="3" lg="2" class="d-md-none d-lg-flex"> {{ $t('common.fee') }} </v-col>
+            <v-col sm="3" lg="2" class="d-md-none d-lg-flex"> {{ $t('common.txfee') }} </v-col>
         </v-row>
         <v-divider class="my-0 mt-sm-4 mx-n4 mx-sm-n6" />
         <!--

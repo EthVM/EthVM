@@ -2,7 +2,7 @@
     <div class="pt-3 pb-4 pb-sm-6">
         <div v-if="!actionsLoading">
             <div v-if="ethTransfers.length > 0" class="mb-13 mb-sm-10">
-                <app-expansion-panel :title="`${currencyName} Transfers`">
+                <app-expansion-panel :title="`${currencyName} ${$t('common.transfer')}`">
                     <template #visible-content>
                         <div v-if="!initialLoadingEthTransfers && !loadingEthTransfersData">
                             <div v-for="(transfer, index) in currentPageData.slice(0, 3)" :key="`${index}`">
@@ -40,7 +40,7 @@
                 </app-expansion-panel>
             </div>
             <div v-if="erc20Transfers.length > 0" class="mb-13 mb-sm-10">
-                <app-expansion-panel :title="`Token Transfers`">
+                <app-expansion-panel :title="$t('txs.details.actions.tokenTransfers')">
                     <template #visible-content>
                         <div v-if="!initialLoadingErc20Transfers && !loadingErc20TransfersData">
                             <div v-for="(transfer, index) in currentPageDataErc20.slice(0, 3)" :key="`${index}`">
@@ -78,7 +78,7 @@
                 </app-expansion-panel>
             </div>
             <div v-if="nftTransfers.length > 0" class="mb-13 mb-sm-10">
-                <app-expansion-panel :title="`NFT Transfers`">
+                <app-expansion-panel :title="$t('txs.details.actions.nftTransfers')">
                     <template #visible-content>
                         <div v-if="!initialLoadingNftTransfers && !loadingNftTransfersData && !loadingMeta">
                             <div v-for="(transfer, index) in currentPageDataNFT.slice(0, 3)" :key="`${index}`">
