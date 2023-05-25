@@ -27,8 +27,8 @@
                         <li class="mb-2">
                             <router-link :to="routePPolicy" class="text-link">{{ $t('home.footer.policy') }}</router-link>
                         </li>
-                        <li class="mb-2" target="_blank">
-                            <a href="https://help.myetherwallet.com/en/" class="text-link">{{ $t('home.footer.help') }}</a>
+                        <li class="mb-2">
+                            <a href="https://help.myetherwallet.com/en/" class="text-link" target="_blank">{{ $t('home.footer.help') }}</a>
                         </li>
                         <li class="mb-2">
                             <router-link :to="routeAdvertise" class="text-link">{{ $t('home.footer.advertise') }}</router-link>
