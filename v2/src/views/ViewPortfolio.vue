@@ -7,7 +7,7 @@
             <v-card fluid class="pa-4 pa-sm-6" elevation="1" rounded="xl" height="100%">
                 <v-row no-gutter justify="start">
                     <v-col cols="6" sm="4" lg="3">
-                        <address-balance-totals title="Total Addresses" :is-loading="false" :balance="store.portfolioLength.toString()">
+                        <address-balance-totals :title="$t('block.totalAddress')" :is-loading="false" :balance="store.portfolioLength.toString()">
                         </address-balance-totals>
                     </v-col>
                     <v-spacer />
@@ -26,9 +26,9 @@
                     <v-col v-if="!xs" cols="12">
                         <div class="d-flex flex-nowrap align-center">
                             <address-balance-totals
-                                title="Token Balance"
+                                :title="$t('block.tokenBalance')"
                                 :is-loading="!store.portfolioTokensIsLoaded()"
-                                :subtext="`${tokensCount} total tokens`"
+                                :subtext="`${tokensCount} ${$t('block.tokenTotal')}`"
                                 :balance="tokenBalanceFiat"
                             />
                             <app-token-icon-row v-if="store.portfolioTokensIsLoaded()" :tokens="tokenIcons" class="ml-5"></app-token-icon-row>
@@ -40,7 +40,7 @@
         <v-col v-if="xs" cols="12">
             <v-card elevation="1" rounded="xl" class="pa-4 pa-sm-6">
                 <address-balance-totals
-                    title="Token Balance"
+                    :title="$t('block.tokenBalance')"
                     :is-loading="!store.portfolioTokensIsLoaded()"
                     :subtext="`${tokensCount} total tokens`"
                     :balance="tokenBalanceFiat"
@@ -78,6 +78,9 @@ import { TokenSort, TOKEN_FILTER_VALUES } from '@module/address/models/TokenSort
 import { MarketDataFragment } from '@core/composables/CoinData/getLatestPrices.generated'
 import { useCoinData } from '@core/composables/CoinData/coinData.composable'
 import { onMounted } from 'vue'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 
 onMounted(() => {
     window.scrollTo(0, 0)
@@ -91,11 +94,11 @@ const routes = Q_PORTFOLIO
 const tabs: Tab[] = [
     {
         value: routes[0],
-        title: 'Watchlist'
+        title: t('block.header.watchList')
     },
     {
         value: routes[1],
-        title: 'Balances'
+        title: t('common.balance', 2)
     }
 ]
 
