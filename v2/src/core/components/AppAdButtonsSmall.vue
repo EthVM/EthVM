@@ -9,6 +9,7 @@
                 href="https://www.myetherwallet.com/"
                 target="_blank"
                 class="promo-btn text-white"
+                @click="btnClick('swap-assets')"
             >
                 <div class="d-flex flex-row flex-sm-row align-center justify-center">
                     <v-img v-if="!xs" :src="require('@/assets/logo/mew-long-white.png')" eager contain alt="MyEtherWallet button icon" height="14" width="50" />
@@ -29,6 +30,7 @@
                 href="https://ccswap.myetherwallet.com/?platform=ethvm"
                 target="_blank"
                 class="promo-btn text-white"
+                @click="btnClick('buy-crypto')"
             >
                 <div class="d-flex flex-row flex-sm-row align-center justify-center">
                     <v-img
@@ -55,6 +57,7 @@
                 href="https://rarible.com/?ref=0x5bA9576c214FC7C6649f6F3C73dcbC2769b1761"
                 target="_blank"
                 class="promo-btn text-white"
+                @click="btnClick('trade-nfts')"
             >
                 <div class="d-flex flex-row flex-sm-row align-center justify-center">
                     <v-img v-if="!xs" :src="require('@/assets/promo/rarible-icon.png')" eager contain alt="MEW logo button icon" height="16" width="16" />
@@ -68,7 +71,16 @@
 <script setup lang="ts">
 import { useDisplay } from 'vuetify/lib/framework.mjs'
 import { ROUTE_NAME } from '@core/router/routesNames'
+import { useGtag } from 'vue-gtag-next'
 const { xs } = useDisplay()
+
+const { event } = useGtag()
+const btnClick = (btnValue: string) => {
+    event(`small-button-click-${btnValue}`, {
+        event_category: 'btn-promo-click',
+        event_label: `btn-small-${btnValue}`
+    })
+}
 </script>
 <style>
 .font-tiny-xs {

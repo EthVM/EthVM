@@ -12,6 +12,7 @@ import Configs from './configs'
 import i18n from './translations'
 import { useI18n } from 'vue-i18n'
 import './assets/fonts/css/Roboto.css'
+import VueGtag from 'vue-gtag'
 
 const app = createApp({
     setup() {
@@ -41,4 +42,21 @@ Sentry.init({
         tags: { chain: Configs.NETWORK }
     }
 })
-app.use(router).use(vuetify).use(createPinia()).use(i18n).mount('#app')
+
+app.use(router)
+    .use(vuetify)
+    .use(createPinia())
+    .use(i18n)
+    .use(
+        VueGtag,
+        {
+            appName: `ethvm.com`,
+            pageTrackerScreenviewEnabled: true,
+            enabled: true,
+            config: {
+                id: Configs.GA_ID
+            }
+        },
+        router
+    )
+    .mount('#app')

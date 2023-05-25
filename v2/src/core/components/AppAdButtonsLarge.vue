@@ -9,6 +9,7 @@
                 class="text-caption text-lg-body-1 promo-btn text-white"
                 href="https://twitter.com/ETH_VM"
                 target="_blank"
+                @click="btnClick('folllow-twitter')"
             >
                 <div class="d-flex flex-row flex-sm-column flex-md-row align-center justify-center px-2">
                     <v-img :src="require('@/assets/promo/btn-twitter.png')" eager contain alt="Twitter button icon" height="30" width="30" />
@@ -25,6 +26,7 @@
                 class="text-caption text-lg-body-1 promo-btn text-white"
                 href="https://myetherwallet.us5.list-manage.com/subscribe/post?u=b7b388a0915a116239fcdc59d&id=7b85b410bd"
                 target="_blank"
+                @click="btnClick('subscribe-to-mewtopia')"
             >
                 <div class="d-flex flex-row flex-sm-column flex-md-row align-center justify-center">
                     <v-img :src="require('@/assets/promo/btn-mew.png')" eager contain alt="MEW logo button icon" height="30" width="30" />
@@ -42,6 +44,7 @@
                 class="text-caption text-lg-body-1 promo-btn text-white"
                 :href="randomHref"
                 target="_blank"
+                @click="btnClick(randomPromoText)"
             >
                 <div class="d-flex flex-row flex-sm-column flex-md-row align-center justify-center">
                     <v-img :src="randomPromoImg" eager contain alt="logo button icon" :height="randomPromoImgSize.height" :width="randomPromoImgSize.width" />
@@ -60,6 +63,8 @@ import configs from '@/configs'
 import { PROMOS } from '@/store/helpers'
 import { storeToRefs } from 'pinia'
 import { useDisplay } from 'vuetify/lib/framework.mjs'
+import { useGtag } from 'vue-gtag-next'
+
 const { columnPadding, rowMargin } = useAppViewGrid()
 const { xs, sm } = useDisplay()
 const store = useStore()
@@ -161,6 +166,14 @@ const randomHref = computed<string>(() => {
             return 'https://raffle.enkrypt.com/'
     }
 })
+
+const { event } = useGtag()
+const btnClick = (btnValue: string) => {
+    event(`large-button-click-${btnValue}`, {
+        event_category: 'btn-promo-click',
+        event_label: `btn-large-${btnValue}`
+    })
+}
 </script>
 <style>
 .promo-btn {
