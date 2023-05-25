@@ -3,21 +3,21 @@
         <template v-if="!smAndDown">
             <v-row align="center" justify="start" class="text-info mt-2 mt-sm-3">
                 <v-col sm="3">
-                    <span>Value</span>
+                    <span>{{ $t('common.value') }}</span>
                 </v-col>
-                <v-col sm="2"> To/From </v-col>
-                <v-col sm="3"> Address </v-col>
-                <v-col sm="2"> Hash </v-col>
+                <v-col sm="2"> {{ $t('common.to') }}/{{ $t('common.from') }} </v-col>
+                <v-col sm="3"> {{ $t('common.address') }} </v-col>
+                <v-col sm="2"> {{ $t('common.hash') }} </v-col>
                 <template v-if="props.tab === routes[2]">
                     <v-col sm="2">
                         <div class="d-flex justify-space-between">
-                            <span>Balance Change</span>
-                            <span>Details</span>
+                            <span>{{ $t('txs.balanceChange') }}</span>
+                            <span>{{ $t('common.details') }}</span>
                         </div>
                     </v-col>
                 </template>
                 <template v-else>
-                    <v-col sm="2">Estimated Fee</v-col>
+                    <v-col sm="2">{{ $t('txs.estimatedFee') }}</v-col>
                 </template>
             </v-row>
         </template>
@@ -25,20 +25,20 @@
         <template v-else-if="!xs">
             <v-row align="center" justify="start" class="text-info mt-2 mt-sm-6">
                 <v-col sm="4">
-                    <span>Value</span>
+                    <span>{{ $t('common.value') }}</span>
                 </v-col>
-                <v-col sm="3"> Address </v-col>
-                <v-col sm="3"> Hash </v-col>
+                <v-col sm="3"> {{ $t('common.address') }} </v-col>
+                <v-col sm="3"> {{ $t('common.hash') }} </v-col>
                 <template v-if="props.tab === routes[2]">
                     <v-col sm="2">
                         <div class="d-flex justify-space-between">
-                            <span>Balance Change</span>
-                            <span>Details</span>
+                            <span>{{ $t('txs.balanceChange') }}</span>
+                            <span>{{ $t('common.details') }}</span>
                         </div>
                     </v-col>
                 </template>
                 <template v-else>
-                    <v-col sm="2">Estimated Fee</v-col>
+                    <v-col sm="2">{{ $t('txs.estimatedFee') }}</v-col>
                 </template>
             </v-row>
         </template>
@@ -50,7 +50,7 @@
         </div>
         <template v-else>
             <div v-if="pendingTxs && pendingTxs.length < 1">
-                <app-no-result text="This address does not have pending transactions" class="mt-4 mt-sm-6" />
+                <app-no-result :text="$t('address.tagline.noPendingTransactions')" class="mt-4 mt-sm-6" />
             </div>
             <div v-else class="p-ten-top">
                 <div v-for="tx in currentPageData" :key="tx.hash">

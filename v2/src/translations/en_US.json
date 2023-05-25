@@ -21,6 +21,12 @@
     },
     "txs": {
         "header": "All Transactions",
+        "incoming": "Incoming",
+        "outcoming": "Outgoing",
+        "balanceChange": "Balance Change",
+        "balanceBefore": "Balance Before",
+        "balanceAfter": "Balance After",
+        "estimatedFee": "Estimated Fee",
         "isHomeHeader": "Last Transactions",
         "refresh": "New Txs Found, Refresh",
         "name": "Transactions",
@@ -59,8 +65,10 @@
     },
     "common": {
         "add": "add",
+        "all": "All",
         "id": "Id",
-        "block": "Block / Timestamp",
+        "block": "Block",
+        "details": "Details",
         "blockMined": "Block Mined",
         "confirmations": "Confirmations",
         "copy": "copy | copies",
@@ -69,9 +77,11 @@
         "history": "History",
         "from": "From",
         "to": "To",
+        "type": "Type",
         "amount": "Amount",
         "gasLimit": "Gas limit",
-        "txfee": "Tx Fee",
+        "txFee": "Tx Fee",
+        "txValue": "Tx Value",
         "paid": "Paid",
         "input": "Input",
         "nonce": "Nonce",
@@ -90,6 +100,7 @@
         "24h": "24h",
         "usdValue": "USD Value",
         "name": "Name",
+        "validator": "Validator",
         "button": {
             "export": "Export",
             "import": "Import"
@@ -125,6 +136,8 @@
     "address": {
         "circulatingSupply": "Circulating Supply",
         "24hTradingVolume": "24h Trading Volume",
+        "blockRewards": "Block rewards",
+        "uncleRewards": "Uncle rewards",
         "totalSupply": "Total Supply",
         "24h": {
             "high": "24h High",
@@ -139,6 +152,8 @@
             "noTransactionHistory": "This address does not have any token transfer history",
             "noNFT": "This address does not have any NFTs",
             "noNFTTransfer": "This address does not have any NFT transfer history",
+            "noPendingTransactions": "This address does not have pending transactions",
+            "noStakeWithdrawals": "This address does not have any stake withdrawals",
             "noTransfer": "This address does not have any transfers"
         }
     },

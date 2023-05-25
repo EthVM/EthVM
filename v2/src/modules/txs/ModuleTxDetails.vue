@@ -194,7 +194,7 @@ const tabs: Tab[] = [
     },
     {
         value: routes[1],
-        title: t('txs.details.more.header')
+        title: t('common.more')
     }
 ]
 
