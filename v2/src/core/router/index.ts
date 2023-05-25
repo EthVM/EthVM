@@ -29,6 +29,7 @@ const ViewNotFound = () => import(/* webpackChunkName: "View404" */ '@view/ViewN
 const ViewAbout = () => import(/* webpackChunkName: "ViewAbout" */ '@view/ViewAbout.vue')
 const ViewSettings = () => import(/* webpackChunkName: "ViewSettings" */ '@view/ViewSettings.vue')
 const ViewAdvertise = () => import(/* webpackChunkName: "ViewAdvertise" */ '@view/ViewAdWithUs.vue')
+const ViewPrivacyPolicy = () => import(/* webpackChunkName: "ViewPrivacyPolicy" */ '@view/ViewPrivacyPolicy.vue')
 
 const routes: Array<RouteRecordRaw> = [
     {
@@ -159,6 +160,11 @@ const routes: Array<RouteRecordRaw> = [
         path: ROUTE_NAME.ADVERTISE.PATH,
         component: ViewAdvertise,
         name: ROUTE_NAME.ADVERTISE.NAME
+    },
+    {
+        path: ROUTE_NAME.PRIVACY_POLICY.PATH,
+        component: ViewPrivacyPolicy,
+        name: ROUTE_NAME.PRIVACY_POLICY.NAME
     }
 ]
 

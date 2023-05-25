@@ -25,7 +25,7 @@
                             <router-link :to="routeAbout" class="text-link">{{ $t('home.footer.about') }}</router-link>
                         </li>
                         <li class="mb-2">
-                            <a href="https://www.myetherwallet.com/privacy-policy" target="_blank" class="text-link">{{ $t('home.footer.policy') }}</a>
+                            <router-link :to="routePPolicy" class="text-link">{{ $t('home.footer.policy') }}</router-link>
                         </li>
                         <li class="mb-2" target="_blank">
                             <a href="https://help.myetherwallet.com/en/" class="text-link">{{ $t('home.footer.help') }}</a>
@@ -151,6 +151,10 @@ const routeAdvertise = {
 
 const routeSettings = {
     name: ROUTE_NAME.SETTINGS.NAME
+}
+
+const routePPolicy = {
+    name: ROUTE_NAME.PRIVACY_POLICY.NAME
 }
 
 const { lgAndUp, mdAndDown } = useDisplay()
