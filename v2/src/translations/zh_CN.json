@@ -24,19 +24,59 @@
         "header": "All Transactions",
         "isHomeHeader": "Last Transactions",
         "refresh": "New Txs Found, Refresh",
-        "name": "Transactions"
+        "name": "Transactions",
+        "details": {
+            "header": "Transaction Summary",
+            "txHash": "Tx Hash",
+            "createdContract": "Created Contract",
+            "title": {
+                "successful": "Successful",
+                "failed": "Failed",
+                "replaced": "Replaced",
+                "pending": "Pending"
+            },
+            "state": {
+                "header": "State",
+                "before": "Before",
+                "after": "After",
+                "notFound": "No transaction state difference avaialble",
+                "difference": "State Difference"
+            },
+            "more": {
+                "header": "More",
+                "gasUsed": "Gas Used",
+                "baseFee": "Base fee",
+                "maxFee": "Max fee per gas",
+                "notFound": "No transaction state difference avaialble",
+                "index": "TX Index",
+                "difference": "State"
+            },
+            "actions": {
+                "header": "Actions",
+                "tokenTransfers": "Token Transfers",
+                "nftTransfers": "NFT Transfers"
+            }
+        }
     },
     "common": {
         "block": "Block / Timestamp",
+        "blockMined": "Block Mined",
+        "confirmations": "Confirmations",
+        "copy": "copy | copies",
         "timestamp": "Timestamp",
         "hash": "Hash",
         "from": "From",
         "to": "To",
         "amount": "Amount",
-        "fee": "Tx Fee",
+        "gasLimit": "Gas limit",
+        "txfee": "Tx Fee",
+        "input": "Input",
+        "nonce": "Nonce",
+        "fee": "Fee",
         "status": "Status",
         "address": "Address",
         "total": "Total",
+        "transfer": "Transfers",
         "balance": "Balance | Balances",
         "value": "Value",
         "token": "Token",
@@ -114,7 +154,8 @@
             "pricing": "Pricing from Coingecko",
             "power": "Powered by",
             "rights": "All rights reserved.",
-            "settings": "Settings"
+            "settings": "Settings",
+            "advertise": "Advertise with us"
         }
     }
 }
