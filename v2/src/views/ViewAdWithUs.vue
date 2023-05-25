@@ -167,7 +167,7 @@
                                                 eager
                                                 class="floating-messanger"
                                             />
-                                            <v-form validate-on="input" @update:model-value="onInput">
+                                            <v-form validate-on="input" ref="contactInputForm" @update:model-value="onInput">
                                                 <v-text-field
                                                     v-model="formState.name"
                                                     label="Name"
@@ -258,6 +258,7 @@
 import AppBtn from '@core/components/AppBtn.vue'
 import { useAppViewGrid } from '@core/composables/AppViewGrid/AppViewGrid.composable'
 import { useDisplay } from 'vuetify/lib/framework.mjs'
+import { useStore } from '@/store'
 import { computed, reactive } from 'vue'
 import { onMounted, nextTick, ref } from 'vue'
 import configs from '@/configs'
@@ -342,11 +343,12 @@ const rules = {
         return pattern.test(value) || 'Invalid e-mail.'
     }
 }
+
 const scrollToForm = () => {
     const el = document.getElementById('contact-form')
     if (el) {
         nextTick(() => {
-            el.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'nearest' })
+            el.scrollIntoView({ behavior: 'smooth' })
         })
     }
 }
@@ -364,6 +366,9 @@ const onInput = (newValue: boolean) => {
         enableSubmission.value = false
     }
 }
+
+const store = useStore()
+const contactInputForm = ref<HTMLFormElement | null>(null)
 /**
  * Submits info to Form Spree
  */
@@ -386,10 +391,19 @@ const submit = () => {
             .then(response => {
                 if (response.ok) {
                     submissionInProcess.value = false
+                    formState.name = ''
+                    formState.company = ''
+                    formState.website = ''
+                    formState.contactNumber = ''
+                    formState.email = ''
+                    formState.message = ''
+                    store.notify('Your information has been submitted. Thank you for reaching out, you will recieve our responce within several business days.')
+                    contactInputForm.value?.reset()
                 }
             })
             .catch(error => {
                 Sentry.captureException(`ERROR in form submisssion: ${error}. DATA: ${formData}`)
+                store.notify('Something went wrong while submitting your information. Please try again later.')
             })
     }
 }
