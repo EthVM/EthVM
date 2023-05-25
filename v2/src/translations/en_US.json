@@ -20,7 +20,6 @@
         "homeButton": "Go Back Home"
     },
     "txs": {
-        "more": "More",
         "header": "All Transactions",
         "isHomeHeader": "Last Transactions",
         "refresh": "New Txs Found, Refresh",
@@ -87,6 +86,7 @@
         "token": "Token",
         "price": "Price",
         "marketCap": "Market Cap",
+        "more": "More",
         "24h": "24h",
         "usdValue": "USD Value",
         "name": "Name",

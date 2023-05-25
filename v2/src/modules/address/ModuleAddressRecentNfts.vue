@@ -7,7 +7,7 @@
     >
         <v-card-title v-if="props.isOverview" class="card-title d-flex justify-space-between align-center mb-5 pa-0">
             <span class="text-h6 font-weight-bold">{{ $t('block.nftCollection') }}</span>
-            <app-btn v-if="!xs" :text="$t('txs.more')" isSmall icon="east" @click="goToNftsPage"></app-btn>
+            <app-btn v-if="!xs" :text="$t('common.more')" isSmall icon="east" @click="goToNftsPage"></app-btn>
             <app-btn-icon v-else icon="east" @click="goToNftsPage"></app-btn-icon>
         </v-card-title>
         <div>

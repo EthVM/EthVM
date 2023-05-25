@@ -25,7 +25,7 @@
                     />
                 </v-row>
             </div>
-            <app-btn v-if="props.isOverview && !xs" :text="$t('txs.more')" isSmall icon="east" @click="goToTokenTransfersPage"></app-btn>
+            <app-btn v-if="props.isOverview && !xs" :text="$t('common.more')" isSmall icon="east" @click="goToTokenTransfersPage"></app-btn>
             <app-btn-icon v-if="props.isOverview && xs" icon="east" @click="goToTokenTransfersPage"></app-btn-icon>
         </v-card-title>
         <div class="mb-n5">
@@ -39,7 +39,7 @@
                 <v-col :cols="props.isOverview ? 4 : 2" class="py-0"> {{ $t('common.address') }} </v-col>
                 <v-col v-if="!props.isOverview" cols="2" class="py-0"> {{ $t('common.hash') }}</v-col>
                 <v-col v-if="!props.isOverview" cols="1" class="py-0"> {{ $t('common.timestamp') }} </v-col>
-                <v-col v-if="!props.isOverview" cols="1" class="py-0 text-right"> {{ $t('txs.more') }} </v-col>
+                <v-col v-if="!props.isOverview" cols="1" class="py-0 text-right"> {{ $t('common.more') }} </v-col>
             </v-row>
             <v-divider class="my-0 mt-sm-4 mx-n4 mx-sm-n6" />
             <div v-if="initialLoad || loadingTransfers" class="p-ten-top">

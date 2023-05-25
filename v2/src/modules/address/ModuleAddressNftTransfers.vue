@@ -12,7 +12,7 @@
                     <app-new-update :icon-only="props.isOverview" :text="$t('txs.newNft')" :update-count="props.newErc721Transfer" @reload="setPage(0, true)" />
                 </v-row>
             </div>
-            <app-btn v-if="props.isOverview && !xs" :text="$t('txs.more')" isSmall icon="east" @click="goToNftTransfersPage"></app-btn>
+            <app-btn v-if="props.isOverview && !xs" :text="$t('common.more')" isSmall icon="east" @click="goToNftTransfersPage"></app-btn>
             <app-btn-icon v-if="props.isOverview && xs" icon="east" @click="goToNftTransfersPage"></app-btn-icon>
         </v-card-title>
         <div>

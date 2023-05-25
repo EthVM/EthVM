@@ -17,7 +17,7 @@
                 />
             </div>
             <template v-if="props.isOverview">
-                <app-btn :text="$t('txs.more')" is-small icon="east" @click="goToTokensBalancePage"></app-btn>
+                <app-btn :text="$t('common.more')" is-small icon="east" @click="goToTokensBalancePage"></app-btn>
             </template>
         </v-card-title>
         <div v-if="!props.isOverview || (props.isOverview && xs)" class="d-flex align-center flex-wrap">
