@@ -7,6 +7,8 @@
 -   Added setting View for i18n [#1158](https://github.com/EthVM/EthVM/pull/1158)
 -   Added Transaction details View for i18n [#1159](https://github.com/EthVM/EthVM/pull/1159)
 
+### Feature
+- advertise with us page [#1156](https://github.com/EthVM/EthVM/pull/1156)
 ======================================================================
 
 ### Release v2.1.1

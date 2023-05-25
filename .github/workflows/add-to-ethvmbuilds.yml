@@ -50,6 +50,7 @@ jobs:
           VUE_APP_HTTP_LINK: ${{ secrets.VUE_APP_HTTP_LINK }}
           VUE_APP_WS_CLIENT: ${{ secrets.VUE_APP_WS_CLIENT }}
           VUE_APP_OPENSEA_API: ${{ secrets.VUE_APP_OPENSEA_API }}
+          VUE_APP_FORMSPREE_CONTACT : ${{secrets.VUE_APP_FORMSPREE_CONTACT}}
       # Deploy to S3
       - name: Deploy to S3
         if: github.base_ref == ''

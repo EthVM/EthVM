@@ -3,7 +3,17 @@
         <div class="nebula px-2 px-sm-6 mx-xl-auto mt-n16 pt-16">
             <v-container :class="['px-7 px-lg-12 pt-5 pt-lg-0 pb-16']">
                 <v-row align="center" justify="space-between" class="flex-column flex-lg-row">
-                    <v-img v-if="mdAndDown" :src="require('@/assets/hero/hero.png')" alt="" height="300" width="300" max-height="300" max-width="300" contain />
+                    <v-img
+                        v-if="mdAndDown"
+                        :src="require('@/assets/hero/hero.png')"
+                        alt=""
+                        height="300"
+                        width="300"
+                        max-height="300"
+                        max-width="300"
+                        contain
+                        eager
+                    />
                     <div class="pl-lg-14 pb-10 pb-sm-16 pb-lg-0">
                         <p class="mt-lg-16 text-white font-weight-light text-h3 text-sm-h2 text-lg-h1 text-center text-lg-left">
                             {{ $t('home.tagline.row1') }}
@@ -28,6 +38,7 @@
                         max-width="460"
                         class="mt-10"
                         contain
+                        eager
                     />
                 </v-row>
             </v-container>
@@ -68,6 +79,7 @@
                                 height="565"
                                 width="565"
                                 class="enkrypt-promo-text mr-auto"
+                                eager
                             />
                         </v-card>
                     </v-col>
@@ -86,6 +98,7 @@
                                 height="150"
                                 width="150"
                                 class="enkrypt-promo-text-sm mr-auto"
+                                eager
                             />
                         </v-card>
                     </v-col>
@@ -99,7 +112,7 @@
                         <v-card elevation="1" rounded="xl" min-height="150" max-height="200" class="promo pa-4 pa-sm-6">
                             <v-row align="end" justify="space-around" class="fill-height">
                                 <a class="d-flex align-center justify-center flex-column" href="https://www.myetherwallet.com/" target="_blank">
-                                    <v-img :src="require('@/assets/promo/mew.png')" cover height="40" width="88" />
+                                    <v-img :src="require('@/assets/promo/mew.png')" cover height="40" width="88" eager />
                                     <app-btn text="Swap Tokens"></app-btn>
                                 </a>
                                 <a
@@ -107,7 +120,7 @@
                                     href="https://ccswap.myetherwallet.com/?platform=ethvm"
                                     target="_blank"
                                 >
-                                    <v-img :src="require('@/assets/promo/buy-crypto.png')" contain height="44" width="48" class="mb-2" />
+                                    <v-img :src="require('@/assets/promo/buy-crypto.png')" contain height="44" width="48" class="mb-2" eager />
 
                                     <app-btn text="Buy Crypto"></app-btn>
                                 </a>
@@ -117,7 +130,7 @@
                                     href="https://rarible.com/?ref=0x5bA9576c214FC7C6649f6F3C73dcbC2769b1761"
                                     target="_blank"
                                 >
-                                    <v-img :src="require('@/assets/promo/rarible.png')" cover height="40" width="100" />
+                                    <v-img :src="require('@/assets/promo/rarible.png')" cover height="40" width="100" eager />
                                     <app-btn text="Trade NFTs"></app-btn>
                                 </a>
                             </v-row>
