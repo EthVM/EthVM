@@ -23,7 +23,7 @@
         <div v-if="!props.isOverview || (props.isOverview && xs)" class="d-flex align-center flex-wrap">
             <v-col :cols="props.isOverview && xs ? '10' : '12'" sm="4" lg="3" class="pa-0">
                 <address-balance-totals
-                    title="Token Balance"
+                    :title="$t('block.tokenBalance')"
                     :is-loading="loadingTokens || loadingCoinData"
                     :balance="tokenBalance"
                     :subtext="`${tokensLength} ${$t('block.tokenTotal')}`"
@@ -34,7 +34,7 @@
             <v-spacer v-if="props.isOverview && xs" />
             <app-btn-icon v-if="props.isOverview && xs" icon="east" @click="goToTokensBalancePage"></app-btn-icon>
             <div class="flex-grow-1 my-5 my-sm-0">
-                <app-input place-holder="Search token name" v-model="state.searchParams" />
+                <app-input :place-holder="$t('block.tokenSearch')" v-model="state.searchParams" />
             </div>
         </div>
 

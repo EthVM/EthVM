@@ -167,6 +167,7 @@
         "totalAddress": "Total Addresses",
         "tokenBalance": "Token Balance",
         "tokenHistory": "Token History",
+        "tokenSearch": "Search token name",
         "tokenTotal": "total tokens",
         "tokenBalanceRefresh": "Token's Balance Changed, Refresh",
         "newTransfer": "New ERC20 Transfers",
