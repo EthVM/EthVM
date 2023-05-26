@@ -50,12 +50,13 @@ app.use(router)
     .use(
         VueGtag,
         {
-            appName: `ethvm.com`,
-            pageTrackerScreenviewEnabled: true,
-            enabled: true,
-            config: {
+            property: {
                 id: Configs.GA_ID
-            }
+            },
+            isEnabled: false,
+            useDebugger: Configs.NODE_ENV === 'development',
+            appName: 'ethvm.com',
+            appVersion: Configs.VERSION
         },
         router
     )

@@ -11,6 +11,7 @@ import {
 } from './routesNames'
 import configs from '@/configs'
 import { tabViewRouteGuard, loadImages } from './helpers'
+import { trackRouter } from 'vue-gtag-next'
 const ViewHome = () => import(/* webpackChunkName: "ViewHome" */ '@view/ViewHome.vue')
 const ViewBlocks = () => import(/* webpackChunkName: "ViewBlocks" */ '@view/ViewBlocks.vue')
 const ViewTxDetails = () => import(/* webpackChunkName: "ViewTx" */ '@view/ViewTxDetails.vue')
@@ -172,5 +173,7 @@ const router = createRouter({
     history: configs.ROUTER_MODE === 'hash' ? createWebHashHistory() : createWebHistory(),
     routes
 })
+
+trackRouter(router, { useScreenview: true })
 
 export default router

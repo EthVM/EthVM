@@ -31,6 +31,7 @@ import { usePreferredColorScheme } from '@vueuse/core'
 import { useTheme } from 'vuetify/lib/framework.mjs'
 import { themes } from './core/plugins/vuetify'
 import { useNetwork } from './core/composables/Network/useNetwork'
+import { useState } from 'vue-gtag-next'
 
 const store = useStore()
 const { supportsFiat } = useNetwork()
@@ -176,6 +177,20 @@ if (oldAdrs.value.length > 0) {
 oldAdrs.value = null
 
 /** -------------------
+ * Check Data Sharing Settings
+ * --------------------*/
+const { isEnabled } = useState()
+
+watch(
+    () => store.dataShare,
+    (val: boolean) => {
+        if (isEnabled && val !== isEnabled.value) {
+            isEnabled.value = val
+        }
+    }
+)
+
+/** -------------------
  * Set Default Theme
  * --------------------*/
 const theme = useTheme()
@@ -186,6 +201,9 @@ onMounted(() => {
     } else {
         theme.global.name.value = preferredColor.value === 'dark' ? themes.dark : themes.light
         store.setDarkMode(theme.global.name.value)
+    }
+    if (isEnabled) {
+        isEnabled.value = store.dataShare
     }
 })
 </script>
