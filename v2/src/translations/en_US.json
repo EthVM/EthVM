@@ -204,7 +204,8 @@
             "pricing": "Pricing from Coingecko",
             "power": "Powered by",
             "rights": "All rights reserved.",
-            "settings": "Settings"
+            "settings": "Settings",
+            "advertise": "Advertise with us"
         }
     }
 }

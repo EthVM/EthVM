@@ -20,7 +20,7 @@
                 </v-col>
                 <v-col cols="6" sm="6" lg="2" class="mb-11 mb-lg-0" order="2">
                     <p class="footer-item-title text-h5 font-weight-bold mb-2">{{ $t('home.footer.discover') }}</p>
-                    <ul class="footer-item-lists pa-0 surf text-capitalize">
+                    <ul class="footer-item-lists pa-0 text-capitalize">
                         <li class="mb-2">
                             <router-link :to="routeAbout" class="text-link">{{ $t('home.footer.about') }}</router-link>
                         </li>
@@ -29,6 +29,9 @@
                         </li>
                         <li class="mb-2" target="_blank">
                             <a href="https://help.myetherwallet.com/en/" class="text-link">{{ $t('home.footer.help') }}</a>
+                        </li>
+                        <li class="mb-2">
+                            <router-link :to="routeAdvertise" class="text-link">{{ $t('home.footer.advertise') }}</router-link>
                         </li>
                     </ul>
                 </v-col>
@@ -141,6 +144,10 @@ const routeEth = {
 
 const routeAbout = {
     name: ROUTE_NAME.ABOUT.NAME
+}
+
+const routeAdvertise = {
+    name: ROUTE_NAME.ADVERTISE.NAME
 }
 
 const routeSettings = {

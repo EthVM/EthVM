@@ -133,8 +133,7 @@ $container-padding-x: $spacer * 12;
 /**
 --- Input
 */
-$input-density: ('default': 0, 'comfortable': -4, 'compact': -6) !default;
-
+$input-density: ('default': -2.5, 'comfortable': -4, 'compact': -6) !default;
 /**
 --- removed padding for Window, Carusel next buttons
 */

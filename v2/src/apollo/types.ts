@@ -13,6 +13,12 @@ export type Scalars = {
     BigDecimal: any
     BigInt: any
     Bytes: any
+    EthVMCurrencyFloat: any
+    EthVMIso8601DateTime: any
+    EthVMPrefixedBase16String: any
+    EthVMPrefixedEthereumAddress: any
+    EthVMPrefixedHexString: any
+    EthVMUrl: any
 }
 
 export type AbiChanged = ResolverEvent & {
@@ -1450,6 +1456,96 @@ export type Log = {
     type?: Maybe<Scalars['String']>
 }
 
+export enum MmChain {
+    Bsc = 'BSC',
+    Eth = 'ETH',
+    Matic = 'MATIC'
+}
+
+export type MmEthErc20Balance = {
+    __typename?: 'MmEthErc20Balance'
+    /** 0x prefixed ethereum address that owners the token */
+    ownerAddress: Scalars['EthVMPrefixedEthereumAddress']
+    /** 0x prefixed base16 balance that the owner has of the token */
+    ownerBalance: Scalars['EthVMPrefixedBase16String']
+    /** 0x prefixed ethereum address of the token contract */
+    tokenContractAddress: Scalars['EthVMPrefixedEthereumAddress']
+    tokenDecimals?: Maybe<Scalars['Int']>
+    tokenIconPngUrl?: Maybe<Scalars['EthVMUrl']>
+    tokenIconUrl?: Maybe<Scalars['EthVMUrl']>
+    tokenName?: Maybe<Scalars['String']>
+    tokenPrice?: Maybe<Scalars['EthVMCurrencyFloat']>
+    tokenPriceingLastUpdatedAtIso8601?: Maybe<Scalars['EthVMIso8601DateTime']>
+    tokenSparkline24h?: Maybe<Array<Scalars['EthVMCurrencyFloat']>>
+    tokenSymbol?: Maybe<Scalars['String']>
+    tokenWebsiteUrl?: Maybe<Scalars['EthVMUrl']>
+}
+
+export type MmGetTokenMarketDataByChainResult = {
+    __typename?: 'MmGetTokenMarketDataByChainResult'
+    items: Array<MmTokenMarketData>
+    nextKey?: Maybe<Scalars['String']>
+}
+
+export type MmTokenMarketData = {
+    __typename?: 'MmTokenMarketData'
+    contractAddress?: Maybe<Scalars['EthVMPrefixedEthereumAddress']>
+    decimals?: Maybe<Scalars['Int']>
+    iconPngUrl?: Maybe<Scalars['EthVMUrl']>
+    iconUrl?: Maybe<Scalars['EthVMUrl']>
+    name: Scalars['String']
+    price?: Maybe<Scalars['EthVMCurrencyFloat']>
+    sparline24H: Array<Scalars['EthVMCurrencyFloat']>
+    symbol: Scalars['String']
+    websiteUrl?: Maybe<Scalars['EthVMUrl']>
+}
+
+export enum MmTokenMarketDataByChainSortOption {
+    MarketCap = 'MarketCap',
+    Price = 'Price',
+    PriceChangePercentage24H = 'PriceChangePercentage24H',
+    Volume24h = 'Volume24h'
+}
+
+export type MmTokenMarketMover = {
+    __typename?: 'MmTokenMarketMover'
+    ath?: Maybe<Scalars['Float']>
+    contractAddress?: Maybe<Scalars['EthVMPrefixedEthereumAddress']>
+    decimals?: Maybe<Scalars['Int']>
+    icon?: Maybe<Scalars['EthVMUrl']>
+    iconPng?: Maybe<Scalars['EthVMUrl']>
+    name: Scalars['String']
+    price?: Maybe<Scalars['EthVMCurrencyFloat']>
+    priceChangePercentage?: Maybe<Scalars['Float']>
+    symbol: Scalars['String']
+    timestampIso8601: Scalars['EthVMIso8601DateTime']
+    type: MmTokenMarketMoverType
+    typeSeconds: Scalars['Int']
+    website?: Maybe<Scalars['EthVMUrl']>
+}
+
+export enum MmTokenMarketMoverType {
+    Ath = 'ATH',
+    '1H' = '_1H',
+    '5M' = '_5M',
+    '7D' = '_7D',
+    '24H' = '_24H',
+    '30D' = '_30D'
+}
+
+export type MmTokenSearchResult = {
+    __typename?: 'MmTokenSearchResult'
+    contractAddress?: Maybe<Scalars['EthVMPrefixedEthereumAddress']>
+    decimals?: Maybe<Scalars['Int']>
+    iconUrl?: Maybe<Scalars['EthVMUrl']>
+    name: Scalars['String']
+    price?: Maybe<Scalars['EthVMCurrencyFloat']>
+    sparkline24h: Array<Scalars['EthVMCurrencyFloat']>
+    symbol: Scalars['String']
+    timestampIso8601: Scalars['EthVMIso8601DateTime']
+    websiteUrl?: Maybe<Scalars['EthVMUrl']>
+}
+
 export type MulticoinAddrChanged = ResolverEvent & {
     __typename?: 'MulticoinAddrChanged'
     addr: Scalars['Bytes']
@@ -2812,6 +2908,26 @@ export type Query = {
     getUncleRewards: EthTransfers
     interfaceChanged?: Maybe<InterfaceChanged>
     interfaceChangeds: Array<InterfaceChanged>
+    /** Get the token balances of an address on a given chain */
+    mmGetEthAndErc20BalancesWithPricesByOwnerAddress: Array<MmEthErc20Balance>
+    /** Get the market data of all tokens on a chain (paginated) */
+    mmGetTokenMarketDataByChain: MmGetTokenMarketDataByChainResult
+    /**
+     * Get the market data of the given tokens on a chain
+     *
+     * Results are returned in the same order as the given addresses
+     *
+     * If an address is not found then the result will be null for that address
+     */
+    mmGetTokenMarketDataByChainAndContractAddresses: Array<Maybe<MmTokenMarketData>>
+    /** Query tokens that have had noteworthy price changes recently */
+    mmGetTokenMarketMoversByChain: Array<MmTokenMarketMover>
+    /**
+     * Full text search for a token by name, symbol, or contract address
+     *
+     * Returns a list of tokens that match the search query ordered by relevance and market cap
+     */
+    mmSearchTokenByChain: Array<MmTokenSearchResult>
     multicoinAddrChanged?: Maybe<MulticoinAddrChanged>
     multicoinAddrChangeds: Array<MulticoinAddrChanged>
     nameChanged?: Maybe<NameChanged>
@@ -3332,6 +3448,31 @@ export type QueryInterfaceChangedsArgs = {
     skip?: InputMaybe<Scalars['Int']>
     subgraphError?: _SubgraphErrorPolicy_
     where?: InputMaybe<InterfaceChanged_Filter>
+}
+
+export type QueryMmGetEthAndErc20BalancesWithPricesByOwnerAddressArgs = {
+    ownerAddress: Scalars['String']
+}
+
+export type QueryMmGetTokenMarketDataByChainArgs = {
+    chain: MmChain
+    limit?: InputMaybe<Scalars['Int']>
+    nextKey?: InputMaybe<Scalars['String']>
+    sortBy?: InputMaybe<MmTokenMarketDataByChainSortOption>
+}
+
+export type QueryMmGetTokenMarketDataByChainAndContractAddressesArgs = {
+    chain: MmChain
+    contractAddresses: Array<Scalars['String']>
+}
+
+export type QueryMmGetTokenMarketMoversByChainArgs = {
+    chain: MmChain
+}
+
+export type QueryMmSearchTokenByChainArgs = {
+    chain: MmChain
+    search: Scalars['String']
 }
 
 export type QueryMulticoinAddrChangedArgs = {
