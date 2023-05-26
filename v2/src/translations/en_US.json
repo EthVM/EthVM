@@ -152,6 +152,7 @@
             "noTransactionHistory": "This address does not have any token transfer history",
             "noNFT": "This address does not have any NFTs",
             "noNFTTransfer": "This address does not have any NFT transfer history",
+            "noNFTAtAddress": "This address does not hold any NFTs",
             "noPendingTransactions": "This address does not have pending transactions",
             "noStakeWithdrawals": "This address does not have any stake withdrawals",
             "noTransfer": "This address does not have any transfers"

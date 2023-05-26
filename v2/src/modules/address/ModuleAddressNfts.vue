@@ -18,7 +18,7 @@
                     </v-lazy>
                 </div>
             </div>
-            <app-no-result v-else text="This address does not hold any NFTs"></app-no-result>
+            <app-no-result v-else :text="$t('address.tagline.noNFTAtAddress')"></app-no-result>
         </template>
     </div>
 </template>
