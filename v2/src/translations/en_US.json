@@ -118,6 +118,11 @@
             "name": "Enter Name"
         }
     },
+    "uncle": {
+        "number": "Uncle #",
+        "included": "Included in block",
+        "position": "Position"
+    },
     "settings": {
         "emptyList": "This list is empty",
         "darkModeOn": "Dark Mode On",
