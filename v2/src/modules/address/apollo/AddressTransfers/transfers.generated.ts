@@ -30,7 +30,7 @@ export type GetAddressEthTransfersQueryVariables = Types.Exact<{
 
 export type GetAddressEthTransfersQuery = {
     __typename?: 'Query'
-    getEthTransfersV2: {
+    fdfashtwjnakfgn: {
         __typename?: 'ETHTransfers'
         nextKey?: string | null
         transfers: Array<{
@@ -193,7 +193,7 @@ export const StateDiffFragmentFragmentDoc = gql`
 `
 export const GetAddressEthTransfersDocument = gql`
     query getAddressEthTransfers($hash: String, $filter: TransferDirection, $_limit: Int, $_nextKey: String) {
-        getEthTransfersV2(owner: $hash, direction: $filter, limit: $_limit, nextKey: $_nextKey) {
+        fdfashtwjnakfgn(owner: $hash, direction: $filter, limit: $_limit, nextKey: $_nextKey) {
             transfers {
                 transfer {
                     ...TransferSummary

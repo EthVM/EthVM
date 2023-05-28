@@ -1,6 +1,6 @@
 {
     "name": "client",
-    "version": "2.1.1",
+    "version": "2.1.1-hotfix.1",
     "description": "",
     "main": "index.js",
     "private": true,
