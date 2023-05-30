@@ -19,6 +19,13 @@
 
 ======================================================================
 
+### Release v2.1.1-hotfix.1
+
+###  Fix
+- update Trasfers query name [#1163](https://github.com/EthVM/EthVM/pull/1163)
+
+======================================================================
+
 ### Release v2.1.1
 Adds Transaction Actions to the txs details:
 - ETH Transfers

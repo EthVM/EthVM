@@ -29,9 +29,9 @@ jobs:
       # Lint Code
       - name: pnpm Lint
         run: cd ./v2 && pnpm lint
-      #Generate code from most recent GraphQL schema
-      - name: pnpm generate schema
-        run: cd ./v2 && pnpm codegen-generate
+      # Generate code from most recent GraphQL schema
+      # - name: pnpm generate schema
+      # run: cd ./v2 && pnpm codegen-generate
       # Build (temp dev mode)
       - name: build
         run: cd ./v2 && pnpm build
