@@ -1,6 +1,9 @@
 <template>
     <v-row :class="rowMargin">
         <v-col cols="12" :class="columnPadding">
+            <app-ad-buttons-large />
+        </v-col>
+        <v-col cols="12" :class="columnPadding">
             <v-card elevation="1" rounded="xl" class="pt-4 pt-sm-6">
                 <app-tabs v-model="state.tab" :routes="routes" :tabs="tabs" @update:modelValue="setLastViewedTab()" class="mx-n1 mt-n2 mb-4"></app-tabs>
                 <module-address-tokens
@@ -26,6 +29,7 @@
 
 <script setup lang="ts">
 import { reactive, onMounted } from 'vue'
+import AppAdButtonsLarge from '@/core/components/AppAdButtonsLarge.vue'
 import ModuleAddressTokens from '@module/address/ModuleAddressTokens.vue'
 import ModuleAddressTokenTransfers from '@module/address/ModuleAddressTokenTransfers.vue'
 import AppTabs from '@/core/components/AppTabs.vue'

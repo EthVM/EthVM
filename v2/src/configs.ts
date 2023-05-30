@@ -27,6 +27,8 @@ const configs = {
     BROWSER_NAMES: BROWSER_NAMES,
     EXTENSION_LINKS: EXTENSION_LINKS,
     SENTRY: process.env.VUE_APP_SENTRY_SECURITY_DSN,
-    FORMSPREE: process.env.VUE_APP_FORMSPREE_CONTACT || ''
+    FORMSPREE: process.env.VUE_APP_FORMSPREE_CONTACT || '',
+    GA_ID: process.env.VUE_APP_GA_ID || ''
 }
+
 export default configs

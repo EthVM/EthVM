@@ -29,3 +29,9 @@ export interface NotificationDeleteAddress {
 export const MAX_PORTFOLIO_ITEMS = 10
 
 export const TIMEOUT = 5000
+
+export const PROMOS = {
+    enkrypt: 'enkrypt',
+    ruffle: 'ruffle',
+    mewwallet: 'mewallet'
+}

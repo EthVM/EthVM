@@ -11,6 +11,7 @@ import {
 } from './routesNames'
 import configs from '@/configs'
 import { tabViewRouteGuard, loadImages } from './helpers'
+import { trackRouter } from 'vue-gtag-next'
 const ViewHome = () => import(/* webpackChunkName: "ViewHome" */ '@view/ViewHome.vue')
 const ViewBlocks = () => import(/* webpackChunkName: "ViewBlocks" */ '@view/ViewBlocks.vue')
 const ViewTxDetails = () => import(/* webpackChunkName: "ViewTx" */ '@view/ViewTxDetails.vue')
@@ -29,6 +30,7 @@ const ViewNotFound = () => import(/* webpackChunkName: "View404" */ '@view/ViewN
 const ViewAbout = () => import(/* webpackChunkName: "ViewAbout" */ '@view/ViewAbout.vue')
 const ViewSettings = () => import(/* webpackChunkName: "ViewSettings" */ '@view/ViewSettings.vue')
 const ViewAdvertise = () => import(/* webpackChunkName: "ViewAdvertise" */ '@view/ViewAdWithUs.vue')
+const ViewPrivacyPolicy = () => import(/* webpackChunkName: "ViewPrivacyPolicy" */ '@view/ViewPrivacyPolicy.vue')
 
 const routes: Array<RouteRecordRaw> = [
     {
@@ -159,6 +161,11 @@ const routes: Array<RouteRecordRaw> = [
         path: ROUTE_NAME.ADVERTISE.PATH,
         component: ViewAdvertise,
         name: ROUTE_NAME.ADVERTISE.NAME
+    },
+    {
+        path: ROUTE_NAME.PRIVACY_POLICY.PATH,
+        component: ViewPrivacyPolicy,
+        name: ROUTE_NAME.PRIVACY_POLICY.NAME
     }
 ]
 
@@ -166,5 +173,7 @@ const router = createRouter({
     history: configs.ROUTER_MODE === 'hash' ? createWebHashHistory() : createWebHistory(),
     routes
 })
+
+trackRouter(router, { useScreenview: true })
 
 export default router

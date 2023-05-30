@@ -4,7 +4,7 @@ import { defineStore } from 'pinia'
 import { GetLatestPricesQuery } from '@core/composables/CoinData/getLatestPrices.generated'
 import { useStorage, RemovableRef } from '@vueuse/core'
 import { TokenOwnersFragment } from '@module/address/apollo/AddressTokens/tokens.generated'
-import { NotificationType, NotificationDeleteAddress, Notification, MAX_PORTFOLIO_ITEMS, PortfolioItem } from './helpers'
+import { NotificationType, NotificationDeleteAddress, Notification, MAX_PORTFOLIO_ITEMS, PortfolioItem, PROMOS } from './helpers'
 
 interface PortfolioEthBalanceMap {
     [key: string]: {
@@ -33,6 +33,8 @@ interface StoreState {
     adrBook: RemovableRef<PortfolioItem[]>
     paginationStateMap: Map<string, number>
     appTheme: RemovableRef<string>
+    currentLargeButtonPromo: string
+    dataShare: RemovableRef<boolean>
 }
 
 const getKeySumBN = <T>(map: Record<string, T>, _key: keyof T): BN => {
@@ -66,7 +68,9 @@ export const useStore = defineStore('main', {
         notification: undefined,
         adrBook: useStorage('addressBook', [] as PortfolioItem[]),
         paginationStateMap: new Map(),
-        appTheme: useStorage('app-theme', '')
+        appTheme: useStorage('app-theme', ''),
+        currentLargeButtonPromo: PROMOS.enkrypt,
+        dataShare: useStorage('dataShare', true)
     }),
     getters: {
         /**
@@ -344,6 +348,12 @@ export const useStore = defineStore('main', {
         },
         setDarkMode(theme: string) {
             this.appTheme = theme
+        },
+        setCurrentLargeBtnPromo(promo: string) {
+            this.currentLargeButtonPromo = promo
+        },
+        setDataShare(_value: boolean) {
+            this.dataShare = _value
         }
     }
 })

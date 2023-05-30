@@ -14,6 +14,18 @@
                     class="theme-toggle"
                 ></v-switch>
             </v-col>
+            <v-col cols="12" class="d-flex align-center justify-space-between mt-5">
+                <p>{{ dataSwitchLabel }}</p>
+                <v-spacer />
+                <v-switch
+                    @update:modelValue="toggleData"
+                    v-model="dataShareOn"
+                    hide-details
+                    density="compact"
+                    :color="switchColor"
+                    class="theme-toggle"
+                ></v-switch>
+            </v-col>
         </v-row>
     </v-card>
 </template>
@@ -56,8 +68,31 @@ const switchColor = computed<string>(() => {
     return isDarkMode.value ? 'secondary' : 'secondary'
 })
 
+/**------------------------
+ * Data Sharing Switch
+ -------------------------*/
+const dataShareOn = ref(true)
+const dataSwitchLabel = computed<string>(() => {
+    return dataShareOn.value ? t('settings.data-share.on') : t('settings.data-share.off')
+})
+
+const toggleData = () => {
+    dataShareOn.value = !dataShareOn.value
+    store.setDataShare(dataShareOn.value)
+}
+
+watch(
+    () => store.dataShare,
+    (val: boolean) => {
+        if (val !== dataShareOn.value) {
+            dataShareOn.value = val
+        }
+    }
+)
+
 onMounted(() => {
     isDarkMode.value = theme.global.name.value === themes.dark
+    dataShareOn.value = store.dataShare
 })
 </script>
 

@@ -68,6 +68,7 @@ specifiers:
   vue: ^3.2.13
   vue-chartjs: ^4.1.1
   vue-cli-plugin-vuetify: ~2.5.8
+  vue-gtag-next: ^1.14.0
   vue-i18n: '9'
   vue-qr: ^4.0.9
   vue-router: ^4.1.6
@@ -108,6 +109,7 @@ dependencies:
   ts-loader: 9.4.2_uyjeyilaoraoef7u6cc2jqrzqe
   vue: 3.2.37
   vue-chartjs: 4.1.1_chart.js@3.9.1+vue@3.2.37
+  vue-gtag-next: 1.14.0_vue@3.2.37
   vue-i18n: 9.2.2_vue@3.2.37
   vue-qr: 4.0.9
   vue-router: 4.2.0_vue@3.2.37
@@ -10208,6 +10210,14 @@ packages:
     transitivePeerDependencies:
       - supports-color
     dev: true
+
+  /vue-gtag-next/1.14.0_vue@3.2.37:
+    resolution: {integrity: sha512-iJl+cOG2GU5NuxqzSSIpt03WVOvZqyKB9TOy7d55KiuvRklcnb2nlqxW5B/a3/sbIt7fla+XEkRyMCcoz0zAHw==}
+    peerDependencies:
+      vue: ^3.0.0-rc.11
+    dependencies:
+      vue: 3.2.37
+    dev: false
 
   /vue-hot-reload-api/2.3.4:
     resolution: {integrity: sha512-BXq3jwIagosjgNVae6tkHzzIk6a8MHFtzAdwhnV5VlvPTFxDCvIttgSiHWjdGoTJvXtmRu5HacExfdarRcFhog==}
