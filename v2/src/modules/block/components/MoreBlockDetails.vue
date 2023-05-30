@@ -10,13 +10,13 @@
         </template>
         <template v-else>
             <div class="block-info mb-5">
-                <p class="text-button mb-1">Size</p>
+                <p class="text-button mb-1">{{ $t('block.size') }}</p>
                 <p class="text-info">
                     {{ props.blockDetails.blockSize.detail }}
                 </p>
             </div>
             <div v-if="props.uncleHashes && props.uncleHashes.length > 0" class="block-info mb-5">
-                <p class="text-button mb-1">Uncles</p>
+                <p class="text-button mb-1">{{ $t('block.uncle') }}</p>
                 <app-transform-hash
                     is-blue
                     v-for="uncle in props.uncleHashes"
@@ -27,49 +27,49 @@
                 />
             </div>
             <div class="block-info mb-5">
-                <p class="text-button mb-1">Nonce</p>
+                <p class="text-button mb-1">{{ $t('common.nonce') }}</p>
                 <p class="text-info">
                     {{ props.blockDetails.nonce.detail }}
                 </p>
             </div>
             <div class="block-info mb-5">
-                <p class="text-button mb-1">Difficulty</p>
+                <p class="text-button mb-1">{{ $t('block.difficulty') }}</p>
                 <p class="text-info">
                     {{ props.blockDetails.difficulty.detail }}
                 </p>
             </div>
             <div class="block-info mb-5">
-                <p class="text-button mb-1">Total Difficulty</p>
+                <p class="text-button mb-1">{{ $t('common.total') }} {{ $t('block.difficulty') }}</p>
                 <p class="text-info">
                     {{ props.blockDetails.totalDifficulty.detail }}
                 </p>
             </div>
             <div class="block-info mb-5">
-                <p class="text-button mb-1">State Root</p>
+                <p class="text-button mb-1">{{ $t('block.stateRoot') }}</p>
                 <app-transform-hash :hash="props.blockDetails.stateRoot.detail" class="w-100" />
             </div>
             <div class="block-info mb-5">
-                <p class="text-button mb-1">Receipt Root</p>
+                <p class="text-button mb-1">{{ $t('block.receiptRoot') }}</p>
                 <app-transform-hash :hash="props.blockDetails.receiptsRoot.detail" class="w-100" />
             </div>
             <div class="block-info mb-5">
-                <p class="text-button mb-1">Transaction Root</p>
+                <p class="text-button mb-1">{{ $t('block.transactionRoot') }}</p>
                 <app-transform-hash :hash="props.blockDetails.transactionsRoot.detail" class="w-100" />
             </div>
             <div class="block-info mb-5">
-                <p class="text-button mb-1">Logs Bloom</p>
+                <p class="text-button mb-1">{{ $t('block.logBloom') }}</p>
                 <p>
                     {{ props.blockDetails.logs.detail }}
                 </p>
             </div>
             <div class="block-info mb-5">
-                <p class="text-button mb-1">Extra Data</p>
+                <p class="text-button mb-1">{{ $t('block.extraData') }}</p>
                 <p>
                     {{ props.blockDetails.extraData.detail }}
                 </p>
             </div>
             <div class="block-info mb-5">
-                <p class="text-button mb-1">SHA3 Uncles</p>
+                <p class="text-button mb-1">SHA3 {{ $t('block.uncle') }}</p>
                 <app-transform-hash :hash="props.blockDetails.unclesSHA3.detail" class="w-100" />
             </div>
         </template>
