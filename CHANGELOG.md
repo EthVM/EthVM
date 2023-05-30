@@ -6,6 +6,7 @@
 -   Added Portfolio View for i18n [#1155](https://github.com/EthVM/EthVM/pull/1155)
 -   Added setting View for i18n [#1158](https://github.com/EthVM/EthVM/pull/1158)
 -   Added Transaction details View for i18n [#1159](https://github.com/EthVM/EthVM/pull/1159)
+-   Added Block-details for i18n [#1164](https://github.com/EthVM/EthVM/pull/1164)
 
 ### Feature
 - advertise with us page [#1156](https://github.com/EthVM/EthVM/pull/1156)
