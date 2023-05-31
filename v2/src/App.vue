@@ -211,7 +211,6 @@ onMounted(() => {
         theme.global.name.value = preferredColor.value === 'dark' ? themes.dark : themes.light
         store.setDarkMode(theme.global.name.value)
     }
-    console.log(isEnabled?.value)
     if (isEnabled && configs.NODE_ENV !== 'development') {
         isEnabled.value = store.dataShare
     }
