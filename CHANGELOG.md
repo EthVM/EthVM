@@ -4,6 +4,8 @@
 
 -   Added Address View for i18n [#1161](https://github.com/EthVM/EthVM/pull/1161)
 
+======================================================================
+
 ### Release v2.1.2
 
 ### Devop
