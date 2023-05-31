@@ -44,6 +44,8 @@ import { useRouter } from 'vue-router'
 import { ITEMS_PER_PAGE } from '@core/constants'
 import { useAppPaginate } from '@core/composables/AppPaginate/useAppPaginate.composable'
 import { useDisplay } from 'vuetify'
+import { useI18n } from 'vue-i18n'
+const { t } = useI18n()
 
 const { xs } = useDisplay()
 
@@ -90,9 +92,9 @@ const message = computed<string>(() => {
 
 const getTitle = computed<string>(() => {
     const titles = {
-        blocks: 'All Blocks',
-        address: 'Mined Blocks',
-        home: 'Last Blocks'
+        blocks: t('block.allBlockTitle'),
+        address: t('block.addressBlockTitle'),
+        home: t('block.lastBlockTitle')
     }
     return titles[props.pageType]
 })

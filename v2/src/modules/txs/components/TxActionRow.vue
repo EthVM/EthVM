@@ -73,6 +73,9 @@ import { NftMetaFragment } from '@core/composables/NftMeta/nftMeta.generated'
 import { NFTDetails } from '@module/tokens/components/TokenNFT/propModel'
 import BigNumber from 'bignumber.js'
 import { hexToNumberString } from 'web3-utils'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 const { xs, sm, smAndDown } = useDisplay()
 const props = defineProps({
     transfer: {
@@ -166,7 +169,7 @@ const nftMetaDetails = computed<NFTDetails | undefined>(() => {
 const nftCopies = computed<string>(() => {
     if (props.transfer.type === TransferType.Erc1155) {
         const total = new BigNumber(props.transfer.value)
-        const str = total.gt(1) ? 'copies' : 'copy'
+        const str = total.gt(1) ? t('common.copy', 2) : t('common.copy')
         return `${formatFloatingPointValue(total).value} ${str}`
     }
     return ''

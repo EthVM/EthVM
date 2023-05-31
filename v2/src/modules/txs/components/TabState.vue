@@ -3,11 +3,11 @@
         <div>
             <!-- Table Header -->
             <v-row :dense="xs" align="center" justify="start" class="text-body-1 text-info d-none d-sm-flex">
-                <v-col lg="2"> Address </v-col>
+                <v-col lg="2"> {{ $t('common.address') }} </v-col>
                 <v-spacer />
-                <v-col v-if="!mdAndDown" md="3"> Before </v-col>
-                <v-col v-if="!mdAndDown" md="3"> After </v-col>
-                <v-col lg="2"> State Difference </v-col>
+                <v-col v-if="!mdAndDown" md="3"> {{ $t('txs.details.state.before') }} </v-col>
+                <v-col v-if="!mdAndDown" md="3"> {{ $t('txs.details.state.after') }} </v-col>
+                <v-col lg="2"> {{ $t('txs.details.state.difference') }} </v-col>
             </v-row>
             <v-divider class="my-0 mt-sm-4 mx-n4 mx-sm-n6" />
             <!-- End Table Header -->
@@ -16,7 +16,7 @@
             </template>
             <div v-else>
                 <template v-if="!stateDiff || stateDiff.length < 1">
-                    <app-no-result text="No transaction state difference avaialble" class="mt-5" />
+                    <app-no-result :text="$t('txs.details.state.notFound')" class="mt-5" />
                 </template>
                 <template v-else>
                     <div v-for="(diff, index) in stateDiff" :key="index">

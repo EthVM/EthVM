@@ -46,7 +46,7 @@ export function useAppNavigation() {
                     routerLink: ROUTE_NAME.BLOCKS.PATH
                 },
                 {
-                    text: 'Transaction',
+                    text: 'Transactions',
                     routerLink: ROUTE_NAME.TXS.PATH
                 }
             ]

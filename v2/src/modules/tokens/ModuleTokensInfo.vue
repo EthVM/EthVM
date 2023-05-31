@@ -137,7 +137,10 @@ import { useAppPaginate } from '@core/composables/AppPaginate/useAppPaginate.com
 import { TOKENS_VIEW } from './models/tokensView'
 import { useRouter } from 'vue-router'
 import { useDisplay } from 'vuetify'
+import { useI18n } from 'vue-i18n'
 import { useNetwork } from '@/core/composables/Network/useNetwork'
+
+const { t } = useI18n()
 
 const { xs } = useDisplay()
 const { supportsFiat } = useNetwork()
@@ -285,7 +288,11 @@ const showLoadingRows = computed<number>(() => {
 })
 
 const title = computed<string>(() => {
-    return props.homePage === TOKENS_VIEW.ALL ? 'Top Tokens' : props.homePage === TOKENS_VIEW.FAV || !supportsFiat.value ? 'Favorite Tokens' : 'Token Market'
+    return props.homePage === TOKENS_VIEW.ALL
+        ? t('block.topTokenTitle')
+        : props.homePage === TOKENS_VIEW.FAV || !supportsFiat.value
+        ? t('block.favoriteTokenTitle')
+        : t('block.marketTokenTitle')
 })
 
 const router = useRouter()

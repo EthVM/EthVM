@@ -1,153 +1,183 @@
 <template>
-    <template v-if="!state.hasError">
-        <v-card variant="elevated" elevation="1" rounded="xl" class="pa-4 pa-sm-6">
-            <div class="d-flex">
-                <h2 class="text-h6 font-weight-bold mr-10">Transaction Summary</h2>
-                <template v-if="loadingTransactionHash">
-                    <div class="skeleton-box rounded-xl" style="height: 24px; width: 100px"></div>
-                </template>
-                <app-chip v-else :bg="titleBg" rounded="xl" text="">
-                    <div class="d-flex align-center">
-                        <p>{{ titleStatus }}</p>
-                        <v-progress-circular v-if="txStatus === TxStatus.pending" indeterminate color="white" size="15" width="3" class="ml-2" />
-                    </div>
-                </app-chip>
-            </div>
-            <v-row class="mt-5">
-                <v-col cols="12" lg="6">
-                    <div class="tx-info">
-                        <p class="text-button mb-1">Tx Hash</p>
+    <v-row v-if="!state.hasError" :class="rowMargin">
+        <v-col cols="12" :class="columnPadding">
+            <v-card variant="elevated" elevation="1" rounded="xl" class="pa-4 pa-sm-6">
+                <v-row no-gutters>
+                    <v-col cols="12" md="auto" lg="4" order="last" order-md="first">
                         <div class="d-flex align-center justify-start">
-                            <app-transform-hash :hash="props.txRef" class="text-body-1" />
-                            <app-copy-to-clip :value-to-copy="eth.toCheckSum(props.txRef)" class="mx-3" />
-                        </div>
-                        <template v-if="loadingTransactionHash">
-                            <div class="skeleton-box rounded-xl mt-1" style="height: 18px; max-width: 300px"></div>
-                        </template>
-                        <template v-else>
-                            <p v-if="txStatus !== TxStatus.pending && !isReplaced" class="text-body-2 text-info mt-1">({{ timestamp }})</p>
-                        </template>
-                    </div>
-                </v-col>
-                <template v-if="txStatus !== TxStatus.pending && !isReplaced">
-                    <v-col cols="12" lg="2">
-                        <div class="tx-info">
-                            <p class="text-button mb-1">Block Mined</p>
+                            <h2 class="text-h6 font-weight-bold mr-2 mr-sm-6">{{ $t('txs.details.header') }}</h2>
                             <template v-if="loadingTransactionHash">
-                                <div class="skeleton-box rounded-xl mt-1" style="height: 24px"></div>
+                                <div class="skeleton-box rounded-xl" style="height: 24px; width: 100px"></div>
                             </template>
-                            <router-link :to="`/block/number/${blockMined}`" class="text-secondary">
-                                {{ formatNumber(blockMined) }}
-                            </router-link>
+                            <div v-else>
+                                <app-chip :bg="titleBg" rounded="xl" text="" class="">
+                                    <p>
+                                        {{ titleStatus }}
+                                        <span>
+                                            <v-progress-circular
+                                                v-if="txStatus === TxStatus.pending"
+                                                indeterminate
+                                                color="white"
+                                                size="15"
+                                                width="3"
+                                                class="ml-2"
+                                            />
+                                        </span>
+                                    </p>
+                                </app-chip>
+                            </div>
                         </div>
                     </v-col>
-                    <v-col cols="12" lg="2">
+                    <v-spacer />
+                    <v-col cols="12" md="auto" lg="8" order="first" order-md="last" class="mb-6 mb-md-0 pa-0">
+                        <app-ad-buttons-small />
+                    </v-col>
+                </v-row>
+                <v-row class="mt-md-5">
+                    <v-col cols="12" lg="6">
                         <div class="tx-info">
-                            <p class="text-button mb-1">Confirmations</p>
-                            <p v-if="!loadingBlockInfo" class="text-body-1 text-secondary mt-1">
-                                {{ confirmations }}
-                            </p>
-                            <div v-else class="skeleton-box rounded-xl mt-1" style="height: 24px"></div>
+                            <p class="text-button mb-1">{{ $t('txs.details.txHash') }}</p>
+                            <div class="d-flex align-center justify-start">
+                                <app-transform-hash :hash="props.txRef" class="text-body-1" />
+                                <app-copy-to-clip :value-to-copy="eth.toCheckSum(props.txRef)" class="mx-3" />
+                            </div>
+                            <template v-if="loadingTransactionHash">
+                                <div class="skeleton-box rounded-xl mt-1" style="height: 18px; max-width: 300px"></div>
+                            </template>
+                            <template v-else>
+                                <p v-if="txStatus !== TxStatus.pending && !isReplaced" class="text-body-2 text-info mt-1">({{ timestamp }})</p>
+                            </template>
                         </div>
                     </v-col>
-                </template>
-            </v-row>
-            <v-row align="center" class="mt-5">
-                <v-col cols="12" lg="5">
-                    <div class="rounded-lg bg-tableGrey pa-6">
-                        <div class="tx-info">
-                            <p class="text-button mb-1">From</p>
-                            <template v-if="loadingTransactionHash || !transactionData">
-                                <div class="d-flex align-center">
-                                    <div class="skeleton-box rounded-circle mr-1 mr-sm-2 flex-shrink-0" style="height: 32px; width: 32px"></div>
-                                    <div class="skeleton-box rounded-xl" style="height: 20px"></div>
-                                </div>
-                            </template>
-                            <template v-else>
-                                <div class="d-flex align-center">
-                                    <app-address-blockie :address="transactionData.from || ''" :size="8" class="mr-1 mr-sm-2" />
-                                    <app-transform-hash
-                                        is-blue
-                                        :hash="eth.toCheckSum(transactionData.from)"
-                                        :link="`/address/${transactionData.from}`"
-                                        class="text-body-1"
-                                    />
-                                    <app-copy-to-clip :value-to-copy="eth.toCheckSum(transactionData.from)" class="mx-3" />
-                                </div>
-                            </template>
+                    <template v-if="txStatus !== TxStatus.pending && !isReplaced">
+                        <v-col cols="12" lg="2">
+                            <div class="tx-info">
+                                <p class="text-button mb-1">{{ $t('common.blockMined') }}</p>
+                                <template v-if="loadingTransactionHash">
+                                    <div class="skeleton-box rounded-xl mt-1" style="height: 24px"></div>
+                                </template>
+                                <router-link :to="`/block/number/${blockMined}`" class="text-secondary">
+                                    {{ formatNumber(blockMined) }}
+                                </router-link>
+                            </div>
+                        </v-col>
+                        <v-col cols="12" lg="2">
+                            <div class="tx-info">
+                                <p class="text-button mb-1">{{ $t('common.confirmations') }}</p>
+                                <p v-if="!loadingBlockInfo" class="text-body-1 text-secondary mt-1">
+                                    {{ confirmations }}
+                                </p>
+                                <div v-else class="skeleton-box rounded-xl mt-1" style="height: 24px"></div>
+                            </div>
+                        </v-col>
+                    </template>
+                </v-row>
+                <v-row align="center" class="mt-5">
+                    <v-col cols="12" lg="5">
+                        <div class="rounded-lg bg-tableGrey pa-6">
+                            <div class="tx-info">
+                                <p class="text-button mb-1">{{ $t('common.from') }}</p>
+                                <template v-if="loadingTransactionHash || !transactionData">
+                                    <div class="d-flex align-center">
+                                        <div class="skeleton-box rounded-circle mr-1 mr-sm-2 flex-shrink-0" style="height: 32px; width: 32px"></div>
+                                        <div class="skeleton-box rounded-xl" style="height: 20px"></div>
+                                    </div>
+                                </template>
+                                <template v-else>
+                                    <div class="d-flex align-center">
+                                        <app-address-blockie :address="transactionData.from || ''" :size="8" class="mr-1 mr-sm-2" />
+                                        <app-transform-hash
+                                            is-blue
+                                            :hash="eth.toCheckSum(transactionData.from)"
+                                            :link="`/address/${transactionData.from}`"
+                                            class="text-body-1"
+                                        />
+                                        <app-copy-to-clip :value-to-copy="eth.toCheckSum(transactionData.from)" class="mx-3" />
+                                    </div>
+                                </template>
+                            </div>
                         </div>
-                    </div>
-                </v-col>
-                <v-icon class="mx-3" :class="{ 'mx-auto': mdAndDown }">{{ mdAndDown ? 'expand_more' : 'chevron_right' }}</v-icon>
-                <v-col cols="12" lg="5">
-                    <div class="rounded-lg bg-tableGrey pa-6">
-                        <div class="tx-info">
-                            <p v-if="transactionData && transactionData.contractAddress" class="text-button mb-1">Created Contract</p>
-                            <p v-else class="text-button mb-1">To</p>
-                            <template v-if="loadingTransactionHash || !transactionData">
-                                <div class="d-flex align-center">
-                                    <div class="skeleton-box rounded-circle mr-1 mr-sm-2 flex-shrink-0" style="height: 32px; width: 32px"></div>
-                                    <div class="skeleton-box rounded-xl" style="height: 20px"></div>
-                                </div>
-                            </template>
-                            <template v-else>
-                                <div class="d-flex align-center">
-                                    <app-address-blockie
-                                        :address="transactionData.to || transactionData.contractAddress || ''"
-                                        :size="8"
-                                        class="mr-1 mr-sm-2"
-                                    />
-                                    <app-transform-hash
-                                        is-blue
-                                        :hash="eth.toCheckSum(transactionData.to || transactionData.contractAddress || '')"
-                                        :link="`/address/${transactionData.to || transactionData.contractAddress || ''}`"
-                                        class="text-body-1"
-                                    />
-                                    <app-copy-to-clip
-                                        v-if="transactionData.to || transactionData.contractAddress"
-                                        :value-to-copy="eth.toCheckSum(transactionData.to || transactionData.contractAddress)"
-                                        class="mx-3"
-                                    />
-                                </div>
-                            </template>
+                    </v-col>
+                    <v-icon class="mx-3" :class="{ 'mx-auto': mdAndDown }">{{ mdAndDown ? 'expand_more' : 'chevron_right' }}</v-icon>
+                    <v-col cols="12" lg="5">
+                        <div class="rounded-lg bg-tableGrey pa-6">
+                            <div class="tx-info">
+                                <p v-if="transactionData && transactionData.contractAddress" class="text-button mb-1">
+                                    {{ $t('txs.details.createdContract') }}
+                                </p>
+                                <p v-else class="text-button mb-1">{{ $t('common.to') }}</p>
+                                <template v-if="loadingTransactionHash || !transactionData">
+                                    <div class="d-flex align-center">
+                                        <div class="skeleton-box rounded-circle mr-1 mr-sm-2 flex-shrink-0" style="height: 32px; width: 32px"></div>
+                                        <div class="skeleton-box rounded-xl" style="height: 20px"></div>
+                                    </div>
+                                </template>
+                                <template v-else>
+                                    <div class="d-flex align-center">
+                                        <app-address-blockie
+                                            :address="transactionData.to || transactionData.contractAddress || ''"
+                                            :size="8"
+                                            class="mr-1 mr-sm-2"
+                                        />
+                                        <app-transform-hash
+                                            is-blue
+                                            :hash="eth.toCheckSum(transactionData.to || transactionData.contractAddress || '')"
+                                            :link="`/address/${transactionData.to || transactionData.contractAddress || ''}`"
+                                            class="text-body-1"
+                                        />
+                                        <app-copy-to-clip
+                                            v-if="transactionData.to || transactionData.contractAddress"
+                                            :value-to-copy="eth.toCheckSum(transactionData.to || transactionData.contractAddress)"
+                                            class="mx-3"
+                                        />
+                                    </div>
+                                </template>
+                            </div>
                         </div>
-                    </div>
-                </v-col>
-            </v-row>
-            <v-row align="center" class="mt-5">
-                <v-col cols="12" sm="6" md="4" lg="2" class="flex-grow-0 mr-lg-6">
-                    <div class="rounded-lg bg-tableGrey pa-6">
-                        <div class="tx-info">
-                            <p class="text-button mb-1">Value</p>
-                            <div v-if="loadingTransactionHash" class="skeleton-box rounded-xl" style="height: 21px"></div>
-                            <p v-else class="text-no-wrap">{{ txAmount.value }} {{ currencyName }}</p>
+                    </v-col>
+                </v-row>
+                <v-row align="center" class="mt-5">
+                    <v-col cols="12" sm="6" md="4" lg="2" class="flex-grow-0 mr-lg-6">
+                        <div class="rounded-lg bg-tableGrey pa-6">
+                            <div class="tx-info">
+                                <p class="text-button mb-1">{{ $t('common.value') }}</p>
+                                <div v-if="loadingTransactionHash" class="skeleton-box rounded-xl" style="height: 21px"></div>
+                                <p v-else class="text-no-wrap">{{ txAmount.value }} {{ currencyName }}</p>
+                            </div>
                         </div>
-                    </div>
-                </v-col>
-                <v-col cols="12" sm="6" md="4" lg="2" class="flex-grow-0">
-                    <div class="rounded-lg bg-tableGrey pa-6">
-                        <div class="tx-info">
-                            <p class="text-button mb-1">Fee</p>
-                            <div v-if="loadingTransactionHash" class="skeleton-box rounded-xl" style="height: 21px"></div>
-                            <p v-else class="text-no-wrap">{{ txFee.value }} {{ currencyName }}</p>
+                    </v-col>
+                    <v-col cols="12" sm="6" md="4" lg="2" class="flex-grow-0">
+                        <div class="rounded-lg bg-tableGrey pa-6">
+                            <div class="tx-info">
+                                <p class="text-button mb-1">{{ $t('common.fee') }}</p>
+                                <div v-if="loadingTransactionHash" class="skeleton-box rounded-xl" style="height: 21px"></div>
+                                <p v-else class="text-no-wrap">{{ txFee.value }} {{ currencyName }}</p>
+                            </div>
                         </div>
-                    </div>
-                </v-col>
-            </v-row>
-        </v-card>
-        <v-card variant="elevated" elevation="1" rounded="xl" class="pt-4 pt-sm-6 mt-5">
-            <app-tabs v-model="state.tab" :routes="routes" :tabs="tabs" @update:modelValue="changeRoute" class="mx-n1 mt-n2 mb-4"></app-tabs>
-            <tab-state v-if="state.tab === routes[0]" :tx-hash="props.txRef" :tx-status="txStatus" :loading="loadingTransactionHash" />
-            <tab-more v-if="state.tab === routes[1]" :tx-data="transactionData" :loading="loadingTransactionHash" />
-            <module-tx-actions v-if="state.tab === routes[2]" :tx-hash="props.txRef"></module-tx-actions>
-        </v-card>
-    </template>
+                    </v-col>
+                </v-row>
+            </v-card>
+        </v-col>
+        <v-col cols="12" :class="columnPadding">
+            <app-ad-buttons-large />
+        </v-col>
+        <v-col cols="12" :class="columnPadding">
+            <v-card variant="elevated" elevation="1" rounded="xl" class="pt-4 pt-sm-6">
+                <app-tabs v-model="state.tab" :routes="routes" :tabs="tabs" @update:modelValue="changeRoute" class="mx-n1 mt-n2 mb-4"></app-tabs>
+                <tab-state v-if="state.tab === routes[0]" :tx-hash="props.txRef" :tx-status="txStatus" :loading="loadingTransactionHash" />
+                <tab-more v-if="state.tab === routes[1]" :tx-data="transactionData" :loading="loadingTransactionHash" />
+                <module-tx-actions v-if="state.tab === routes[2]" :tx-hash="props.txRef"></module-tx-actions>
+            </v-card>
+        </v-col>
+    </v-row>
 </template>
 
 <script setup lang="ts">
+import AppAdButtonsLarge from '@/core/components/AppAdButtonsLarge.vue'
 import AppChip from '@core/components/AppChip.vue'
 import AppTransformHash from '@core/components/AppTransformHash.vue'
 import AppAddressBlockie from '@core/components/AppAddressBlockie.vue'
+import AppAdButtonsSmall from '@/core/components/AppAdButtonsSmall.vue'
 import TabMore from '@module/txs/components/TabMore.vue'
 import AppTabs from '@/core/components/AppTabs.vue'
 import ModuleTxActions from './ModuleTxActions.vue'
@@ -168,7 +198,12 @@ import { useDisplay } from 'vuetify'
 import { TxStatus } from '@module/txs/models/ErrorMessagesForTx'
 import { Tab } from '@core/components/props'
 import { useNetwork } from '@core/composables/Network/useNetwork'
+import { useAppViewGrid } from '@core/composables/AppViewGrid/AppViewGrid.composable'
+import { useI18n } from 'vue-i18n'
 
+const { t } = useI18n()
+
+const { columnPadding, rowMargin } = useAppViewGrid()
 const { currencyName } = useNetwork()
 const props = defineProps({
     txRef: {
@@ -183,15 +218,15 @@ const routes = Q_TXS_DETAILS
 const tabs: Tab[] = [
     {
         value: routes[2],
-        title: 'Actions'
+        title: t('txs.details.actions.header')
     },
     {
         value: routes[0],
-        title: 'State'
+        title: t('txs.details.state.header')
     },
     {
         value: routes[1],
-        title: 'More'
+        title: t('txs.details.more.header')
     }
 ]
 

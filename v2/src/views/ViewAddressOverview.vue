@@ -9,6 +9,9 @@
         <v-col cols="12" md="6" lg="4" :class="[columnPadding, 'd-none d-sm-block']">
             <module-address-token-balance :address-ref="props.addressRef" />
         </v-col>
+        <v-col cols="12" :class="columnPadding">
+            <app-ad-buttons-large />
+        </v-col>
         <v-col cols="12" lg="6" :class="columnPadding">
             <module-address-tokens is-overview :address-hash="props.addressRef" />
         </v-col>
@@ -39,6 +42,7 @@
 <script setup lang="ts">
 import AppBtn from '@core/components/AppBtn.vue'
 import AppBtnIcon from '@core/components/AppBtnIcon.vue'
+import AppAdButtonsLarge from '@/core/components/AppAdButtonsLarge.vue'
 import ModuleAddressBalance from '@module/address/ModuleAddressBalance.vue'
 import ModuleAddressTokenBalance from '@module/address/ModuleAddressTokenBalance.vue'
 import ModulePortfolioTotal from '@/modules/address/ModulePortfolioTotal.vue'

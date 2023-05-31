@@ -6,8 +6,11 @@
         <v-col cols="12" lg="6" :class="[columnPadding, 'order-first order-sm-2']">
             <v-card fluid class="pa-4 pa-sm-6" elevation="1" rounded="xl" height="100%">
                 <v-row no-gutter justify="start">
+                    <v-col v-if="xs" cols="12" class="mb-4">
+                        <app-ad-buttons-small />
+                    </v-col>
                     <v-col cols="6" sm="4" lg="3">
-                        <address-balance-totals title="Total Addresses" :is-loading="false" :balance="store.portfolioLength.toString()">
+                        <address-balance-totals :title="$t('block.totalAddress')" :is-loading="false" :balance="store.portfolioLength.toString()">
                         </address-balance-totals>
                     </v-col>
                     <v-spacer />
@@ -26,9 +29,9 @@
                     <v-col v-if="!xs" cols="12">
                         <div class="d-flex flex-nowrap align-center">
                             <address-balance-totals
-                                title="Token Balance"
+                                :title="$t('block.tokenBalance')"
                                 :is-loading="!store.portfolioTokensIsLoaded()"
-                                :subtext="`${tokensCount} total tokens`"
+                                :subtext="`${tokensCount} ${$t('block.tokenTotal')}`"
                                 :balance="tokenBalanceFiat"
                             />
                             <app-token-icon-row v-if="store.portfolioTokensIsLoaded()" :tokens="tokenIcons" class="ml-5"></app-token-icon-row>
@@ -40,7 +43,7 @@
         <v-col v-if="xs" cols="12">
             <v-card elevation="1" rounded="xl" class="pa-4 pa-sm-6">
                 <address-balance-totals
-                    title="Token Balance"
+                    :title="$t('block.tokenBalance')"
                     :is-loading="!store.portfolioTokensIsLoaded()"
                     :subtext="`${tokensCount} total tokens`"
                     :balance="tokenBalanceFiat"
@@ -48,9 +51,20 @@
                 <app-token-icon-row v-if="store.portfolioTokensIsLoaded()" :tokens="tokenIcons" class="mt-3"></app-token-icon-row>
             </v-card>
         </v-col>
+        <v-col cols="12" :class="columnPadding" order="3">
+            <app-ad-buttons-large />
+        </v-col>
         <v-col cols="12" :class="columnPadding" order="last">
             <v-card elevation="1" rounded="xl" class="pt-4 pt-sm-6">
-                <app-tabs v-model="state.tab" :routes="routes" :tabs="tabs" class="mx-n1 mt-n2 mb-4"></app-tabs>
+                <v-row no-gutters>
+                    <v-col cols="12" md="auto" lg="4" order="last" order-md="first">
+                        <app-tabs v-model="state.tab" :routes="routes" :tabs="tabs" class="mx-n1 mt-n2 mb-4"></app-tabs>
+                    </v-col>
+                    <v-spacer />
+                    <v-col v-if="!xs" cols="12" md="auto" lg="8" order="first" order-md="last" class="mb-8 pl-4 pl-sm-6 pr-md-6">
+                        <app-ad-buttons-small />
+                    </v-col>
+                </v-row>
                 <module-portfolio-list v-if="state.tab === routes[0]" />
                 <module-portfolio-token-balance v-if="state.tab === routes[1]" :address-ref="state.addressRef" /> </v-card
         ></v-col>
@@ -58,6 +72,8 @@
 </template>
 
 <script setup lang="ts">
+import AppAdButtonsLarge from '@/core/components/AppAdButtonsLarge.vue'
+import AppAdButtonsSmall from '@/core/components/AppAdButtonsSmall.vue'
 import AddressBalanceTotals from '@/modules/address/components/AddressBalanceTotals.vue'
 import ModuleAddAdressToPorfolio from '@module/address/ModulePorfolioHandleAdr.vue'
 import ModulePortfolioTotal from '@/modules/address/ModulePortfolioTotal.vue'
@@ -78,6 +94,9 @@ import { TokenSort, TOKEN_FILTER_VALUES } from '@module/address/models/TokenSort
 import { MarketDataFragment } from '@core/composables/CoinData/getLatestPrices.generated'
 import { useCoinData } from '@core/composables/CoinData/coinData.composable'
 import { onMounted } from 'vue'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 
 onMounted(() => {
     window.scrollTo(0, 0)
@@ -91,11 +110,11 @@ const routes = Q_PORTFOLIO
 const tabs: Tab[] = [
     {
         value: routes[0],
-        title: 'Watchlist'
+        title: t('block.header.watchList')
     },
     {
         value: routes[1],
-        title: 'Balances'
+        title: t('common.balance', 2)
     }
 ]
 

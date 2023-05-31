@@ -1,16 +1,34 @@
 <template>
     <div>
+        <!--
+        ========================
+            Page Header
+        =========================
+        -->
         <div class="nebula px-2 px-sm-6 mx-xl-auto mt-n16 pt-16">
             <v-container :class="['px-7 px-lg-12 pt-5 pt-lg-0 pb-16']">
                 <v-row align="center" justify="space-between" class="flex-column flex-lg-row">
-                    <v-img v-if="mdAndDown" :src="require('@/assets/hero/hero.png')" alt="" height="300" width="300" max-height="300" max-width="300" contain />
+                    <v-img
+                        v-if="mdAndDown"
+                        :src="require('@/assets/hero/hero.png')"
+                        alt=""
+                        height="300"
+                        width="300"
+                        max-height="300"
+                        max-width="300"
+                        contain
+                        eager
+                    />
                     <div class="pl-lg-14 pb-10 pb-sm-16 pb-lg-0">
-                        <p class="mt-lg-16 text-white font-weight-light text-h3 text-sm-h2 text-lg-h1 text-center text-lg-left">Track, analyze and explore</p>
-                        <p v-if="isETH" class="text-white font-weight-light text-h3 text-sm-h2 text-lg-h1 text-center text-lg-left">
-                            on the Ethereum blockchain.
+                        <p class="mt-lg-16 text-white font-weight-light text-h3 text-sm-h2 text-lg-h1 text-center text-lg-left">
+                            {{ $t('home.tagline.row1') }}
                         </p>
-                        <p v-if="isSEP" class="text-white font-weight-light text-h3 text-sm-h2 text-lg-h1 text-center text-lg-left">on the Sepolia Testnet.</p>
-
+                        <p v-if="isETH" class="text-white font-weight-light text-h3 text-sm-h2 text-lg-h1 text-center text-lg-left">
+                            {{ $t('home.tagline.row2') }}
+                        </p>
+                        <p v-if="isSEP" class="text-white font-weight-light text-h3 text-sm-h2 text-lg-h1 text-center text-lg-left">
+                            {{ $t('home.tagline.row3') }}
+                        </p>
                         <div class="ml-1">
                             <module-search class="justify-center justify-lg-start mt-5 mt-lg-10" />
                         </div>
@@ -25,10 +43,16 @@
                         max-width="460"
                         class="mt-10"
                         contain
+                        eager
                     />
                 </v-row>
             </v-container>
         </div>
+        <!--
+        ========================
+            Page Content
+        =========================
+        -->
         <div class="mx-2 mx-sm-6 mx-xl-auto">
             <v-container class="pt-3 px-0">
                 <v-row :class="rowMargin">
@@ -44,6 +68,14 @@
                             </v-card-title>
                             <module-portfolio-list is-home-page /> </v-card
                     ></v-col>
+                    <v-col cols="12" :class="columnPadding">
+                        <app-ad-buttons-large v-if="showPortfolio" />
+                    </v-col>
+                    <!--
+                    ========================
+                     Tokens
+                    =========================
+                     -->
                     <v-col v-if="supportsFiat" cols="12" lg="6" :class="columnPadding">
                         <module-tokens-info :home-page="TOKENS_VIEW.ALL" />
                     </v-col>
@@ -57,6 +89,7 @@
                             max-height="565"
                             :href="downloadEnkrypt"
                             target="_blank"
+                            @click="btnClick('enkrypt-large-banner')"
                         >
                             <v-img
                                 :src="require('@/assets/promo/enkrypt-text.svg')"
@@ -65,6 +98,7 @@
                                 height="565"
                                 width="565"
                                 class="enkrypt-promo-text mr-auto"
+                                eager
                             />
                         </v-card>
                     </v-col>
@@ -75,7 +109,15 @@
                         md="4"
                         :class="columnPadding"
                     >
-                        <v-card elevation="1" rounded="xl" class="enkrypt-promo-bg-sm" max-height="200" :href="downloadEnkrypt" target="_blank">
+                        <v-card
+                            elevation="1"
+                            rounded="xl"
+                            class="enkrypt-promo-bg-sm"
+                            max-height="200"
+                            :href="downloadEnkrypt"
+                            target="_blank"
+                            @click="btnClick('enkrypt-small-banner')"
+                        >
                             <v-img
                                 :src="require('@/assets/promo/enkrypt-text-sm.png')"
                                 contain
@@ -83,9 +125,15 @@
                                 height="150"
                                 width="150"
                                 class="enkrypt-promo-text-sm mr-auto"
+                                eager
                             />
                         </v-card>
                     </v-col>
+                    <!--
+                    ========================
+                     Promos
+                    =========================
+                     -->
                     <v-col
                         v-if="(supportsFiat && (showFavToknes || (!showFavToknes && mdAndDown))) || !supportsFiat"
                         cols="12"
@@ -96,17 +144,17 @@
                         <v-card elevation="1" rounded="xl" min-height="150" max-height="200" class="promo pa-4 pa-sm-6">
                             <v-row align="end" justify="space-around" class="fill-height">
                                 <a class="d-flex align-center justify-center flex-column" href="https://www.myetherwallet.com/" target="_blank">
-                                    <v-img :src="require('@/assets/promo/mew.png')" cover height="40" width="88" />
-                                    <app-btn text="Swap Tokens"></app-btn>
+                                    <v-img :src="require('@/assets/promo/mew.png')" cover height="40" width="88" eager />
+                                    <app-btn text="Swap Tokens" @click="btnClick('swap-tokens')"></app-btn>
                                 </a>
                                 <a
                                     class="d-flex align-center justify-center flex-column"
                                     href="https://ccswap.myetherwallet.com/?platform=ethvm"
                                     target="_blank"
                                 >
-                                    <v-img :src="require('@/assets/promo/buy-crypto.png')" contain height="44" width="48" class="mb-2" />
+                                    <v-img :src="require('@/assets/promo/buy-crypto.png')" contain height="44" width="48" class="mb-2" eager />
 
-                                    <app-btn text="Buy Crypto"></app-btn>
+                                    <app-btn text="Buy Crypto" @click="btnClick('buy-crypto')"></app-btn>
                                 </a>
                                 <a
                                     v-if="mdAndUp"
@@ -114,8 +162,8 @@
                                     href="https://rarible.com/?ref=0x5bA9576c214FC7C6649f6F3C73dcbC2769b1761"
                                     target="_blank"
                                 >
-                                    <v-img :src="require('@/assets/promo/rarible.png')" cover height="40" width="100" />
-                                    <app-btn text="Trade NFTs"></app-btn>
+                                    <v-img :src="require('@/assets/promo/rarible.png')" cover height="40" width="100" eager />
+                                    <app-btn text="Trade NFTs" @click="btnClick('trade-nft')"></app-btn>
                                 </a>
                             </v-row>
                         </v-card>
@@ -134,6 +182,7 @@
 
 <script setup lang="ts">
 // Components
+import AppAdButtonsLarge from '@/core/components/AppAdButtonsLarge.vue'
 import BlockStatsModule from '@module/block/ModuleBlockStats.vue'
 import RecentBlocks from '@module/block/ModuleRecentBlocks.vue'
 import ModuleTxs from '@module/txs/ModuleTxs.vue'
@@ -152,6 +201,7 @@ import { useStore } from '@/store'
 import { onMounted } from 'vue'
 import { useNetwork } from '@core/composables/Network/useNetwork'
 import configs from '@/configs'
+import { useGtag } from 'vue-gtag-next'
 
 const { lgAndUp, mdAndDown, mdAndUp, xs } = useDisplay()
 const { columnPadding, rowMargin } = useAppViewGrid()
@@ -208,6 +258,15 @@ const downloadEnkrypt = computed<string>(() => {
             return 'https://www.enkrypt.com/'
     }
 })
+
+const { event } = useGtag()
+
+const btnClick = (btnValue: string) => {
+    event(`home-page-${btnValue}`, {
+        event_category: 'promo-click-home',
+        event_label: `${btnValue}`
+    })
+}
 </script>
 
 <style lang="scss" scoped>

@@ -7,7 +7,15 @@
         -->
         <v-col cols="12" :class="columnPadding">
             <v-card elevation="1" rounded="xl" class="pa-4 pa-sm-6">
-                <p class="mb-4 text-h4 font-weight-bold">Contract</p>
+                <v-row no-gutters>
+                    <v-col cols="12" md="auto" lg="4" order="last" order-md="first">
+                        <p class="mb-4 text-h4 font-weight-bold">Contract</p>
+                    </v-col>
+                    <v-spacer />
+                    <v-col cols="12" md="auto" lg="8" order="first" order-md="last" class="mb-6 mb-md-6 pa-0">
+                        <app-ad-buttons-small />
+                    </v-col>
+                </v-row>
                 <v-row align="center" no-gutters>
                     <v-col cols="12" sm="7" lg="8">
                         <div class="d-flex align-center justify-start mb-5 mb-sm-0 pr-sm-10">
@@ -64,6 +72,9 @@
                 </div>
             </v-card>
         </v-col>
+        <v-col cols="12" :class="columnPadding">
+            <app-ad-buttons-large />
+        </v-col>
         <!--
         =====================================================================================
         Contract Holders and Transfers
@@ -94,6 +105,7 @@
 
 <script setup lang="ts">
 import { reactive, computed, onMounted, watch } from 'vue'
+import AppAdButtonsLarge from '@/core/components/AppAdButtonsLarge.vue'
 import AppBtnIcon from '@core/components/AppBtnIcon.vue'
 import AppCopyToClip from '@/core/components/AppCopyToClip.vue'
 import TokenDetailsErc20 from '@module/tokens/components/TokenDetails/TokenDetailsERC20.vue'
@@ -101,6 +113,7 @@ import TokenDetailsNft from '@module/tokens/components/TokenDetails/TokenDetails
 import TokenTransfers from '@module/tokens/components/TokenTransfers.vue'
 import TokenHolders from '@module/tokens/components/TokenHolders.vue'
 import AppTabs from '@/core/components/AppTabs.vue'
+import AppAdButtonsSmall from '@/core/components/AppAdButtonsSmall.vue'
 import { Tab } from '@core/components/props'
 import {
     TokenDetailsFragment as TokenInfo,
