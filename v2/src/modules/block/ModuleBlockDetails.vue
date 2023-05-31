@@ -1,35 +1,51 @@
 <template>
-    <block-details
-        :block-details="blockDetails"
-        :timestamp="timestamp"
-        :curr-block-number="currBlockNumber"
-        :next-block="nextBlock"
-        :previous-block="previousBlock"
-        :is-mined="state.isMined"
-        :is-loading="isLoading"
-    />
-    <v-card v-if="state.blockNumber" variant="elevated" elevation="1" rounded="xl" class="pt-4 pt-sm-6 mt-5">
-        <app-tabs v-model="state.tab" :routes="routes" :tabs="tabs" class="mx-n1 mt-n2 mb-4"></app-tabs>
-        <block-txs
-            v-show="state.tab === routes[0]"
-            :max-items="10"
-            :block-ref="blockNumber.toString()"
-            :is-hash="isHash"
-            :is-mined="state.isMined"
-            page-type="blockDetails"
-        />
-        <module-block-withdrawals
-            v-show="state.tab === routes[1]"
-            :block-number="blockNumber"
-            :is-mined="state.isMined"
-            :block-has-withdrawals="state.hasWithdrawals"
-        />
-        <more-block-details v-show="state.tab === routes[2]" :block-details="blockDetails" :uncle-hashes="uncleHashes" :is-loading="isLoading" />
-    </v-card>
+    <v-row :class="rowMargin">
+        <!--
+                =====================================================================================
+                  TX TABLE
+                =====================================================================================
+            -->
+        <!-- TODO: Implement get block transfers by hash -->
+        <v-col cols="12" :class="columnPadding">
+            <block-details
+                :block-details="blockDetails"
+                :timestamp="timestamp"
+                :curr-block-number="currBlockNumber"
+                :next-block="nextBlock"
+                :previous-block="previousBlock"
+                :is-mined="state.isMined"
+                :is-loading="isLoading"
+            />
+        </v-col>
+        <v-col cols="12" :class="columnPadding">
+            <app-ad-buttons-large />
+        </v-col>
+        <v-col cols="12" :class="columnPadding">
+            <v-card v-if="state.blockNumber" variant="elevated" elevation="1" rounded="xl" class="pt-4 pt-sm-6">
+                <app-tabs v-model="state.tab" :routes="routes" :tabs="tabs" class="mx-n1 mt-n2 mb-4"></app-tabs>
+                <block-txs
+                    v-show="state.tab === routes[0]"
+                    :max-items="10"
+                    :block-ref="blockNumber.toString()"
+                    :is-hash="isHash"
+                    :is-mined="state.isMined"
+                    page-type="blockDetails"
+                />
+                <module-block-withdrawals
+                    v-show="state.tab === routes[1]"
+                    :block-number="blockNumber"
+                    :is-mined="state.isMined"
+                    :block-has-withdrawals="state.hasWithdrawals"
+                />
+                <more-block-details v-show="state.tab === routes[2]" :block-details="blockDetails" :uncle-hashes="uncleHashes" :is-loading="isLoading" />
+            </v-card>
+        </v-col>
+    </v-row>
 </template>
 
 <script setup lang="ts">
 import AppTabs from '@/core/components/AppTabs.vue'
+import AppAdButtonsLarge from '@/core/components/AppAdButtonsLarge.vue'
 // Weird ESLINT error that  'BlockDetails' is defined but never used  even though it is used.
 // eslint-disable-next-line
 import BlockDetails from '@module/block/components/BlockDetails.vue'
@@ -55,7 +71,8 @@ import { timeAgo } from '@core/helper'
 import { fromWei } from 'web3-utils'
 import { Q_BLOCK_DETAILS } from '@core/router/routesNames'
 import { useNetwork } from '@core/composables/Network/useNetwork'
-
+import { useAppViewGrid } from '@core/composables/AppViewGrid/AppViewGrid.composable'
+const { columnPadding, rowMargin } = useAppViewGrid()
 const routes = Q_BLOCK_DETAILS
 
 const { currencyName } = useNetwork()

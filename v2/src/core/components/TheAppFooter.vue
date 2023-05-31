@@ -25,10 +25,10 @@
                             <router-link :to="routeAbout" class="text-link">{{ $t('home.footer.about') }}</router-link>
                         </li>
                         <li class="mb-2">
-                            <a href="https://www.myetherwallet.com/privacy-policy" target="_blank" class="text-link">{{ $t('home.footer.policy') }}</a>
+                            <router-link :to="routePPolicy" class="text-link">{{ $t('home.footer.policy') }}</router-link>
                         </li>
-                        <li class="mb-2" target="_blank">
-                            <a href="https://help.myetherwallet.com/en/" class="text-link">{{ $t('home.footer.help') }}</a>
+                        <li class="mb-2">
+                            <a href="https://help.myetherwallet.com/en/" class="text-link" target="_blank">{{ $t('home.footer.help') }}</a>
                         </li>
                         <li class="mb-2">
                             <router-link :to="routeAdvertise" class="text-link">{{ $t('home.footer.advertise') }}</router-link>
@@ -90,8 +90,7 @@
                     <div class="d-flex font-weight-light align-center justify-sm-end">
                         <p class="text-uppercase mb-0 mr-2 text-caption font-weight-light">{{ $t('home.footer.power') }}</p>
                         <div class="d-flex align-center">
-                            <v-img :src="require('@/assets/logo/mew.svg')" width="24" height="24" contain class="mr-1" />
-                            <p class="text-uppercase text-h3">MEW</p>
+                            <v-img :src="require('@/assets/logo/mew-long-white.png')" width="80" min-height="24" contain />
                         </div>
                     </div>
                 </v-col>
@@ -152,6 +151,10 @@ const routeAdvertise = {
 
 const routeSettings = {
     name: ROUTE_NAME.SETTINGS.NAME
+}
+
+const routePPolicy = {
+    name: ROUTE_NAME.PRIVACY_POLICY.NAME
 }
 
 const { lgAndUp, mdAndDown } = useDisplay()
