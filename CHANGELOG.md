@@ -1,3 +1,13 @@
+### Release v2.1.3
+
+### Devop
+
+-   Added Address View for i18n [#1161](https://github.com/EthVM/EthVM/pull/1161)
+-   Added uncle details for i18n [#1162](https://github.com/EthVM/EthVM/pull/1162)
+-   Added Block-details for i18n [#1164](https://github.com/EthVM/EthVM/pull/1164)
+
+======================================================================
+
 ### Release v2.1.2
 
 ### Devop
@@ -6,7 +16,6 @@
 -   Added Portfolio View for i18n [#1155](https://github.com/EthVM/EthVM/pull/1155)
 -   Added setting View for i18n [#1158](https://github.com/EthVM/EthVM/pull/1158)
 -   Added Transaction details View for i18n [#1159](https://github.com/EthVM/EthVM/pull/1159)
--   Added Block-details for i18n [#1164](https://github.com/EthVM/EthVM/pull/1164)
 
 ### Feature
 
