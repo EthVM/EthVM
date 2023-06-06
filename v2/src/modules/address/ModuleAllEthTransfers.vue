@@ -4,7 +4,7 @@
             <v-col sm="4" md="3" lg="2" order="1"> {{ $t('common.status') }} </v-col>
             <v-col sm="5" md="3" lg="2" order="2"> {{ $t('common.address') }}s </v-col>
             <v-col sm="3" lg="2" order-sm="last" order-lg="3"> {{ $t('common.value') }} </v-col>
-            <v-col lg="2" class="d-none d-lg-flex" order="4"> {{ $t('common.txFee') }} {{ $t('common.paid') }} </v-col>
+            <v-col lg="2" class="d-none d-lg-flex" order="4"> {{ $t('common.txFeePaid') }} {{ $t('common.paid') }} </v-col>
             <v-col sm="3" class="d-none d-lg-flex" lg="2" order="5"> {{ $t('common.type') }} </v-col>
             <v-col md="3" lg="2" class="d-none d-md-flex" order-md="3" order-lg="6"> {{ $t('common.hash') }}/{{ $t('common.block') }} </v-col>
         </v-row>

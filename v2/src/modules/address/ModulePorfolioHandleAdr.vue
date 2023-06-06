@@ -13,13 +13,13 @@
                             icon="add"
                         ></app-btn>
                         <v-btn v-else icon flat color="secondary" height="34px" width="34px" @click="state.openDialog = true">
-                            <v-icon>{{ $t('common.add') }}</v-icon>
+                            <v-icon>add</v-icon>
                         </v-btn>
                     </div>
                 </template>
             </v-tooltip>
             <v-btn v-else icon flat color="secondary" height="34px" width="34px" @click="state.openDialog = true">
-                <v-icon>{{ $t('common.add') }}</v-icon>
+                <v-icon>add</v-icon>
             </v-btn>
         </div>
         <app-dialog v-model="state.openDialog" :title="title" height="290" width="480" @update:model-value="closeModule">

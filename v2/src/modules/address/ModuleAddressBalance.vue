@@ -201,7 +201,7 @@ interface FiatInfo {
 const fiatInfo = computed<FiatInfo[]>(() => {
     return [
         {
-            text: t('address.24h.change'),
+            text: t('common.marketCap'),
             fiat: new BN(ethMarketInfo.value?.market_cap || 0)
         },
         {
