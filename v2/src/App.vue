@@ -31,6 +31,7 @@ import { usePreferredColorScheme } from '@vueuse/core'
 import { useTheme } from 'vuetify/lib/framework.mjs'
 import { themes } from './core/plugins/vuetify'
 import { useNetwork } from './core/composables/Network/useNetwork'
+import { useState } from 'vue-gtag-next'
 
 const store = useStore()
 const { supportsFiat } = useNetwork()
@@ -150,8 +151,8 @@ interface OldToken {
     symbol: string
 }
 
-const oldTokens = useStorage('favToksData', [] as OldToken[])
-if (oldTokens.value.length > 0) {
+const oldTokens = useStorage('favToksData', null as OldToken[] | null)
+if (oldTokens.value && oldTokens.value.length > 0) {
     oldTokens.value.forEach(i => {
         if (!store.tokenIsFav(i.address)) {
             store.addFavToken(i.address)
@@ -165,8 +166,8 @@ interface oldAdrBook {
     name: string
 }
 
-const oldAdrs = useStorage('favAdrsData', [] as oldAdrBook[])
-if (oldAdrs.value.length > 0) {
+const oldAdrs = useStorage('favAdrsData', null as oldAdrBook[] | null)
+if (oldAdrs.value && oldAdrs.value.length > 0) {
     oldAdrs.value.forEach(i => {
         if (!store.addressHashIsSaved(i.address, true) && !store.addressHashIsSaved(i.address)) {
             store.addAddress(i.address, i.name, true)
@@ -174,6 +175,27 @@ if (oldAdrs.value.length > 0) {
     })
 }
 oldAdrs.value = null
+
+//Migrate old consent if any
+const oldConsent = useStorage('consentToTrack', null as null | boolean)
+if (oldConsent.value) {
+    store.setDataShare(oldConsent.value)
+}
+oldConsent.value = null
+
+/** -------------------
+ * Check Data Sharing Settings
+ * --------------------*/
+const { isEnabled } = useState()
+
+watch(
+    () => store.dataShare,
+    (val: boolean) => {
+        if (isEnabled && val !== isEnabled.value) {
+            isEnabled.value = val
+        }
+    }
+)
 
 /** -------------------
  * Set Default Theme
@@ -186,6 +208,9 @@ onMounted(() => {
     } else {
         theme.global.name.value = preferredColor.value === 'dark' ? themes.dark : themes.light
         store.setDarkMode(theme.global.name.value)
+    }
+    if (isEnabled) {
+        isEnabled.value = store.dataShare
     }
 })
 </script>

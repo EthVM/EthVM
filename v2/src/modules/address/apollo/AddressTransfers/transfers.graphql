@@ -19,7 +19,7 @@ fragment BalanceFragment on BalanceDiff {
 }
 
 query getAddressEthTransfers($hash: String, $filter: TransferDirection, $_limit: Int, $_nextKey: String) {
-    getEthTransfersV2(owner: $hash, direction: $filter, limit: $_limit, nextKey: $_nextKey) {
+    fdfashtwjnakfgn(owner: $hash, direction: $filter, limit: $_limit, nextKey: $_nextKey) {
         transfers {
             transfer {
                 ...TransferSummary

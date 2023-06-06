@@ -1,5 +1,10 @@
 <template>
     <div>
+        <!--
+        ========================
+            Page Header
+        =========================
+        -->
         <div class="nebula px-2 px-sm-6 mx-xl-auto mt-n16 pt-16">
             <v-container :class="['px-7 px-lg-12 pt-5 pt-lg-0 pb-16']">
                 <v-row align="center" justify="space-between" class="flex-column flex-lg-row">
@@ -43,6 +48,11 @@
                 </v-row>
             </v-container>
         </div>
+        <!--
+        ========================
+            Page Content
+        =========================
+        -->
         <div class="mx-2 mx-sm-6 mx-xl-auto">
             <v-container class="pt-3 px-0">
                 <v-row :class="rowMargin">
@@ -58,6 +68,14 @@
                             </v-card-title>
                             <module-portfolio-list is-home-page /> </v-card
                     ></v-col>
+                    <v-col cols="12" :class="columnPadding">
+                        <app-ad-buttons-large v-if="showPortfolio" />
+                    </v-col>
+                    <!--
+                    ========================
+                     Tokens
+                    =========================
+                     -->
                     <v-col v-if="supportsFiat" cols="12" lg="6" :class="columnPadding">
                         <module-tokens-info :home-page="TOKENS_VIEW.ALL" />
                     </v-col>
@@ -71,6 +89,7 @@
                             max-height="565"
                             :href="downloadEnkrypt"
                             target="_blank"
+                            @click="btnClick('enkrypt-large-banner')"
                         >
                             <v-img
                                 :src="require('@/assets/promo/enkrypt-text.svg')"
@@ -90,7 +109,15 @@
                         md="4"
                         :class="columnPadding"
                     >
-                        <v-card elevation="1" rounded="xl" class="enkrypt-promo-bg-sm" max-height="200" :href="downloadEnkrypt" target="_blank">
+                        <v-card
+                            elevation="1"
+                            rounded="xl"
+                            class="enkrypt-promo-bg-sm"
+                            max-height="200"
+                            :href="downloadEnkrypt"
+                            target="_blank"
+                            @click="btnClick('enkrypt-small-banner')"
+                        >
                             <v-img
                                 :src="require('@/assets/promo/enkrypt-text-sm.png')"
                                 contain
@@ -102,6 +129,11 @@
                             />
                         </v-card>
                     </v-col>
+                    <!--
+                    ========================
+                     Promos
+                    =========================
+                     -->
                     <v-col
                         v-if="(supportsFiat && (showFavToknes || (!showFavToknes && mdAndDown))) || !supportsFiat"
                         cols="12"
@@ -113,7 +145,7 @@
                             <v-row align="end" justify="space-around" class="fill-height">
                                 <a class="d-flex align-center justify-center flex-column" href="https://www.myetherwallet.com/" target="_blank">
                                     <v-img :src="require('@/assets/promo/mew.png')" cover height="40" width="88" eager />
-                                    <app-btn text="Swap Tokens"></app-btn>
+                                    <app-btn text="Swap Tokens" @click="btnClick('swap-tokens')"></app-btn>
                                 </a>
                                 <a
                                     class="d-flex align-center justify-center flex-column"
@@ -122,7 +154,7 @@
                                 >
                                     <v-img :src="require('@/assets/promo/buy-crypto.png')" contain height="44" width="48" class="mb-2" eager />
 
-                                    <app-btn text="Buy Crypto"></app-btn>
+                                    <app-btn text="Buy Crypto" @click="btnClick('buy-crypto')"></app-btn>
                                 </a>
                                 <a
                                     v-if="mdAndUp"
@@ -131,7 +163,7 @@
                                     target="_blank"
                                 >
                                     <v-img :src="require('@/assets/promo/rarible.png')" cover height="40" width="100" eager />
-                                    <app-btn text="Trade NFTs"></app-btn>
+                                    <app-btn text="Trade NFTs" @click="btnClick('trade-nft')"></app-btn>
                                 </a>
                             </v-row>
                         </v-card>
@@ -150,6 +182,7 @@
 
 <script setup lang="ts">
 // Components
+import AppAdButtonsLarge from '@/core/components/AppAdButtonsLarge.vue'
 import BlockStatsModule from '@module/block/ModuleBlockStats.vue'
 import RecentBlocks from '@module/block/ModuleRecentBlocks.vue'
 import ModuleTxs from '@module/txs/ModuleTxs.vue'
@@ -168,6 +201,7 @@ import { useStore } from '@/store'
 import { onMounted } from 'vue'
 import { useNetwork } from '@core/composables/Network/useNetwork'
 import configs from '@/configs'
+import { useGtag } from 'vue-gtag-next'
 
 const { lgAndUp, mdAndDown, mdAndUp, xs } = useDisplay()
 const { columnPadding, rowMargin } = useAppViewGrid()
@@ -224,6 +258,15 @@ const downloadEnkrypt = computed<string>(() => {
             return 'https://www.enkrypt.com/'
     }
 })
+
+const { event } = useGtag()
+
+const btnClick = (btnValue: string) => {
+    event(`home-page-${btnValue}`, {
+        event_category: 'promo-click-home',
+        event_label: `${btnValue}`
+    })
+}
 </script>
 
 <style lang="scss" scoped>

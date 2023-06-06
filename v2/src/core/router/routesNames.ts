@@ -102,6 +102,10 @@ const ROUTE_NAME: Route = {
     ADVERTISE: {
         PATH: '/advertise-with-us',
         NAME: 'advertise'
+    },
+    PRIVACY_POLICY: {
+        PATH: '/privacy-policy',
+        NAME: 'privacypolicy'
     }
 }
 

@@ -8,6 +8,9 @@
         -->
         <v-row justify="start" :class="rowMargin">
             <v-col cols="12" :class="columnPadding">
+                <app-ad-buttons-large />
+            </v-col>
+            <v-col cols="12" :class="columnPadding">
                 <uncle-details v-if="isValid && !hasError" :uncle-ref="props.uncleRef" @errorDetails="setError" />
             </v-col>
         </v-row>
@@ -17,6 +20,7 @@
 <script setup lang="ts">
 import { reactive, computed, onMounted } from 'vue'
 import AppError from '@core/components/AppError.vue'
+import AppAdButtonsLarge from '@/core/components/AppAdButtonsLarge.vue'
 import UncleDetails from '@module/uncles/ModuleUncleDetails.vue'
 import { eth } from '@core/helper'
 import { ErrorMessageUncle } from '@module/uncles/models/ErrorMessagesForUncle'

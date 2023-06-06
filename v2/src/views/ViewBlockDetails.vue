@@ -1,17 +1,7 @@
 <template>
     <div>
         <app-error v-if="!isValid" :has-error="!isValid" message="This is not a valid block" :routeProp="props.blockRef" />
-        <v-row :class="rowMargin">
-            <!--
-                =====================================================================================
-                  TX TABLE
-                =====================================================================================
-            -->
-            <!-- TODO: Implement get block transfers by hash -->
-            <v-col cols="12" :class="columnPadding">
-                <module-block-details v-if="isValid" :block-ref="props.blockRef" :is-hash="isHash" :tab="props.tab" />
-            </v-col>
-        </v-row>
+        <module-block-details v-if="isValid" :block-ref="props.blockRef" :is-hash="isHash" :tab="props.tab" />
     </div>
 </template>
 
@@ -21,8 +11,6 @@ import AppError from '@core/components/AppError.vue'
 import ModuleBlockDetails from '@module/block/ModuleBlockDetails.vue'
 import { eth } from '@core/helper'
 import { ErrorMessageBlock } from '@module/block/models/ErrorMessagesForBlock'
-import { useAppViewGrid } from '@core/composables/AppViewGrid/AppViewGrid.composable'
-const { columnPadding, rowMargin } = useAppViewGrid()
 
 interface ComponentState {
     errorMessages: ErrorMessageBlock[]
