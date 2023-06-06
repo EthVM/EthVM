@@ -1,7 +1,7 @@
 <template>
     <v-card flat :color="showMoreDetails ? 'pillGrey' : 'transparent'" class="pa-4 px-sm-6">
         <div class="d-flex text-caption justify-space-between mb-2">
-            <p>{{ props.index + 1 }}</p>
+            <p>{{ props.index }}</p>
             <p class="text-right text-info">Log Index: {{ props.log.logIndex }}</p>
         </div>
         <div class="d-flex ml-sm-6 ml-md-12 align-center">
