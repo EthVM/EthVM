@@ -55,6 +55,12 @@
                 "header": "Actions",
                 "tokenTransfers": "Token Transfers",
                 "nftTransfers": "NFT Transfers"
+            },
+            "logs": {
+                "header": "Logs",
+                "decoded": "Decoded",
+                "data": "Raw Data",
+                "signature": "Signature"
             }
         }
     },

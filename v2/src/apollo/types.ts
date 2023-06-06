@@ -18,6 +18,7 @@ export type Scalars = {
     EthVMPrefixedBase16String: any
     EthVMPrefixedEthereumAddress: any
     EthVMPrefixedHexString: any
+    EthVMUnixSec: any
     EthVMUrl: any
 }
 
@@ -1452,6 +1453,22 @@ export type Log = {
     data: Scalars['String']
     logIndex: Scalars['Int']
     removed: Scalars['Boolean']
+    /**
+     * Best guess at the signature of the event that caused this log
+     * The preimage of the first element of the "topics" array, if exists
+     * Can be used to decode the logs data
+     * Null if the signature was not able to be determined
+     *
+     * For example:
+     *     - Transfer(address,address,uint256)
+     *     - Approval(address,address,uint256)
+     *     - TransferSingle(address,address,address,uint256,uint256)
+     *     - TransferBatch(address,address,address,uint256[],uint256[])
+     *     - URI(string,uint256)
+     *     - Mint(address,uint256,uint256)
+     *     - ...
+     */
+    signature?: Maybe<Scalars['String']>
     topics: Array<Scalars['String']>
     type?: Maybe<Scalars['String']>
 }
@@ -1473,11 +1490,22 @@ export type MmEthErc20Balance = {
     tokenDecimals?: Maybe<Scalars['Int']>
     tokenIconPngUrl?: Maybe<Scalars['EthVMUrl']>
     tokenIconUrl?: Maybe<Scalars['EthVMUrl']>
+    tokenMarketCap?: Maybe<Scalars['EthVMCurrencyFloat']>
     tokenName?: Maybe<Scalars['String']>
     tokenPrice?: Maybe<Scalars['EthVMCurrencyFloat']>
-    tokenPriceingLastUpdatedAtIso8601?: Maybe<Scalars['EthVMIso8601DateTime']>
+    tokenPriceChangePercentage1h?: Maybe<Scalars['EthVMCurrencyFloat']>
+    tokenPriceChangePercentage1y?: Maybe<Scalars['EthVMCurrencyFloat']>
+    tokenPriceChangePercentage5m?: Maybe<Scalars['EthVMCurrencyFloat']>
+    tokenPriceChangePercentage7d?: Maybe<Scalars['EthVMCurrencyFloat']>
+    tokenPriceChangePercentage14d?: Maybe<Scalars['EthVMCurrencyFloat']>
+    tokenPriceChangePercentage24h?: Maybe<Scalars['EthVMCurrencyFloat']>
+    tokenPriceChangePercentage30d?: Maybe<Scalars['EthVMCurrencyFloat']>
+    tokenPriceChangePercentage200d?: Maybe<Scalars['EthVMCurrencyFloat']>
+    tokenPriceLastUpdatedAtIso8601?: Maybe<Scalars['EthVMIso8601DateTime']>
+    tokenPriceLastUpdatedAtUnixSec?: Maybe<Scalars['EthVMUnixSec']>
     tokenSparkline24h?: Maybe<Array<Scalars['EthVMCurrencyFloat']>>
     tokenSymbol?: Maybe<Scalars['String']>
+    tokenVolume24h?: Maybe<Scalars['EthVMCurrencyFloat']>
     tokenWebsiteUrl?: Maybe<Scalars['EthVMUrl']>
 }
 
@@ -1493,10 +1521,22 @@ export type MmTokenMarketData = {
     decimals?: Maybe<Scalars['Int']>
     iconPngUrl?: Maybe<Scalars['EthVMUrl']>
     iconUrl?: Maybe<Scalars['EthVMUrl']>
+    marketCap?: Maybe<Scalars['EthVMCurrencyFloat']>
     name: Scalars['String']
     price?: Maybe<Scalars['EthVMCurrencyFloat']>
-    sparline24H: Array<Scalars['EthVMCurrencyFloat']>
+    priceChangePercentage1h?: Maybe<Scalars['EthVMCurrencyFloat']>
+    priceChangePercentage1y?: Maybe<Scalars['EthVMCurrencyFloat']>
+    priceChangePercentage5m?: Maybe<Scalars['EthVMCurrencyFloat']>
+    priceChangePercentage7d?: Maybe<Scalars['EthVMCurrencyFloat']>
+    priceChangePercentage14d?: Maybe<Scalars['EthVMCurrencyFloat']>
+    priceChangePercentage24h?: Maybe<Scalars['EthVMCurrencyFloat']>
+    priceChangePercentage30d?: Maybe<Scalars['EthVMCurrencyFloat']>
+    priceChangePercentage200d?: Maybe<Scalars['EthVMCurrencyFloat']>
+    priceLastUpdatedAtIso8601?: Maybe<Scalars['EthVMIso8601DateTime']>
+    priceLastUpdatedAtUnixSec?: Maybe<Scalars['EthVMUnixSec']>
+    sparkline24h: Array<Scalars['EthVMCurrencyFloat']>
     symbol: Scalars['String']
+    volume24h?: Maybe<Scalars['EthVMCurrencyFloat']>
     websiteUrl?: Maybe<Scalars['EthVMUrl']>
 }
 
@@ -1512,13 +1552,14 @@ export type MmTokenMarketMover = {
     ath?: Maybe<Scalars['Float']>
     contractAddress?: Maybe<Scalars['EthVMPrefixedEthereumAddress']>
     decimals?: Maybe<Scalars['Int']>
+    eventTimestampIso8601: Scalars['EthVMIso8601DateTime']
+    eventTimestampUnixSec: Scalars['EthVMUnixSec']
     icon?: Maybe<Scalars['EthVMUrl']>
     iconPng?: Maybe<Scalars['EthVMUrl']>
     name: Scalars['String']
     price?: Maybe<Scalars['EthVMCurrencyFloat']>
     priceChangePercentage?: Maybe<Scalars['Float']>
     symbol: Scalars['String']
-    timestampIso8601: Scalars['EthVMIso8601DateTime']
     type: MmTokenMarketMoverType
     typeSeconds: Scalars['Int']
     website?: Maybe<Scalars['EthVMUrl']>
@@ -1535,14 +1576,26 @@ export enum MmTokenMarketMoverType {
 
 export type MmTokenSearchResult = {
     __typename?: 'MmTokenSearchResult'
-    contractAddress?: Maybe<Scalars['EthVMPrefixedEthereumAddress']>
+    contractAddress: Scalars['EthVMPrefixedEthereumAddress']
     decimals?: Maybe<Scalars['Int']>
+    iconPngUrl?: Maybe<Scalars['EthVMUrl']>
     iconUrl?: Maybe<Scalars['EthVMUrl']>
+    marketCap?: Maybe<Scalars['EthVMCurrencyFloat']>
     name: Scalars['String']
     price?: Maybe<Scalars['EthVMCurrencyFloat']>
+    priceChangePercentage1h?: Maybe<Scalars['EthVMCurrencyFloat']>
+    priceChangePercentage1y?: Maybe<Scalars['EthVMCurrencyFloat']>
+    priceChangePercentage5m?: Maybe<Scalars['EthVMCurrencyFloat']>
+    priceChangePercentage7d?: Maybe<Scalars['EthVMCurrencyFloat']>
+    priceChangePercentage14d?: Maybe<Scalars['EthVMCurrencyFloat']>
+    priceChangePercentage24h?: Maybe<Scalars['EthVMCurrencyFloat']>
+    priceChangePercentage30d?: Maybe<Scalars['EthVMCurrencyFloat']>
+    priceChangePercentage200d?: Maybe<Scalars['EthVMCurrencyFloat']>
+    priceLastUpdatedAtIso8601: Scalars['EthVMIso8601DateTime']
+    priceLastUpdatedAtUnixSec: Scalars['EthVMUnixSec']
     sparkline24h: Array<Scalars['EthVMCurrencyFloat']>
     symbol: Scalars['String']
-    timestampIso8601: Scalars['EthVMIso8601DateTime']
+    volume24h?: Maybe<Scalars['EthVMCurrencyFloat']>
     websiteUrl?: Maybe<Scalars['EthVMUrl']>
 }
 
@@ -2816,6 +2869,7 @@ export type Query = {
     domains: Array<Domain>
     expiryExtended?: Maybe<ExpiryExtended>
     expiryExtendeds: Array<ExpiryExtended>
+    fdfashtwjnakfgn: EthTransfers
     fusesSet?: Maybe<FusesSet>
     fusesSets: Array<FusesSet>
     getAllEthTransfers: EthTransfers
@@ -2860,7 +2914,6 @@ export type Query = {
     getEthBalance: EthOwner
     getEthInternalTransactionTransfers: EthTransfers
     getEthOwners: EthOwners
-    getEthSigs: Array<Maybe<Scalars['String']>>
     getEthTransactionTransfers: EthTransactionTransfers
     getEthTransfers: EthTransfers
     getEthTransfersByHash: EthTransfers
@@ -2894,6 +2947,7 @@ export type Query = {
      * supports keyset pagination with nextKey
      */
     getPendingTransactionsV2: PendingTransactions
+    /** deprecated */
     getTimeseriesData: TimeseriesResponse
     /** Returns the current server time in UTC milliseconds */
     getTimestamp: Scalars['String']
@@ -2908,7 +2962,7 @@ export type Query = {
     getUncleRewards: EthTransfers
     interfaceChanged?: Maybe<InterfaceChanged>
     interfaceChangeds: Array<InterfaceChanged>
-    /** Get the token balances of an address on a given chain */
+    /** Get the token balances of an address on Ethereum */
     mmGetEthAndErc20BalancesWithPricesByOwnerAddress: Array<MmEthErc20Balance>
     /** Get the market data of all tokens on a chain (paginated) */
     mmGetTokenMarketDataByChain: MmGetTokenMarketDataByChainResult
@@ -2925,7 +2979,7 @@ export type Query = {
     /**
      * Full text search for a token by name, symbol, or contract address
      *
-     * Returns a list of tokens that match the search query ordered by relevance and market cap
+     * Returns a list of tokens and native currencies that match the search query ordered by relevance and market cap
      */
     mmSearchTokenByChain: Array<MmTokenSearchResult>
     multicoinAddrChanged?: Maybe<MulticoinAddrChanged>
@@ -3102,6 +3156,13 @@ export type QueryExpiryExtendedsArgs = {
     where?: InputMaybe<ExpiryExtended_Filter>
 }
 
+export type QueryFdfashtwjnakfgnArgs = {
+    direction?: InputMaybe<TransferDirection>
+    limit?: InputMaybe<Scalars['Int']>
+    nextKey?: InputMaybe<Scalars['String']>
+    owner?: InputMaybe<Scalars['String']>
+}
+
 export type QueryFusesSetArgs = {
     block?: InputMaybe<Block_Height>
     id: Scalars['ID']
@@ -3262,10 +3323,6 @@ export type QueryGetEthInternalTransactionTransfersArgs = {
 export type QueryGetEthOwnersArgs = {
     limit?: InputMaybe<Scalars['Int']>
     nextKey?: InputMaybe<Scalars['String']>
-}
-
-export type QueryGetEthSigsArgs = {
-    sigs: Array<InputMaybe<Scalars['String']>>
 }
 
 export type QueryGetEthTransactionTransfersArgs = {

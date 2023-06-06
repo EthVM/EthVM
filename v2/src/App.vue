@@ -183,7 +183,6 @@ const oldConsentOne = useStorage('consentToTrack', null as null | boolean)
 const dataShare = useStorage('dataShare', null as null | boolean)
 oldConsentOne.value = null
 dataShare.value = null
-console.log(dataShare.value)
 
 /** -------------------
  * Check Data Sharing Settings

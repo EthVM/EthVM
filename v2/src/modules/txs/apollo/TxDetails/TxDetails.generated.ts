@@ -17,6 +17,7 @@ export type LogFragmentFragment = {
     removed: boolean
     topics: Array<string>
     type?: string | null
+    signature?: string | null
 }
 
 export type TraceActionFragment = {
@@ -73,24 +74,16 @@ export type TxDetailsFragment = {
     r?: string | null
     s?: string | null
     contractAddress?: string | null
-    logs: Array<{ __typename?: 'Log'; address: string; data: string; logIndex: number; removed: boolean; topics: Array<string>; type?: string | null }>
-    trace?: Array<{
-        __typename?: 'Trace'
-        subtraces?: number | null
-        traceAddress?: Array<number> | null
-        transactionPosition?: number | null
+    logs: Array<{
+        __typename?: 'Log'
+        address: string
+        data: string
+        logIndex: number
+        removed: boolean
+        topics: Array<string>
         type?: string | null
-        action?: {
-            __typename?: 'TraceAction'
-            callType?: string | null
-            from?: string | null
-            gas?: string | null
-            input?: string | null
-            to?: string | null
-            value?: string | null
-        } | null
-        result?: { __typename?: 'TraceResult'; gasUsed?: string | null; output?: string | null } | null
-    }> | null
+        signature?: string | null
+    }>
 }
 
 export type GetTransactionByHashQueryVariables = Types.Exact<{
@@ -123,24 +116,16 @@ export type GetTransactionByHashQuery = {
         r?: string | null
         s?: string | null
         contractAddress?: string | null
-        logs: Array<{ __typename?: 'Log'; address: string; data: string; logIndex: number; removed: boolean; topics: Array<string>; type?: string | null }>
-        trace?: Array<{
-            __typename?: 'Trace'
-            subtraces?: number | null
-            traceAddress?: Array<number> | null
-            transactionPosition?: number | null
+        logs: Array<{
+            __typename?: 'Log'
+            address: string
+            data: string
+            logIndex: number
+            removed: boolean
+            topics: Array<string>
             type?: string | null
-            action?: {
-                __typename?: 'TraceAction'
-                callType?: string | null
-                from?: string | null
-                gas?: string | null
-                input?: string | null
-                to?: string | null
-                value?: string | null
-            } | null
-            result?: { __typename?: 'TraceResult'; gasUsed?: string | null; output?: string | null } | null
-        }> | null
+            signature?: string | null
+        }>
     }
 }
 
@@ -150,16 +135,6 @@ export type TransactionEventSubscriptionVariables = Types.Exact<{
 
 export type TransactionEventSubscription = { __typename?: 'Subscription'; transactionEvent: string }
 
-export const LogFragmentFragmentDoc = gql`
-    fragment LogFragment on Log {
-        address
-        data
-        logIndex
-        removed
-        topics
-        type
-    }
-`
 export const TraceActionFragmentDoc = gql`
     fragment TraceAction on TraceAction {
         callType
@@ -192,6 +167,17 @@ export const TraceFragmentFragmentDoc = gql`
     ${TraceActionFragmentDoc}
     ${TraceResultFragmentDoc}
 `
+export const LogFragmentFragmentDoc = gql`
+    fragment LogFragment on Log {
+        address
+        data
+        logIndex
+        removed
+        topics
+        type
+        signature
+    }
+`
 export const TxDetailsFragmentDoc = gql`
     fragment TxDetails on Tx {
         blockHash
@@ -219,12 +205,8 @@ export const TxDetailsFragmentDoc = gql`
         logs {
             ...LogFragment
         }
-        trace {
-            ...TraceFragment
-        }
     }
     ${LogFragmentFragmentDoc}
-    ${TraceFragmentFragmentDoc}
 `
 export const GetTransactionByHashDocument = gql`
     query getTransactionByHash($hash: String!) {

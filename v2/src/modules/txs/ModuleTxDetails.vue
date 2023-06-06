@@ -167,6 +167,7 @@
                 <tab-state v-if="state.tab === routes[0]" :tx-hash="props.txRef" :tx-status="txStatus" :loading="loadingTransactionHash" />
                 <tab-more v-if="state.tab === routes[1]" :tx-data="transactionData" :loading="loadingTransactionHash" />
                 <module-tx-actions v-if="state.tab === routes[2]" :tx-hash="props.txRef"></module-tx-actions>
+                <module-tx-logs v-if="state.tab === routes[3]" :tx-hash="props.txRef" :logs="txLogs" :loading="loadingTransactionHash"></module-tx-logs>
             </v-card>
         </v-col>
     </v-row>
@@ -181,10 +182,16 @@ import AppAdButtonsSmall from '@/core/components/AppAdButtonsSmall.vue'
 import TabMore from '@module/txs/components/TabMore.vue'
 import AppTabs from '@/core/components/AppTabs.vue'
 import ModuleTxActions from './ModuleTxActions.vue'
+import ModuleTxLogs from './ModuleTxLogs.vue'
 import AppCopyToClip from '@/core/components/AppCopyToClip.vue'
 import { computed, onMounted, reactive, ref } from 'vue'
 import BN from 'bignumber.js'
-import { TxDetailsFragment as TxDetailsType, useGetTransactionByHashQuery, useTransactionEventSubscription } from './apollo/TxDetails/TxDetails.generated'
+import {
+    TxDetailsFragment as TxDetailsType,
+    useGetTransactionByHashQuery,
+    useTransactionEventSubscription,
+    LogFragmentFragment as Log
+} from './apollo/TxDetails/TxDetails.generated'
 import { ErrorMessageTx, TitleStatus } from '@/modules/txs/models/ErrorMessagesForTx'
 import { excpTxDoNotExists } from '@/apollo/errorExceptions'
 import { formatNumber, FormattedNumber, formatVariableUnitEthValue } from '@/core/helper/number-format-helper'
@@ -219,6 +226,10 @@ const tabs: Tab[] = [
     {
         value: routes[2],
         title: t('txs.details.actions.header')
+    },
+    {
+        value: routes[3],
+        title: t('txs.details.logs.header')
     },
     {
         value: routes[0],
@@ -416,5 +427,12 @@ const emitErrorState = (val: boolean, hashNotFound = false): void => {
 
 onMounted(() => {
     refetchTransactionHash()
+})
+const txLogs = computed<Log[]>(() => {
+    if (!loadingTransactionHash.value && transactionData.value) {
+        console.log(transactionData.value.logs)
+        return transactionData.value.logs
+    }
+    return []
 })
 </script>

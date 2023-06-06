@@ -5,6 +5,7 @@ fragment LogFragment on Log {
     removed
     topics
     type
+    signature
 }
 
 fragment TraceAction on TraceAction {
@@ -59,9 +60,6 @@ fragment TxDetails on Tx {
     contractAddress
     logs {
         ...LogFragment
-    }
-    trace {
-        ...TraceFragment
     }
 }
 
