@@ -3,8 +3,15 @@
         <div v-if="isReady && !props.loading">
             <div class="mb-5">
                 <div v-if="props.logs.length > 0" class="px-3 px-sm-5">
-                    <app-btn text="filter" @click="setFilter(true)" is-small class="ma-1"></app-btn>
-                    <app-btn v-if="activeFilters.length > 0" text="Clear All" @click="clearFilter()" is-small class="ma-1" icon="close"></app-btn>
+                    <app-btn :text="`${$t('common.filter')}`" @click="setFilter(true)" is-small class="ma-1"></app-btn>
+                    <app-btn
+                        v-if="activeFilters.length > 0"
+                        :text="`${$t('txs.details.logs.clear')}`"
+                        @click="clearFilter()"
+                        is-small
+                        class="ma-1"
+                        icon="close"
+                    ></app-btn>
                 </div>
                 <div class="px-3 px-sm-5">
                     <v-btn
@@ -46,15 +53,15 @@
         <app-dialog v-model="openFilterDialog" height="650" width="400" @update:model-value="setFilter">
             <template #no-scroll-content>
                 <v-row class="align-center justify-space-between px-6">
-                    <p class="text-h5 font-weight-bold text-capitalize">Filter</p>
+                    <p class="text-h5 font-weight-bold text-capitalize">{{ $t('common.filter') }}</p>
                     <app-btn-icon icon="close" @click="setFilter(false)" />
                 </v-row>
             </template>
             <template #scroll-content>
                 <div>
                     <v-divider class="mb-4 mt-0" />
-                    <p class="font-weight-medium mb-2">Events</p>
-                    <app-input place-holder="Search events" v-model="searchEvents" />
+                    <p class="font-weight-medium mb-2">{{ $t('txs.details.logs.event', 2) }}</p>
+                    <app-input :place-holder="`${$t('txs.details.logs.searchEvents')}`" v-model="searchEvents" />
                     <div class="d-flex pt-1">
                         <v-virtual-scroll v-if="eventSignatures.length > 0" :height="180" :items="eventSignatures" item-height="60">
                             <template #default="{ item }">
@@ -70,11 +77,11 @@
                                     </template> </v-list-item
                             ></template>
                         </v-virtual-scroll>
-                        <app-no-result v-else text="No events found" class="mt-3 w-100" height="168"></app-no-result>
+                        <app-no-result v-else :text="`${$t('txs.details.logs.noEvents')}`" class="mt-3 w-100" height="168"></app-no-result>
                     </div>
                     <v-divider class="my-4" />
-                    <p class="font-weight-medium mb-2">Addresses</p>
-                    <app-input place-holder="Search Addresses" v-model="searchAdr" />
+                    <p class="font-weight-medium mb-2">{{ $t('common.address', 2) }}</p>
+                    <app-input :place-holder="`${$t('txs.details.logs.searchAdrs')}`" v-model="searchAdr" />
                     <div class="d-flex pt-1">
                         <v-virtual-scroll v-if="addressList.length > 0" :height="180" :items="addressList" item-height="58">
                             <template #default="{ item }">
@@ -101,7 +108,7 @@
                                     </template> </v-list-item
                             ></template>
                         </v-virtual-scroll>
-                        <app-no-result v-else text="No addresses found" class="mt-3 w-100" height="168"></app-no-result>
+                        <app-no-result v-else :text="`${$t('txs.details.logs.noAdrs')}`" class="mt-3 w-100" height="168"></app-no-result>
                     </div>
                 </div>
             </template>
@@ -192,15 +199,6 @@ const setFilters = (): void => {
     })
     isReady.value = true
 }
-//Setting up filters on loading change
-watch(
-    () => props.loading,
-    (newVal, oldVal) => {
-        if (newVal !== oldVal && !newVal) {
-            setFilters()
-        }
-    }
-)
 
 /**
  * Search Filters inside dialog
@@ -323,15 +321,47 @@ const clearFilter = () => {
     activeFilters.value = []
 }
 
+/** -------------------
+ * Filter Reset
+ * --------------------*/
+//Setting up filters on loading change
+
+const resetInProgress = ref(false)
+
+const resetAll = () => {
+    if (!resetInProgress.value) {
+        resetInProgress.value = true
+        isReady.value = false
+        addressListRaw.value = []
+        eventSigRaw.value = []
+        clearFilter()
+        if (!props.loading) {
+            setFilters()
+        }
+        resetInProgress.value = false
+    }
+}
+watch(
+    () => props.loading,
+    (newVal, oldVal) => {
+        if (newVal !== oldVal && !newVal) {
+            resetAll()
+        }
+    }
+)
+
+onMounted(() => {
+    if (!props.loading) {
+        resetAll()
+    }
+})
+
 //Reset filters on txRef change
 watch(
     () => props.txRef,
     (newVal, oldVal) => {
         if (newVal.toLowerCase() !== oldVal.toLowerCase()) {
-            isReady.value = false
-            addressListRaw.value = []
-            eventSigRaw.value = []
-            clearFilter()
+            resetAll()
         }
     }
 )

@@ -61,7 +61,13 @@
                 "header": "Logs",
                 "decoded": "Decoded",
                 "data": "Raw Data",
-                "signature": "Signature"
+                "signature": "Signature",
+                "event": "Event | Events",
+                "searchEvents": "Search events",
+                "searchAdrs": "Search Addresses",
+                "noEvents": "No events found",
+                "noAdrs": "No addresses found",
+                "clear": "Clear All"
             }
         }
     },
@@ -81,7 +87,7 @@
         "nonce": "Nonce",
         "fee": "Fee",
         "status": "Status",
-        "address": "Address",
+        "address": "Address | Addresses",
         "total": "Total",
         "transfer": "Transfers",
         "balance": "Balance | Balances",
@@ -94,7 +100,8 @@
         "button": {
             "export": "Export",
             "import": "Import"
-        }
+        },
+        "filter": "Filter"
     },
     "portfolio": {
         "addAddressIcon": "Add Address",
