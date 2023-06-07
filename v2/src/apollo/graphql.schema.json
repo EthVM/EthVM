@@ -12040,7 +12040,7 @@
             },
             {
                 "kind": "SCALAR",
-                "name": "EthVMIso8601DateTime",
+                "name": "EthVMIso8601DateTimeMilliseconds",
                 "description": null,
                 "fields": null,
                 "inputFields": null,
@@ -12080,7 +12080,17 @@
             },
             {
                 "kind": "SCALAR",
-                "name": "EthVMUnixSec",
+                "name": "EthVMUnixEpochMilliseconds",
+                "description": null,
+                "fields": null,
+                "inputFields": null,
+                "interfaces": null,
+                "enumValues": null,
+                "possibleTypes": null
+            },
+            {
+                "kind": "SCALAR",
+                "name": "EthVMUnixEpochSeconds",
                 "description": null,
                 "fields": null,
                 "inputFields": null,
@@ -14138,6 +14148,16 @@
                 "possibleTypes": null
             },
             {
+                "kind": "SCALAR",
+                "name": "Int8",
+                "description": "8 bytes signed integer\n",
+                "fields": null,
+                "inputFields": null,
+                "interfaces": null,
+                "enumValues": null,
+                "possibleTypes": null
+            },
+            {
                 "kind": "OBJECT",
                 "name": "InterfaceChanged",
                 "description": null,
@@ -15780,7 +15800,7 @@
                         "args": [],
                         "type": {
                             "kind": "SCALAR",
-                            "name": "EthVMIso8601DateTime",
+                            "name": "EthVMIso8601DateTimeMilliseconds",
                             "ofType": null
                         },
                         "isDeprecated": false,
@@ -15792,7 +15812,7 @@
                         "args": [],
                         "type": {
                             "kind": "SCALAR",
-                            "name": "EthVMUnixSec",
+                            "name": "EthVMUnixEpochSeconds",
                             "ofType": null
                         },
                         "isDeprecated": false,
@@ -15905,6 +15925,29 @@
                 "inputFields": null,
                 "interfaces": [],
                 "enumValues": null,
+                "possibleTypes": null
+            },
+            {
+                "kind": "ENUM",
+                "name": "MmSortDirection",
+                "description": null,
+                "fields": null,
+                "inputFields": null,
+                "interfaces": null,
+                "enumValues": [
+                    {
+                        "name": "Asc",
+                        "description": null,
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "Desc",
+                        "description": null,
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    }
+                ],
                 "possibleTypes": null
             },
             {
@@ -16102,7 +16145,7 @@
                         "args": [],
                         "type": {
                             "kind": "SCALAR",
-                            "name": "EthVMIso8601DateTime",
+                            "name": "EthVMIso8601DateTimeMilliseconds",
                             "ofType": null
                         },
                         "isDeprecated": false,
@@ -16114,7 +16157,7 @@
                         "args": [],
                         "type": {
                             "kind": "SCALAR",
-                            "name": "EthVMUnixSec",
+                            "name": "EthVMUnixEpochSeconds",
                             "ofType": null
                         },
                         "isDeprecated": false,
@@ -16275,7 +16318,7 @@
                             "name": null,
                             "ofType": {
                                 "kind": "SCALAR",
-                                "name": "EthVMIso8601DateTime",
+                                "name": "EthVMIso8601DateTimeMilliseconds",
                                 "ofType": null
                             }
                         },
@@ -16291,7 +16334,7 @@
                             "name": null,
                             "ofType": {
                                 "kind": "SCALAR",
-                                "name": "EthVMUnixSec",
+                                "name": "EthVMUnixEpochSeconds",
                                 "ofType": null
                             }
                         },
@@ -16318,6 +16361,38 @@
                             "kind": "SCALAR",
                             "name": "EthVMUrl",
                             "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "marketDataLastUpdatedAtIso8601",
+                        "description": null,
+                        "args": [],
+                        "type": {
+                            "kind": "NON_NULL",
+                            "name": null,
+                            "ofType": {
+                                "kind": "SCALAR",
+                                "name": "EthVMIso8601DateTimeMilliseconds",
+                                "ofType": null
+                            }
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "marketDataLastUpdatedAtUnixSec",
+                        "description": null,
+                        "args": [],
+                        "type": {
+                            "kind": "NON_NULL",
+                            "name": null,
+                            "ofType": {
+                                "kind": "SCALAR",
+                                "name": "EthVMUnixEpochSeconds",
+                                "ofType": null
+                            }
                         },
                         "isDeprecated": false,
                         "deprecationReason": null
@@ -16677,7 +16752,7 @@
                             "name": null,
                             "ofType": {
                                 "kind": "SCALAR",
-                                "name": "EthVMIso8601DateTime",
+                                "name": "EthVMIso8601DateTimeMilliseconds",
                                 "ofType": null
                             }
                         },
@@ -16693,7 +16768,7 @@
                             "name": null,
                             "ofType": {
                                 "kind": "SCALAR",
-                                "name": "EthVMUnixSec",
+                                "name": "EthVMUnixEpochSeconds",
                                 "ofType": null
                             }
                         },
@@ -35733,6 +35808,18 @@
                                 "type": {
                                     "kind": "ENUM",
                                     "name": "MmTokenMarketDataByChainSortOption",
+                                    "ofType": null
+                                },
+                                "defaultValue": null,
+                                "isDeprecated": false,
+                                "deprecationReason": null
+                            },
+                            {
+                                "name": "sortDirection",
+                                "description": "Order results in ascending or descending? (default: descending)",
+                                "type": {
+                                    "kind": "ENUM",
+                                    "name": "MmSortDirection",
                                     "ofType": null
                                 },
                                 "defaultValue": null,
@@ -55189,6 +55276,18 @@
                                 "name": "String",
                                 "ofType": null
                             }
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "isContractCall",
+                        "description": "Is/was this transaction calling a contract to execute?\n\nNull for pending transactions since they haven't executed yet\n\nDetermined by whether the \"gasUsed\" indicates contract execution",
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "Boolean",
+                            "ofType": null
                         },
                         "isDeprecated": false,
                         "deprecationReason": null

@@ -105,6 +105,9 @@
                                 <p v-if="transactionData && transactionData.contractAddress" class="text-button mb-1">
                                     {{ $t('txs.details.createdContract') }}
                                 </p>
+                                <p v-else-if="transactionData && transactionData.isContractCall" class="text-button mb-1">
+                                    {{ $t('txs.details.interactedWith') }}
+                                </p>
                                 <p v-else class="text-button mb-1">{{ $t('common.to') }}</p>
                                 <template v-if="loadingTransactionHash || !transactionData">
                                     <div class="d-flex align-center">

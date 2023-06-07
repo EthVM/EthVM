@@ -61,6 +61,7 @@ fragment TxDetails on Tx {
     logs {
         ...LogFragment
     }
+    isContractCall
 }
 
 query getTransactionByHash($hash: String!) {

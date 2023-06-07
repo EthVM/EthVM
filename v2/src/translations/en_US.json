@@ -29,6 +29,7 @@
             "header": "Transaction Summary",
             "txHash": "Tx Hash",
             "createdContract": "Created Contract",
+            "interactedWith": "Interacted With Contract",
             "title": {
                 "successful": "Successful",
                 "failed": "Failed",

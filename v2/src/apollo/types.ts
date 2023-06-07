@@ -14,12 +14,18 @@ export type Scalars = {
     BigInt: any
     Bytes: any
     EthVMCurrencyFloat: any
-    EthVMIso8601DateTime: any
+    EthVMIso8601DateTimeMilliseconds: any
     EthVMPrefixedBase16String: any
     EthVMPrefixedEthereumAddress: any
     EthVMPrefixedHexString: any
-    EthVMUnixSec: any
+    EthVMUnixEpochMilliseconds: any
+    EthVMUnixEpochSeconds: any
     EthVMUrl: any
+    /**
+     * 8 bytes signed integer
+     *
+     */
+    Int8: any
 }
 
 export type AbiChanged = ResolverEvent & {
@@ -1501,8 +1507,8 @@ export type MmEthErc20Balance = {
     tokenPriceChangePercentage24h?: Maybe<Scalars['EthVMCurrencyFloat']>
     tokenPriceChangePercentage30d?: Maybe<Scalars['EthVMCurrencyFloat']>
     tokenPriceChangePercentage200d?: Maybe<Scalars['EthVMCurrencyFloat']>
-    tokenPriceLastUpdatedAtIso8601?: Maybe<Scalars['EthVMIso8601DateTime']>
-    tokenPriceLastUpdatedAtUnixSec?: Maybe<Scalars['EthVMUnixSec']>
+    tokenPriceLastUpdatedAtIso8601?: Maybe<Scalars['EthVMIso8601DateTimeMilliseconds']>
+    tokenPriceLastUpdatedAtUnixSec?: Maybe<Scalars['EthVMUnixEpochSeconds']>
     tokenSparkline24h?: Maybe<Array<Scalars['EthVMCurrencyFloat']>>
     tokenSymbol?: Maybe<Scalars['String']>
     tokenVolume24h?: Maybe<Scalars['EthVMCurrencyFloat']>
@@ -1513,6 +1519,11 @@ export type MmGetTokenMarketDataByChainResult = {
     __typename?: 'MmGetTokenMarketDataByChainResult'
     items: Array<MmTokenMarketData>
     nextKey?: Maybe<Scalars['String']>
+}
+
+export enum MmSortDirection {
+    Asc = 'Asc',
+    Desc = 'Desc'
 }
 
 export type MmTokenMarketData = {
@@ -1532,8 +1543,8 @@ export type MmTokenMarketData = {
     priceChangePercentage24h?: Maybe<Scalars['EthVMCurrencyFloat']>
     priceChangePercentage30d?: Maybe<Scalars['EthVMCurrencyFloat']>
     priceChangePercentage200d?: Maybe<Scalars['EthVMCurrencyFloat']>
-    priceLastUpdatedAtIso8601?: Maybe<Scalars['EthVMIso8601DateTime']>
-    priceLastUpdatedAtUnixSec?: Maybe<Scalars['EthVMUnixSec']>
+    priceLastUpdatedAtIso8601?: Maybe<Scalars['EthVMIso8601DateTimeMilliseconds']>
+    priceLastUpdatedAtUnixSec?: Maybe<Scalars['EthVMUnixEpochSeconds']>
     sparkline24h: Array<Scalars['EthVMCurrencyFloat']>
     symbol: Scalars['String']
     volume24h?: Maybe<Scalars['EthVMCurrencyFloat']>
@@ -1552,10 +1563,12 @@ export type MmTokenMarketMover = {
     ath?: Maybe<Scalars['Float']>
     contractAddress?: Maybe<Scalars['EthVMPrefixedEthereumAddress']>
     decimals?: Maybe<Scalars['Int']>
-    eventTimestampIso8601: Scalars['EthVMIso8601DateTime']
-    eventTimestampUnixSec: Scalars['EthVMUnixSec']
+    eventTimestampIso8601: Scalars['EthVMIso8601DateTimeMilliseconds']
+    eventTimestampUnixSec: Scalars['EthVMUnixEpochSeconds']
     icon?: Maybe<Scalars['EthVMUrl']>
     iconPng?: Maybe<Scalars['EthVMUrl']>
+    marketDataLastUpdatedAtIso8601: Scalars['EthVMIso8601DateTimeMilliseconds']
+    marketDataLastUpdatedAtUnixSec: Scalars['EthVMUnixEpochSeconds']
     name: Scalars['String']
     price?: Maybe<Scalars['EthVMCurrencyFloat']>
     priceChangePercentage?: Maybe<Scalars['Float']>
@@ -1591,8 +1604,8 @@ export type MmTokenSearchResult = {
     priceChangePercentage24h?: Maybe<Scalars['EthVMCurrencyFloat']>
     priceChangePercentage30d?: Maybe<Scalars['EthVMCurrencyFloat']>
     priceChangePercentage200d?: Maybe<Scalars['EthVMCurrencyFloat']>
-    priceLastUpdatedAtIso8601: Scalars['EthVMIso8601DateTime']
-    priceLastUpdatedAtUnixSec: Scalars['EthVMUnixSec']
+    priceLastUpdatedAtIso8601: Scalars['EthVMIso8601DateTimeMilliseconds']
+    priceLastUpdatedAtUnixSec: Scalars['EthVMUnixEpochSeconds']
     sparkline24h: Array<Scalars['EthVMCurrencyFloat']>
     symbol: Scalars['String']
     volume24h?: Maybe<Scalars['EthVMCurrencyFloat']>
@@ -3516,6 +3529,7 @@ export type QueryMmGetTokenMarketDataByChainArgs = {
     limit?: InputMaybe<Scalars['Int']>
     nextKey?: InputMaybe<Scalars['String']>
     sortBy?: InputMaybe<MmTokenMarketDataByChainSortOption>
+    sortDirection?: InputMaybe<MmSortDirection>
 }
 
 export type QueryMmGetTokenMarketDataByChainAndContractAddressesArgs = {
@@ -5433,6 +5447,14 @@ export type Tx = {
     gasUsed?: Maybe<Scalars['String']>
     hash: Scalars['String']
     input: Scalars['String']
+    /**
+     * Is/was this transaction calling a contract to execute?
+     *
+     * Null for pending transactions since they haven't executed yet
+     *
+     * Determined by whether the "gasUsed" indicates contract execution
+     */
+    isContractCall?: Maybe<Scalars['Boolean']>
     logs: Array<Log>
     maxFeePerGas?: Maybe<Scalars['String']>
     maxPriorityFeePerGas?: Maybe<Scalars['String']>

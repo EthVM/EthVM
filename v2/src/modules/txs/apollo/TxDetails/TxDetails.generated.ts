@@ -74,6 +74,7 @@ export type TxDetailsFragment = {
     r?: string | null
     s?: string | null
     contractAddress?: string | null
+    isContractCall?: boolean | null
     logs: Array<{
         __typename?: 'Log'
         address: string
@@ -116,6 +117,7 @@ export type GetTransactionByHashQuery = {
         r?: string | null
         s?: string | null
         contractAddress?: string | null
+        isContractCall?: boolean | null
         logs: Array<{
             __typename?: 'Log'
             address: string
@@ -205,6 +207,7 @@ export const TxDetailsFragmentDoc = gql`
         logs {
             ...LogFragment
         }
+        isContractCall
     }
     ${LogFragmentFragmentDoc}
 `
