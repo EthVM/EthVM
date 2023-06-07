@@ -4,10 +4,10 @@
             <p>{{ props.index }}</p>
             <p class="text-right text-info">Log Index: {{ props.log.logIndex }}</p>
         </div>
-        <div class="d-flex ml-sm-6 ml-md-12 align-center">
+        <v-row no-gutters class="ml-sm-6 ml-md-12 align-center flex-nowrap">
             <app-address-blockie :address="props.log.address" :size="8" key="identicon" class="mr-5" />
-            <div>
-                <p v-if="store.getAddressName(props.log.address)">{{ store.getAddressName(props.log.address) }}</p>
+            <v-col cols="10">
+                <p v-if="store.getAddressName(props.log.address)" class="text-ellipses mr-auto">{{ store.getAddressName(props.log.address) }}</p>
                 <div class="d-flex justify-start align-center">
                     <app-transform-hash
                         :hash="eth.toCheckSum(props.log.address)"
@@ -19,8 +19,8 @@
                     />
                     <app-copy-to-clip v-if="eth.toCheckSum(props.log.address)" :value-to-copy="eth.toCheckSum(props.log.address)" class="ml-4" />
                 </div>
-            </div>
-        </div>
+            </v-col>
+        </v-row>
         <v-row class="d-flex ml-sm-6 ml-md-12 align-end justify-space-between">
             <v-col cols="10" lg="10">
                 <p v-if="props.log.signature" class="mt-2">{{ formatSignature() }}</p>

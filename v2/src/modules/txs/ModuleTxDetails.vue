@@ -430,7 +430,6 @@ onMounted(() => {
 })
 const txLogs = computed<Log[]>(() => {
     if (!loadingTransactionHash.value && transactionData.value) {
-        console.log(transactionData.value.logs)
         return transactionData.value.logs
     }
     return []
