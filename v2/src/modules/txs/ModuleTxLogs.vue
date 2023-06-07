@@ -129,6 +129,10 @@ import { watchDebounced } from '@vueuse/core'
 const store = useStore()
 
 const props = defineProps({
+    txRef: {
+        type: String,
+        required: true
+    },
     logs: {
         type: Array as PropType<Array<Log>>,
         default: () => []
@@ -323,6 +327,17 @@ const clearFilter = () => {
     })
     activeFilters.value = []
 }
+
+//Reset filters on txRef change
+
+watch(
+    () => props.txRef,
+    (newVal, oldVal) => {
+        if (newVal.toLowerCase() !== oldVal.toLowerCase()) {
+            clearFilter()
+        }
+    }
+)
 
 /** -------------------
  * RAW logs
