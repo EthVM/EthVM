@@ -167,7 +167,9 @@
                 <tab-state v-if="state.tab === routes[0]" :tx-hash="props.txRef" :tx-status="txStatus" :loading="loadingTransactionHash" />
                 <tab-more v-if="state.tab === routes[1]" :tx-data="transactionData" :loading="loadingTransactionHash" />
                 <module-tx-actions v-if="state.tab === routes[2]" :tx-hash="props.txRef"></module-tx-actions>
-                <module-tx-logs v-if="state.tab === routes[3]" :tx-ref="props.txRef" :logs="txLogs" :loading="loadingTransactionHash"></module-tx-logs>
+                <keep-alive>
+                    <module-tx-logs v-if="state.tab === routes[3]" :tx-ref="props.txRef" :logs="txLogs" :loading="loadingTransactionHash"></module-tx-logs>
+                </keep-alive>
             </v-card>
         </v-col>
     </v-row>

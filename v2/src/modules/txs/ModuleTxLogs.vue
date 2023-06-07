@@ -201,11 +201,6 @@ watch(
         }
     }
 )
-onMounted(() => {
-    if (!props.loading) {
-        setFilters()
-    }
-})
 
 /**
  * Search Filters inside dialog
@@ -329,11 +324,13 @@ const clearFilter = () => {
 }
 
 //Reset filters on txRef change
-
 watch(
     () => props.txRef,
     (newVal, oldVal) => {
         if (newVal.toLowerCase() !== oldVal.toLowerCase()) {
+            isReady.value = false
+            addressListRaw.value = []
+            eventSigRaw.value = []
             clearFilter()
         }
     }
