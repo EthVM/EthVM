@@ -12,6 +12,7 @@ import Configs from './configs'
 import i18n from './translations'
 import { useI18n } from 'vue-i18n'
 import './assets/fonts/css/Roboto.css'
+import './assets/fonts/css/SourceCodePro.css'
 import VueGtag from 'vue-gtag-next'
 
 const app = createApp({
