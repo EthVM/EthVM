@@ -397,7 +397,7 @@ const submit = () => {
                     formState.contactNumber = ''
                     formState.email = ''
                     formState.message = ''
-                    store.notify('Your information has been submitted. Thank you for reaching out, you will recieve our responce within several business days.')
+                    store.notify('Your information has been submitted. Thank you for reaching out, you will receive our response within several business days.')
                     contactInputForm.value?.reset()
                 }
             })
