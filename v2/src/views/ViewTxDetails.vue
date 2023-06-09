@@ -11,13 +11,11 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, computed } from 'vue'
+import { reactive, computed, onMounted } from 'vue'
 import AppError from '@/core/components/AppError.vue'
 import { eth } from '@/core/helper'
 import TxDetails from '@/modules/txs/ModuleTxDetails.vue'
 import { ErrorMessageTx } from '@/modules/txs/models/ErrorMessagesForTx'
-import { onMounted } from 'vue'
-
 onMounted(() => {
     window.scrollTo(0, 0)
 })

@@ -6,6 +6,9 @@
             </v-card>
         </v-col>
         <v-col cols="12" :class="columnPadding">
+            <app-ad-buttons-large />
+        </v-col>
+        <v-col cols="12" :class="columnPadding">
             <v-card class="pa-4 pa-sm-6" elevation="1" rounded="xl">
                 <div>
                     <app-tabs
@@ -31,6 +34,7 @@
 
 <script setup lang="ts">
 import AppTabs from '@/core/components/AppTabs.vue'
+import AppAdButtonsLarge from '@/core/components/AppAdButtonsLarge.vue'
 import ModulePendingTransfers from '@module/address/ModulePendingEthTransfers.vue'
 import ModuleInternalEthTransfers from '@module/address/ModuleInternalEthTransfers.vue'
 import ModuleAddressBalance from '@module/address/ModuleAddressBalance.vue'

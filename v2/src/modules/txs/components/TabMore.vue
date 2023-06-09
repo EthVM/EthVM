@@ -11,7 +11,7 @@
             </v-col>
             <v-col lg="2">
                 <div class="tx-info">
-                    <p class="text-button mb-1">{{ $t('txs.details.more.gasUsed') }}</p>
+                    <p class="text-button mb-1">{{ $t('txs.details.other.gasUsed') }}</p>
                     <div v-if="props.loading" class="skeleton-box rounded-xl" style="height: 24px"></div>
                     <p v-else class="text-no-wrap">{{ gasUsed }} ({{ percentageOfGasUsed }})</p>
                 </div>
@@ -20,14 +20,14 @@
         <v-row class="mt-5">
             <v-col lg="2">
                 <div class="tx-info">
-                    <p class="text-button mb-1">{{ $t('txs.details.more.baseFee') }}</p>
+                    <p class="text-button mb-1">{{ $t('txs.details.other.baseFee') }}</p>
                     <div v-if="props.loading" class="skeleton-box rounded-xl" style="height: 24px"></div>
                     <p v-else class="text-no-wrap">{{ baseFeePerGas.value }} {{ baseFeePerGas.unit }}</p>
                 </div>
             </v-col>
             <v-col lg="2">
                 <div class="tx-info">
-                    <p class="text-button mb-1">{{ $t('txs.details.more.maxFee') }}</p>
+                    <p class="text-button mb-1">{{ $t('txs.details.other.maxFee') }}</p>
                     <div v-if="props.loading" class="skeleton-box rounded-xl" style="height: 24px"></div>
                     <p v-else class="text-no-wrap">{{ maxFeePerGas.value }} {{ maxFeePerGas.unit }}</p>
                 </div>
@@ -48,7 +48,7 @@
             </v-col>
             <v-col lg="2">
                 <div class="tx-info">
-                    <p class="text-button mb-1">{{ $t('txs.details.more.index') }}</p>
+                    <p class="text-button mb-1">{{ $t('txs.details.other.index') }}</p>
                     <div v-if="props.loading" class="skeleton-box rounded-xl" style="height: 24px"></div>
                     <p v-else class="text-no-wrap">{{ props.txData.transactionIndex }}</p>
                 </div>

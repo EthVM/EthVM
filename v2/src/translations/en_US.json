@@ -35,6 +35,7 @@
             "header": "Transaction Summary",
             "txHash": "Tx Hash",
             "createdContract": "Created Contract",
+            "interactedWith": "Interacted With Contract",
             "title": {
                 "successful": "Successful",
                 "failed": "Failed",
@@ -48,7 +49,8 @@
                 "notFound": "No transaction state difference avaialble",
                 "difference": "State Difference"
             },
-            "more": {
+            "other": {
+                "header": "Other",
                 "gasUsed": "Gas Used",
                 "baseFee": "Base fee",
                 "maxFee": "Max fee per gas",
@@ -60,6 +62,18 @@
                 "header": "Actions",
                 "tokenTransfers": "Token Transfers",
                 "nftTransfers": "NFT Transfers"
+            },
+            "logs": {
+                "header": "Logs",
+                "decoded": "Decoded",
+                "data": "Raw Data",
+                "signature": "Signature",
+                "event": "Event | Events",
+                "searchEvents": "Search events",
+                "searchAdrs": "Search Addresses",
+                "noEvents": "No events found",
+                "noAdrs": "No addresses found",
+                "clear": "Clear All"
             }
         }
     },
@@ -89,7 +103,7 @@
         "fee": "Fee",
         "status": "Status",
         "symbol": "Symbol",
-        "address": "Address",
+        "address": "Address | Addresses",
         "total": "Total",
         "transfer": "Transfers",
         "balance": "Balance | Balances",
@@ -105,7 +119,8 @@
         "button": {
             "export": "Export",
             "import": "Import"
-        }
+        },
+        "filter": "Filter"
     },
     "portfolio": {
         "addAddressIcon": "Add Address",
@@ -132,6 +147,10 @@
         },
         "tagline": {
             "addressName": "Add custom names to addresses in order to easily track them through ethVM"
+        },
+        "data-share": {
+            "on": "Data Sharing On",
+            "off": "Data Sharing Off"
         }
     },
     "address": {
@@ -204,7 +223,8 @@
             "pricing": "Pricing from Coingecko",
             "power": "Powered by",
             "rights": "All rights reserved.",
-            "settings": "Settings"
+            "settings": "Settings",
+            "advertise": "Advertise with us"
         }
     }
 }
