@@ -1,4 +1,4 @@
-### Release v2.1.2
+### Release v2.1.3
 Add partially decoded transaction logs:
     - shows raw data
     - partially decoded log method (function name and var types)
