@@ -2,7 +2,7 @@
     <div>
         <div v-if="isReady && !props.loading">
             <div class="mb-5">
-                <div v-if="props.logs.length > 0" class="px-3 px-sm-5">
+                <div v-if="props.logs.length > 0" class="px-3 px-sm-5 mb-3">
                     <app-btn :text="`${$t('common.filter')}`" @click="setFilter(true)" is-small class="ma-1"></app-btn>
                     <app-btn
                         v-if="activeFilters.length > 0"
