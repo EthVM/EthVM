@@ -1,4 +1,4 @@
-### Release v2.1.3
+### Release v2.1.4
 
 ### Devop
 
@@ -7,26 +7,39 @@
 -   Added Block-details for i18n [#1164](https://github.com/EthVM/EthVM/pull/1164)
 
 ======================================================================
+### Release v2.1.3
+Add partially decoded transaction logs:
+    - shows raw data
+    - partially decoded log method (function name and var types)
+    - fitler by contract address
+    - filter by method
+
+### Feature
+- tx logs [#1166](https://github.com/EthVM/EthVM/pull/1166)
+
+### Devop
+- reset ga consent with new policy [#1166](https://github.com/EthVM/EthVM/pull/1166)
+- add undefined keys to the search helper function [#1166](https://github.com/EthVM/EthVM/pull/1166)
+
+======================================================================
 
 ### Release v2.1.2
 
 ### Devop
 
--   refactor Home View for i18n [#1142](https://github.com/EthVM/EthVM/pull/1142)
--   Added Portfolio View for i18n [#1155](https://github.com/EthVM/EthVM/pull/1155)
--   Added setting View for i18n [#1158](https://github.com/EthVM/EthVM/pull/1158)
--   Added Transaction details View for i18n [#1159](https://github.com/EthVM/EthVM/pull/1159)
+-  refactor Home View for i18n [#1142](https://github.com/EthVM/EthVM/pull/1142)
+-  added Portfolio View for i18n [#1155](https://github.com/EthVM/EthVM/pull/1155)
+-  added setting View for i18n [#1158](https://github.com/EthVM/EthVM/pull/1158)
+-  added Transaction details View for i18n [#1159](https://github.com/EthVM/EthVM/pull/1159)
 
 ### Feature
-
--   advertise with us page [#1156](https://github.com/EthVM/EthVM/pull/1156)
--   implemented GA [#1160](https://github.com/EthVM/EthVM/pull/1160)
--   add new privacy policy route [#1160](https://github.com/EthVM/EthVM/pull/1160)
+- advertise with us page [#1156](https://github.com/EthVM/EthVM/pull/1156)
+- implemented GA [#1160](https://github.com/EthVM/EthVM/pull/1160)
+- add new privacy policy route [#1160](https://github.com/EthVM/EthVM/pull/1160)
 
 ### UI
-
--   add small and large promo buttons [#1160](https://github.com/EthVM/EthVM/pull/1160)
--   new address view layout [#1160](https://github.com/EthVM/EthVM/pull/1160)
+- add small and large promo buttons [#1160](https://github.com/EthVM/EthVM/pull/1160)
+- new address view layout [#1160](https://github.com/EthVM/EthVM/pull/1160)
 
 ======================================================================
 

@@ -70,7 +70,7 @@ export const useStore = defineStore('main', {
         paginationStateMap: new Map(),
         appTheme: useStorage('app-theme', ''),
         currentLargeButtonPromo: PROMOS.enkrypt,
-        dataShare: useStorage('dataShare', true)
+        dataShare: useStorage('allowDataShare', true)
     }),
     getters: {
         /**

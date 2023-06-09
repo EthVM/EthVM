@@ -105,6 +105,9 @@
                                 <p v-if="transactionData && transactionData.contractAddress" class="text-button mb-1">
                                     {{ $t('txs.details.createdContract') }}
                                 </p>
+                                <p v-else-if="transactionData && transactionData.isContractCall" class="text-button mb-1">
+                                    {{ $t('txs.details.interactedWith') }}
+                                </p>
                                 <p v-else class="text-button mb-1">{{ $t('common.to') }}</p>
                                 <template v-if="loadingTransactionHash || !transactionData">
                                     <div class="d-flex align-center">
@@ -162,11 +165,14 @@
             <app-ad-buttons-large />
         </v-col>
         <v-col cols="12" :class="columnPadding">
-            <v-card variant="elevated" elevation="1" rounded="xl" class="pt-4 pt-sm-6">
+            <v-card variant="elevated" elevation="1" rounded="xl" class="py-4 py-sm-6">
                 <app-tabs v-model="state.tab" :routes="routes" :tabs="tabs" @update:modelValue="changeRoute" class="mx-n1 mt-n2 mb-4"></app-tabs>
                 <tab-state v-if="state.tab === routes[0]" :tx-hash="props.txRef" :tx-status="txStatus" :loading="loadingTransactionHash" />
                 <tab-more v-if="state.tab === routes[1]" :tx-data="transactionData" :loading="loadingTransactionHash" />
                 <module-tx-actions v-if="state.tab === routes[2]" :tx-hash="props.txRef"></module-tx-actions>
+                <keep-alive>
+                    <module-tx-logs v-if="state.tab === routes[3]" :tx-ref="props.txRef" :logs="txLogs" :loading="loadingTransactionHash"></module-tx-logs>
+                </keep-alive>
             </v-card>
         </v-col>
     </v-row>
@@ -181,10 +187,16 @@ import AppAdButtonsSmall from '@/core/components/AppAdButtonsSmall.vue'
 import TabMore from '@module/txs/components/TabMore.vue'
 import AppTabs from '@/core/components/AppTabs.vue'
 import ModuleTxActions from './ModuleTxActions.vue'
+import ModuleTxLogs from './ModuleTxLogs.vue'
 import AppCopyToClip from '@/core/components/AppCopyToClip.vue'
 import { computed, onMounted, reactive, ref } from 'vue'
 import BN from 'bignumber.js'
-import { TxDetailsFragment as TxDetailsType, useGetTransactionByHashQuery, useTransactionEventSubscription } from './apollo/TxDetails/TxDetails.generated'
+import {
+    TxDetailsFragment as TxDetailsType,
+    useGetTransactionByHashQuery,
+    useTransactionEventSubscription,
+    LogFragmentFragment as Log
+} from './apollo/TxDetails/TxDetails.generated'
 import { ErrorMessageTx, TitleStatus } from '@/modules/txs/models/ErrorMessagesForTx'
 import { excpTxDoNotExists } from '@/apollo/errorExceptions'
 import { formatNumber, FormattedNumber, formatVariableUnitEthValue } from '@/core/helper/number-format-helper'
@@ -221,12 +233,16 @@ const tabs: Tab[] = [
         title: t('txs.details.actions.header')
     },
     {
+        value: routes[3],
+        title: t('txs.details.logs.header')
+    },
+    {
         value: routes[0],
         title: t('txs.details.state.header')
     },
     {
         value: routes[1],
-        title: t('txs.details.more.header')
+        title: t('txs.details.other.header')
     }
 ]
 
@@ -416,5 +432,11 @@ const emitErrorState = (val: boolean, hashNotFound = false): void => {
 
 onMounted(() => {
     refetchTransactionHash()
+})
+const txLogs = computed<Log[]>(() => {
+    if (!loadingTransactionHash.value && transactionData.value) {
+        return transactionData.value.logs
+    }
+    return []
 })
 </script>
