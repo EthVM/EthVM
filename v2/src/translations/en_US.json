@@ -43,8 +43,8 @@
                 "notFound": "No transaction state difference avaialble",
                 "difference": "State Difference"
             },
-            "more": {
-                "header": "More",
+            "other": {
+                "header": "Other",
                 "gasUsed": "Gas Used",
                 "baseFee": "Base fee",
                 "maxFee": "Max fee per gas",

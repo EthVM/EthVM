@@ -165,7 +165,7 @@
             <app-ad-buttons-large />
         </v-col>
         <v-col cols="12" :class="columnPadding">
-            <v-card variant="elevated" elevation="1" rounded="xl" class="pt-4 pt-sm-6">
+            <v-card variant="elevated" elevation="1" rounded="xl" class="py-4 py-sm-6">
                 <app-tabs v-model="state.tab" :routes="routes" :tabs="tabs" @update:modelValue="changeRoute" class="mx-n1 mt-n2 mb-4"></app-tabs>
                 <tab-state v-if="state.tab === routes[0]" :tx-hash="props.txRef" :tx-status="txStatus" :loading="loadingTransactionHash" />
                 <tab-more v-if="state.tab === routes[1]" :tx-data="transactionData" :loading="loadingTransactionHash" />
@@ -242,7 +242,7 @@ const tabs: Tab[] = [
     },
     {
         value: routes[1],
-        title: t('txs.details.more.header')
+        title: t('txs.details.other.header')
     }
 ]
 
