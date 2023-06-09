@@ -27,7 +27,9 @@ const COLORS = {
     greyLight: '#F4F6FD',
     greyTableBGLight: '#F3F5F9',
     greyCardLM: '#F2F3F6',
-    greyInputText: '#5A678A'
+    greyInputText: '#5A678A',
+    greyCodeBGLM: '#2d2d2d',
+    greyTextFilter: '#909DA4'
 }
 const mainnetLightTheme: ThemeDefinition = {
     dark: false,
@@ -59,7 +61,9 @@ const mainnetLightTheme: ThemeDefinition = {
         snackbar: COLORS.navy,
         darkSurface: COLORS.greyBackdroundDM,
         switchTrack: COLORS.lightGreyDM,
-        switchThumb: COLORS.lightBlue
+        switchThumb: COLORS.lightBlue,
+        codeBG: COLORS.greyCodeBGLM,
+        greyTextFilter: COLORS.greyTextFilter
     },
     variables: {
         'skeleton-gradient': 0.3
@@ -97,7 +101,9 @@ const mainnetDarkTheme: ThemeDefinition = {
         snackbar: COLORS.lightBlue,
         darkSurface: COLORS.greyBackgroundLM,
         switchTrack: COLORS.lightGreyDM,
-        switchThumb: COLORS.lightBlue
+        switchThumb: COLORS.lightBlue,
+        codeBG: COLORS.surfaceDM,
+        greyTextFilter: COLORS.greyTextFilter
     },
     variables: {
         'skeleton-gradient': 0.03

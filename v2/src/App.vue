@@ -32,6 +32,7 @@ import { useTheme } from 'vuetify/lib/framework.mjs'
 import { themes } from './core/plugins/vuetify'
 import { useNetwork } from './core/composables/Network/useNetwork'
 import { useState } from 'vue-gtag-next'
+import configs from './configs'
 
 const store = useStore()
 const { supportsFiat } = useNetwork()
@@ -78,6 +79,7 @@ const isFullScreen = computed<boolean>(() => {
  Fetches eth balances for for the addresses in the portfolio
 ===================================================================================
 */
+
 interface SetPortfolio {
     refetchBalance: () => void
     setHash: (hash: string) => void
@@ -177,11 +179,10 @@ if (oldAdrs.value && oldAdrs.value.length > 0) {
 oldAdrs.value = null
 
 //Migrate old consent if any
-const oldConsent = useStorage('consentToTrack', null as null | boolean)
-if (oldConsent.value) {
-    store.setDataShare(oldConsent.value)
-}
-oldConsent.value = null
+const oldConsentOne = useStorage('consentToTrack', null as null | boolean)
+const dataShare = useStorage('dataShare', null as null | boolean)
+oldConsentOne.value = null
+dataShare.value = null
 
 /** -------------------
  * Check Data Sharing Settings
@@ -191,7 +192,7 @@ const { isEnabled } = useState()
 watch(
     () => store.dataShare,
     (val: boolean) => {
-        if (isEnabled && val !== isEnabled.value) {
+        if (isEnabled && val !== isEnabled.value && configs.NODE_ENV !== 'development') {
             isEnabled.value = val
         }
     }
@@ -209,7 +210,7 @@ onMounted(() => {
         theme.global.name.value = preferredColor.value === 'dark' ? themes.dark : themes.light
         store.setDarkMode(theme.global.name.value)
     }
-    if (isEnabled) {
+    if (isEnabled && configs.NODE_ENV !== 'development') {
         isEnabled.value = store.dataShare
     }
 })

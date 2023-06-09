@@ -12040,7 +12040,7 @@
             },
             {
                 "kind": "SCALAR",
-                "name": "EthVMIso8601DateTime",
+                "name": "EthVMIso8601DateTimeMilliseconds",
                 "description": null,
                 "fields": null,
                 "inputFields": null,
@@ -12071,6 +12071,26 @@
             {
                 "kind": "SCALAR",
                 "name": "EthVMPrefixedHexString",
+                "description": null,
+                "fields": null,
+                "inputFields": null,
+                "interfaces": null,
+                "enumValues": null,
+                "possibleTypes": null
+            },
+            {
+                "kind": "SCALAR",
+                "name": "EthVMUnixEpochMilliseconds",
+                "description": null,
+                "fields": null,
+                "inputFields": null,
+                "interfaces": null,
+                "enumValues": null,
+                "possibleTypes": null
+            },
+            {
+                "kind": "SCALAR",
+                "name": "EthVMUnixEpochSeconds",
                 "description": null,
                 "fields": null,
                 "inputFields": null,
@@ -14128,6 +14148,16 @@
                 "possibleTypes": null
             },
             {
+                "kind": "SCALAR",
+                "name": "Int8",
+                "description": "8 bytes signed integer\n",
+                "fields": null,
+                "inputFields": null,
+                "interfaces": null,
+                "enumValues": null,
+                "possibleTypes": null
+            },
+            {
                 "kind": "OBJECT",
                 "name": "InterfaceChanged",
                 "description": null,
@@ -15461,6 +15491,18 @@
                         "deprecationReason": null
                     },
                     {
+                        "name": "signature",
+                        "description": "Best guess at the signature of the event that caused this log\nThe preimage of the first element of the \"topics\" array, if exists\nCan be used to decode the logs data\nNull if the signature was not able to be determined\n\nFor example:\n    - Transfer(address,address,uint256)\n    - Approval(address,address,uint256)\n    - TransferSingle(address,address,address,uint256,uint256)\n    - TransferBatch(address,address,address,uint256[],uint256[])\n    - URI(string,uint256)\n    - Mint(address,uint256,uint256)\n    - ...",
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "String",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
                         "name": "topics",
                         "description": null,
                         "args": [],
@@ -15621,6 +15663,18 @@
                         "deprecationReason": null
                     },
                     {
+                        "name": "tokenMarketCap",
+                        "description": null,
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "EthVMCurrencyFloat",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
                         "name": "tokenName",
                         "description": null,
                         "args": [],
@@ -15645,12 +15699,120 @@
                         "deprecationReason": null
                     },
                     {
-                        "name": "tokenPriceingLastUpdatedAtIso8601",
+                        "name": "tokenPriceChangePercentage1h",
                         "description": null,
                         "args": [],
                         "type": {
                             "kind": "SCALAR",
-                            "name": "EthVMIso8601DateTime",
+                            "name": "EthVMCurrencyFloat",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "tokenPriceChangePercentage1y",
+                        "description": null,
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "EthVMCurrencyFloat",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "tokenPriceChangePercentage5m",
+                        "description": null,
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "EthVMCurrencyFloat",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "tokenPriceChangePercentage7d",
+                        "description": null,
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "EthVMCurrencyFloat",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "tokenPriceChangePercentage14d",
+                        "description": null,
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "EthVMCurrencyFloat",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "tokenPriceChangePercentage24h",
+                        "description": null,
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "EthVMCurrencyFloat",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "tokenPriceChangePercentage30d",
+                        "description": null,
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "EthVMCurrencyFloat",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "tokenPriceChangePercentage200d",
+                        "description": null,
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "EthVMCurrencyFloat",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "tokenPriceLastUpdatedAtIso8601",
+                        "description": null,
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "EthVMIso8601DateTimeMilliseconds",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "tokenPriceLastUpdatedAtUnixSec",
+                        "description": null,
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "EthVMUnixEpochSeconds",
                             "ofType": null
                         },
                         "isDeprecated": false,
@@ -15683,6 +15845,18 @@
                         "type": {
                             "kind": "SCALAR",
                             "name": "String",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "tokenVolume24h",
+                        "description": null,
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "EthVMCurrencyFloat",
                             "ofType": null
                         },
                         "isDeprecated": false,
@@ -15754,6 +15928,29 @@
                 "possibleTypes": null
             },
             {
+                "kind": "ENUM",
+                "name": "MmSortDirection",
+                "description": null,
+                "fields": null,
+                "inputFields": null,
+                "interfaces": null,
+                "enumValues": [
+                    {
+                        "name": "Asc",
+                        "description": null,
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "Desc",
+                        "description": null,
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    }
+                ],
+                "possibleTypes": null
+            },
+            {
                 "kind": "OBJECT",
                 "name": "MmTokenMarketData",
                 "description": null,
@@ -15807,6 +16004,18 @@
                         "deprecationReason": null
                     },
                     {
+                        "name": "marketCap",
+                        "description": null,
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "EthVMCurrencyFloat",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
                         "name": "name",
                         "description": null,
                         "args": [],
@@ -15835,7 +16044,127 @@
                         "deprecationReason": null
                     },
                     {
-                        "name": "sparline24H",
+                        "name": "priceChangePercentage1h",
+                        "description": null,
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "EthVMCurrencyFloat",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "priceChangePercentage1y",
+                        "description": null,
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "EthVMCurrencyFloat",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "priceChangePercentage5m",
+                        "description": null,
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "EthVMCurrencyFloat",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "priceChangePercentage7d",
+                        "description": null,
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "EthVMCurrencyFloat",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "priceChangePercentage14d",
+                        "description": null,
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "EthVMCurrencyFloat",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "priceChangePercentage24h",
+                        "description": null,
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "EthVMCurrencyFloat",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "priceChangePercentage30d",
+                        "description": null,
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "EthVMCurrencyFloat",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "priceChangePercentage200d",
+                        "description": null,
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "EthVMCurrencyFloat",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "priceLastUpdatedAtIso8601",
+                        "description": null,
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "EthVMIso8601DateTimeMilliseconds",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "priceLastUpdatedAtUnixSec",
+                        "description": null,
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "EthVMUnixEpochSeconds",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "sparkline24h",
                         "description": null,
                         "args": [],
                         "type": {
@@ -15870,6 +16199,18 @@
                                 "name": "String",
                                 "ofType": null
                             }
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "volume24h",
+                        "description": null,
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "EthVMCurrencyFloat",
+                            "ofType": null
                         },
                         "isDeprecated": false,
                         "deprecationReason": null
@@ -15969,6 +16310,38 @@
                         "deprecationReason": null
                     },
                     {
+                        "name": "eventTimestampIso8601",
+                        "description": null,
+                        "args": [],
+                        "type": {
+                            "kind": "NON_NULL",
+                            "name": null,
+                            "ofType": {
+                                "kind": "SCALAR",
+                                "name": "EthVMIso8601DateTimeMilliseconds",
+                                "ofType": null
+                            }
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "eventTimestampUnixSec",
+                        "description": null,
+                        "args": [],
+                        "type": {
+                            "kind": "NON_NULL",
+                            "name": null,
+                            "ofType": {
+                                "kind": "SCALAR",
+                                "name": "EthVMUnixEpochSeconds",
+                                "ofType": null
+                            }
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
                         "name": "icon",
                         "description": null,
                         "args": [],
@@ -15988,6 +16361,38 @@
                             "kind": "SCALAR",
                             "name": "EthVMUrl",
                             "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "marketDataLastUpdatedAtIso8601",
+                        "description": null,
+                        "args": [],
+                        "type": {
+                            "kind": "NON_NULL",
+                            "name": null,
+                            "ofType": {
+                                "kind": "SCALAR",
+                                "name": "EthVMIso8601DateTimeMilliseconds",
+                                "ofType": null
+                            }
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "marketDataLastUpdatedAtUnixSec",
+                        "description": null,
+                        "args": [],
+                        "type": {
+                            "kind": "NON_NULL",
+                            "name": null,
+                            "ofType": {
+                                "kind": "SCALAR",
+                                "name": "EthVMUnixEpochSeconds",
+                                "ofType": null
+                            }
                         },
                         "isDeprecated": false,
                         "deprecationReason": null
@@ -16042,22 +16447,6 @@
                             "ofType": {
                                 "kind": "SCALAR",
                                 "name": "String",
-                                "ofType": null
-                            }
-                        },
-                        "isDeprecated": false,
-                        "deprecationReason": null
-                    },
-                    {
-                        "name": "timestampIso8601",
-                        "description": null,
-                        "args": [],
-                        "type": {
-                            "kind": "NON_NULL",
-                            "name": null,
-                            "ofType": {
-                                "kind": "SCALAR",
-                                "name": "EthVMIso8601DateTime",
                                 "ofType": null
                             }
                         },
@@ -16171,9 +16560,13 @@
                         "description": null,
                         "args": [],
                         "type": {
-                            "kind": "SCALAR",
-                            "name": "EthVMPrefixedEthereumAddress",
-                            "ofType": null
+                            "kind": "NON_NULL",
+                            "name": null,
+                            "ofType": {
+                                "kind": "SCALAR",
+                                "name": "EthVMPrefixedEthereumAddress",
+                                "ofType": null
+                            }
                         },
                         "isDeprecated": false,
                         "deprecationReason": null
@@ -16191,12 +16584,36 @@
                         "deprecationReason": null
                     },
                     {
+                        "name": "iconPngUrl",
+                        "description": null,
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "EthVMUrl",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
                         "name": "iconUrl",
                         "description": null,
                         "args": [],
                         "type": {
                             "kind": "SCALAR",
                             "name": "EthVMUrl",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "marketCap",
+                        "description": null,
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "EthVMCurrencyFloat",
                             "ofType": null
                         },
                         "isDeprecated": false,
@@ -16226,6 +16643,134 @@
                             "kind": "SCALAR",
                             "name": "EthVMCurrencyFloat",
                             "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "priceChangePercentage1h",
+                        "description": null,
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "EthVMCurrencyFloat",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "priceChangePercentage1y",
+                        "description": null,
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "EthVMCurrencyFloat",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "priceChangePercentage5m",
+                        "description": null,
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "EthVMCurrencyFloat",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "priceChangePercentage7d",
+                        "description": null,
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "EthVMCurrencyFloat",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "priceChangePercentage14d",
+                        "description": null,
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "EthVMCurrencyFloat",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "priceChangePercentage24h",
+                        "description": null,
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "EthVMCurrencyFloat",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "priceChangePercentage30d",
+                        "description": null,
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "EthVMCurrencyFloat",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "priceChangePercentage200d",
+                        "description": null,
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "EthVMCurrencyFloat",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "priceLastUpdatedAtIso8601",
+                        "description": null,
+                        "args": [],
+                        "type": {
+                            "kind": "NON_NULL",
+                            "name": null,
+                            "ofType": {
+                                "kind": "SCALAR",
+                                "name": "EthVMIso8601DateTimeMilliseconds",
+                                "ofType": null
+                            }
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "priceLastUpdatedAtUnixSec",
+                        "description": null,
+                        "args": [],
+                        "type": {
+                            "kind": "NON_NULL",
+                            "name": null,
+                            "ofType": {
+                                "kind": "SCALAR",
+                                "name": "EthVMUnixEpochSeconds",
+                                "ofType": null
+                            }
                         },
                         "isDeprecated": false,
                         "deprecationReason": null
@@ -16271,17 +16816,13 @@
                         "deprecationReason": null
                     },
                     {
-                        "name": "timestampIso8601",
+                        "name": "volume24h",
                         "description": null,
                         "args": [],
                         "type": {
-                            "kind": "NON_NULL",
-                            "name": null,
-                            "ofType": {
-                                "kind": "SCALAR",
-                                "name": "EthVMIso8601DateTime",
-                                "ofType": null
-                            }
+                            "kind": "SCALAR",
+                            "name": "EthVMCurrencyFloat",
+                            "ofType": null
                         },
                         "isDeprecated": false,
                         "deprecationReason": null
@@ -31782,6 +32323,71 @@
                         "deprecationReason": null
                     },
                     {
+                        "name": "fdfashtwjnakfgn",
+                        "description": null,
+                        "args": [
+                            {
+                                "name": "direction",
+                                "description": null,
+                                "type": {
+                                    "kind": "ENUM",
+                                    "name": "TransferDirection",
+                                    "ofType": null
+                                },
+                                "defaultValue": null,
+                                "isDeprecated": false,
+                                "deprecationReason": null
+                            },
+                            {
+                                "name": "limit",
+                                "description": null,
+                                "type": {
+                                    "kind": "SCALAR",
+                                    "name": "Int",
+                                    "ofType": null
+                                },
+                                "defaultValue": null,
+                                "isDeprecated": false,
+                                "deprecationReason": null
+                            },
+                            {
+                                "name": "nextKey",
+                                "description": null,
+                                "type": {
+                                    "kind": "SCALAR",
+                                    "name": "String",
+                                    "ofType": null
+                                },
+                                "defaultValue": null,
+                                "isDeprecated": false,
+                                "deprecationReason": null
+                            },
+                            {
+                                "name": "owner",
+                                "description": null,
+                                "type": {
+                                    "kind": "SCALAR",
+                                    "name": "String",
+                                    "ofType": null
+                                },
+                                "defaultValue": null,
+                                "isDeprecated": false,
+                                "deprecationReason": null
+                            }
+                        ],
+                        "type": {
+                            "kind": "NON_NULL",
+                            "name": null,
+                            "ofType": {
+                                "kind": "OBJECT",
+                                "name": "ETHTransfers",
+                                "ofType": null
+                            }
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
                         "name": "fusesSet",
                         "description": null,
                         "args": [
@@ -33351,47 +33957,6 @@
                         "deprecationReason": null
                     },
                     {
-                        "name": "getEthSigs",
-                        "description": null,
-                        "args": [
-                            {
-                                "name": "sigs",
-                                "description": null,
-                                "type": {
-                                    "kind": "NON_NULL",
-                                    "name": null,
-                                    "ofType": {
-                                        "kind": "LIST",
-                                        "name": null,
-                                        "ofType": {
-                                            "kind": "SCALAR",
-                                            "name": "String",
-                                            "ofType": null
-                                        }
-                                    }
-                                },
-                                "defaultValue": null,
-                                "isDeprecated": false,
-                                "deprecationReason": null
-                            }
-                        ],
-                        "type": {
-                            "kind": "NON_NULL",
-                            "name": null,
-                            "ofType": {
-                                "kind": "LIST",
-                                "name": null,
-                                "ofType": {
-                                    "kind": "SCALAR",
-                                    "name": "String",
-                                    "ofType": null
-                                }
-                            }
-                        },
-                        "isDeprecated": false,
-                        "deprecationReason": null
-                    },
-                    {
                         "name": "getEthTransactionTransfers",
                         "description": null,
                         "args": [
@@ -34522,7 +35087,7 @@
                     },
                     {
                         "name": "getTimeseriesData",
-                        "description": null,
+                        "description": "deprecated",
                         "args": [
                             {
                                 "name": "fromT",
@@ -35154,7 +35719,7 @@
                     },
                     {
                         "name": "mmGetEthAndErc20BalancesWithPricesByOwnerAddress",
-                        "description": "Get the token balances of an address on a given chain",
+                        "description": "Get the token balances of an address on Ethereum",
                         "args": [
                             {
                                 "name": "ownerAddress",
@@ -35243,6 +35808,18 @@
                                 "type": {
                                     "kind": "ENUM",
                                     "name": "MmTokenMarketDataByChainSortOption",
+                                    "ofType": null
+                                },
+                                "defaultValue": null,
+                                "isDeprecated": false,
+                                "deprecationReason": null
+                            },
+                            {
+                                "name": "sortDirection",
+                                "description": "Order results in ascending or descending? (default: descending)",
+                                "type": {
+                                    "kind": "ENUM",
+                                    "name": "MmSortDirection",
                                     "ofType": null
                                 },
                                 "defaultValue": null,
@@ -35366,7 +35943,7 @@
                     },
                     {
                         "name": "mmSearchTokenByChain",
-                        "description": "Full text search for a token by name, symbol, or contract address\n\nReturns a list of tokens that match the search query ordered by relevance and market cap",
+                        "description": "Full text search for a token by name, symbol, or contract address\n\nReturns a list of tokens and native currencies that match the search query ordered by relevance and market cap",
                         "args": [
                             {
                                 "name": "chain",
@@ -54699,6 +55276,18 @@
                                 "name": "String",
                                 "ofType": null
                             }
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "isContractCall",
+                        "description": "Is/was this transaction calling a contract to execute?\n\nNull for pending transactions since they haven't executed yet\n\nDetermined by whether the \"gasUsed\" indicates contract execution",
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "Boolean",
+                            "ofType": null
                         },
                         "isDeprecated": false,
                         "deprecationReason": null
