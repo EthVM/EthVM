@@ -137,7 +137,7 @@
     "block": {
         "lastBlockTitle": "Last Blocks",
         "size": "Size",
-        "uncle": "Uncles",
+        "uncle": "Uncle | Uncles",
         "difficulty": "Difficulty",
         "stateRoot": "State Root",
         "receiptRoot": "Receipt Root",

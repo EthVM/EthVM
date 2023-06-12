@@ -69,7 +69,7 @@
                 </p>
             </div>
             <div class="block-info mb-5">
-                <p class="text-button mb-1">SHA3 {{ $t('block.uncle') }}</p>
+                <p class="text-button mb-1">SHA3 {{ $t('block.uncle', 2) }}</p>
                 <app-transform-hash :hash="props.blockDetails.unclesSHA3.detail" class="w-100" />
             </div>
         </template>
