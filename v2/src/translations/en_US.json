@@ -78,6 +78,7 @@
         "copy": "copy | copies",
         "timestamp": "Timestamp",
         "hash": "Hash",
+        "parentHash": "Parent Hash",
         "from": "From",
         "to": "To",
         "amount": "Amount",
@@ -137,6 +138,10 @@
     "block": {
         "lastBlockTitle": "Last Blocks",
         "size": "Size",
+        "baseFee": "Base Fee per Gas",
+        "blockReward": "Block Reward",
+        "uncleReward": "Uncle Reward",
+        "totalTxs": "Total Txs",
         "uncle": "Uncle | Uncles",
         "difficulty": "Difficulty",
         "stateRoot": "State Root",
@@ -164,6 +169,7 @@
         },
         "error": {
             "withdrawal": "This block does not have any withdrawals",
+            "notMined": "This block has not been mined yet",
             "reward": "Reward"
         }
     },
