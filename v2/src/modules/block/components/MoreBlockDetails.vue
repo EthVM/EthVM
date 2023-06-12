@@ -39,7 +39,7 @@
                 </p>
             </div>
             <div class="block-info mb-5">
-                <p class="text-button mb-1">{{ $t('common.total') }} {{ $t('block.difficulty') }}</p>
+                <p class="text-button mb-1">{{ $t('block.totalDifficulty') }}</p>
                 <p class="text-info">
                     {{ props.blockDetails.totalDifficulty.detail }}
                 </p>

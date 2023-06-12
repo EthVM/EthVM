@@ -138,6 +138,7 @@
     "block": {
         "lastBlockTitle": "Last Blocks",
         "size": "Size",
+        "totalDifficulty": "Total Difficulty",
         "baseFee": "Base Fee per Gas",
         "blockReward": "Block Reward",
         "uncleReward": "Uncle Reward",
