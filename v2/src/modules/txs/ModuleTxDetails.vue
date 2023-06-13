@@ -198,7 +198,7 @@ import {
     LogFragmentFragment as Log
 } from './apollo/TxDetails/TxDetails.generated'
 import { ErrorMessageTx, TitleStatus } from '@/modules/txs/models/ErrorMessagesForTx'
-import { excpTxDoNotExists } from '@/apollo/errorExceptions'
+import { excpTxDoNotExists, excpFailedToDeserialize } from '@/apollo/errorExceptions'
 import { formatNumber, FormattedNumber, formatVariableUnitEthValue } from '@/core/helper/number-format-helper'
 import { eth, timeAgo } from '@core/helper'
 import { useGetLatestBlockInfoQuery } from '@module/block/apollo/BlockStats/blockStats.generated'
@@ -364,6 +364,18 @@ const txFee = computed<FormattedNumber>(() => {
     return { value: '0', unit: currencyName.value }
 })
 
+interface TimeoutSate {
+    timeout: number
+    value: number
+    active: boolean
+}
+
+const timeoutState: TimeoutSate = reactive({
+    timeout: 0,
+    value: 3000,
+    active: true
+})
+
 /**
  * Start apollo subscription
  */
@@ -371,7 +383,7 @@ const {
     result: transactionHashResult,
     onResult: onTransactionHashLoaded,
     onError: onTransactionHashError,
-    loading: loadingTransactionHash,
+    loading,
     refetch: refetchTransactionHash
 } = useGetTransactionByHashQuery(() => ({ hash: props.txRef }), {
     notifyOnNetworkStatusChange: true,
@@ -380,8 +392,11 @@ const {
 
 onTransactionHashLoaded(({ data }) => {
     if (data && data.getTransactionByHash) {
+        clearTimeout(timeoutState.timeout)
+        timeoutState.active = false
         if (!isReplaced.value && txStatus.value === TxStatus.pending && !state.subscribed) {
             subscriptionEnabled.value = true
+            refetchTransactionHash()
         }
         emitErrorState(false)
     }
@@ -393,12 +408,28 @@ const transactionData = computed<TxDetailsType | undefined>(() => {
 
 onTransactionHashError(error => {
     const newError = JSON.stringify(error.message)
-    state.hasError = true
-    if (newError.toLowerCase().includes(excpTxDoNotExists)) {
-        emitErrorState(true, true)
+
+    if (newError.toLowerCase().includes(excpFailedToDeserialize)) {
+        clearTimeout(timeoutState.timeout)
+        timeoutState.active = true
+        timeoutState.timeout = window.setTimeout(() => {
+            if (timeoutState.value <= 1000) {
+                timeoutState.value = timeoutState.value + 3000
+            }
+            refetchTransactionHash()
+        }, timeoutState.value)
     } else {
-        emitErrorState(true)
+        state.hasError = true
+        if (newError.toLowerCase().includes(excpTxDoNotExists)) {
+            emitErrorState(true, true)
+        } else {
+            emitErrorState(true)
+        }
     }
+})
+
+const loadingTransactionHash = computed<boolean>(() => {
+    return loading.value || timeoutState.active
 })
 
 const subscriptionEnabled = ref(true)
