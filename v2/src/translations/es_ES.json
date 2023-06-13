@@ -92,6 +92,7 @@
         "transfer": "Transfers",
         "balance": "Balance | Balances",
         "value": "Value",
+        "validator": "Validator",
         "token": "Token",
         "price": "Price",
         "24h": "24h",
@@ -135,6 +136,14 @@
     },
     "block": {
         "lastBlockTitle": "Last Blocks",
+        "size": "Size",
+        "uncle": "Uncle | Uncles",
+        "difficulty": "Difficulty",
+        "stateRoot": "State Root",
+        "receiptRoot": "Receipt Root",
+        "transactionRoot": "Transaction Root",
+        "logBloom": "Logs Bloom",
+        "extraData": "Extra Data",
         "addressBlockTitle": "Mined Blocks",
         "allBlockTitle": "All Blocks",
         "topTokenTitle": "Top Tokens",
@@ -151,6 +160,10 @@
             "time": "Timestamp",
             "transactions": "Transactions",
             "miner": "Miner",
+            "reward": "Reward"
+        },
+        "error": {
+            "withdrawal": "This block does not have any withdrawals",
             "reward": "Reward"
         }
     },
