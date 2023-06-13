@@ -6,10 +6,10 @@
         =====================================================================================
         -->
         <v-row v-if="!xs" align="center" justify="start" class="text-info d-none d-sm-flex">
-            <v-col sm="2">Validator </v-col>
+            <v-col sm="2">{{ t('common.validator') }} </v-col>
             <v-spacer />
             <v-col sm="5" lg="6"> {{ t('common.to') }} </v-col>
-            <v-col sm="3" lg="2"> Value </v-col>
+            <v-col sm="3" lg="2"> {{ t('common.value') }} </v-col>
         </v-row>
         <v-divider class="my-0 mt-sm-4 mx-n4 mx-sm-n6" />
         <!--
@@ -23,7 +23,7 @@
                     <block-withdrawal-row :transfer="transfer" />
                 </div>
             </template>
-            <app-no-result v-else text="This block does not have any withdrawals" class="mt-4 mt-sm-6" />
+            <app-no-result v-else :text="$t('block.error.withdrawal')" class="mt-4 mt-sm-6" />
         </div>
         <div v-if="isLoading" class="p-ten-top">
             <div v-for="i in 10" :key="i" style="padding: 10px 0px">
