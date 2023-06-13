@@ -16,7 +16,7 @@
                 </p>
             </div>
             <div v-if="props.uncleHashes && props.uncleHashes.length > 0" class="block-info mb-5">
-                <p class="text-button mb-1">{{ $t('block.uncle') }}</p>
+                <p class="text-button mb-1">{{ $t('block.uncle', 2) }}</p>
                 <app-transform-hash
                     is-blue
                     v-for="uncle in props.uncleHashes"
