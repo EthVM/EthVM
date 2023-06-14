@@ -1,11 +1,11 @@
 <template>
     <v-app class="app-view">
         <the-app-navigation-drawer-vue />
-        <the-app-header :hide-search-bar="isHomeView" :is-transparent="isLost || isHomeView" />
-        <v-main :class="[{ 'pt-16': isHomeView || isLost }, 'w-100']">
+        <the-app-header :hide-search-bar="isHomeView" :is-transparent="isFullScreen || isHomeView" />
+        <v-main :class="[{ 'pt-16': isHomeView || isFullScreen }, 'w-100']">
             <v-container
-                :class="[isAddressView || isHomeView || isLost ? 'pa-0' : 'px-2 px-sm-6 px-md-0 px-lg-6 px-xl-0 pt-4 pt-sm-6']"
-                :fluid="isAddressView || isHomeView || isLost"
+                :class="[isAddressView || isHomeView || isFullScreen ? 'pa-0' : 'px-2 px-sm-6 px-md-0 px-lg-6 px-xl-0 pt-4 pt-sm-6']"
+                :fluid="isAddressView || isHomeView || isFullScreen"
             >
                 <router-view />
             </v-container>
@@ -31,6 +31,8 @@ import { usePreferredColorScheme } from '@vueuse/core'
 import { useTheme } from 'vuetify/lib/framework.mjs'
 import { themes } from './core/plugins/vuetify'
 import { useNetwork } from './core/composables/Network/useNetwork'
+import { useState } from 'vue-gtag-next'
+import configs from './configs'
 
 const store = useStore()
 const { supportsFiat } = useNetwork()
@@ -67,8 +69,8 @@ const isHomeView = computed<boolean>(() => {
     return route.name === ROUTE_NAME.HOME.NAME
 })
 
-const isLost = computed<boolean>(() => {
-    return route.name === ROUTE_NAME.NOT_FOUND.NAME
+const isFullScreen = computed<boolean>(() => {
+    return route.name === ROUTE_NAME.NOT_FOUND.NAME || route.name === ROUTE_NAME.ADVERTISE.NAME
 })
 
 /*
@@ -77,6 +79,7 @@ const isLost = computed<boolean>(() => {
  Fetches eth balances for for the addresses in the portfolio
 ===================================================================================
 */
+
 interface SetPortfolio {
     refetchBalance: () => void
     setHash: (hash: string) => void
@@ -150,8 +153,8 @@ interface OldToken {
     symbol: string
 }
 
-const oldTokens = useStorage('favToksData', [] as OldToken[])
-if (oldTokens.value.length > 0) {
+const oldTokens = useStorage('favToksData', null as OldToken[] | null)
+if (oldTokens.value && oldTokens.value.length > 0) {
     oldTokens.value.forEach(i => {
         if (!store.tokenIsFav(i.address)) {
             store.addFavToken(i.address)
@@ -165,8 +168,8 @@ interface oldAdrBook {
     name: string
 }
 
-const oldAdrs = useStorage('favAdrsData', [] as oldAdrBook[])
-if (oldAdrs.value.length > 0) {
+const oldAdrs = useStorage('favAdrsData', null as oldAdrBook[] | null)
+if (oldAdrs.value && oldAdrs.value.length > 0) {
     oldAdrs.value.forEach(i => {
         if (!store.addressHashIsSaved(i.address, true) && !store.addressHashIsSaved(i.address)) {
             store.addAddress(i.address, i.name, true)
@@ -174,6 +177,26 @@ if (oldAdrs.value.length > 0) {
     })
 }
 oldAdrs.value = null
+
+//Migrate old consent if any
+const oldConsentOne = useStorage('consentToTrack', null as null | boolean)
+const dataShare = useStorage('dataShare', null as null | boolean)
+oldConsentOne.value = null
+dataShare.value = null
+
+/** -------------------
+ * Check Data Sharing Settings
+ * --------------------*/
+const { isEnabled } = useState()
+
+watch(
+    () => store.dataShare,
+    (val: boolean) => {
+        if (isEnabled && val !== isEnabled.value && configs.NODE_ENV !== 'development') {
+            isEnabled.value = val
+        }
+    }
+)
 
 /** -------------------
  * Set Default Theme
@@ -186,6 +209,9 @@ onMounted(() => {
     } else {
         theme.global.name.value = preferredColor.value === 'dark' ? themes.dark : themes.light
         store.setDarkMode(theme.global.name.value)
+    }
+    if (isEnabled && configs.NODE_ENV !== 'development') {
+        isEnabled.value = store.dataShare
     }
 })
 </script>

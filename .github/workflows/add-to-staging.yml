@@ -29,9 +29,9 @@ jobs:
       # Lint Code
       - name: pnpm Lint
         run: cd ./v2 && pnpm lint
-      #Generate code from most recent GraphQL schema
-      - name: pnpm generate schema
-        run: cd ./v2 && pnpm codegen-generate
+      # Generate code from most recent GraphQL schema
+      # - name: pnpm generate schema
+      # run: cd ./v2 && pnpm codegen-generate
       # Build (temp dev mode)
       - name: build
         run: cd ./v2 && pnpm build
@@ -42,6 +42,8 @@ jobs:
           VUE_APP_HTTP_LINK: ${{ secrets.VUE_APP_HTTP_LINK }}
           VUE_APP_WS_CLIENT: ${{ secrets.VUE_APP_WS_CLIENT }}
           VUE_APP_OPENSEA_API: ${{ secrets.VUE_APP_OPENSEA_API }}
+          VUE_APP_FORMSPREE_CONTACT : ${{secrets.VUE_APP_FORMSPREE_CONTACT}}
+          VUE_APP_GA_ID: ${{secrets.VUE_APP_GA_ID}}
       # Deploy to S3
       - name: Deploy to S3
         if: github.base_ref == ''

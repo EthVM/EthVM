@@ -146,7 +146,7 @@ const tabs = computed<Tab[]>(() => {
     if (!xs.value) {
         return props.tabs
     }
-    if (props.tabs.length < 4) {
+    if (props.tabs.length <= 4) {
         return props.tabs
     }
     const start = props.tabs.findIndex(i => i.value === state.activeTab)
@@ -165,7 +165,7 @@ const tabs = computed<Tab[]>(() => {
  * More tabs, returns all tabs for the meny if more then 3 tabs
  */
 const moreTabs = computed<Tab[]>(() => {
-    if (props.tabs.length > 3 && xs.value) {
+    if (props.tabs.length > 4 && xs.value) {
         return props.tabs
     }
     return []

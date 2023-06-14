@@ -10,18 +10,26 @@
             <div class="skeleton-box rounded-xl mt-1" :style="skeletonLoaderStyle"></div>
         </template>
         <template v-else>
-            <div class="d-flex align-center mx-n3">
-                <template v-if="props.previousBlock">
-                    <app-btn-icon icon="chevron_left" color="secondary" :disabled="!props.previousBlock" :link="props.previousBlock" />
-                </template>
-                <h1 class="text-h6 font-weight-bold">Block #{{ formatNumber(props.currBlockNumber) }}</h1>
-                <template v-if="props.nextBlock">
-                    <app-btn-icon icon="chevron_right" color="secondary" :disabled="!props.nextBlock" :link="props.nextBlock" />
-                </template>
-            </div>
-            <span class="text-info text-body-1">
-                {{ props.timestamp }}
-            </span>
+            <v-row no-gutters>
+                <v-col cols="12" md="auto" lg="4" order="last" order-md="first">
+                    <div class="d-flex align-center mx-n3">
+                        <template v-if="props.previousBlock">
+                            <app-btn-icon icon="chevron_left" color="secondary" :disabled="!props.previousBlock" :link="props.previousBlock" />
+                        </template>
+                        <h1 class="text-h6 font-weight-bold">Block #{{ formatNumber(props.currBlockNumber) }}</h1>
+                        <template v-if="props.nextBlock">
+                            <app-btn-icon icon="chevron_right" color="secondary" :disabled="!props.nextBlock" :link="props.nextBlock" />
+                        </template>
+                    </div>
+                    <span class="text-info text-body-1">
+                        {{ props.timestamp }}
+                    </span>
+                </v-col>
+                <v-spacer />
+                <v-col cols="12" md="auto" lg="8" order="first" order-md="last" class="mb-6 mb-md-0 pa-0">
+                    <app-ad-buttons-small />
+                </v-col>
+            </v-row>
             <v-row class="my-7">
                 <v-col cols="12" lg="6" class="text-textPrimary">
                     <div class="block-info mb-5">
@@ -88,6 +96,7 @@
 </template>
 
 <script setup lang="ts">
+import AppAdButtonsSmall from '@/core/components/AppAdButtonsSmall.vue'
 import AppTransformHash from '@core/components/AppTransformHash.vue'
 import AppAddressBlockie from '@core/components/AppAddressBlockie.vue'
 import AppBtnIcon from '@core/components/AppBtnIcon.vue'

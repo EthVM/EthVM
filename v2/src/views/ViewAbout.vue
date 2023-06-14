@@ -1,6 +1,9 @@
 <template>
     <v-row :class="rowMargin">
         <v-col cols="12" :class="columnPadding">
+            <app-ad-buttons-large />
+        </v-col>
+        <v-col cols="12" :class="columnPadding">
             <v-card class="pa-4 pa-sm-6" elevation="1" rounded="xl">
                 <div class="nebula mb-5 rounded-xl d-flex align-center justify-center">
                     <v-img :src="require('@/assets/hero/hero-group.png')" alt="" :max-height="xs ? '150' : '300'" />
@@ -36,6 +39,7 @@
 </template>
 
 <script setup lang="ts">
+import AppAdButtonsLarge from '@/core/components/AppAdButtonsLarge.vue'
 import { useAppViewGrid } from '@core/composables/AppViewGrid/AppViewGrid.composable'
 import { onMounted } from 'vue'
 import { useDisplay } from 'vuetify/lib/framework.mjs'

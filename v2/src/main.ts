@@ -12,6 +12,8 @@ import Configs from './configs'
 import i18n from './translations'
 import { useI18n } from 'vue-i18n'
 import './assets/fonts/css/Roboto.css'
+import './assets/fonts/css/SourceCodePro.css'
+import VueGtag from 'vue-gtag-next'
 
 const app = createApp({
     setup() {
@@ -41,4 +43,22 @@ Sentry.init({
         tags: { chain: Configs.NETWORK }
     }
 })
-app.use(router).use(vuetify).use(createPinia()).use(i18n).mount('#app')
+
+app.use(router)
+    .use(vuetify)
+    .use(createPinia())
+    .use(i18n)
+    .use(
+        VueGtag,
+        {
+            property: {
+                id: Configs.GA_ID
+            },
+            isEnabled: false,
+            useDebugger: Configs.NODE_ENV === 'development',
+            appName: 'ethvm.com',
+            appVersion: Configs.VERSION
+        },
+        router
+    )
+    .mount('#app')
