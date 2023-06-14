@@ -7,7 +7,30 @@ schema:
 documents: "src/**/*.graphql"
 generates:
   src/apollo/types.ts:
-    - typescript
+    plugins:
+        - add:
+            content: >
+                /**
+                * NOTE: THIS IS AN AUTO-GENERATED FILE. DO NOT MODIFY IT DIRECTLY.
+                */
+
+        - typescript
+        - typescript-operations
+    config:
+        scalars: 
+            EthVMUnixEpochSeconds: number
+            EthVMUnixEpochMilliseconds: number
+            EthVMIso8601DateTimeMilliseconds: string
+            EthVMUrl: string
+            EthVMCurrencyFloat: number
+            EthVMPrefixedEthereumAddress: string
+            EthVMPrefixedBase16String: string
+            EthVMPrefixedHexString: string
+            # IMPORTANT: Below values are not used, they are coming from ens graph.  Add proper types, if they are needed
+            BigDecimal: string
+            BigInt: string
+            Bytes: string
+            Int8: string
   src/:
       preset: near-operation-file
       presetConfig:
@@ -26,6 +49,9 @@ generates:
       config:
         withCompositionFunctions: true
         vueCompositionApiImportFrom: 'vue'
+        # strictScalars: true
+
+        
   src/apollo/graphql.schema.json:
     plugins:
       - "introspection"
