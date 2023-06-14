@@ -3,7 +3,16 @@
         <app-error :has-error="hasError" :message="state.error" />
     </v-container>
 
-    <div v-if="isValid && props.addressRef" :class="[xs ? 'adr-core-background-mobile' : 'adr-core-background', 'pb-6']">
+    <div
+        v-if="isValid && props.addressRef"
+        :class="[
+            { 'adr-core-background-mobile': xs },
+            { 'adr-core-background-sm': sm },
+            { 'adr-core-background-md': md },
+            { 'adr-core-background': lgAndUp },
+            'pb-6'
+        ]"
+    >
         <v-card class="px-sm-6 px-xl-auto mx-0" flat rounded="0" :min-height="smAndDown ? '100%' : '92px'">
             <v-container class="core-container px-2 px-sm-0 pb-4 pb-sm-6 pt-4 pt-sm-10">
                 <v-row no-gutters align="center">
@@ -142,7 +151,7 @@ import { useStore } from '@/store'
 import { useIsAddressMiner } from '@core/composables/IsAddressMiner/isAddressMiner.composable'
 import { useNetwork } from '@/core/composables/Network/useNetwork'
 
-const { smAndDown, xs } = useDisplay()
+const { smAndDown, xs, sm, md, lgAndUp } = useDisplay()
 const { currencyName } = useNetwork()
 const store = useStore()
 const tabs = reactive([
@@ -291,6 +300,12 @@ if (!isValid.value) {
 }
 .adr-core-background {
     background: linear-gradient(to bottom, rgb(var(--v-theme-primary)) 316px, rgb(var(--v-theme-background)) 316px, rgb(var(--v-theme-background)) 100%);
+}
+.adr-core-background-sm {
+    background: linear-gradient(to bottom, rgb(var(--v-theme-primary)) 420px, rgb(var(--v-theme-background)) 420px, rgb(var(--v-theme-background)) 100%);
+}
+.adr-core-background-md {
+    background: linear-gradient(to bottom, rgb(var(--v-theme-primary)) 420px, rgb(var(--v-theme-background)) 420px, rgb(var(--v-theme-background)) 100%);
 }
 .adr-core-background-mobile {
     background: linear-gradient(to bottom, rgb(var(--v-theme-primary)) 200px, rgb(var(--v-theme-background)) 200px, rgb(var(--v-theme-background)) 100%);
