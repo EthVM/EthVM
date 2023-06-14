@@ -11,18 +11,18 @@
                         <v-row align="center" justify="start" class="px-0 px-sm-0 flex-nowrap" no-gutters style="min-height: 48px">
                             <app-address-blockie :address="props.addressRef || ''" :size="xs ? 9 : 10" />
                             <v-col cols="6" sm="7" :md="store.getAddressName(props.addressRef) ? '8' : 'auto'" lg="auto" class="pl-2 pl-sm-4 pr-sm-0">
-                                <div v-if="store.getAddressName(props.addressRef)" class="text-h4 font-weight-bold text-ellipses">
+                                <div v-if="store.getAddressName(props.addressRef)" class="text-h5 font-weight-bold text-ellipses">
                                     {{ store.getAddressName(props.addressRef) }}
                                 </div>
                                 <div>
                                     <app-transform-hash
                                         v-if="(xs && store.getAddressName(props.addressRef)) || (smAndDown && !store.getAddressName(props.addressRef))"
                                         :hash="eth.toCheckSum(props.addressRef)"
-                                        :class="['font-weight-regular font-mono', { 'text-h4': !store.getAddressName(props.addressRef) }]"
+                                        :class="['font-weight-regular font-mono', { 'text-h5': !store.getAddressName(props.addressRef) }]"
                                         :show-name="false"
                                         :is-short="xs"
                                     ></app-transform-hash>
-                                    <p v-else :class="[{ 'text-h4 font-mono': !store.getAddressName(props.addressRef) }]">
+                                    <p v-else :class="[{ 'text-h5 font-mono': !store.getAddressName(props.addressRef) }]">
                                         {{ eth.toCheckSum(props.addressRef) }}
                                     </p>
                                 </div>
