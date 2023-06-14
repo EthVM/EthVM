@@ -184,7 +184,7 @@ const otherDeatils = computed<TokenDetail[]>(() => {
             text: !props.isLoading && tokenData.value && tokenData.value.low_24h ? formatUsdValue(new BN(tokenData.value.low_24h)).value : zero
         },
         {
-            title: t('token.curculatingSupply'),
+            title: t('token.circulatingSupply'),
             text:
                 !props.isLoading && tokenData.value && tokenData.value.circulating_supply
                     ? formatUsdValue(new BN(tokenData.value.circulating_supply)).value
