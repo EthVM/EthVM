@@ -5,6 +5,8 @@
 - Added uncle details for i18n [#1162](https://github.com/EthVM/EthVM/pull/1162)
 - Added Block-details for i18n [#1164](https://github.com/EthVM/EthVM/pull/1164)
 - Added Block view for i18n [#1168](https://github.com/EthVM/EthVM/pull/1168)
+- Added token view for i18n [#1169](https://github.com/EthVM/EthVM/pull/1169)
+- Added token-details for i18n [#1169](https://github.com/EthVM/EthVM/pull/1169)
 
 ======================================================================
 ### Release v2.1.3
