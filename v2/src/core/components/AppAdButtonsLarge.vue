@@ -12,7 +12,7 @@
                 @click="btnClick('folllow-twitter')"
             >
                 <div class="d-flex flex-row flex-sm-column flex-md-row align-center justify-center px-2">
-                    <v-img :src="require('@/assets/promo/btn-twitter.png')" eager contain alt="Twitter button icon" height="30" width="30" />
+                    <v-img :src="require('@/assets/promo/btn-twitter.png')" contain alt="Twitter button icon" height="30" width="30" />
                     <p class="text-caption text-lg-body-1 text-white ml-2 ml-sm-0 ml-md-2 mt-sm-1 mt-md-0 text-break-new-line">Follow us on Twitter</p>
                 </div>
             </v-btn>
