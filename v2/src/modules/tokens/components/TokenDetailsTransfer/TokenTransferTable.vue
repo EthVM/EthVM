@@ -3,16 +3,16 @@
         <!-- Table Header -->
         <div v-if="!props.hasError">
             <v-row align="center" justify="start" class="text-body-1 text-info d-none d-sm-flex">
-                <v-col sm="3" md="2"> Hash </v-col>
-                <v-col sm="3" lg="2" class="d-none d-sm-block"> From </v-col>
+                <v-col sm="3" md="2"> {{ $t('common.hash') }} </v-col>
+                <v-col sm="3" lg="2" class="d-none d-sm-block"> {{ $t('common.from') }} </v-col>
                 <v-spacer v-if="lgAndUp" />
-                <v-col sm="3" lg="2" class="d-none d-sm-block"> To </v-col>
+                <v-col sm="3" lg="2" class="d-none d-sm-block"> {{ $t('common.to') }} </v-col>
                 <v-col :sm="isNFT ? '1' : '3'" :md="isNFT ? 1 : 2" :lg="isNFT ? 1 : 3">
-                    <template v-if="!isNFT">Amount</template>
-                    <template v-else>ID</template>
+                    <template v-if="!isNFT">{{ $t('common.amount') }}</template>
+                    <template v-else>{{ $t('token.id') }}</template>
                 </v-col>
-                <v-col v-if="isNFT" sm="2"> Image </v-col>
-                <v-col md="2" class="d-none d-lg-block"> Timestamp </v-col>
+                <v-col v-if="isNFT" sm="2"> {{ $t('token.image') }} </v-col>
+                <v-col md="2" class="d-none d-lg-block"> {{ $t('block.header.time') }} </v-col>
             </v-row>
             <v-divider class="my-0 mt-sm-4 mx-n4 mx-sm-n6" />
             <!-- End Table Header -->
@@ -25,7 +25,7 @@
             </div>
             <div v-else class="p-ten-top">
                 <div v-if="!props.hasItems && !props.loading">
-                    <app-no-result text="No transfers available" class="mt-4 mt-sm-6"></app-no-result>
+                    <app-no-result :text="$t('token.noTransfers')" class="mt-4 mt-sm-6"></app-no-result>
                 </div>
                 <div v-for="(transfer, index) in props.transfers" v-else :key="index" color="white" class="transparent" flat>
                     <transfers-table-row

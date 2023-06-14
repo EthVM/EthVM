@@ -116,6 +116,23 @@
             "name": "Enter Name"
         }
     },
+    "token": {
+        "maxSupply": "Max Supply",
+        "contract": "Contract",
+        "tokenStandard": "Token Standard",
+        "decimals": "Decimals",
+        "collections": "Collections",
+        "curculatingSupply": "Circulating Supply",
+        "24hHigh": "24h High",
+        "24hTradingVolume": "24h Trading Volume",
+        "marketCap": "Market Cap",
+        "id": "ID",
+        "percentage": "Percentage",
+        "image": "Image",
+        "quantity": "Quantity",
+        "noHolder": "There are no holders for this token",
+        "noTransfers": "No transfers available"
+    },
     "settings": {
         "emptyList": "This list is empty",
         "darkModeOn": "Dark Mode On",
