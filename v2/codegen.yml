@@ -17,6 +17,7 @@ generates:
         - typescript
         - typescript-operations
     config:
+        strictScalars: true
         scalars: 
             EthVMUnixEpochSeconds: number
             EthVMUnixEpochMilliseconds: number
@@ -49,9 +50,6 @@ generates:
       config:
         withCompositionFunctions: true
         vueCompositionApiImportFrom: 'vue'
-        # strictScalars: true
-
-        
   src/apollo/graphql.schema.json:
     plugins:
       - "introspection"

@@ -32,10 +32,15 @@ export type Scalars = {
 
 export type AbiChanged = ResolverEvent & {
     __typename?: 'AbiChanged'
+    /** The block number at which the event was emitted */
     blockNumber: Scalars['Int']
+    /** The content type of the ABI change */
     contentType: Scalars['BigInt']
+    /** Concatenation of block number and log ID */
     id: Scalars['ID']
+    /** Used to derive relationships to Resolvers */
     resolver: Resolver
+    /** The transaction hash of the transaction in which the event was emitted */
     transactionID: Scalars['Bytes']
 }
 
@@ -114,9 +119,13 @@ export enum AbiChanged_OrderBy {
 
 export type Account = {
     __typename?: 'Account'
+    /** The domains owned by the account */
     domains: Array<Domain>
+    /** The unique identifier for the account */
     id: Scalars['ID']
+    /** The Registrations made by the account */
     registrations?: Maybe<Array<Registration>>
+    /** The WrappedDomains owned by the account */
     wrappedDomains?: Maybe<Array<WrappedDomain>>
 }
 
@@ -171,10 +180,15 @@ export enum Account_OrderBy {
 
 export type AddrChanged = ResolverEvent & {
     __typename?: 'AddrChanged'
+    /** The new address associated with the resolver */
     addr: Account
+    /** The block number at which this event occurred */
     blockNumber: Scalars['Int']
+    /** Unique identifier for this event */
     id: Scalars['ID']
+    /** The resolver associated with this event */
     resolver: Resolver
+    /** The transaction ID for the transaction in which this event occurred */
     transactionID: Scalars['Bytes']
 }
 
@@ -322,12 +336,19 @@ export type AllTransfersWithErrors = {
 
 export type AuthorisationChanged = ResolverEvent & {
     __typename?: 'AuthorisationChanged'
+    /** The block number at which the event occurred */
     blockNumber: Scalars['Int']
+    /** Unique identifier for this event */
     id: Scalars['ID']
+    /** Whether the authorisation was added or removed */
     isAuthorized: Scalars['Boolean']
+    /** The owner of the authorisation */
     owner: Scalars['Bytes']
+    /** The resolver associated with this event */
     resolver: Resolver
+    /** The target of the authorisation */
     target: Scalars['Bytes']
+    /** The transaction hash associated with the event */
     transactionID: Scalars['Bytes']
 }
 
@@ -553,10 +574,15 @@ export type CoinGeckoTokenPrice = {
 
 export type ContenthashChanged = ResolverEvent & {
     __typename?: 'ContenthashChanged'
+    /** The block number where the event occurred */
     blockNumber: Scalars['Int']
+    /** The new content hash for the domain */
     hash: Scalars['Bytes']
+    /** Concatenation of block number and log ID */
     id: Scalars['ID']
+    /** Used to derive relationships to Resolvers */
     resolver: Resolver
+    /** The ID of the transaction where the event occurred */
     transactionID: Scalars['Bytes']
 }
 
@@ -652,22 +678,44 @@ export type ContractVerify = {
 
 export type Domain = {
     __typename?: 'Domain'
+    /** The time when the domain was created */
     createdAt: Scalars['BigInt']
+    /** The events associated with the domain */
     events: Array<DomainEvent>
+    /** The expiry date for the domain, from either the registration, or the wrapped domain if PCC is burned */
+    expiryDate?: Maybe<Scalars['BigInt']>
+    /** The namehash of the name */
     id: Scalars['ID']
+    /** Indicates whether the domain has been migrated to a new registrar */
     isMigrated: Scalars['Boolean']
+    /** The human readable label name (imported from CSV), if known */
     labelName?: Maybe<Scalars['String']>
+    /** keccak256(labelName) */
     labelhash?: Maybe<Scalars['Bytes']>
+    /** The human readable name, if known. Unknown portions replaced with hash in square brackets (eg, foo.[1234].eth) */
     name?: Maybe<Scalars['String']>
+    /** The account that owns the domain */
     owner: Account
+    /** The namehash (id) of the parent name */
     parent?: Maybe<Domain>
+    /** The account that owns the ERC721 NFT for the domain */
+    registrant?: Maybe<Account>
+    /** The registration associated with the domain */
     registration?: Maybe<Registration>
+    /** Address logged from current resolver, if any */
     resolvedAddress?: Maybe<Account>
+    /** The resolver that controls the domain's settings */
     resolver?: Maybe<Resolver>
+    /** The number of subdomains */
     subdomainCount: Scalars['Int']
+    /** Can count domains from length of array */
     subdomains: Array<Domain>
+    /** The time-to-live (TTL) value of the domain's records */
     ttl?: Maybe<Scalars['BigInt']>
+    /** The wrapped domain associated with the domain */
     wrappedDomain?: Maybe<WrappedDomain>
+    /** The account that owns the wrapped domain */
+    wrappedOwner?: Maybe<Account>
 }
 
 export type DomainEventsArgs = {
@@ -687,9 +735,13 @@ export type DomainSubdomainsArgs = {
 }
 
 export type DomainEvent = {
+    /** The block number at which the event occurred */
     blockNumber: Scalars['Int']
+    /** The domain name associated with the event */
     domain: Domain
+    /** The unique identifier of the event */
     id: Scalars['ID']
+    /** The transaction hash of the transaction that triggered the event */
     transactionID: Scalars['Bytes']
 }
 
@@ -751,6 +803,7 @@ export enum DomainEvent_OrderBy {
     BlockNumber = 'blockNumber',
     Domain = 'domain',
     DomainCreatedAt = 'domain__createdAt',
+    DomainExpiryDate = 'domain__expiryDate',
     DomainId = 'domain__id',
     DomainIsMigrated = 'domain__isMigrated',
     DomainLabelName = 'domain__labelName',
@@ -775,6 +828,14 @@ export type Domain_Filter = {
     createdAt_not?: InputMaybe<Scalars['BigInt']>
     createdAt_not_in?: InputMaybe<Array<Scalars['BigInt']>>
     events_?: InputMaybe<DomainEvent_Filter>
+    expiryDate?: InputMaybe<Scalars['BigInt']>
+    expiryDate_gt?: InputMaybe<Scalars['BigInt']>
+    expiryDate_gte?: InputMaybe<Scalars['BigInt']>
+    expiryDate_in?: InputMaybe<Array<Scalars['BigInt']>>
+    expiryDate_lt?: InputMaybe<Scalars['BigInt']>
+    expiryDate_lte?: InputMaybe<Scalars['BigInt']>
+    expiryDate_not?: InputMaybe<Scalars['BigInt']>
+    expiryDate_not_in?: InputMaybe<Array<Scalars['BigInt']>>
     id?: InputMaybe<Scalars['ID']>
     id_gt?: InputMaybe<Scalars['ID']>
     id_gte?: InputMaybe<Scalars['ID']>
@@ -880,6 +941,27 @@ export type Domain_Filter = {
     parent_not_starts_with_nocase?: InputMaybe<Scalars['String']>
     parent_starts_with?: InputMaybe<Scalars['String']>
     parent_starts_with_nocase?: InputMaybe<Scalars['String']>
+    registrant?: InputMaybe<Scalars['String']>
+    registrant_?: InputMaybe<Account_Filter>
+    registrant_contains?: InputMaybe<Scalars['String']>
+    registrant_contains_nocase?: InputMaybe<Scalars['String']>
+    registrant_ends_with?: InputMaybe<Scalars['String']>
+    registrant_ends_with_nocase?: InputMaybe<Scalars['String']>
+    registrant_gt?: InputMaybe<Scalars['String']>
+    registrant_gte?: InputMaybe<Scalars['String']>
+    registrant_in?: InputMaybe<Array<Scalars['String']>>
+    registrant_lt?: InputMaybe<Scalars['String']>
+    registrant_lte?: InputMaybe<Scalars['String']>
+    registrant_not?: InputMaybe<Scalars['String']>
+    registrant_not_contains?: InputMaybe<Scalars['String']>
+    registrant_not_contains_nocase?: InputMaybe<Scalars['String']>
+    registrant_not_ends_with?: InputMaybe<Scalars['String']>
+    registrant_not_ends_with_nocase?: InputMaybe<Scalars['String']>
+    registrant_not_in?: InputMaybe<Array<Scalars['String']>>
+    registrant_not_starts_with?: InputMaybe<Scalars['String']>
+    registrant_not_starts_with_nocase?: InputMaybe<Scalars['String']>
+    registrant_starts_with?: InputMaybe<Scalars['String']>
+    registrant_starts_with_nocase?: InputMaybe<Scalars['String']>
     registration_?: InputMaybe<Registration_Filter>
     resolvedAddress?: InputMaybe<Scalars['String']>
     resolvedAddress_?: InputMaybe<Account_Filter>
@@ -941,11 +1023,33 @@ export type Domain_Filter = {
     ttl_not?: InputMaybe<Scalars['BigInt']>
     ttl_not_in?: InputMaybe<Array<Scalars['BigInt']>>
     wrappedDomain_?: InputMaybe<WrappedDomain_Filter>
+    wrappedOwner?: InputMaybe<Scalars['String']>
+    wrappedOwner_?: InputMaybe<Account_Filter>
+    wrappedOwner_contains?: InputMaybe<Scalars['String']>
+    wrappedOwner_contains_nocase?: InputMaybe<Scalars['String']>
+    wrappedOwner_ends_with?: InputMaybe<Scalars['String']>
+    wrappedOwner_ends_with_nocase?: InputMaybe<Scalars['String']>
+    wrappedOwner_gt?: InputMaybe<Scalars['String']>
+    wrappedOwner_gte?: InputMaybe<Scalars['String']>
+    wrappedOwner_in?: InputMaybe<Array<Scalars['String']>>
+    wrappedOwner_lt?: InputMaybe<Scalars['String']>
+    wrappedOwner_lte?: InputMaybe<Scalars['String']>
+    wrappedOwner_not?: InputMaybe<Scalars['String']>
+    wrappedOwner_not_contains?: InputMaybe<Scalars['String']>
+    wrappedOwner_not_contains_nocase?: InputMaybe<Scalars['String']>
+    wrappedOwner_not_ends_with?: InputMaybe<Scalars['String']>
+    wrappedOwner_not_ends_with_nocase?: InputMaybe<Scalars['String']>
+    wrappedOwner_not_in?: InputMaybe<Array<Scalars['String']>>
+    wrappedOwner_not_starts_with?: InputMaybe<Scalars['String']>
+    wrappedOwner_not_starts_with_nocase?: InputMaybe<Scalars['String']>
+    wrappedOwner_starts_with?: InputMaybe<Scalars['String']>
+    wrappedOwner_starts_with_nocase?: InputMaybe<Scalars['String']>
 }
 
 export enum Domain_OrderBy {
     CreatedAt = 'createdAt',
     Events = 'events',
+    ExpiryDate = 'expiryDate',
     Id = 'id',
     IsMigrated = 'isMigrated',
     LabelName = 'labelName',
@@ -955,6 +1059,7 @@ export enum Domain_OrderBy {
     OwnerId = 'owner__id',
     Parent = 'parent',
     ParentCreatedAt = 'parent__createdAt',
+    ParentExpiryDate = 'parent__expiryDate',
     ParentId = 'parent__id',
     ParentIsMigrated = 'parent__isMigrated',
     ParentLabelName = 'parent__labelName',
@@ -962,6 +1067,8 @@ export enum Domain_OrderBy {
     ParentName = 'parent__name',
     ParentSubdomainCount = 'parent__subdomainCount',
     ParentTtl = 'parent__ttl',
+    Registrant = 'registrant',
+    RegistrantId = 'registrant__id',
     Registration = 'registration',
     RegistrationCost = 'registration__cost',
     RegistrationExpiryDate = 'registration__expiryDate',
@@ -981,7 +1088,9 @@ export enum Domain_OrderBy {
     WrappedDomainExpiryDate = 'wrappedDomain__expiryDate',
     WrappedDomainFuses = 'wrappedDomain__fuses',
     WrappedDomainId = 'wrappedDomain__id',
-    WrappedDomainName = 'wrappedDomain__name'
+    WrappedDomainName = 'wrappedDomain__name',
+    WrappedOwner = 'wrappedOwner',
+    WrappedOwnerId = 'wrappedOwner__id'
 }
 
 export type Erc20TokenBalance = {
@@ -1166,10 +1275,15 @@ export type EthTransfer = {
 
 export type ExpiryExtended = DomainEvent & {
     __typename?: 'ExpiryExtended'
+    /** The block number at which the event occurred */
     blockNumber: Scalars['Int']
+    /** The domain name associated with the event */
     domain: Domain
+    /** The new expiry date associated with the domain after the extension event */
     expiryDate: Scalars['BigInt']
+    /** The unique identifier of the event */
     id: Scalars['ID']
+    /** The transaction hash of the transaction that triggered the event */
     transactionID: Scalars['Bytes']
 }
 
@@ -1239,6 +1353,7 @@ export enum ExpiryExtended_OrderBy {
     BlockNumber = 'blockNumber',
     Domain = 'domain',
     DomainCreatedAt = 'domain__createdAt',
+    DomainExpiryDate = 'domain__expiryDate',
     DomainId = 'domain__id',
     DomainIsMigrated = 'domain__isMigrated',
     DomainLabelName = 'domain__labelName',
@@ -1253,10 +1368,15 @@ export enum ExpiryExtended_OrderBy {
 
 export type FusesSet = DomainEvent & {
     __typename?: 'FusesSet'
+    /** The block number at which the event occurred */
     blockNumber: Scalars['Int']
+    /** The domain name associated with the event */
     domain: Domain
+    /** The number of fuses associated with the domain after the set event */
     fuses: Scalars['Int']
+    /** The unique identifier of the event */
     id: Scalars['ID']
+    /** The transaction hash of the transaction that triggered the event */
     transactionID: Scalars['Bytes']
 }
 
@@ -1326,6 +1446,7 @@ export enum FusesSet_OrderBy {
     BlockNumber = 'blockNumber',
     Domain = 'domain',
     DomainCreatedAt = 'domain__createdAt',
+    DomainExpiryDate = 'domain__expiryDate',
     DomainId = 'domain__id',
     DomainIsMigrated = 'domain__isMigrated',
     DomainLabelName = 'domain__labelName',
@@ -1349,11 +1470,17 @@ export enum HashType {
 
 export type InterfaceChanged = ResolverEvent & {
     __typename?: 'InterfaceChanged'
+    /** The block number in which the event occurred */
     blockNumber: Scalars['Int']
+    /** Concatenation of block number and log ID */
     id: Scalars['ID']
+    /** The address of the contract that implements the interface */
     implementer: Scalars['Bytes']
+    /** The ID of the EIP-1820 interface that was changed */
     interfaceID: Scalars['Bytes']
+    /** Used to derive relationships to Resolvers */
     resolver: Resolver
+    /** The transaction ID for the transaction in which the event occurred */
     transactionID: Scalars['Bytes']
 }
 
@@ -1623,11 +1750,17 @@ export type MmTokenSearchResult = {
 
 export type MulticoinAddrChanged = ResolverEvent & {
     __typename?: 'MulticoinAddrChanged'
+    /** The new address value for the given coin type */
     addr: Scalars['Bytes']
+    /** Block number in which this event was emitted */
     blockNumber: Scalars['Int']
+    /** The coin type of the changed address */
     coinType: Scalars['BigInt']
+    /** Unique identifier for the event */
     id: Scalars['ID']
+    /** Resolver associated with this event */
     resolver: Resolver
+    /** Transaction ID in which this event was emitted */
     transactionID: Scalars['Bytes']
 }
 
@@ -1794,10 +1927,15 @@ export enum NftType {
 
 export type NameChanged = ResolverEvent & {
     __typename?: 'NameChanged'
+    /** Block number where event occurred */
     blockNumber: Scalars['Int']
+    /** Concatenation of block number and log ID */
     id: Scalars['ID']
+    /** New ENS name value */
     name: Scalars['String']
+    /** Used to derive relationships to Resolvers */
     resolver: Resolver
+    /** Unique transaction ID where event occurred */
     transactionID: Scalars['Bytes']
 }
 
@@ -1888,11 +2026,17 @@ export enum NameChanged_OrderBy {
 
 export type NameRegistered = RegistrationEvent & {
     __typename?: 'NameRegistered'
+    /** The block number of the event */
     blockNumber: Scalars['Int']
+    /** The expiry date of the registration */
     expiryDate: Scalars['BigInt']
+    /** The unique identifier of the NameRegistered event */
     id: Scalars['ID']
+    /** The account that registered the name */
     registrant: Account
+    /** The registration associated with the event */
     registration: Registration
+    /** The transaction ID associated with the event */
     transactionID: Scalars['Bytes']
 }
 
@@ -1996,10 +2140,15 @@ export enum NameRegistered_OrderBy {
 
 export type NameRenewed = RegistrationEvent & {
     __typename?: 'NameRenewed'
+    /** The block number of the event */
     blockNumber: Scalars['Int']
+    /** The new expiry date of the registration */
     expiryDate: Scalars['BigInt']
+    /** The unique identifier of the NameRenewed event */
     id: Scalars['ID']
+    /** The registration associated with the event */
     registration: Registration
+    /** The transaction ID associated with the event */
     transactionID: Scalars['Bytes']
 }
 
@@ -2080,10 +2229,15 @@ export enum NameRenewed_OrderBy {
 
 export type NameTransferred = RegistrationEvent & {
     __typename?: 'NameTransferred'
+    /** The block number of the event */
     blockNumber: Scalars['Int']
+    /** The ID of the event */
     id: Scalars['ID']
+    /** The new owner of the domain */
     newOwner: Account
+    /** The registration associated with the event */
     registration: Registration
+    /** The transaction ID of the event */
     transactionID: Scalars['Bytes']
 }
 
@@ -2178,10 +2332,15 @@ export enum NameTransferred_OrderBy {
 
 export type NameUnwrapped = DomainEvent & {
     __typename?: 'NameUnwrapped'
+    /** The block number at which the event occurred */
     blockNumber: Scalars['Int']
+    /** The domain name associated with the event */
     domain: Domain
+    /** The unique identifier of the event */
     id: Scalars['ID']
+    /** The account that owns the domain after it was unwrapped */
     owner: Account
+    /** The transaction hash of the transaction that triggered the event */
     transactionID: Scalars['Bytes']
 }
 
@@ -2264,6 +2423,7 @@ export enum NameUnwrapped_OrderBy {
     BlockNumber = 'blockNumber',
     Domain = 'domain',
     DomainCreatedAt = 'domain__createdAt',
+    DomainExpiryDate = 'domain__expiryDate',
     DomainId = 'domain__id',
     DomainIsMigrated = 'domain__isMigrated',
     DomainLabelName = 'domain__labelName',
@@ -2279,13 +2439,21 @@ export enum NameUnwrapped_OrderBy {
 
 export type NameWrapped = DomainEvent & {
     __typename?: 'NameWrapped'
+    /** The block number at which the wrapped domain was wrapped */
     blockNumber: Scalars['Int']
+    /** The domain name associated with the wrapped domain */
     domain: Domain
+    /** The expiry date of the wrapped domain registration */
     expiryDate: Scalars['BigInt']
+    /** The number of fuses associated with the wrapped domain */
     fuses: Scalars['Int']
+    /** The unique identifier of the wrapped domain */
     id: Scalars['ID']
+    /** The human-readable name of the wrapped domain */
     name?: Maybe<Scalars['String']>
+    /** The account that owns the wrapped domain */
     owner: Account
+    /** The transaction hash of the transaction that wrapped the domain */
     transactionID: Scalars['Bytes']
 }
 
@@ -2404,6 +2572,7 @@ export enum NameWrapped_OrderBy {
     BlockNumber = 'blockNumber',
     Domain = 'domain',
     DomainCreatedAt = 'domain__createdAt',
+    DomainExpiryDate = 'domain__expiryDate',
     DomainId = 'domain__id',
     DomainIsMigrated = 'domain__isMigrated',
     DomainLabelName = 'domain__labelName',
@@ -2422,11 +2591,17 @@ export enum NameWrapped_OrderBy {
 
 export type NewOwner = DomainEvent & {
     __typename?: 'NewOwner'
+    /** The block number at which the event occurred */
     blockNumber: Scalars['Int']
+    /** The domain name associated with the event */
     domain: Domain
+    /** The unique identifier of the event */
     id: Scalars['ID']
+    /** The new account that owns the domain */
     owner: Account
+    /** The parent domain of the domain name associated with the event */
     parentDomain: Domain
+    /** The transaction hash of the transaction that triggered the event */
     transactionID: Scalars['Bytes']
 }
 
@@ -2530,6 +2705,7 @@ export enum NewOwner_OrderBy {
     BlockNumber = 'blockNumber',
     Domain = 'domain',
     DomainCreatedAt = 'domain__createdAt',
+    DomainExpiryDate = 'domain__expiryDate',
     DomainId = 'domain__id',
     DomainIsMigrated = 'domain__isMigrated',
     DomainLabelName = 'domain__labelName',
@@ -2542,6 +2718,7 @@ export enum NewOwner_OrderBy {
     OwnerId = 'owner__id',
     ParentDomain = 'parentDomain',
     ParentDomainCreatedAt = 'parentDomain__createdAt',
+    ParentDomainExpiryDate = 'parentDomain__expiryDate',
     ParentDomainId = 'parentDomain__id',
     ParentDomainIsMigrated = 'parentDomain__isMigrated',
     ParentDomainLabelName = 'parentDomain__labelName',
@@ -2554,10 +2731,15 @@ export enum NewOwner_OrderBy {
 
 export type NewResolver = DomainEvent & {
     __typename?: 'NewResolver'
+    /** The block number at which the event occurred */
     blockNumber: Scalars['Int']
+    /** The domain name associated with the event */
     domain: Domain
+    /** The unique identifier of the event */
     id: Scalars['ID']
+    /** The new resolver contract address associated with the domain */
     resolver: Resolver
+    /** The transaction hash of the transaction that triggered the event */
     transactionID: Scalars['Bytes']
 }
 
@@ -2640,6 +2822,7 @@ export enum NewResolver_OrderBy {
     BlockNumber = 'blockNumber',
     Domain = 'domain',
     DomainCreatedAt = 'domain__createdAt',
+    DomainExpiryDate = 'domain__expiryDate',
     DomainId = 'domain__id',
     DomainIsMigrated = 'domain__isMigrated',
     DomainLabelName = 'domain__labelName',
@@ -2657,10 +2840,15 @@ export enum NewResolver_OrderBy {
 
 export type NewTtl = DomainEvent & {
     __typename?: 'NewTTL'
+    /** The block number at which the event occurred */
     blockNumber: Scalars['Int']
+    /** The domain name associated with the event */
     domain: Domain
+    /** The unique identifier of the event */
     id: Scalars['ID']
+    /** The transaction hash of the transaction that triggered the event */
     transactionID: Scalars['Bytes']
+    /** The new TTL value (in seconds) associated with the domain */
     ttl: Scalars['BigInt']
 }
 
@@ -2730,6 +2918,7 @@ export enum NewTtl_OrderBy {
     BlockNumber = 'blockNumber',
     Domain = 'domain',
     DomainCreatedAt = 'domain__createdAt',
+    DomainExpiryDate = 'domain__expiryDate',
     DomainId = 'domain__id',
     DomainIsMigrated = 'domain__isMigrated',
     DomainLabelName = 'domain__labelName',
@@ -2777,11 +2966,17 @@ export type PrimaryAssetContract = {
 
 export type PubkeyChanged = ResolverEvent & {
     __typename?: 'PubkeyChanged'
+    /** Block number of the Ethereum block where the event occurred */
     blockNumber: Scalars['Int']
+    /** Concatenation of block number and log ID */
     id: Scalars['ID']
+    /** Used to derive relationships to Resolvers */
     resolver: Resolver
+    /** Transaction hash of the Ethereum transaction where the event occurred */
     transactionID: Scalars['Bytes']
+    /** The x-coordinate of the new public key */
     x: Scalars['Bytes']
+    /** The y-coordinate of the new public key */
     y: Scalars['Bytes']
 }
 
@@ -3877,13 +4072,21 @@ export type QueryWrappedTransfersArgs = {
 
 export type Registration = {
     __typename?: 'Registration'
+    /** The cost associated with the domain registration */
     cost?: Maybe<Scalars['BigInt']>
+    /** The domain name associated with the registration */
     domain: Domain
+    /** The events associated with the domain registration */
     events: Array<RegistrationEvent>
+    /** The expiry date of the domain */
     expiryDate: Scalars['BigInt']
+    /** The unique identifier of the registration */
     id: Scalars['ID']
+    /** The human-readable label name associated with the domain registration */
     labelName?: Maybe<Scalars['String']>
+    /** The account that registered the domain */
     registrant: Account
+    /** The registration date of the domain */
     registrationDate: Scalars['BigInt']
 }
 
@@ -3896,9 +4099,13 @@ export type RegistrationEventsArgs = {
 }
 
 export type RegistrationEvent = {
+    /** The block number of the event */
     blockNumber: Scalars['Int']
+    /** The unique identifier of the registration event */
     id: Scalars['ID']
+    /** The registration associated with the event */
     registration: Registration
+    /** The transaction ID associated with the event */
     transactionID: Scalars['Bytes']
 }
 
@@ -4074,6 +4281,7 @@ export enum Registration_OrderBy {
     Cost = 'cost',
     Domain = 'domain',
     DomainCreatedAt = 'domain__createdAt',
+    DomainExpiryDate = 'domain__expiryDate',
     DomainId = 'domain__id',
     DomainIsMigrated = 'domain__isMigrated',
     DomainLabelName = 'domain__labelName',
@@ -4092,13 +4300,21 @@ export enum Registration_OrderBy {
 
 export type Resolver = {
     __typename?: 'Resolver'
+    /** The current value of the 'addr' record for this resolver, as determined by the associated events */
     addr?: Maybe<Account>
+    /** The address of the resolver contract */
     address: Scalars['Bytes']
+    /** The set of observed SLIP-44 coin types for this resolver */
     coinTypes?: Maybe<Array<Scalars['BigInt']>>
+    /** The content hash for this resolver, in binary format */
     contentHash?: Maybe<Scalars['Bytes']>
+    /** The domain that this resolver is associated with */
     domain?: Maybe<Domain>
+    /** The events associated with this resolver */
     events: Array<ResolverEvent>
+    /** The unique identifier for this resolver, which is a concatenation of the resolver address and the domain namehash */
     id: Scalars['ID']
+    /** The set of observed text record keys for this resolver */
     texts?: Maybe<Array<Scalars['String']>>
 }
 
@@ -4111,9 +4327,13 @@ export type ResolverEventsArgs = {
 }
 
 export type ResolverEvent = {
+    /** The block number that the event occurred on */
     blockNumber: Scalars['Int']
+    /** Concatenation of block number and log ID */
     id: Scalars['ID']
+    /** Used to derive relationships to Resolvers */
     resolver: Resolver
+    /** The transaction hash of the event */
     transactionID: Scalars['Bytes']
 }
 
@@ -4279,6 +4499,7 @@ export enum Resolver_OrderBy {
     ContentHash = 'contentHash',
     Domain = 'domain',
     DomainCreatedAt = 'domain__createdAt',
+    DomainExpiryDate = 'domain__expiryDate',
     DomainId = 'domain__id',
     DomainIsMigrated = 'domain__isMigrated',
     DomainLabelName = 'domain__labelName',
@@ -4998,11 +5219,17 @@ export type SubscriptionWrappedTransfersArgs = {
 
 export type TextChanged = ResolverEvent & {
     __typename?: 'TextChanged'
+    /** Block number of the Ethereum block in which the event occurred */
     blockNumber: Scalars['Int']
+    /** Concatenation of block number and log ID */
     id: Scalars['ID']
+    /** The key of the text record that was changed */
     key: Scalars['String']
+    /** Used to derive relationships to Resolvers */
     resolver: Resolver
+    /** Hash of the Ethereum transaction in which the event occurred */
     transactionID: Scalars['Bytes']
+    /** The new value of the text record that was changed */
     value?: Maybe<Scalars['String']>
 }
 
@@ -5283,16 +5510,21 @@ export type TransactionStateDiffChange = {
 export type Transfer = DomainEvent & {
     __typename?: 'Transfer'
     block: Scalars['Int']
+    /** The block number at which the event occurred */
     blockNumber: Scalars['Int']
+    /** The domain name associated with the event */
     domain: Domain
     from: Scalars['String']
+    /** The unique identifier of the event */
     id: Scalars['ID']
+    /** The account that owns the domain after the transfer */
     owner: Account
     status?: Maybe<Scalars['Boolean']>
     subtype: TransferSubtype
     timestamp: Scalars['Int']
     to: Scalars['String']
     transactionHash: Scalars['String']
+    /** The transaction hash of the transaction that triggered the event */
     transactionID: Scalars['Bytes']
     txFee: Scalars['String']
     type: TransferType
@@ -5431,6 +5663,7 @@ export enum Transfer_OrderBy {
     BlockNumber = 'blockNumber',
     Domain = 'domain',
     DomainCreatedAt = 'domain__createdAt',
+    DomainExpiryDate = 'domain__expiryDate',
     DomainId = 'domain__id',
     DomainIsMigrated = 'domain__isMigrated',
     DomainLabelName = 'domain__labelName',
@@ -5497,10 +5730,15 @@ export type Uncle = {
 
 export type VersionChanged = ResolverEvent & {
     __typename?: 'VersionChanged'
+    /** The block number at which the event occurred */
     blockNumber: Scalars['Int']
+    /** Unique identifier for this event */
     id: Scalars['ID']
+    /** The resolver associated with this event */
     resolver: Resolver
+    /** The transaction hash associated with the event */
     transactionID: Scalars['Bytes']
+    /** The new version number of the resolver */
     version: Scalars['BigInt']
 }
 
@@ -5579,11 +5817,17 @@ export enum VersionChanged_OrderBy {
 
 export type WrappedDomain = {
     __typename?: 'WrappedDomain'
+    /** The domain that is wrapped by this WrappedDomain */
     domain: Domain
+    /** The expiry date of the wrapped domain */
     expiryDate: Scalars['BigInt']
+    /** The number of fuses remaining on the wrapped domain */
     fuses: Scalars['Int']
+    /** unique identifier for each instance of the WrappedDomain entity */
     id: Scalars['ID']
+    /** The name of the wrapped domain */
     name?: Maybe<Scalars['String']>
+    /** The account that owns this WrappedDomain */
     owner: Account
 }
 
@@ -5683,6 +5927,7 @@ export type WrappedDomain_Filter = {
 export enum WrappedDomain_OrderBy {
     Domain = 'domain',
     DomainCreatedAt = 'domain__createdAt',
+    DomainExpiryDate = 'domain__expiryDate',
     DomainId = 'domain__id',
     DomainIsMigrated = 'domain__isMigrated',
     DomainLabelName = 'domain__labelName',
@@ -5700,10 +5945,15 @@ export enum WrappedDomain_OrderBy {
 
 export type WrappedTransfer = DomainEvent & {
     __typename?: 'WrappedTransfer'
+    /** The block number at which the event occurred */
     blockNumber: Scalars['Int']
+    /** The domain name associated with the event */
     domain: Domain
+    /** The unique identifier of the event */
     id: Scalars['ID']
+    /** The account that owns the wrapped domain after the transfer */
     owner: Account
+    /** The transaction hash of the transaction that triggered the event */
     transactionID: Scalars['Bytes']
 }
 
@@ -5786,6 +6036,7 @@ export enum WrappedTransfer_OrderBy {
     BlockNumber = 'blockNumber',
     Domain = 'domain',
     DomainCreatedAt = 'domain__createdAt',
+    DomainExpiryDate = 'domain__expiryDate',
     DomainId = 'domain__id',
     DomainIsMigrated = 'domain__isMigrated',
     DomainLabelName = 'domain__labelName',
