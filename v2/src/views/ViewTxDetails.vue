@@ -16,6 +16,10 @@ import AppError from '@/core/components/AppError.vue'
 import { eth } from '@/core/helper'
 import TxDetails from '@/modules/txs/ModuleTxDetails.vue'
 import { ErrorMessageTx } from '@/modules/txs/models/ErrorMessagesForTx'
+import { onBeforeRouteUpdate } from 'vue-router'
+import { tabViewRouteGuardOnUpdate } from '@/core/router/helpers'
+import { Q_TXS_DETAILS } from '@/core/router/routesNames'
+
 onMounted(() => {
     window.scrollTo(0, 0)
 })
@@ -71,4 +75,8 @@ const setError = (hasError: boolean, message: ErrorMessageTx): void => {
         }
     }
 }
+
+onBeforeRouteUpdate(async (to, from, next) => {
+    tabViewRouteGuardOnUpdate(Q_TXS_DETAILS[0], to, from, next)
+})
 </script>
