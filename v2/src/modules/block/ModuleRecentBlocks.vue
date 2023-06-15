@@ -45,6 +45,7 @@ import { ITEMS_PER_PAGE } from '@core/constants'
 import { useAppPaginate } from '@core/composables/AppPaginate/useAppPaginate.composable'
 import { useDisplay } from 'vuetify'
 import { useI18n } from 'vue-i18n'
+import * as Sentry from '@sentry/vue'
 const { t } = useI18n()
 
 const { xs } = useDisplay()
@@ -125,19 +126,25 @@ function subscribeToMoreHandler() {
         document: NewBlockTableDocument,
         updateQuery: (previousResult: GetBlocksArrayByNumberQuery, { subscriptionData }: { subscriptionData: SubscriptionRes }) => {
             if (previousResult && subscriptionData.data.newBlockFeed) {
-                const prevB = [...previousResult.getBlocksArrayByNumber.slice(0)]
-                const newB = { ...subscriptionData.data.newBlockFeed, txFail: 0 }
-                const index = prevB.findIndex(block => block?.number === newB.number)
-                if (index != -1) {
-                    prevB.splice(index, 1, newB)
+                try {
+                    const prevB = [...previousResult.getBlocksArrayByNumber.slice(0)]
+                    const newB = { ...subscriptionData.data.newBlockFeed, txFail: 0 }
+                    const index = prevB.findIndex(block => block?.number === newB.number)
+                    if (index != -1) {
+                        prevB.splice(index, 1, newB)
+                        return {
+                            __typename: 'BlockSummary',
+                            getBlocksArrayByNumber: prevB
+                        }
+                    }
                     return {
                         __typename: 'BlockSummary',
-                        getBlocksArrayByNumber: prevB
+                        getBlocksArrayByNumber: isHome.value ? [newB, ...prevB].slice(0, 10) : [newB, ...prevB]
                     }
-                }
-                return {
-                    __typename: 'BlockSummary',
-                    getBlocksArrayByNumber: isHome.value ? [newB, ...prevB].slice(0, 10) : [newB, ...prevB]
+                } catch (error) {
+                    Sentry.captureException(
+                        `ERROR in subscribeToMoreHandler: ${error}. previousResult : ${previousResult}. subscriptionData: ${subscriptionData}`
+                    )
                 }
             }
         }
@@ -203,21 +210,25 @@ const setPage = async (page: number, reset = false): Promise<boolean> => {
 
 onBlockArrayLoaded(result => {
     if (!result.loading) {
-        if (state.initialLoad) {
-            state.initialLoad = false
-            state.startBlock = result.data.getBlocksArrayByNumber[0]?.number || 0
-            setPageNum(1)
-            state.totalPages = Math.ceil(new BN(state.startBlock + 1).div(ITEMS_PER_PAGE).toNumber())
-        }
-        if (props.pageType === 'home') {
-            if (result.data.getBlocksArrayByNumber.length > 1) {
-                if (result.data.getBlocksArrayByNumber[0].number - result.data.getBlocksArrayByNumber[1].number > 1) {
-                    refetchBlockArray()
+        try {
+            if (state.initialLoad) {
+                state.initialLoad = false
+                state.startBlock = result.data.getBlocksArrayByNumber[0]?.number || 0
+                setPageNum(1)
+                state.totalPages = Math.ceil(new BN(state.startBlock + 1).div(ITEMS_PER_PAGE).toNumber())
+            }
+            if (props.pageType === 'home') {
+                if (result.data.getBlocksArrayByNumber.length > 1) {
+                    if (result.data.getBlocksArrayByNumber[0].number - result.data.getBlocksArrayByNumber[1].number > 1) {
+                        refetchBlockArray()
+                    }
                 }
             }
+            const newBlocks = result.data.getBlocksArrayByNumber
+            state.indexedBlocks[pageNum.value] = props.pageType === 'home' ? newBlocks.slice(0, ITEMS_PER_PAGE) : newBlocks
+        } catch (error) {
+            Sentry.captureException(`ERROR in onBlockArrayLoaded: ${error}. state.initialLoad : ${state.initialLoad}. result: ${result}`)
         }
-        const newBlocks = result.data.getBlocksArrayByNumber
-        state.indexedBlocks[pageNum.value] = props.pageType === 'home' ? newBlocks.slice(0, ITEMS_PER_PAGE) : newBlocks
     }
 })
 
