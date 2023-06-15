@@ -7,7 +7,8 @@ import {
     Q_BLOCK_DETAILS,
     Q_TXS_DETAILS,
     Q_ADDRESS_TRANSFERS,
-    Q_PORTFOLIO
+    Q_PORTFOLIO,
+    Q_TOKENS
 } from './routesNames'
 import configs from '@/configs'
 import { tabViewRouteGuard, loadImages } from './helpers'
@@ -135,7 +136,9 @@ const routes: Array<RouteRecordRaw> = [
     {
         path: ROUTE_NAME.TOKENS.PATH,
         name: ROUTE_NAME.TOKENS.NAME,
-        component: ViewTokens
+        component: ViewTokens,
+        props: route => ({ tab: route.query.t }),
+        beforeEnter: tabViewRouteGuard(Q_TOKENS[0])
     },
     {
         path: ROUTE_NAME.NOT_FOUND.PATH,

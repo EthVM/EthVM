@@ -4,7 +4,7 @@
             <app-ad-buttons-large />
         </v-col>
         <v-col cols="12" :class="columnPadding">
-            <module-tokens-info />
+            <module-tokens-info :tab="props.tab" />
         </v-col>
     </v-row>
 </template>
@@ -19,6 +19,10 @@ onMounted(() => {
     window.scrollTo(0, 0)
 })
 const { columnPadding, rowMargin } = useAppViewGrid()
+
+const props = defineProps({
+    tab: String
+})
 </script>
 
 <style scoped></style>

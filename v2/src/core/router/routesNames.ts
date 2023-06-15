@@ -120,5 +120,17 @@ const Q_BLOCKS_AND_TXS = ['blocks', 'transactions']
 const Q_BLOCK_DETAILS = ['transaction', 'stake-withdrawals', 'more']
 const Q_ADDRESS_TRANSFERS = ['all', 'internal', 'tx-history', 'pending', 'rewards', 'stake-withdrawals']
 const Q_TXS_DETAILS = ['state', 'other', 'actions', 'logs']
+const Q_TOKENS = ['all', 'favorites']
 
-export { ROUTE_NAME, ROUTE_PROP, ADDRESS_ROUTE_QUERY, Q_TOKEN_DETAILS, Q_BLOCKS_AND_TXS, Q_BLOCK_DETAILS, Q_TXS_DETAILS, Q_ADDRESS_TRANSFERS, Q_PORTFOLIO }
+export {
+    ROUTE_NAME,
+    ROUTE_PROP,
+    ADDRESS_ROUTE_QUERY,
+    Q_TOKEN_DETAILS,
+    Q_BLOCKS_AND_TXS,
+    Q_BLOCK_DETAILS,
+    Q_TXS_DETAILS,
+    Q_ADDRESS_TRANSFERS,
+    Q_PORTFOLIO,
+    Q_TOKENS
+}
