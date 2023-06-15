@@ -2,10 +2,10 @@
     <div>
         <template v-if="!xs">
             <v-row align="center" justify="start" class="text-info mt-2 mt-sm-3">
-                <v-col sm="3" lg="2"> Status </v-col>
-                <v-col sm="2" md="3" lg="3"> Validator</v-col>
-                <v-col sm="4" md="3" lg="5"> Value</v-col>
-                <v-col sm="3" lg="2"> Block </v-col>
+                <v-col sm="3" lg="2"> {{ $t('common.status') }}</v-col>
+                <v-col sm="2" md="3" lg="3"> {{ $t('common.validator') }}</v-col>
+                <v-col sm="4" md="3" lg="5"> {{ $t('common.value') }}</v-col>
+                <v-col sm="3" lg="2"> {{ $t('common.block') }} </v-col>
             </v-row>
         </template>
         <v-divider class="my-0 mt-sm-4 mx-n4 mx-sm-n6" />
@@ -18,7 +18,7 @@
                     <table-row-stake-withdrawals :withdrawal="withdrawal" />
                 </div>
             </template>
-            <app-no-result v-else text="This address does not have any stake withdrawals" class="mt-4 mt-sm-6 mb-5"></app-no-result>
+            <app-no-result v-else :text="$t('address.tagline.noStakeWithdrawals')" class="mt-4 mt-sm-6 mb-5"></app-no-result>
         </div>
         <div v-else class="p-ten-top">
             <div v-for="item in 10" :key="item" style="padding: 10px 0">
