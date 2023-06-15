@@ -1,3 +1,21 @@
+### Release v2.1.4
+
+###  Fix
+- scrolling nft details [#1170](https://github.com/EthVM/EthVM/pull/1170)
+- value.forEach is not a function in app.vue [#1170](https://github.com/EthVM/EthVM/pull/1170)
+
+### Devop
+- update codegen config with scalar types [#1170](https://github.com/EthVM/EthVM/pull/1170)
+- remove old store migration, delete old local storage variables [#1170](https://github.com/EthVM/EthVM/pull/1170)
+- add try/catch to further analyize recentblocks.slice() [#1170](https://github.com/EthVM/EthVM/pull/1170)
+- add exception to tx 'failed to deserialize' [#1170](https://github.com/EthVM/EthVM/pull/1170)
+
+### UI
+- adjust addres menu background height on sm and md [#1170](https://github.com/EthVM/EthVM/pull/1170)
+- fix home view with no portfolio column apperance [#1170](https://github.com/EthVM/EthVM/pull/1170)
+- decrease adr hash font size [#1170](https://github.com/EthVM/EthVM/pull/1170)
+======================================================================
+
 ### Release v2.1.3
 Add partially decoded transaction logs:
     - shows raw data
