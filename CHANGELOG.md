@@ -8,6 +8,7 @@
 -   Added Block view for i18n [#1168](https://github.com/EthVM/EthVM/pull/1168)
 
 ======================================================================
+
 ### Release v2.1.3
 Add partially decoded transaction logs:
     - shows raw data
