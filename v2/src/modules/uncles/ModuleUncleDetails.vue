@@ -47,7 +47,7 @@
                             </v-col>
                             <v-col cols="6" sm="4">
                                 <div class="block-info mb-5">
-                                    <p class="text-button mb-1">{{ $t('txs.more.gasUsed') }}</p>
+                                    <p class="text-button mb-1">{{ $t('txs.details.other.gasUsed') }}</p>
                                     <p>{{ formatNumber(uncle.block.gasUsed) }}</p>
                                 </div>
                             </v-col>
