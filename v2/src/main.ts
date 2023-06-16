@@ -42,7 +42,8 @@ Sentry.init({
     initialScope: {
         tags: { chain: Configs.NETWORK }
     },
-    enabled: Configs.NODE_ENV === 'production'
+    enabled: Configs.NODE_ENV === 'production',
+    maxValueLength: 100000
 })
 
 app.use(router)
