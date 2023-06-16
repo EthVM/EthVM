@@ -4,6 +4,7 @@
 
 -   Added Address View for i18n [#1161](https://github.com/EthVM/EthVM/pull/1161)
 -   Added uncle details for i18n [#1162](https://github.com/EthVM/EthVM/pull/1162)
+-   Added Block-details for i18n [#1164](https://github.com/EthVM/EthVM/pull/1164)
 
 ======================================================================
 
@@ -46,8 +47,9 @@ Add partially decoded transaction logs:
 
 ### Release v2.1.1-hotfix.1
 
-###  Fix
-- update Trasfers query name [#1163](https://github.com/EthVM/EthVM/pull/1163)
+### Fix
+
+-   update Trasfers query name [#1163](https://github.com/EthVM/EthVM/pull/1163)
 
 ======================================================================
 
