@@ -88,6 +88,7 @@
         "copy": "copy | copies",
         "timestamp": "Timestamp",
         "hash": "Hash",
+        "parentHash": "Parent Hash",
         "history": "History",
         "from": "From",
         "to": "To",
@@ -141,6 +142,23 @@
         "error": "This is not a valid uncle hash",
         "errorExist": "This uncle does not exist.",
         "position": "Position"
+    }
+    "token": {
+        "maxSupply": "Max Supply",
+        "contract": "Contract",
+        "tokenStandard": "Token Standard",
+        "decimals": "Decimals",
+        "collections": "Collections",
+        "circulatingSupply": "Circulating Supply",
+        "24hHigh": "24h High",
+        "24hTradingVolume": "24h Trading Volume",
+        "marketCap": "Market Cap",
+        "id": "ID",
+        "percentage": "Percentage",
+        "image": "Image",
+        "quantity": "Quantity",
+        "noHolder": "There are no holders for this token",
+        "noTransfers": "No transfers available"
     },
     "settings": {
         "emptyList": "This list is empty",
@@ -188,6 +206,11 @@
     "block": {
         "lastBlockTitle": "Last Blocks",
         "size": "Size",
+        "totalDifficulty": "Total Difficulty",
+        "baseFee": "Base Fee per Gas",
+        "blockReward": "Block Reward",
+        "uncleReward": "Uncle Reward",
+        "totalTxs": "Total Txs",
         "uncle": "Uncle | Uncles",
         "difficulty": "Difficulty",
         "stateRoot": "State Root",
@@ -222,6 +245,7 @@
         },
         "error": {
             "withdrawal": "This block does not have any withdrawals",
+            "notMined": "This block has not been mined yet",
             "reward": "Reward"
         }
     },

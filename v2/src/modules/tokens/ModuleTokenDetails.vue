@@ -9,7 +9,7 @@
             <v-card elevation="1" rounded="xl" class="pa-4 pa-sm-6">
                 <v-row no-gutters>
                     <v-col cols="12" md="auto" lg="4" order="last" order-md="first">
-                        <p class="mb-4 text-h4 font-weight-bold">Contract</p>
+                        <p class="mb-4 text-h4 font-weight-bold">{{ $t('token.contract') }}</p>
                     </v-col>
                     <v-spacer />
                     <v-col cols="12" md="auto" lg="8" order="first" order-md="last" class="mb-6 mb-md-6 pa-0">
@@ -24,7 +24,7 @@
                             <app-copy-to-clip :value-to-copy="eth.toCheckSum(props.addressRef)" class="mx-3" /></div
                     ></v-col>
                     <v-col cols="6" sm="3" lg="2">
-                        <p v-if="state.standard !== ''" class="font-weight-bold">Token Standard</p>
+                        <p v-if="state.standard !== ''" class="font-weight-bold">{{ $t('token.tokenStandard') }}</p>
                         <p v-if="state.standard !== ''">{{ state.standard }}</p>
                         <div v-else class="skeleton-box rounded-xl mr-10" style="height: 40px; width: 120px"></div>
                     </v-col>
@@ -131,6 +131,8 @@ import AppTransformHash from '@/core/components/AppTransformHash.vue'
 import { TransferType } from '@/apollo/types'
 import { useCoinData } from '@core/composables/CoinData/coinData.composable'
 import { useNetwork } from '@/core/composables/Network/useNetwork'
+import { useI18n } from 'vue-i18n'
+const { t } = useI18n()
 const { supportsNft } = useNetwork()
 
 const { columnPadding, rowMargin } = useAppViewGrid()
@@ -304,10 +306,10 @@ const decimals = computed<number | undefined>(() => {
 
 const leftTitle = computed<string>(() => {
     if (state.standard === TransferType.Erc1155 || state.standard === TransferType.Erc721) {
-        return 'Collections'
+        return t('token.collections')
     }
     if (state.standard === TransferType.Erc20) {
-        return 'Decimals'
+        return t('token.decimals')
     }
     return ''
 })

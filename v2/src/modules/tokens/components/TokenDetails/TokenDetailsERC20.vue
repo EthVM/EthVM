@@ -13,7 +13,7 @@
             <v-col cols="12" lg="8">
                 <v-row>
                     <v-col cols="12" sm="4" md="3">
-                        <p class="text-info">Price</p>
+                        <p class="text-info">{{ $t('common.price') }}</p>
                         <div v-if="!loadingTokenData" class="d-flex align-center mb-2">
                             <p class="text-subtitle-1 font-weight-bold">{{ price }}</p>
                             <span v-if="priceChange" class="d-sm-flex align-center ml-3" :class="`text-${priceChange.color}`">
@@ -49,7 +49,8 @@ import { TokenDetailsFragment as TokenInfo } from '@module/tokens/apollo/TokenDe
 import { ErrorMessageToken } from '@module/tokens/models/ErrorMessagesForTokens'
 import { computed } from 'vue'
 import { MarketDataFragment as TokenMarketData } from '@/core/composables/CoinData/getLatestPrices.generated'
-
+import { useI18n } from 'vue-i18n'
+const { t } = useI18n()
 interface PropType {
     addressRef: string
     isLoading: boolean
@@ -171,30 +172,30 @@ const otherDeatils = computed<TokenDetail[]>(() => {
     const zero = '$0.00'
     return [
         {
-            title: 'Market Cap',
+            title: t('token.marketCap'),
             text: !props.isLoading && tokenData.value && tokenData.value.market_cap ? formatUsdValue(new BN(tokenData.value.market_cap)).value : zero
         },
         {
-            title: '24h High',
+            title: t('token.24hHigh'),
             text: !props.isLoading && tokenData.value && tokenData.value.high_24h ? formatUsdValue(new BN(tokenData.value.high_24h)).value : zero
         },
         {
-            title: '24h Low',
+            title: t('token.24hLow'),
             text: !props.isLoading && tokenData.value && tokenData.value.low_24h ? formatUsdValue(new BN(tokenData.value.low_24h)).value : zero
         },
         {
-            title: 'Circulating Supply',
+            title: t('token.circulatingSupply'),
             text:
                 !props.isLoading && tokenData.value && tokenData.value.circulating_supply
                     ? formatUsdValue(new BN(tokenData.value.circulating_supply)).value
                     : zero
         },
         {
-            title: 'Max Supply',
+            title: t('token.maxSupply'),
             text: !props.isLoading && tokenData.value && tokenData.value.total_supply ? formatUsdValue(new BN(tokenData.value.total_supply)).value : zero
         },
         {
-            title: '24h Trading Volume',
+            title: t('token.24hTradingVolume'),
             text: !props.isLoading && tokenData.value && tokenData.value.total_volume ? formatUsdValue(new BN(tokenData.value.total_volume)).value : zero
         }
     ]
