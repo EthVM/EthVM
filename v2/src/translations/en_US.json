@@ -142,7 +142,7 @@
         "error": "This is not a valid uncle hash",
         "errorExist": "This uncle does not exist.",
         "position": "Position"
-    }
+    },
     "token": {
         "maxSupply": "Max Supply",
         "contract": "Contract",
