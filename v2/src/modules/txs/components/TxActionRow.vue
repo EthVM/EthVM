@@ -45,7 +45,7 @@
                     <v-icon color="success" class="mx-2 mx-md-3 mx-md-lg-5" :size="20">east</v-icon>
                     <div class="d-flex justify-start align-center">
                         <app-address-blockie :address="props.transfer.to" :size="8" class="mr-2 mr-md-3" />
-                        <app-transform-hash is-blue is-short :hash="eth.toCheckSum(props.transfer.to)" :link="`/address/${props.transfer.from}`" />
+                        <app-transform-hash is-blue is-short :hash="eth.toCheckSum(props.transfer.to)" :link="`/address/${props.transfer.to}`" />
                     </div>
                 </div>
             </v-col>
