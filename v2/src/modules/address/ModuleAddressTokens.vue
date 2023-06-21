@@ -25,7 +25,8 @@
                 <address-balance-totals
                     :title="$t('block.tokenBalance')"
                     :is-loading="loadingTokens || loadingCoinData"
-                    :balance="tokenBalance"
+                    :balance="tokenBalance.value"
+                    :balance-tooltip="tokenBalance.tooltipText"
                     :subtext="`${tokensLength} ${$t('block.tokenTotal')}`"
                     :class="{ 'd-sm-none': props.isOverview }"
                 >

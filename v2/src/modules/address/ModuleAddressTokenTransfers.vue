@@ -12,7 +12,8 @@
                         <address-balance-totals
                             :title="$t('block.tokenBalance')"
                             :is-loading="loadingAddressTokens || loadingMarketInfo"
-                            :balance="tokenBalanceValue"
+                            :balance="tokenBalance.value"
+                            :balance-tooltip="tokenBalance.tooltipText"
                             :subtext="`${tokenCount} ${$t('block.tokenTotal')}`"
                         />
                     </div>
@@ -118,7 +119,7 @@ const queryPolicy = computed<WatchQueryFetchPolicy>(() => {
     return store.addressHashIsSaved(props.addressHash.toLowerCase()) || props.isOverview ? 'cache-only' : 'cache-first'
 })
 const { addressHash } = toRefs(props)
-const { tokenBalanceValue, tokenCount, initialLoad: loadingAddressTokens } = useAddressToken(addressHash, queryPolicy)
+const { tokenBalance, tokenCount, initialLoad: loadingAddressTokens } = useAddressToken(addressHash, queryPolicy)
 const { loading: loadingMarketInfo } = useCoinData()
 
 const {

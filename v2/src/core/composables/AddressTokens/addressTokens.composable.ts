@@ -3,7 +3,7 @@ import { computed, Ref, ref, unref } from 'vue'
 import { MarketDataFragment as TokenMarketData } from '@core/composables/CoinData/getLatestPrices.generated'
 import { useCoinData } from '@core/composables/CoinData/coinData.composable'
 import { TokenSort } from '@module/address/models/TokenSort'
-import { formatUsdValue } from '@core/helper/number-format-helper'
+import { FormattedNumber, formatUsdValue } from '@core/helper/number-format-helper'
 import { eth } from '@/core/helper'
 import BN from 'bignumber.js'
 import { WatchQueryFetchPolicy } from '@apollo/client/core'
@@ -82,8 +82,11 @@ export function useAddressToken(addressHash: Ref<string> | string, policy: Ref<W
         return erc20Tokens.value?.length || 0
     })
 
-    const tokenBalanceValue = computed<string>(() => {
-        return tokenBalance.value || '0'
+    /**
+     * @returns {FormattedNumber} - total token balance in formatted string
+     */
+    const tokenBalance = computed<FormattedNumber>(() => {
+        return formatUsdValue(tokenTotalBalanceBN.value)
     })
 
     /**
@@ -137,13 +140,6 @@ export function useAddressToken(addressHash: Ref<string> | string, policy: Ref<W
         return new BN(0)
     })
 
-    /**
-     * @returns {string} - total token balance in formatted string
-     */
-    const tokenBalance = computed<string>(() => {
-        return formatUsdValue(tokenTotalBalanceBN.value).value
-    })
-
     return {
         erc20Tokens,
         tokenPrices,
@@ -153,7 +149,6 @@ export function useAddressToken(addressHash: Ref<string> | string, policy: Ref<W
         tokenBalance,
         tokenTotalBalanceBN,
         initialLoad,
-        tokenCount,
-        tokenBalanceValue
+        tokenCount
     }
 }
