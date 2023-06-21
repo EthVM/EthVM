@@ -70,10 +70,10 @@
         </v-col>
     </app-table-row>
     <app-menu min-width="160" :activator="`#list-item-menu-${props.adr.hash}`">
-        <v-list-item title="Edit Name" class="py-2" @click="openEditDialog(true)"> </v-list-item>
+        <v-list-item :title="$t('portfolio.editName')" class="py-2" @click="openEditDialog(true)"> </v-list-item>
         <v-list-item title="View Tokens" class="py-2" @click="viewTokens"></v-list-item>
         <v-divider class="my-1 mx-4" />
-        <v-list-item title="Delete Address" class="py-2" @click="deleteAddress"> </v-list-item>
+        <v-list-item :title="$t('portfolio.deleteAdr')" class="py-2" @click="deleteAddress"> </v-list-item>
     </app-menu>
     <module-porfolio-handle-adr v-if="state.showEdit" is-edit-mode :address="props.adr.hash" :name="props.adr.name" @close-module="openEditDialog(false)">
     </module-porfolio-handle-adr>

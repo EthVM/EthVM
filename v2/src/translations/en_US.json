@@ -109,7 +109,6 @@
         "transfer": "Transfers",
         "balance": "Balance | Balances",
         "value": "Value",
-        "validator": "Validator",
         "token": "Token",
         "price": "Price",
         "marketCap": "Market Cap",
@@ -122,17 +121,19 @@
             "export": "Export",
             "import": "Import"
         },
-        "filter": "Filter"
+        "filter": "Filter",
+        "save": "Save"
     },
     "portfolio": {
         "addAddressIcon": "Add Address",
+        "editName": "Edit name",
+        "deleteAdr": "Delete Address",
         "limit": "You can only store 10 addresses in your portfolio",
         "errorDuplicateName": "This name is already saved",
         "tokenName": "Token Name",
         "viewInSettings": "View in Settings",
         "placeholder": {
             "addAddress": "Enter Address Hash / Domain Name",
-            "searchTokenName": "Search token name",
             "name": "Enter Name"
         }
     },
@@ -151,7 +152,10 @@
         "image": "Image",
         "quantity": "Quantity",
         "noHolder": "There are no holders for this token",
-        "noTransfers": "No transfers available"
+        "noTransfers": "No transfers available",
+        "searchTokenName": "Search token name",
+        "addToken": "Add Token",
+        "noMatch": "We could not find anything mathching"
     },
     "settings": {
         "emptyList": "This list is empty",
@@ -182,9 +186,6 @@
             "high": "24h High",
             "change": "24h Change",
             "low": "24h low"
-        },
-        "placeholder": {
-            "search": "Search by hash or name"
         },
         "tagline": {
             "noToken": "This address does not hold any tokens",
@@ -219,7 +220,6 @@
         "totalAddress": "Total Addresses",
         "tokenBalance": "Token Balance",
         "tokenHistory": "Token History",
-        "tokenSearch": "Search token name",
         "tokenTotal": "total tokens",
         "tokenBalanceRefresh": "Token's Balance Changed, Refresh",
         "newTransfer": "New ERC20 Transfers",

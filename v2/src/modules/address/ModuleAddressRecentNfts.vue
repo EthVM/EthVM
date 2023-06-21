@@ -13,7 +13,9 @@
         <div>
             <template v-if="loadingBalance === false && loadingMeta === false">
                 <template v-if="!tokens || tokens.length < 1">
-                    <app-no-result :text="$t('address.tagline.noNFT')" class="mt-4 mt-sm-6"></app-no-result>
+                    <div class="pt-lg-9">
+                        <app-no-result :text="$t('address.tagline.noNFT')" class="mt-4 mt-sm-6"></app-no-result>
+                    </div>
                 </template>
                 <template v-else>
                     <v-row :dense="xs">
