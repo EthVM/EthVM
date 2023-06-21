@@ -5,7 +5,7 @@
         </template>
         <template v-else>
             <div class="d-flex align-center">
-                <h1 class="text-h6 font-weight-bold">Uncle #{{ formatNumber(uncle.block.summary.number) }}</h1>
+                <h1 class="text-h6 font-weight-bold">{{ $t('uncle.number') }} {{ formatNumber(uncle.block.summary.number) }}</h1>
             </div>
             <span class="text-info text-body-1">
                 {{ timestamp }}
@@ -13,14 +13,14 @@
             <v-row class="my-7">
                 <v-col cols="12" lg="6" class="text-textPrimary">
                     <div class="block-info mb-5">
-                        <p class="text-button mb-1">Miner</p>
+                        <p class="text-button mb-1">{{ $t('block.header.miner') }}</p>
                         <div class="d-flex align-center">
                             <app-address-blockie :address="uncle.block.summary.miner || ''" :size="8" class="mr-1 mr-sm-2" />
                             <app-transform-hash is-blue :hash="uncle.block.summary.miner" :link="`/address/${uncle.block.summary.miner}`" class="w-100" />
                         </div>
                     </div>
                     <div class="block-info mb-5">
-                        <p class="text-button mb-1">Hash</p>
+                        <p class="text-button mb-1">{{ $t('common.hash') }}</p>
                         <app-transform-hash :hash="uncle.block.hash" class="w-100" />
                     </div>
                     <div class="block-info">
@@ -33,7 +33,7 @@
                         <v-row>
                             <v-col cols="6" sm="4">
                                 <div class="block-info mb-5">
-                                    <p class="text-button mb-1">Included in block</p>
+                                    <p class="text-button mb-1">{{ $t('uncle.included') }}</p>
                                     <router-link :to="`/block/number/${uncle.parentBlockNumber}`" class="text-secondary">
                                         {{ uncle.parentBlockNumber }}
                                     </router-link>
@@ -41,19 +41,19 @@
                             </v-col>
                             <v-col cols="6" sm="4">
                                 <div class="block-info mb-5">
-                                    <p class="text-button mb-1">Gas Limit</p>
+                                    <p class="text-button mb-1">{{ $t('common.gasLimit') }}</p>
                                     <p>{{ formatNumber(uncle.block.gasLimit) }}</p>
                                 </div>
                             </v-col>
                             <v-col cols="6" sm="4">
                                 <div class="block-info mb-5">
-                                    <p class="text-button mb-1">Gas Used</p>
+                                    <p class="text-button mb-1">{{ $t('txs.details.other.gasUsed') }}</p>
                                     <p>{{ formatNumber(uncle.block.gasUsed) }}</p>
                                 </div>
                             </v-col>
                             <v-col cols="6" sm="4">
                                 <div class="block-info mb-5">
-                                    <p class="text-button mb-1">Position</p>
+                                    <p class="text-button mb-1">{{ $t('uncle.position') }}</p>
                                     <p>{{ uncle.unclePosition }}</p>
                                 </div>
                             </v-col>
