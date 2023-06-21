@@ -36,6 +36,7 @@ Add partially decoded transaction logs:
 -  added Transaction details View for i18n [#1159](https://github.com/EthVM/EthVM/pull/1159)
 
 ### Feature
+
 - advertise with us page [#1156](https://github.com/EthVM/EthVM/pull/1156)
 - implemented GA [#1160](https://github.com/EthVM/EthVM/pull/1160)
 - add new privacy policy route [#1160](https://github.com/EthVM/EthVM/pull/1160)
@@ -52,6 +53,7 @@ Add partially decoded transaction logs:
 - update Trasfers query name [#1163](https://github.com/EthVM/EthVM/pull/1163)
 
 ======================================================================
+
 
 ### Release v2.1.1
 Adds Transaction Actions to the txs details:
