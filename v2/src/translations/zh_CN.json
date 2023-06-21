@@ -135,6 +135,13 @@
             "name": "Enter Name"
         }
     },
+    "uncle": {
+        "number": "Uncle #",
+        "included": "Included in block",
+        "error": "This is not a valid uncle hash",
+        "errorExist": "This uncle does not exist.",
+        "position": "Position"
+    },
     "token": {
         "maxSupply": "Max Supply",
         "contract": "Contract",
