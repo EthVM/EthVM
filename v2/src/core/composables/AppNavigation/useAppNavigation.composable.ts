@@ -2,9 +2,11 @@ import { reactive } from 'vue'
 import { ROUTE_NAME } from '@core/router/routesNames'
 import { useRouter } from 'vue-router'
 import { useNetwork } from '../Network/useNetwork'
+import { useI18n } from 'vue-i18n'
 
 export function useAppNavigation() {
     const { supportsFiat } = useNetwork()
+    const { t } = useI18n()
     /**
      *
      * Nav Items
@@ -32,28 +34,28 @@ export function useAppNavigation() {
     const navItems = reactive<NavMenuEntry[]>([
         {
             header: {
-                text: 'Home',
+                text: t('coreMenu.home'),
                 routerLink: ROUTE_NAME.HOME.PATH
             }
         },
         {
             header: {
-                text: 'Blockchain'
+                text: t('coreMenu.blockchain')
             },
             links: [
                 {
-                    text: 'Blocks',
+                    text: t('common.block', 2),
                     routerLink: ROUTE_NAME.BLOCKS.PATH
                 },
                 {
-                    text: 'Transactions',
+                    text: t('txs.name', 2),
                     routerLink: ROUTE_NAME.TXS.PATH
                 }
             ]
         },
         {
             header: {
-                text: 'MEW Products'
+                text: `MEW ${t('coreMenu.products')}`
             },
             links: [
                 {
@@ -98,7 +100,7 @@ export function useAppNavigation() {
         },
         {
             header: {
-                text: 'Your Portfolio',
+                text: t('portfolio.yourPortfolio'),
                 icon: 'folder_special',
                 routerLink: ROUTE_NAME.PORTFOLIO.PATH
             }
@@ -108,7 +110,7 @@ export function useAppNavigation() {
     if (supportsFiat.value) {
         navItems.splice(1, 0, {
             header: {
-                text: 'Tokens',
+                text: t('common.token', 2),
                 routerLink: ROUTE_NAME.TOKENS.PATH
             }
         })

@@ -172,7 +172,7 @@ const otherDeatils = computed<TokenDetail[]>(() => {
     const zero = '$0.00'
     return [
         {
-            title: t('token.marketCap'),
+            title: t('common.marketCap'),
             text: !props.isLoading && tokenData.value && tokenData.value.market_cap ? formatUsdValue(new BN(tokenData.value.market_cap)).value : zero
         },
         {

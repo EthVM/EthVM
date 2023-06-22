@@ -81,7 +81,7 @@
         "add": "add",
         "all": "All",
         "id": "Id",
-        "block": "Block",
+        "block": "Block | Blocks",
         "details": "Details",
         "blockMined": "Block Mined",
         "confirmations": "Confirmations",
@@ -95,6 +95,7 @@
         "type": "Type",
         "amount": "Amount",
         "gasLimit": "Gas limit",
+        "gasPrice": "Gas Price",
         "txFee": "Tx Fee",
         "txFeePaid": "Tx Fee Paid",
         "txValue": "Tx Value",
@@ -109,7 +110,7 @@
         "transfer": "Transfers",
         "balance": "Balance | Balances",
         "value": "Value",
-        "token": "Token",
+        "token": "Token | Tokens",
         "price": "Price",
         "marketCap": "Market Cap",
         "more": "More",
@@ -125,6 +126,7 @@
         "save": "Save"
     },
     "portfolio": {
+        "yourPortfolio": "Your portfolio",
         "addAddressIcon": "Add Address",
         "editName": "Edit name",
         "deleteAdr": "Delete Address",
@@ -246,7 +248,8 @@
         "error": {
             "withdrawal": "This block does not have any withdrawals",
             "notMined": "This block has not been mined yet",
-            "reward": "Reward"
+            "reward": "Reward",
+            "txs": "This block does not have any transactions"
         }
     },
     "home": {
@@ -270,5 +273,16 @@
             "settings": "Settings",
             "advertise": "Advertise with us"
         }
-    }
+    },
+    "stats": {
+        "lastUpdate": "Last update",
+        "lastBlock": "Last block"
+    },
+    "coreMenu": {
+        "home": "Home",
+        "blockchain": "Blockchain",
+        "products": "Products",
+        "gas": "Gas"
+    },
+    "message": "There are no actions performed in this transaction"
 }

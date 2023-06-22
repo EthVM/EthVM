@@ -4,14 +4,14 @@
             <v-col cols="6" md="3" :class="[columnPadding, 'py-2']">
                 <BlockStatsCard
                     :is-loading="loading"
-                    title="Last Block"
+                    :title="$t('stats.lastBlock')"
                     :value="blockNumber.toString()"
                     :img="require('@/assets/block-stats-icons/block.svg')"
                 />
             </v-col>
             <v-col cols="6" md="3" :class="[columnPadding, 'py-2']">
                 <BlockStatsCard
-                    title="Last update"
+                    :title="$t('stats.lastUpdate')"
                     :value="timestamp"
                     is-date
                     :is-loading="loading"
@@ -23,7 +23,7 @@
             </v-col>
             <v-col cols="6" md="3" :class="[columnPadding, 'py-2']">
                 <BlockStatsCard
-                    title="Gas Price"
+                    :title="$t('common.gasPrice')"
                     :value="gasPrice"
                     mertrics="Gwei"
                     :is-loading="loading"
@@ -32,7 +32,7 @@
             </v-col>
             <v-col cols="6" md="3" :class="[columnPadding, 'py-2']">
                 <BlockStatsCard
-                    :title="`${currencyName} Price`"
+                    :title="`${currencyName} ${$t('common.price')}`"
                     :value="ethPrice"
                     :is-loading="loadingMarketInfo"
                     :img="require('@/assets/block-stats-icons/eth.svg')"
