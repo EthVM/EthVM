@@ -20,9 +20,9 @@
         "homeButton": "Go Back Home"
     },
     "txs": {
-        "header": "All Transactions",
-        "incoming": "Incoming",
-        "outcoming": "Outgoing",
+        "header": "Все транзакции",
+        "incoming": "Входящие",
+        "outcoming": "Исходящие",
         "balanceChange": "Balance Change",
         "balanceBefore": "Balance Before",
         "balanceAfter": "Balance After",
