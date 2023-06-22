@@ -10,7 +10,7 @@
                 height="24"
                 @click="setTransferDirection(TransferDirection.Incoming)"
             >
-                Incoming
+                {{ $t('txs.incoming') }}
             </v-btn>
         </div>
         <div class="mr-3">
@@ -23,7 +23,7 @@
                 height="24"
                 @click="setTransferDirection(TransferDirection.Outgoing)"
             >
-                Outgoing
+                {{ $t('txs.outcoming') }}
             </v-btn>
         </div>
         <div>
@@ -36,7 +36,7 @@
                 height="24"
                 @click="setTransferDirection('')"
             >
-                All
+                {{ $t('common.all') }}
             </v-btn>
         </div>
     </v-row>
@@ -44,13 +44,13 @@
         <v-row align="center" justify="start" class="text-info mt-2 mt-sm-4">
             <v-col sm="3" lg="2">
                 <span style="width: 30px; height: 1px" class="d-inline-block"></span>
-                <span class="ml-4">Tx Value</span>
+                <span class="ml-4">{{ $t('common.txValue') }}</span>
             </v-col>
-            <v-col v-if="!mdAndDown" sm="2"> To/From </v-col>
+            <v-col v-if="!mdAndDown" sm="2"> {{ $t('common.to') }}/{{ $t('common.from') }} </v-col>
             <v-spacer v-else />
-            <v-col sm="3"> Address </v-col>
-            <v-col sm="2"> Hash</v-col>
-            <v-col sm="3"> Balance Change </v-col>
+            <v-col sm="3"> {{ $t('common.address') }} </v-col>
+            <v-col sm="2"> {{ $t('common.hash') }}</v-col>
+            <v-col sm="3"> {{ $t('txs.balanceChange') }} </v-col>
         </v-row>
     </template>
     <v-divider class="my-0 mt-sm-4 mx-n4 mx-sm-n6" />

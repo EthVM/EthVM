@@ -2,7 +2,7 @@
     <v-card variant="elevated" elevation="1" rounded="xl" class="pa-4 pa-sm-6">
         <template v-if="!props.isMined && isLoading">
             <p class="text-h6 font-weight-bold">
-                This block has not been mined yet
+                {{ $t('block.error.notMined') }}
                 <v-progress-circular :size="20" color="secondary" indeterminate></v-progress-circular>
             </p>
         </template>
@@ -16,7 +16,7 @@
                         <template v-if="props.previousBlock">
                             <app-btn-icon icon="chevron_left" color="secondary" :disabled="!props.previousBlock" :link="props.previousBlock" />
                         </template>
-                        <h1 class="text-h6 font-weight-bold">Block #{{ formatNumber(props.currBlockNumber) }}</h1>
+                        <h1 class="text-h6 font-weight-bold">{{ $t('block.header.blockNumber') }}{{ formatNumber(props.currBlockNumber) }}</h1>
                         <template v-if="props.nextBlock">
                             <app-btn-icon icon="chevron_right" color="secondary" :disabled="!props.nextBlock" :link="props.nextBlock" />
                         </template>
@@ -33,18 +33,18 @@
             <v-row class="my-7">
                 <v-col cols="12" lg="6" class="text-textPrimary">
                     <div class="block-info mb-5">
-                        <p class="text-button mb-1">Miner</p>
+                        <p class="text-button mb-1">{{ $t('block.header.miner') }}</p>
                         <div class="d-flex align-center">
                             <app-address-blockie :address="props.blockDetails.miner.detail || ''" :size="8" class="mr-1 mr-sm-2" />
                             <app-transform-hash is-blue :hash="props.blockDetails.miner.detail" :link="props.blockDetails.miner.link" class="w-100" />
                         </div>
                     </div>
                     <div class="block-info mb-5">
-                        <p class="text-button mb-1">Hash</p>
+                        <p class="text-button mb-1">{{ $t('common.hash') }}</p>
                         <app-transform-hash :hash="props.blockDetails.hash.detail" class="w-100" />
                     </div>
                     <div class="block-info mb-5">
-                        <p class="text-button mb-1">Parent Hash</p>
+                        <p class="text-button mb-1">{{ $t('common.parentHash') }}</p>
                         <app-transform-hash is-blue :hash="props.blockDetails.parentHash.detail" :link="props.blockDetails.parentHash.link" class="w-100" />
                     </div>
                 </v-col>
@@ -53,37 +53,37 @@
                         <v-row>
                             <v-col cols="6" sm="4">
                                 <div class="block-info mb-5">
-                                    <p class="text-button mb-1">Block Reward</p>
+                                    <p class="text-button mb-1">{{ $t('block.blockReward') }}</p>
                                     <p class="text-body-1 text-uppercase">{{ props.blockDetails.totalRewards.detail }}</p>
                                 </div>
                             </v-col>
                             <v-col cols="6" sm="4">
                                 <div class="block-info mb-5">
-                                    <p class="text-button mb-1">Uncle Reward</p>
+                                    <p class="text-button mb-1">{{ $t('block.uncleReward') }}</p>
                                     <p class="text-body-1 text-uppercase">{{ props.blockDetails.uncleReward.detail }}</p>
                                 </div>
                             </v-col>
                             <v-col cols="6" sm="4">
                                 <div class="block-info mb-5">
-                                    <p class="text-button mb-1">Total Txs</p>
+                                    <p class="text-button mb-1">{{ $t('block.totalTxs') }}</p>
                                     <p class="text-body-1">{{ props.blockDetails.transactions.detail }}</p>
                                 </div>
                             </v-col>
                             <v-col cols="6" sm="4">
                                 <div class="block-info mb-5">
-                                    <p class="text-button mb-1">Gas Limit</p>
+                                    <p class="text-button mb-1">{{ $t('common.gasLimit') }}</p>
                                     <p class="text-body-1">{{ props.blockDetails.gasLimit.detail }}</p>
                                 </div>
                             </v-col>
                             <v-col cols="6" sm="8">
                                 <div class="block-info mb-5">
-                                    <p class="text-button mb-1">Gas Used</p>
+                                    <p class="text-button mb-1">{{ $t('txs.details.other.gasUsed') }}</p>
                                     <p class="text-body-1">{{ props.blockDetails.gasUsed.detail }}</p>
                                 </div>
                             </v-col>
                             <v-col v-if="props.blockDetails.baseFee" cols="6" sm="4">
                                 <div class="block-info mb-5">
-                                    <p class="text-button mb-1">Base Fee per Gas</p>
+                                    <p class="text-button mb-1">{{ $t('block.baseFee') }}</p>
                                     <p class="text-body-1">{{ props.blockDetails.baseFee.detail }}</p>
                                 </div>
                             </v-col>

@@ -70,7 +70,7 @@
                     <app-btn :text="buttonText" @click="addAddressToPortfolio" :disabled="!isValidInput"></app-btn>
                     <v-col v-if="props.isEditMode && !props.hideSettingsLink" cols="12" class="d-flex align-centet justify-center">
                         <v-btn class="rounded-pill mt-3 text-body-1" :to="routeSettings">
-                            View in Settings <span><v-icon icon="east" size="16"></v-icon></span>
+                            {{ $t('portfolio.viewInSettings') }} <span><v-icon icon="east" size="16"></v-icon></span>
                         </v-btn>
                     </v-col>
                 </v-row>
