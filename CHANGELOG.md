@@ -3,8 +3,10 @@
 ###  Fix
 - scrolling nft details [#1170](https://github.com/EthVM/EthVM/pull/1170)
 - value.forEach is not a function in app.vue [#1170](https://github.com/EthVM/EthVM/pull/1170)
+- add tab to route history when going back (block, portfolio, token, tx ) [#1171](https://github.com/EthVM/EthVM/pull/1171)
 
 ### Devop
+- added routes to Tokens View [#1171](https://github.com/EthVM/EthVM/pull/1171)
 - update codegen config with scalar types [#1170](https://github.com/EthVM/EthVM/pull/1170)
 - remove old store migration, delete old local storage variables [#1170](https://github.com/EthVM/EthVM/pull/1170)
 - add try/catch to further analyize recentblocks.slice() [#1170](https://github.com/EthVM/EthVM/pull/1170)
