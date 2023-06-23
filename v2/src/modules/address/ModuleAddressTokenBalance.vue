@@ -4,7 +4,8 @@
             <address-balance-totals
                 :title="$t('block.tokenBalance')"
                 :is-loading="initialLoad || loadingMarketInfo"
-                :balance="tokenBalanceValue"
+                :balance="tokenBalance.value"
+                :balance-tooltip="tokenBalance.tooltipText"
                 :subtext="`${tokenCount} ${$t('block.tokenTotal')}`"
             >
             </address-balance-totals>
@@ -35,7 +36,7 @@ const props = defineProps({
 
 const { addressRef } = toRefs(props)
 
-const { initialLoad, tokenBalanceValue, tokenCount, tokenSort } = useAddressToken(addressRef, 'cache-only')
+const { initialLoad, tokenBalance, tokenCount, tokenSort } = useAddressToken(addressRef, 'cache-only')
 const { loading: loadingMarketInfo } = useCoinData()
 
 const { result: nftCountRes, loading: loadingNftCount } = useGetOwnersNftBalanceQuery(() => ({

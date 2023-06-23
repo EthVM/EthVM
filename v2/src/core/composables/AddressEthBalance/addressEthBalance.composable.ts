@@ -2,7 +2,7 @@ import { useCoinData } from '@core/composables/CoinData/coinData.composable'
 import { eth } from '@/core/helper'
 import { useGetEthBalanceQuery } from './addressBalance.generated'
 import { computed, ref, Ref, watch, unref, isRef } from 'vue'
-import { formatUsdValue, formatVariableUnitEthValue } from '@core/helper/number-format-helper'
+import { FormattedNumber, formatUsdValue, formatVariableUnitEthValue } from '@core/helper/number-format-helper'
 import BN from 'bignumber.js'
 
 export function useAddressEthBalance(addressHash: Ref<string> | string) {
@@ -68,6 +68,14 @@ export function useAddressEthBalance(addressHash: Ref<string> | string) {
     const balanceFormatted = computed<string>(() => {
         return formatVariableUnitEthValue(new BN(balanceWei.value)).value
     })
+
+    /**
+     * Returns FormattedNumber balance in ETH
+     */
+    const balanceFormattedNumber = computed<FormattedNumber>(() => {
+        return formatVariableUnitEthValue(new BN(balanceWei.value))
+    })
+
     /**
      * Returns FIAT balance in BN
      */
@@ -90,6 +98,13 @@ export function useAddressEthBalance(addressHash: Ref<string> | string) {
     })
 
     /**
+     * Returns FormattedNumber ETH balance in FIAT
+     */
+    const balanceFiatFormattedNumber = computed<FormattedNumber>(() => {
+        return formatUsdValue(balanceFiatBN.value)
+    })
+
+    /**
      * If passed param is Ref -->
      * Watches for changes in the addressHash string
      * Resets initial load to true on new hash
@@ -102,5 +117,16 @@ export function useAddressEthBalance(addressHash: Ref<string> | string) {
         })
     }
 
-    return { balanceData, initialLoad, loadingBalance, refetchBalance, balanceFiatFormatted, balanceWei, balanceFormatted, balanceFiatBN }
+    return {
+        balanceData,
+        initialLoad,
+        loadingBalance,
+        refetchBalance,
+        balanceFiatFormatted,
+        balanceWei,
+        balanceFormatted,
+        balanceFiatBN,
+        balanceFormattedNumber,
+        balanceFiatFormattedNumber
+    }
 }

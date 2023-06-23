@@ -38,7 +38,9 @@
         <v-col v-if="(xs && state.showMore) || smAndUp" cols="6" sm="3" lg="2" class="d-block d-lg-flex align-lg-center">
             <div v-if="props.adr.eth">
                 <p v-if="xs" class="text-info mb-2">{{ currencyName }} Balance</p>
-                <p>{{ props.adr.eth }}</p>
+                <p>
+                    {{ props.adr.eth }} <span v-if="props.adr.ethTooltip"><app-tooltip :text="props.adr.ethTooltip"></app-tooltip></span>
+                </p>
                 <p v-if="!xs && mdAndDown" class="text-info">{{ props.adr.ethUSD }}</p>
             </div>
             <div v-else class="skeleton-box rounded-xl" style="height: 20px; width: 60%"></div>
@@ -80,6 +82,7 @@
 </template>
 
 <script setup lang="ts">
+import AppTooltip from '@/core/components/AppTooltip.vue'
 import AppAddressBlockie from '@core/components/AppAddressBlockie.vue'
 import AppTransformHash from '@/core/components/AppTransformHash.vue'
 import AppCopyToClip from '@/core/components/AppCopyToClip.vue'
@@ -107,6 +110,7 @@ interface DisplayItem {
     weiBN?: BN
     ethUSDBN?: BN
     totalBN?: BN
+    ethTooltip?: string
 }
 
 interface PropsType {

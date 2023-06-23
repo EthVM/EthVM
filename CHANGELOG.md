@@ -4,6 +4,7 @@
 - scrolling nft details [#1170](https://github.com/EthVM/EthVM/pull/1170)
 - value.forEach is not a function in app.vue [#1170](https://github.com/EthVM/EthVM/pull/1170)
 - add tab to route history when going back (block, portfolio, token, tx ) [#1171](https://github.com/EthVM/EthVM/pull/1171)
+- show proper eth/usd balance on address and portfolio [#1173](https://github.com/EthVM/EthVM/pull/1173)
 
 ### Devop
 - added routes to Tokens View [#1171](https://github.com/EthVM/EthVM/pull/1171)
