@@ -11,6 +11,9 @@ import AppError from '@core/components/AppError.vue'
 import ModuleBlockDetails from '@module/block/ModuleBlockDetails.vue'
 import { eth } from '@core/helper'
 import { ErrorMessageBlock } from '@module/block/models/ErrorMessagesForBlock'
+import { onBeforeRouteUpdate } from 'vue-router'
+import { tabViewRouteGuardOnUpdate } from '@/core/router/helpers'
+import { Q_BLOCK_DETAILS } from '@/core/router/routesNames'
 
 interface ComponentState {
     errorMessages: ErrorMessageBlock[]
@@ -34,7 +37,7 @@ const isValid = computed<boolean>(() => {
 })
 
 const isHash = computed<boolean>(() => {
-    return eth.isValidHash(props.blockRef)
+    return eth.isValidHash(props.blockRef || '')
 })
 
 onMounted(() => {
@@ -44,7 +47,11 @@ onMounted(() => {
 watch(
     () => props.blockRef,
     () => {
-        state.blockNumber = props.blockRef
+        state.blockNumber = props.blockRef || ''
     }
 )
+
+onBeforeRouteUpdate(async (to, from, next) => {
+    tabViewRouteGuardOnUpdate(Q_BLOCK_DETAILS[0], to, from, next)
+})
 </script>

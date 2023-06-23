@@ -95,6 +95,7 @@ import { MarketDataFragment } from '@core/composables/CoinData/getLatestPrices.g
 import { useCoinData } from '@core/composables/CoinData/coinData.composable'
 import { onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { tabViewRouteGuardOnUpdate } from '@/core/router/helpers'
 
 const { t } = useI18n()
 
@@ -134,7 +135,7 @@ const state = reactive<StateType>({
     tab: props.tab
 })
 
-onBeforeRouteUpdate(to => {
+onBeforeRouteUpdate(async (to, from, next) => {
     if (to.query.t === Q_PORTFOLIO[0]) {
         state.addressRef = undefined
     } else {
@@ -142,6 +143,7 @@ onBeforeRouteUpdate(to => {
             state.addressRef = to.params.addressRef as string
         }
     }
+    tabViewRouteGuardOnUpdate(Q_PORTFOLIO[0], to, from, next)
 })
 
 const tokenBalanceFiat = computed<string>(() => {
