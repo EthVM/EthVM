@@ -22,7 +22,9 @@ import { Tab } from '@core/components/props'
 import { useAppViewGrid } from '@core/composables/AppViewGrid/AppViewGrid.composable'
 import { ADDRESS_ROUTE_QUERY } from '@core/router/routesNames'
 import { onMounted, reactive } from 'vue'
+import { useI18n } from 'vue-i18n'
 
+const { t } = useI18n()
 const { columnPadding, rowMargin } = useAppViewGrid()
 
 const routes = ADDRESS_ROUTE_QUERY.Q_NFTS
@@ -30,11 +32,11 @@ const routes = ADDRESS_ROUTE_QUERY.Q_NFTS
 const tabs: Tab[] = [
     {
         value: routes[0],
-        title: 'Collection'
+        title: t('token.collection')
     },
     {
         value: routes[1],
-        title: 'Transfers'
+        title: t('common.transfer')
     }
 ]
 

@@ -60,7 +60,7 @@
                         </v-icon>
                     </div>
                     <span>
-                        {{ transferType === 'in' ? 'Received' : 'Sent' }}
+                        {{ transferType === 'in' ? $t('txs.status.recieve') : $t('txs.status.sent') }}
                     </span>
                 </div>
                 <p class="text-info">{{ timeAgo(new Date(props.transfer.transfer.timestamp * 1e3)) }}</p>

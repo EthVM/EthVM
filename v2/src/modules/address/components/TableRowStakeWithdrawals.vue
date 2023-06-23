@@ -5,7 +5,7 @@
                 <div class="mobile-chip rounded-circle mr-2 bg-success">
                     <v-icon size="12"> south_east </v-icon>
                 </div>
-                <span> Recieved </span>
+                <span> {{ $t('txs.status.recieve') }}</span>
             </div>
             <p class="text-info">{{ timeAgo(new Date(props.withdrawal.transfer.timestamp * 1e3)) }} from</p></v-col
         >

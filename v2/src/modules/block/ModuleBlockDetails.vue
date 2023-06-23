@@ -72,6 +72,9 @@ import { fromWei } from 'web3-utils'
 import { Q_BLOCK_DETAILS } from '@core/router/routesNames'
 import { useNetwork } from '@core/composables/Network/useNetwork'
 import { useAppViewGrid } from '@core/composables/AppViewGrid/AppViewGrid.composable'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 const { columnPadding, rowMargin } = useAppViewGrid()
 const routes = Q_BLOCK_DETAILS
 
@@ -79,15 +82,15 @@ const { currencyName } = useNetwork()
 const tabs: Tab[] = [
     {
         value: routes[0],
-        title: 'Transactions'
+        title: t('txs.name', 2)
     },
     {
         value: routes[1],
-        title: 'Stake Withdrawals'
+        title: t('block.stakeWithdrawals')
     },
     {
         value: routes[2],
-        title: 'More'
+        title: t('common.more')
     }
 ]
 

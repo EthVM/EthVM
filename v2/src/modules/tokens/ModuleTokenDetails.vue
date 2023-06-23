@@ -133,6 +133,7 @@ import { useCoinData } from '@core/composables/CoinData/coinData.composable'
 import { useNetwork } from '@/core/composables/Network/useNetwork'
 import { useI18n } from 'vue-i18n'
 const { t } = useI18n()
+
 const { supportsNft } = useNetwork()
 
 const { columnPadding, rowMargin } = useAppViewGrid()
@@ -142,11 +143,11 @@ const routes = Q_TOKEN_DETAILS
 const tabs: Tab[] = [
     {
         value: routes[0],
-        title: 'Transfers'
+        title: t('common.transfer')
     },
     {
         value: routes[1],
-        title: 'Holders'
+        title: t('token.holder', 2)
     }
 ]
 
@@ -306,7 +307,7 @@ const decimals = computed<number | undefined>(() => {
 
 const leftTitle = computed<string>(() => {
     if (state.standard === TransferType.Erc1155 || state.standard === TransferType.Erc721) {
-        return t('token.collections')
+        return t('token.collection', 2)
     }
     if (state.standard === TransferType.Erc20) {
         return t('token.decimals')

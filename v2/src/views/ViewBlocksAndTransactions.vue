@@ -23,6 +23,9 @@ import { Tab } from '@core/components/props'
 import { onMounted, reactive } from 'vue'
 import { useAppViewGrid } from '@core/composables/AppViewGrid/AppViewGrid.composable'
 import { Q_BLOCKS_AND_TXS } from '@core/router/routesNames'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 
 onMounted(() => {
     window.scrollTo(0, 0)
@@ -35,11 +38,11 @@ const routes = Q_BLOCKS_AND_TXS
 const tabs: Tab[] = [
     {
         value: routes[0],
-        title: 'Blocks'
+        title: t('common.block', 2)
     },
     {
         value: routes[1],
-        title: 'Transactions'
+        title: t('txs.name', 2)
     }
 ]
 

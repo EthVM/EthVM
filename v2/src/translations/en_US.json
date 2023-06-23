@@ -85,7 +85,7 @@
         },
         "type": {
             "genesis": "genesis reward",
-            "internal": " internal",
+            "internal": "internal",
             "dao": "dao hard fork",
             "withdrawal": "withdrawal"
         }
@@ -138,7 +138,7 @@
         "filter": "Filter",
         "save": "Save",
         "overview": "Overview",
-        "NFT": "NFT | NFTS"
+        "nft": "NFT | NFTS"
     },
     "portfolio": {
         "yourPortfolio": "Your portfolio",
@@ -166,7 +166,7 @@
         "contract": "Contract",
         "tokenStandard": "Token Standard",
         "decimals": "Decimals",
-        "collections": "Collections",
+        "collection": "Collection | Collections",
         "circulatingSupply": "Circulating Supply",
         "24hHigh": "24h High",
         "24hTradingVolume": "24h Trading Volume",
@@ -179,7 +179,8 @@
         "noTransfers": "No transfers available",
         "searchTokenName": "Search token name",
         "addToken": "Add Token",
-        "noMatch": "We could not find anything mathching"
+        "noMatch": "We could not find anything mathching",
+        "holder": "Holder | Holders"
     },
     "settings": {
         "emptyList": "This list is empty",
@@ -252,6 +253,7 @@
         "unknown": "Unknown",
         "portfolioEmpty": "Your portfolio is empty",
         "portfolioValue": "Portfolio Value",
+        "stakeWithdrawals": "Stake Withdrawals",
         "header": {
             "blockNumber": "Block #",
             "watchList": "Watchlist",

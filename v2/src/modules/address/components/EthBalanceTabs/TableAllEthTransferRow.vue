@@ -180,7 +180,7 @@ const transferStatus = computed<Status>(() => {
     }
     return {
         direction: TRANSFER_DIRECTION.SELF,
-        text: 'Self',
+        text: t('txs.status.selfSent'),
         color: 'info',
         icon: 'refresh'
     }

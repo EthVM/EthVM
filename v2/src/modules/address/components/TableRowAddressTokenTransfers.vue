@@ -92,7 +92,7 @@
                             </v-icon>
                         </div>
                         <span>
-                            {{ transferType === 'in' ? 'Received' : 'Sent' }}
+                            {{ transferType === 'in' ? $t('txs.status.recieve') : $t('txs.status.sent') }}
                         </span>
                     </div>
                 </v-col>
