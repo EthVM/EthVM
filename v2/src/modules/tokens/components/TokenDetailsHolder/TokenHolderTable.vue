@@ -3,13 +3,11 @@
         <!-- Table Header ERC20 -->
         <div v-if="!props.initialLoad && !props.hasError && !isNft">
             <v-row align="center" justify="start" class="text-body-1 text-info d-none d-sm-flex">
-                <v-col :md="!isNft ? 3 : 4"> Address </v-col>
-                <v-col sm="3" lg="4">
-                    {{ isNft ? 'ID' : 'Quantity' }}
-                </v-col>
-                <v-col v-if="!isNft" md="3"> USD Value </v-col>
+                <v-col :md="!isNft ? 3 : 4"> {{ $t('common.address') }} </v-col>
+                <v-col sm="3" lg="4"> {{ isNft ? $t('token.id') : $t('token.quantity') }} </v-col>
+                <v-col v-if="!isNft" md="3"> USD {{ $t('common.value') }} </v-col>
                 <v-col sm="3" lg="2">
-                    {{ isNft ? 'Image' : 'Percentage' }}
+                    {{ isNft ? $t('token.image') : $t('token.percentage') }}
                 </v-col>
             </v-row>
             <v-divider class="my-0 mt-sm-4 mx-n4 mx-sm-n6" />
@@ -24,7 +22,7 @@
 
         <!-- No results Message -->
         <div v-else-if="!props.hasItems && !props.loading">
-            <app-no-result text="There are no holders for this token" class="mt-4 mt-sm-6"></app-no-result>
+            <app-no-result :text="$t('tokenData.noHolder')" class="mt-4 mt-sm-6"></app-no-result>
         </div>
         <!--End No results Message -->
 

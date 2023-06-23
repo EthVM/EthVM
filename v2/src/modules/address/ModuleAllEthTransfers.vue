@@ -1,12 +1,12 @@
 <template>
     <template v-if="!xs">
         <v-row align="center" justify="start" class="text-info mt-2 mt-sm-3">
-            <v-col sm="4" md="3" lg="2" order="1"> Status </v-col>
-            <v-col sm="5" md="3" lg="2" order="2"> Address </v-col>
-            <v-col sm="3" lg="2" order-sm="last" order-lg="3"> Value </v-col>
-            <v-col lg="2" class="d-none d-lg-flex" order="4"> Tx Fee Paid </v-col>
-            <v-col sm="3" class="d-none d-lg-flex" lg="2" order="5"> Type </v-col>
-            <v-col md="3" lg="2" class="d-none d-md-flex" order-md="3" order-lg="6"> Hash/Block </v-col>
+            <v-col sm="4" md="3" lg="2" order="1"> {{ $t('common.status') }} </v-col>
+            <v-col sm="5" md="3" lg="2" order="2"> {{ $t('common.address') }}s </v-col>
+            <v-col sm="3" lg="2" order-sm="last" order-lg="3"> {{ $t('common.value') }} </v-col>
+            <v-col lg="2" class="d-none d-lg-flex" order="4"> {{ $t('common.txFeePaid') }} </v-col>
+            <v-col sm="3" class="d-none d-lg-flex" lg="2" order="5"> {{ $t('common.type') }} </v-col>
+            <v-col md="3" lg="2" class="d-none d-md-flex" order-md="3" order-lg="6"> {{ $t('common.hash') }}/{{ $t('common.block') }} </v-col>
         </v-row>
     </template>
     <v-divider class="my-0 mt-sm-4 mx-n4 mx-sm-n6" />
@@ -16,7 +16,7 @@
                 <table-all-eth-transfer-row :transfer="transfer" :address-ref="props.addressRef" />
             </div>
         </template>
-        <app-no-result v-else text="This address does not have any transfers" class="mt-4 mt-sm-6 mb-5"></app-no-result>
+        <app-no-result v-else :text="$t('address.tagline.noTransfer')" class="mt-4 mt-sm-6 mb-5"></app-no-result>
     </div>
     <div v-else class="p-ten-top">
         <div v-for="item in 10" :key="item" style="padding: 10px 0">
