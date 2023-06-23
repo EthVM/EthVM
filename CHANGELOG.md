@@ -1,12 +1,27 @@
 ### Release v2.1.4
 
+###  Fix
+- scrolling nft details [#1170](https://github.com/EthVM/EthVM/pull/1170)
+- value.forEach is not a function in app.vue [#1170](https://github.com/EthVM/EthVM/pull/1170)
+- add tab to route history when going back (block, portfolio, token, tx ) [#1171](https://github.com/EthVM/EthVM/pull/1171)
+
 ### Devop
+- added routes to Tokens View [#1171](https://github.com/EthVM/EthVM/pull/1171)
+- update codegen config with scalar types [#1170](https://github.com/EthVM/EthVM/pull/1170)
+- remove old store migration, delete old local storage variables [#1170](https://github.com/EthVM/EthVM/pull/1170)
+- add try/catch to further analyize recentblocks.slice() [#1170](https://github.com/EthVM/EthVM/pull/1170)
+- add exception to tx 'failed to deserialize' [#1170](https://github.com/EthVM/EthVM/pull/1170)
 - Added Address View for i18n [#1161](https://github.com/EthVM/EthVM/pull/1161)
 - Added uncle details for i18n [#1162](https://github.com/EthVM/EthVM/pull/1162)
 - Added Block-details for i18n [#1164](https://github.com/EthVM/EthVM/pull/1164)
 - Added Block view for i18n [#1168](https://github.com/EthVM/EthVM/pull/1168)
 - Added token view for i18n [#1169](https://github.com/EthVM/EthVM/pull/1169)
 - Added token-details for i18n [#1169](https://github.com/EthVM/EthVM/pull/1169)
+
+### UI
+- adjust addres menu background height on sm and md [#1170](https://github.com/EthVM/EthVM/pull/1170)
+- fix home view with no portfolio column apperance [#1170](https://github.com/EthVM/EthVM/pull/1170)
+- decrease adr hash font size [#1170](https://github.com/EthVM/EthVM/pull/1170)
 
 ======================================================================
 
@@ -36,6 +51,7 @@ Add partially decoded transaction logs:
 -  added Transaction details View for i18n [#1159](https://github.com/EthVM/EthVM/pull/1159)
 
 ### Feature
+
 - advertise with us page [#1156](https://github.com/EthVM/EthVM/pull/1156)
 - implemented GA [#1160](https://github.com/EthVM/EthVM/pull/1160)
 - add new privacy policy route [#1160](https://github.com/EthVM/EthVM/pull/1160)
@@ -52,6 +68,7 @@ Add partially decoded transaction logs:
 - update Trasfers query name [#1163](https://github.com/EthVM/EthVM/pull/1163)
 
 ======================================================================
+
 
 ### Release v2.1.1
 Adds Transaction Actions to the txs details:

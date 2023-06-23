@@ -393,6 +393,7 @@ const transactionData = computed<TxDetailsType | undefined>(() => {
 
 onTransactionHashError(error => {
     const newError = JSON.stringify(error.message)
+
     state.hasError = true
     if (newError.toLowerCase().includes(excpTxDoNotExists)) {
         emitErrorState(true, true)

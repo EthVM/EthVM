@@ -25,7 +25,9 @@ import UncleDetails from '@module/uncles/ModuleUncleDetails.vue'
 import { eth } from '@core/helper'
 import { ErrorMessageUncle } from '@module/uncles/models/ErrorMessagesForUncle'
 import { useAppViewGrid } from '@core/composables/AppViewGrid/AppViewGrid.composable'
+import { useI18n } from 'vue-i18n'
 
+const { t } = useI18n()
 const { columnPadding, rowMargin } = useAppViewGrid()
 
 interface ComponentState {
@@ -52,7 +54,7 @@ const hasError = computed<boolean>(() => {
 
 onMounted(() => {
     if (!isValid.value) {
-        state.error = 'This is not a valid uncle hash'
+        state.error = t('uncle.error')
         return
     }
     window.scrollTo(0, 0)
@@ -66,7 +68,7 @@ onMounted(() => {
 const setError = (hasError: boolean, message: ErrorMessageUncle): void => {
     if (hasError) {
         if (message === ErrorMessageUncle.notFound) {
-            state.error = 'This uncle does not exist.'
+            state.error = t('uncle.errorExist')
         } else {
             if (!state.errorMessages.includes(message)) {
                 state.errorMessages.push(message)
