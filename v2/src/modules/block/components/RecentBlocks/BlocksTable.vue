@@ -8,7 +8,7 @@
         <v-row v-if="!xs" align="center" justify="start" class="text-body-1 text-info">
             <v-col> {{ $t('block.header.blockNumber') }} </v-col>
             <v-col v-if="!mdAndDown" sm="2"> {{ $t('block.header.time') }} </v-col>
-            <v-col sm="3" lg="2"> {{ $t('txs.name') }} </v-col>
+            <v-col sm="3" lg="2"> {{ $t('txs.name', 2) }} </v-col>
             <v-col sm="4" lg="3"> {{ $t('block.header.miner') }} </v-col>
             <v-col sm="3"> {{ $t('block.header.reward') }} </v-col>
         </v-row>

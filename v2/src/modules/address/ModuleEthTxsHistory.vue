@@ -82,8 +82,10 @@ import { TxsTransfersFragment, useGetEthTransactionTransfersQuery } from '@modul
 import { TransferDirection } from '@/apollo/types'
 import { useAppPaginate } from '@core/composables/AppPaginate/useAppPaginate.composable'
 import { ITEMS_PER_PAGE } from '@core/constants'
+import { useI18n } from 'vue-i18n'
 
 const { smAndDown, mdAndDown } = useDisplay()
+const { t } = useI18n()
 
 const props = defineProps({
     addressRef: {
@@ -139,11 +141,11 @@ const hasMore = computed<boolean>(() => {
 
 const noResultText = computed<string>(() => {
     if (state.transferDirection === TransferDirection.Outgoing) {
-        return 'This address does not have any outgoing transfers'
+        return t('message.adrNoOutgoing')
     } else if (state.transferDirection === TransferDirection.Incoming) {
-        return 'This address does not have any incoming transfers'
+        return t('message.adrNoIncoming')
     }
-    return 'This address does not have any transactions'
+    return t('message.adrNoTxs')
 })
 
 const loadMoreTxsTransfersData = (): void => {

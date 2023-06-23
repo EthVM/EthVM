@@ -80,9 +80,10 @@ import { ADDRESS_ROUTE_QUERY } from '@core/router/routesNames'
 import { useAddressUpdate } from '@core/composables/AddressUpdate/addressUpdate.composable'
 import { useAppPaginate } from '@core/composables/AppPaginate/useAppPaginate.composable'
 import { ITEMS_PER_PAGE } from '@core/constants'
+import { useI18n } from 'vue-i18n'
 
 const minerRoutes = ADDRESS_ROUTE_QUERY.Q_MINER
-
+const { t } = useI18n()
 interface ComponentState {
     isEnd: number
     tab: string
@@ -147,9 +148,9 @@ const addressRewards = computed<RewardSummaryFragment | undefined>(() => {
 
 const noResultText = computed<string>(() => {
     if (state.tab === minerRoutes[0]) {
-        return 'This address does not have any block rewards'
+        return t('message.adrNoBlockRewards')
     }
-    return 'This address does not have any uncle rewards'
+    return t('message.adrNoUnclerewards')
 })
 
 /*

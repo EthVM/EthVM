@@ -29,7 +29,7 @@
         "estimatedFee": "Estimated Fee",
         "isHomeHeader": "Last Transactions",
         "refresh": "New Txs Found, Refresh",
-        "name": "Transactions",
+        "name": "Transaction | Transactions",
         "newNft": "New ERC20 Transfers",
         "details": {
             "header": "Transaction Summary",
@@ -75,6 +75,19 @@
                 "noAdrs": "No addresses found",
                 "clear": "Clear All"
             }
+        },
+        "status": {
+            "sent": "Sent",
+            "failSend": "Fail Send",
+            "selfSent": "Self Sent",
+            "recieve": "Recieved",
+            "failRecieve": "Fail Recieve"
+        },
+        "type": {
+            "genesis": "genesis reward",
+            "internal": " internal",
+            "dao": "dao hard fork",
+            "withdrawal": "withdrawal"
         }
     },
     "common": {
@@ -123,7 +136,9 @@
             "import": "Import"
         },
         "filter": "Filter",
-        "save": "Save"
+        "save": "Save",
+        "overview": "Overview",
+        "NFT": "NFT | NFTS"
     },
     "portfolio": {
         "yourPortfolio": "Your portfolio",
@@ -284,5 +299,14 @@
         "products": "Products",
         "gas": "Gas"
     },
-    "message": "There are no actions performed in this transaction"
+    "message": {
+        "txNoactions"  : "There are no actions performed in this transaction",
+        "txNoLogs": "There are no logs found in this transaction",
+        "adrNoBlockRewards": "This address does not have any block rewards",
+        "adrNoUnclerewards": "This address does not have any uncle rewards",
+        "adrNoOutgoing": "This address does not have any outgoing transactions",
+        "adrNoIncoming": "This address does not have any incoming transactions",
+        "adrNoTxs": "This address does not have any transactions",
+        "adrNoInternal": "This address does not have any internal transfers"
+    }
 }
