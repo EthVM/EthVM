@@ -310,7 +310,8 @@
     },
     "nft": {
         "items":"items",
-        "owner": "owner | owners"
+        "owner": "owner | owners",
+        "ownedBy": "Owned By"
     },
     "market": {
         "marketCap":"Market Cap",
