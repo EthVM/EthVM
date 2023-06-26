@@ -199,6 +199,14 @@
         "data-share": {
             "on": "Data Sharing On",
             "off": "Data Sharing Off"
+        },
+        "import": {
+            "name": "Import Names",
+            "portfolio": "Import Portfolio",
+            "all": "Import All Settings",
+            "invalidFile": "File contents are not valid",
+            "selectFile": "Select File",
+            "dragAndDrop": "Drag and drop your ethVM-adrs-names.json file or click to browse"
         }
     },
     "address": {
@@ -310,5 +318,9 @@
         "adrNoIncoming": "This address does not have any incoming transactions",
         "adrNoTxs": "This address does not have any transactions",
         "adrNoInternal": "This address does not have any internal transfers"
+    },
+    "nft": {
+        "items":"items",
+        "owners": "owners"
     }
 }

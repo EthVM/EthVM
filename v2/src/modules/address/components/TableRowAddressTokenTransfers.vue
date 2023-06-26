@@ -43,7 +43,7 @@
                     </p>
                 </v-col>
                 <v-col :cols="props.isOverview ? 2 : 1">
-                    <app-chip :bg="transferType === 'in' ? 'success' : 'warning'" :text="transferType === 'in' ? 'From' : 'To'" />
+                    <app-chip :bg="transferType === 'in' ? 'success' : 'warning'" :text="transferType === 'in' ? $t('common.from') : $t('common.to')" />
                 </v-col>
                 <v-col :cols="props.isOverview ? 4 : 2" class="text-secondary py-0">
                     <div class="d-flex align-center">
@@ -105,7 +105,7 @@
                 </v-col>
                 <v-col cols="6" class="py-0 text-info">
                     {{ timeAgo(new Date(props.transfer.transfer.timestamp * 1e3)) }}
-                    {{ transferType === 'in' ? 'from' : 'to' }}
+                    {{ transferType === 'in' ? $t('common.from') : $t('common.to') }}
                 </v-col>
                 <v-col cols="6" class="py-0 text-secondary">
                     <div class="d-flex align-center">

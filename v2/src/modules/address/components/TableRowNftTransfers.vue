@@ -25,7 +25,7 @@
             {{ totalTokens }}
         </v-col>
         <v-col :cols="props.isOverview ? 2 : 1">
-            <app-chip :bg="transferType === 'in' ? 'success' : 'warning'" :text="transferType === 'in' ? 'From' : 'To'" />
+            <app-chip :bg="transferType === 'in' ? 'success' : 'warning'" :text="transferType === 'in' ? $t('common.from') : $t('common.to')" />
         </v-col>
         <v-col :cols="props.isOverview ? 4 : 3" class="text-secondary">
             <div class="d-flex align-center">
