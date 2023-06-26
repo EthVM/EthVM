@@ -95,7 +95,7 @@
             =========================
             -->
             <v-col cols="6" md="4" lg="3" class="mt-4">
-                <p class="text-caption mb-1 text-info">{{ $t('address.24h.change') }}</p>
+                <p class="text-caption mb-1 text-info">{{ $t('market.24hChange') }}</p>
                 <div v-if="loadingMarketInfo" class="skeleton-box rounded-xl" style="height: 20px"></div>
                 <p v-else :class="['text-body-1', percentageClass]">{{ percentageFormatted }}%</p>
             </v-col>
@@ -201,27 +201,27 @@ interface FiatInfo {
 const fiatInfo = computed<FiatInfo[]>(() => {
     return [
         {
-            text: t('common.marketCap'),
+            text: t('market.marketCap'),
             fiat: new BN(ethMarketInfo.value?.market_cap || 0)
         },
         {
-            text: t('address.circulatingSupply'),
+            text: t('market.circulatingSupply'),
             fiat: new BN(ethMarketInfo.value?.circulating_supply || 0)
         },
         {
-            text: t('address.24hTradingVolume'),
+            text: t('market.24hTradingVolume'),
             fiat: new BN(ethMarketInfo.value?.total_volume || 0)
         },
         {
-            text: t('address.totalSupply'),
+            text: t('market.totalSupply'),
             fiat: new BN(ethMarketInfo?.value?.total_supply || 0)
         },
         {
-            text: t('address.24h.high'),
+            text: t('market.24hHigh'),
             fiat: new BN(ethMarketInfo.value?.high_24h || 0)
         },
         {
-            text: t('address.24h.low'),
+            text: t('market.24hLow'),
             fiat: new BN(ethMarketInfo.value?.low_24h || 0)
         }
     ]

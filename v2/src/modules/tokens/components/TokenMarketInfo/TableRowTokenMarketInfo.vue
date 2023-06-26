@@ -50,7 +50,7 @@
             <v-row>
                 <v-col cols="4">
                     <div>
-                        <p class="text-info">Volume</p>
+                        <p class="text-info">{{ $t('market.volume') }}</p>
                         <p class="mb-0">
                             {{ props.token.getVolumeFormatted() }}
                         </p>
@@ -58,7 +58,7 @@
                 </v-col>
                 <v-col cols="8">
                     <div>
-                        <p class="text-info">Market Cap</p>
+                        <p class="text-info">{{ $t('market.marketCap') }}</p>
                         <p class="mb-0">
                             {{ props.token.getMarketCapFormatted() }}
                         </p>

@@ -14,7 +14,7 @@
                             <span class="font-weight-bold black--text">{{ props.collection.distinct_nft_count }}</span>
                         </p>
                         <p v-if="props.collection.distinct_owner_count" class="mr-6 info--text">
-                            {{ $t('nft.owners') }}
+                            {{ $t('nft.owner', 2) }}
                             <span class="font-weight-bold black--text">{{ props.collection.distinct_owner_count }}</span>
                         </p>
                         <!-- <p class="mr-6 info--text">

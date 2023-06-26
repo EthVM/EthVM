@@ -9,35 +9,34 @@
         </v-card-title>
         <app-tabs v-if="!isHomePage && supportsFiat" v-model="state.activeList" :routes="routes" :tabs="list" class="my-5" btn-variant></app-tabs>
         <v-row v-if="!isHomePage" class="mb-10 flex-nowrap" align="center">
-            <app-input place-holder="Search tokens" v-model="state.tokenSearch" class="w-100 mr-5" />
+            <app-input :place-holder="t('token.searchTokens')" v-model="state.tokenSearch" class="w-100 mr-5" />
             <module-add-fav-token v-if="state.activeList === list[1].value" />
         </v-row>
         <v-row align="center" justify="start" class="text-body-1 text-info my-0 d-none d-sm-flex">
             <v-col sm="6" :md="isHomePage ? '6' : '4'" class="py-0">
                 <v-row align="center" class="ma-0">
                     <v-btn variant="text" color="info" class="font-weight-regular ml-n3" rounded="pill" size="small" @click="sortTable(SORT_KEY.NAME)">
-                        Token
-                        <v-icon v-if="isActiveSort(SORT_KEY.NAME)" class="ml-1" :size="14">{{ sortIcon }}</v-icon></v-btn
+                        {{ $t('common.token', 1) }}<v-icon v-if="isActiveSort(SORT_KEY.NAME)" class="ml-1" :size="14">{{ sortIcon }}</v-icon></v-btn
                     >
                 </v-row>
             </v-col>
             <v-col sm="2" md="2" class="py-0">
                 <v-row align="center" class="ma-0">
                     <v-btn variant="text" color="info" class="font-weight-regular ml-n3" rounded="pill" size="small" @click="sortTable(SORT_KEY.PRICE)">
-                        Price
+                        {{ $t('common.price') }}
                         <v-icon v-if="isActiveSort(SORT_KEY.PRICE)" class="ml-1" :size="14">{{ sortIcon }}</v-icon></v-btn
                     >
                 </v-row>
             </v-col>
             <v-col sm="2" md="2" class="py-0">
                 <v-btn variant="text" color="info" class="font-weight-regular ml-n3" rounded="pill" size="small" @click="sortTable(SORT_KEY.PERCENTAGE_CHANGE)">
-                    24h<v-icon v-if="isActiveSort(SORT_KEY.PERCENTAGE_CHANGE)" class="ml-1" :size="14">{{ sortIcon }}</v-icon></v-btn
+                    {{ $t('common.24h') }}<v-icon v-if="isActiveSort(SORT_KEY.PERCENTAGE_CHANGE)" class="ml-1" :size="14">{{ sortIcon }}</v-icon></v-btn
                 ></v-col
             >
             <v-col v-if="!isHomePage" md="2" class="d-none d-md-block py-0">
                 <v-row align="center" class="ma-0">
                     <v-btn variant="text" color="info" class="font-weight-regular ml-n3" rounded="pill" size="small" @click="sortTable(SORT_KEY.VOLUME)">
-                        Volume
+                        {{ $t('market.volume') }}
                         <v-icon v-if="isActiveSort(SORT_KEY.VOLUME)" class="ml-1" :size="14">{{ sortIcon }}</v-icon></v-btn
                     >
                 </v-row>
@@ -45,7 +44,7 @@
             <v-col :sm="2" class="d-none d-sm-block py-0">
                 <v-row align="center" class="ma-0">
                     <v-btn variant="text" color="info" class="font-weight-regular ml-n3" rounded="pill" size="small" @click="sortTable(SORT_KEY.MARKET_CAP)">
-                        Market Cap
+                        {{ $t('market.marketCap') }}
                         <v-icon v-if="isActiveSort(SORT_KEY.MARKET_CAP)" class="ml-1" :size="14">{{ sortIcon }}</v-icon></v-btn
                     >
                 </v-row>
@@ -64,27 +63,27 @@
                     <v-icon class="ml-1" :size="14">{{ sortIcon }}</v-icon></v-btn
                 >
                 <app-menu min-width="140" activator="#activator-mobile-sort" :close-on-content-click="false">
-                    <v-list-item title="Token Name" class="py-2" @click="sortTable(SORT_KEY.NAME)">
+                    <v-list-item :title="$t('portfolio.tokenName')" class="py-2" @click="sortTable(SORT_KEY.NAME)">
                         <template #append>
                             <v-icon v-if="isActiveSort(SORT_KEY.NAME)" class="ml-1" :size="14">{{ sortIcon }}</v-icon>
                         </template>
                     </v-list-item>
-                    <v-list-item title="Price" class="py-2" @click="sortTable(SORT_KEY.PRICE)">
+                    <v-list-item :title="$t('common.price')" class="py-2" @click="sortTable(SORT_KEY.PRICE)">
                         <template #append>
                             <v-icon v-if="isActiveSort(SORT_KEY.PRICE)" class="ml-1" :size="14">{{ sortIcon }}</v-icon>
                         </template>
                     </v-list-item>
-                    <v-list-item title="Volume" class="py-2" @click="sortTable(SORT_KEY.VOLUME)">
+                    <v-list-item :title="$t('market.volume')" class="py-2" @click="sortTable(SORT_KEY.VOLUME)">
                         <template #append>
                             <v-icon v-if="isActiveSort(SORT_KEY.VOLUME)" class="ml-1" :size="14">{{ sortIcon }}</v-icon></template
                         >
                     </v-list-item>
-                    <v-list-item title="Market Cap" class="py-2" @click="sortTable(SORT_KEY.MARKET_CAP)">
+                    <v-list-item :title="$t('market.marketCap')" class="py-2" @click="sortTable(SORT_KEY.MARKET_CAP)">
                         <template #append>
                             <v-icon v-if="isActiveSort(SORT_KEY.MARKET_CAP)" class="ml-1" :size="14">{{ sortIcon }}</v-icon>
                         </template>
                     </v-list-item>
-                    <v-list-item title="24h" class="py-2" @click="sortTable(SORT_KEY.PERCENTAGE_CHANGE)">
+                    <v-list-item :title="$t('common.24h')" class="py-2" @click="sortTable(SORT_KEY.PERCENTAGE_CHANGE)">
                         <template #append>
                             <v-icon v-if="isActiveSort(SORT_KEY.PERCENTAGE_CHANGE)" class="ml-1" :size="14">{{ sortIcon }}</v-icon></template
                         >
@@ -156,13 +155,13 @@ const props = withDefaults(defineProps<PropType>(), {})
 const list: Tab[] = [
     {
         value: 'fav',
-        title: 'Favorites'
+        title: t('token.favorites')
     }
 ]
 if (supportsFiat.value) {
     list.unshift({
         value: 'all',
-        title: 'All'
+        title: t('common.all')
     })
 }
 
@@ -256,15 +255,15 @@ const SORT_KEY = KEY
 
 const activeSortString = computed<string>(() => {
     if (state.sortKey.includes(SORT_KEY.MARKET_CAP)) {
-        return 'Market Cap'
+        return t('market.marketCap')
     } else if (state.sortKey.includes(SORT_KEY.PRICE)) {
-        return 'Price'
+        return t('common.price')
     } else if (state.sortKey.includes(SORT_KEY.NAME)) {
-        return 'Token'
+        return t('common.token')
     } else if (state.sortKey.includes(SORT_KEY.VOLUME)) {
-        return 'Volume'
+        return t('market.volume')
     }
-    return '24h'
+    return t('common.24h')
 })
 
 /**

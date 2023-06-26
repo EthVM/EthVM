@@ -125,7 +125,6 @@
         "value": "Value",
         "token": "Token | Tokens",
         "price": "Price",
-        "marketCap": "Market Cap",
         "more": "More",
         "24h": "24h",
         "usdValue": "USD Value",
@@ -162,15 +161,10 @@
         "position": "Position"
     },
     "token": {
-        "maxSupply": "Max Supply",
         "contract": "Contract",
         "tokenStandard": "Token Standard",
         "decimals": "Decimals",
         "collection": "Collection | Collections",
-        "circulatingSupply": "Circulating Supply",
-        "24hHigh": "24h High",
-        "24hTradingVolume": "24h Trading Volume",
-        "marketCap": "Market Cap",
         "id": "ID",
         "percentage": "Percentage",
         "image": "Image",
@@ -180,7 +174,8 @@
         "searchTokenName": "Search token name",
         "addToken": "Add Token",
         "noMatch": "We could not find anything mathching",
-        "holder": "Holder | Holders"
+        "holder": "Holder | Holders",
+        "favorites": "Favorites"
     },
     "settings": {
         "emptyList": "This list is empty",
@@ -210,16 +205,8 @@
         }
     },
     "address": {
-        "circulatingSupply": "Circulating Supply",
-        "24hTradingVolume": "24h Trading Volume",
         "blockRewards": "Block rewards",
         "uncleRewards": "Uncle rewards",
-        "totalSupply": "Total Supply",
-        "24h": {
-            "high": "24h High",
-            "change": "24h Change",
-            "low": "24h low"
-        },
         "tagline": {
             "noToken": "This address does not hold any tokens",
             "noTransactionHistory": "This address does not have any token transfer history",
@@ -321,6 +308,19 @@
     },
     "nft": {
         "items":"items",
-        "owners": "owners"
+        "owner": "owner | owners"
+    },
+    "market": {
+        "marketCap":"Market Cap",
+        "volume": "Volume",
+        "circulatingSupply": "Circulating Supply",
+        "24hHigh": "24h High",
+        "24hLow": "24h Low",
+        "totalSupply": "Total Supply",
+        "24hTradingVolume": "24h Trading Volume",
+        "maxSupply": "Max Supply",
+        "24hChange":  "24h Change",
+        "priceChange": "Price Change",
+        "totalUsdValue": "Total USD Value"
     }
 }
