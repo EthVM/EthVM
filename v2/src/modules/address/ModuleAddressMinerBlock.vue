@@ -33,7 +33,7 @@
                 <!--Table Header-->
                 <v-row class="d-none d-sm-flex text-body-1 text-info mt-2 mt-sm-5 mb-1">
                     <v-col md="3" class="py-0"> {{ $t('common.block') }} # </v-col>
-                    <v-col md="3" class="py-0"> {{ $t('block.header.reward') }} </v-col>
+                    <v-col md="3" class="py-0"> {{ $t('common.reward') }} </v-col>
                     <v-col md="3" class="py-0"> {{ $t('txs.balanceBefore') }} </v-col>
                     <v-col md="3" class="py-0"> {{ $t('txs.balanceAfter') }} </v-col>
                 </v-row>

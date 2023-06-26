@@ -109,94 +109,94 @@ const blockDetails = computed<{ [key: string]: Detail } | null>(() => {
     if (blockDetailsData.value) {
         const details: { [key: string]: Detail } = {
             height: {
-                title: 'Height',
+                title: t('block.Height'),
                 detail: formatNumber(blockDetailsData.value?.summary.number)
             },
             hash: {
-                title: 'Hash',
+                title: t('common.hash'),
                 detail: blockDetailsData.value?.hash
             },
             parentHash: {
-                title: 'Parent Hash',
+                title: t('common.parentHash'),
                 detail: blockDetailsData.value?.parentHash,
                 link: `/block/hash/${blockDetailsData.value?.parentHash}`
             },
             miner: {
-                title: 'Miner',
+                title: t('block.header.miner'),
                 detail: blockDetailsData.value?.summary.miner,
                 link: `/address/${blockDetailsData.value?.summary.miner}`
             },
             totalRewards: {
-                title: 'Total Rewards',
+                title: t('block.totalRewards'),
                 detail: `${rewards.value.value} ${rewards.value.unit}`,
                 tooltip: rewards.value.tooltipText ? `${rewards.value.tooltipText} ${currencyName}` : undefined
             },
             txsFees: {
-                title: 'Txs Fees',
+                title: t('block.txFee'),
                 detail: `${transactionFees.value.value} ${transactionFees.value.unit}`,
                 tooltip: transactionFees.value.tooltipText ? `${transactionFees.value.tooltipText} ${currencyName}` : undefined
             },
             uncleReward: {
-                title: 'Uncle Reward',
+                title: t('block.uncleReward'),
                 detail: `${uncleRewards.value.value} ${uncleRewards.value.unit}`,
                 tooltip: uncleRewards.value.tooltipText ? `${uncleRewards.value.tooltipText} ${currencyName}` : undefined
             },
             transactions: {
-                title: 'Transactions',
+                title: t('txs.name', 2),
                 detail: transactionsCount.value
             },
             difficulty: {
-                title: 'Difficulty',
+                title: t('block.difficulty'),
                 detail: formatNumber(new BN(blockDetailsData.value?.difficulty).toNumber())
             },
             totalDifficulty: {
-                title: 'Total Difficulty',
+                title: t('block.totalDifficulty'),
                 detail: formatNumber(new BN(blockDetailsData.value?.totalDifficulty).toNumber())
             },
             blockSize: {
-                title: 'Size',
+                title: t('block.size'),
                 detail: `${formatNumber(blockDetailsData.value?.size)} Bytes`
             },
             nonce: {
-                title: 'Nonce',
+                title: t('common.nonce'),
                 detail: formatNumber(new BN(blockDetailsData.value?.nonce).toNumber())
             },
             stateRoot: {
-                title: 'State Root',
+                title: t('block.stateRoot'),
                 detail: blockDetailsData.value?.stateRoot
             },
             extraData: {
-                title: 'Extra Data',
+                title: t('block.extraData'),
                 detail: blockDetailsData.value?.extraData
             },
             gasLimit: {
-                title: 'Gas Limit',
+                title: t('common.gasLimit'),
                 detail: formatNumber(blockDetailsData.value?.gasLimit)
             },
             gasUsed: {
-                title: 'Gas Used',
+                title: t('txs.details.other.gasUsed'),
                 detail: formatNumber(blockDetailsData.value?.gasUsed)
             },
             logs: {
-                title: 'Logs',
+                title: t('txs.details.logs.header'),
                 detail: blockDetailsData.value?.logsBloom
             },
             transactionsRoot: {
-                title: 'Transactions Root',
+                title: t('block.transactionRoot'),
                 detail: blockDetailsData.value?.transactionsRoot
             },
             receiptsRoot: {
-                title: 'Receipts Root',
+                title: t('block.receiptRoot'),
                 detail: blockDetailsData.value?.receiptsRoot
             },
             unclesSHA3: {
-                title: 'Uncles SHA3',
+                title: t('block.uncleSha'),
                 detail: blockDetailsData.value?.sha3Uncles
             }
         }
         if (blockDetailsData.value?.summary.baseFeePerGas) {
             details['baseFee'] = {
-                title: 'Base Fee per Gas',
+                title: t('block.baseFee'),
                 detail: `${fromWei(blockDetailsData.value?.summary.baseFeePerGas, 'Gwei')} Gwei`
             }
         }

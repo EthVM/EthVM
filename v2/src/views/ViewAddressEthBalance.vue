@@ -47,7 +47,9 @@ import { useAppViewGrid } from '@core/composables/AppViewGrid/AppViewGrid.compos
 import { Tab } from '@core/components/props'
 import { ADDRESS_ROUTE_QUERY, Q_ADDRESS_TRANSFERS } from '@core/router/routesNames'
 import { useDisplay } from 'vuetify/lib/framework.mjs'
+import { useI18n } from 'vue-i18n'
 
+const { t } = useI18n()
 const { xs } = useDisplay()
 const routes = Q_ADDRESS_TRANSFERS
 const minerRoutes = ADDRESS_ROUTE_QUERY.Q_MINER
@@ -75,11 +77,11 @@ const state = reactive({
 const { columnPadding, rowMargin } = useAppViewGrid()
 
 const tabs = computed<Tab[]>(() => {
-    const txsText = xs.value ? 'Txs' : 'Transactions'
+    const txsText = xs.value ? t('txs.nameShort', 2) : t('txs.name', 2)
     const tabs = [
         {
             value: routes[0],
-            title: 'All'
+            title: t('common.all')
         },
         {
             value: routes[1],
@@ -87,15 +89,15 @@ const tabs = computed<Tab[]>(() => {
         },
         {
             value: routes[2],
-            title: 'Transfers'
+            title: t('common.transfer')
         },
         {
             value: routes[3],
-            title: 'Pending'
+            title: t('txs.details.title.pending')
         },
         {
             value: routes[5],
-            title: 'Stake Withdrawals'
+            title: t('block.stakeWithdrawals')
         }
     ]
 
@@ -103,7 +105,7 @@ const tabs = computed<Tab[]>(() => {
         ...tabs,
         props.isAddressMiner && {
             value: routes[4],
-            title: 'Rewards'
+            title: t('common.reward', 2)
         }
     ].filter(Boolean)
 })

@@ -19,13 +19,13 @@
                 <v-col cols="12" v-if="state.showMoreDetails">
                     <v-row justify="space-between" dense class="my-5 mx-0">
                         <div>
-                            <p class="text-info mr-2">Transactions</p>
+                            <p class="text-info mr-2">{{ $t('txs.name', 2) }}</p>
                             <p>
                                 {{ _block.totalTx }}
                             </p>
                         </div>
                         <div style="width: 140px">
-                            <p class="text-info mr-2">Reward</p>
+                            <p class="text-info mr-2">{{ $t('common.reward') }}</p>
                             <p>
                                 {{ _block.rewards.value }}
                             </p>

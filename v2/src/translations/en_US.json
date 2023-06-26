@@ -30,6 +30,7 @@
         "isHomeHeader": "Last Transactions",
         "refresh": "New Txs Found, Refresh",
         "name": "Transaction | Transactions",
+        "nameShort": "Tx | Txs",
         "newNft": "New ERC20 Transfers",
         "details": {
             "header": "Transaction Summary",
@@ -55,8 +56,7 @@
                 "baseFee": "Base fee",
                 "maxFee": "Max fee per gas",
                 "notFound": "No transaction state difference avaialble",
-                "index": "TX Index",
-                "difference": "State"
+                "index": "Tx Index"
             },
             "actions": {
                 "header": "Actions",
@@ -137,7 +137,9 @@
         "filter": "Filter",
         "save": "Save",
         "overview": "Overview",
-        "nft": "NFT | NFTS"
+        "nft": "NFT | NFTS",
+        "reward": "Reward | Rewards",
+        "height": "Height"
     },
     "portfolio": {
         "yourPortfolio": "Your portfolio",
@@ -172,6 +174,7 @@
         "noHolder": "There are no holders for this token",
         "noTransfers": "No transfers available",
         "searchTokenName": "Search token name",
+        "searchTokens": "Search tokens",
         "addToken": "Add Token",
         "noMatch": "We could not find anything mathching",
         "holder": "Holder | Holders",
@@ -228,8 +231,8 @@
         "uncle": "Uncle | Uncles",
         "difficulty": "Difficulty",
         "stateRoot": "State Root",
-        "receiptRoot": "Receipt Root",
-        "transactionRoot": "Transaction Root",
+        "receiptRoot": "Receipts Root",
+        "transactionRoot": "Transactions Root",
         "logBloom": "Logs Bloom",
         "extraData": "Extra Data",
         "addressBlockTitle": "Mined Blocks",
@@ -252,17 +255,16 @@
         "header": {
             "blockNumber": "Block #",
             "watchList": "Watchlist",
-            "time": "Timestamp",
-            "transactions": "Transactions",
-            "miner": "Miner",
-            "reward": "Reward"
+            "miner": "Miner"
         },
         "error": {
             "withdrawal": "This block does not have any withdrawals",
             "notMined": "This block has not been mined yet",
-            "reward": "Reward",
             "txs": "This block does not have any transactions"
-        }
+        },
+        "totalRewards": "Total Rewards",
+        "txFee": "Transaction fees",
+        "uncleSha": "Uncles SHA3"
     },
     "home": {
         "tagline": {
