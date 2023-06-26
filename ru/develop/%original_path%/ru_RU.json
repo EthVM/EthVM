@@ -1,0 +1,1844 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+  <file id="7399" original="/develop/v2/src/translations/en_US.json" source-language="en" target-language="ru" datatype="plaintext" project-id="352149" tool-id="crowdin">
+    <header>
+      <tool tool-id="crowdin" tool-name="Crowdin" tool-version="1.1"/>
+    </header>
+    <body>
+      <trans-unit id="680469" resname="about.what.header">
+        <source>What is ethVM</source>
+        <target state="needs-translation">What is ethVM</target>
+        <context-group purpose="information">
+          <context context-type="source">about -&gt; what -&gt; header</context>
+          <context context-type="x-crowdin-screenshot">Screenshot: https://crowdin.com/s/wrap/93e33383l4g3v6d3b3r4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2n4h423b37363c31474g57385i6o4?t=680469</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680471" resname="about.what.body">
+        <source>ethVM is a block explorer made by people that put user experience first. We made EthVM so that normal users can monitor blockchain transactions, view portfolio analytics, and even explore NFT collections without feeling like they are doing their taxes…or even worse:using Excel. It is an open source platform that empowers users to do more when it comes to crypto!</source>
+        <target state="needs-translation">ethVM is a block explorer made by people that put user experience first. We made EthVM so that normal users can monitor blockchain transactions, view portfolio analytics, and even explore NFT collections without feeling like they are doing their taxes…or even worse:using Excel. It is an open source platform that empowers users to do more when it comes to crypto!</target>
+        <context-group purpose="information">
+          <context context-type="source">about -&gt; what -&gt; body</context>
+          <context context-type="x-crowdin-screenshot">Screenshot: https://crowdin.com/s/wrap/93e33383l4g3v6d3b3r4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2n4h423b37363c31474g57385i6o4?t=680471</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680473" resname="about.who.header">
+        <source>Who are we?</source>
+        <target state="needs-translation">Who are we?</target>
+        <context-group purpose="information">
+          <context context-type="source">about -&gt; who -&gt; header</context>
+          <context context-type="x-crowdin-screenshot">Screenshot: https://crowdin.com/s/wrap/93e33383l4g3v6d3b3r4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2n4h423b37363c31474g57385i6o4?t=680473</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680475" resname="about.who.body">
+        <source>ethVM is made by the MyEtherWallet team!</source>
+        <target state="needs-translation">ethVM is made by the MyEtherWallet team!</target>
+        <context-group purpose="information">
+          <context context-type="source">about -&gt; who -&gt; body</context>
+          <context context-type="x-crowdin-screenshot">Screenshot: https://crowdin.com/s/wrap/93e33383l4g3v6d3b3r4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2n4h423b37363c31474g57385i6o4?t=680475</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680477" resname="about.who.body2">
+        <source>MEW was the first wallet interface in Ethereum and was founded 2 weeks after Ethereum mainnet went live. You can basically call us a crypto OG. Ever since our founding, our mission has been to make products that people love to use.</source>
+        <target state="needs-translation">MEW was the first wallet interface in Ethereum and was founded 2 weeks after Ethereum mainnet went live. You can basically call us a crypto OG. Ever since our founding, our mission has been to make products that people love to use.</target>
+        <context-group purpose="information">
+          <context context-type="source">about -&gt; who -&gt; body2</context>
+          <context context-type="x-crowdin-screenshot">Screenshot: https://crowdin.com/s/wrap/93e33383l4g3v6d3b3r4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2n4h423b37363c31474g57385i6o4?t=680477</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680479" resname="about.why.header">
+        <source>Why did we make ethVM?</source>
+        <target state="needs-translation">Why did we make ethVM?</target>
+        <context-group purpose="information">
+          <context context-type="source">about -&gt; why -&gt; header</context>
+          <context context-type="x-crowdin-screenshot">Screenshot: https://crowdin.com/s/wrap/93e33383l4g3v6d3b3r4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2n4h423b37363c31474g57385i6o4?t=680479</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680481" resname="about.why.body">
+        <source> We made ethVM so that users, developers, and communities have a beautiful choice when it comes to block explorers. ethVM is open source, which makes it adaptable to any crypto ecosystem. So whether you want a better way to track your contract approvals or a solution for an ambitious new project - this is for you!</source>
+        <target state="needs-translation"> We made ethVM so that users, developers, and communities have a beautiful choice when it comes to block explorers. ethVM is open source, which makes it adaptable to any crypto ecosystem. So whether you want a better way to track your contract approvals or a solution for an ambitious new project - this is for you!</target>
+        <context-group purpose="information">
+          <context context-type="source">about -&gt; why -&gt; body</context>
+          <context context-type="x-crowdin-screenshot">Screenshot: https://crowdin.com/s/wrap/93e33383l4g3v6d3b3r4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2n4h423b37363c31474g57385i6o4?t=680481</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680483" resname="about.foot">
+        <source>SSPL License, Copyright © 2023 MyEtherWallet Inc. For Terms &amp; conditions visit our GitHub.</source>
+        <target state="needs-translation">SSPL License, Copyright © 2023 MyEtherWallet Inc. For Terms &amp; conditions visit our GitHub.</target>
+        <context-group purpose="information">
+          <context context-type="source">about -&gt; foot</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680485" resname="notFound.text">
+        <source>Oh No! This page is not found.</source>
+        <target state="needs-translation">Oh No! This page is not found.</target>
+        <context-group purpose="information">
+          <context context-type="source">notFound -&gt; text</context>
+          <context context-type="x-crowdin-screenshot">Screenshot: https://crowdin.com/s/wrap/93e33383l4g3v6d3b3p4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2n4h423c37363831474g57385i6o4?t=680485</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680487" resname="notFound.homeButton">
+        <source>Go Back Home</source>
+        <target state="needs-translation">Go Back Home</target>
+        <context-group purpose="information">
+          <context context-type="source">notFound -&gt; homeButton</context>
+          <context context-type="x-crowdin-screenshot">Screenshot: https://crowdin.com/s/wrap/93e33383l4g3v6d3b3p4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2n4h423c37363831474g57385i6o4?t=680487</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680491" resname="txs.header" approved="yes">
+        <source>All Transactions</source>
+        <target state="final">Все транзакции</target>
+        <context-group purpose="information">
+          <context context-type="source">txs -&gt; header</context>
+          <context context-type="x-crowdin-screenshot">Screenshot: https://crowdin.com/s/wrap/93e33383l4g3v6d3c3t4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k453g2j495k2n4h473e37323e31474g57385i6o4?t=680491</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680759" resname="txs.incoming" approved="yes">
+        <source>Incoming</source>
+        <target state="final">Входящие</target>
+        <context-group purpose="information">
+          <context context-type="source">txs -&gt; incoming</context>
+          <context context-type="x-crowdin-screenshot">Screenshot 1: https://crowdin.com/s/wrap/93e33383l4g3v6c3d3t4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l4039393v283l4n2j56463k6v4n4?t=680759
+Screenshot 2: https://crowdin.com/s/wrap/93e33383l4g3v6c3b3r4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l40393b3v293l4n2j56463k6v4n4?t=680759</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680761" resname="txs.outcoming" approved="yes">
+        <source>Outgoing</source>
+        <target state="final">Исходящие</target>
+        <context-group purpose="information">
+          <context context-type="source">txs -&gt; outcoming</context>
+          <context context-type="x-crowdin-screenshot">Screenshot 1: https://crowdin.com/s/wrap/93e33383l4g3v6c3d3t4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l4039393v283l4n2j56463k6v4n4?t=680761
+Screenshot 2: https://crowdin.com/s/wrap/93e33383l4g3v6c3b3r4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l40393b3v293l4n2j56463k6v4n4?t=680761</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680763" resname="txs.balanceChange">
+        <source>Balance Change</source>
+        <target state="needs-translation">Balance Change</target>
+        <context-group purpose="information">
+          <context context-type="source">txs -&gt; balanceChange</context>
+          <context context-type="x-crowdin-screenshot">Screenshot 1: https://crowdin.com/s/wrap/93e33383l4g3v6c3d3t4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l4039393v283l4n2j56463k6v4n4?t=680763
+Screenshot 2: https://crowdin.com/s/wrap/93e33383l4g3v6c3b3r4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l40393b3v293l4n2j56463k6v4n4?t=680763</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680765" resname="txs.balanceBefore">
+        <source>Balance Before</source>
+        <target state="needs-translation">Balance Before</target>
+        <context-group purpose="information">
+          <context context-type="source">txs -&gt; balanceBefore</context>
+          <context context-type="x-crowdin-screenshot">Screenshot 1: https://crowdin.com/s/wrap/93e33383l4g3v6b3h3l4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l403a3f3v2c3h4n2j56463k6v4n4?t=680765
+Screenshot 2: https://crowdin.com/s/wrap/93e33383l4g3v6c3d3n4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l4039393v2b3j4n2j56463k6v4n4?t=680765
+Screenshot 3: https://crowdin.com/s/wrap/93e33383l4g3v6b3h3n4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l403a3f3v2b3i4n2j56463k6v4n4?t=680765</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680767" resname="txs.balanceAfter">
+        <source>Balance After</source>
+        <target state="needs-translation">Balance After</target>
+        <context-group purpose="information">
+          <context context-type="source">txs -&gt; balanceAfter</context>
+          <context context-type="x-crowdin-screenshot">Screenshot 1: https://crowdin.com/s/wrap/93e33383l4g3v6b3h3l4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l403a3f3v2c3h4n2j56463k6v4n4?t=680767
+Screenshot 2: https://crowdin.com/s/wrap/93e33383l4g3v6c3d3n4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l4039393v2b3j4n2j56463k6v4n4?t=680767
+Screenshot 3: https://crowdin.com/s/wrap/93e33383l4g3v6b3h3n4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l403a3f3v2b3i4n2j56463k6v4n4?t=680767</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680769" resname="txs.estimatedFee">
+        <source>Estimated Fee</source>
+        <target state="needs-translation">Estimated Fee</target>
+        <context-group purpose="information">
+          <context context-type="source">txs -&gt; estimatedFee</context>
+          <context context-type="x-crowdin-screenshot">Screenshot: https://crowdin.com/s/wrap/93e33383l4g3v6c3d3l4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l4039393v2c3h4n2j56463k6v4n4?t=680769</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680493" resname="txs.isHomeHeader">
+        <source>Last Transactions</source>
+        <target state="needs-translation">Last Transactions</target>
+        <context-group purpose="information">
+          <context context-type="source">txs -&gt; isHomeHeader</context>
+          <context context-type="x-crowdin-screenshot">Screenshot: https://crowdin.com/s/wrap/93e33383l4g3v6c3h3l4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4k40373d3v2c3q4n2456463k6v4n4?t=680493</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680495" resname="txs.refresh">
+        <source>New Txs Found, Refresh</source>
+        <target state="needs-translation">New Txs Found, Refresh</target>
+        <context-group purpose="information">
+          <context context-type="source">txs -&gt; refresh</context>
+          <context context-type="x-crowdin-screenshot">Screenshot: https://crowdin.com/s/wrap/93e33383l4g3v6d3c3t4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k453g2j495k2n4h473e37323e31474g57385i6o4?t=680495</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680511" resname="txs.name">
+        <source>Transactions</source>
+        <target state="needs-translation">Transactions</target>
+        <context-group purpose="information">
+          <context context-type="source">txs -&gt; name</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680771" resname="txs.newNft">
+        <source>New ERC20 Transfers</source>
+        <target state="needs-translation">New ERC20 Transfers</target>
+        <context-group purpose="information">
+          <context context-type="source">txs -&gt; newNft</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680629" resname="txs.details.header">
+        <source>Transaction Summary</source>
+        <target state="needs-translation">Transaction Summary</target>
+        <context-group purpose="information">
+          <context context-type="source">txs -&gt; details -&gt; header</context>
+          <context context-type="x-crowdin-screenshot">Screenshot 1: https://crowdin.com/s/wrap/93e33383l4g3v6c3f3p4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l40383f3v293j4n2j56463k6v4n4?t=680629
+Screenshot 2: https://crowdin.com/s/wrap/93e33383l4g3v6c3e3r4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l40383i3v283j4n2j56463k6v4n4?t=680629
+Screenshot 3: https://crowdin.com/s/wrap/93e33383l4g3v6c3c3t4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l40393a3v273i4n2j56463k6v4n4?t=680629</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680631" resname="txs.details.txHash">
+        <source>Tx Hash</source>
+        <target state="needs-translation">Tx Hash</target>
+        <context-group purpose="information">
+          <context context-type="source">txs -&gt; details -&gt; txHash</context>
+          <context context-type="x-crowdin-screenshot">Screenshot 1: https://crowdin.com/s/wrap/93e33383l4g3v6c3f3p4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l40383f3v293j4n2j56463k6v4n4?t=680631
+Screenshot 2: https://crowdin.com/s/wrap/93e33383l4g3v6c3e3r4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l40383i3v283j4n2j56463k6v4n4?t=680631</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680633" resname="txs.details.createdContract">
+        <source>Created Contract</source>
+        <target state="needs-translation">Created Contract</target>
+        <context-group purpose="information">
+          <context context-type="source">txs -&gt; details -&gt; createdContract</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680697" resname="txs.details.interactedWith">
+        <source>Interacted With Contract</source>
+        <target state="needs-translation">Interacted With Contract</target>
+        <context-group purpose="information">
+          <context context-type="source">txs -&gt; details -&gt; interactedWith</context>
+          <context context-type="x-crowdin-screenshot">Screenshot: https://crowdin.com/s/wrap/93e33383l4g3v6c3f3p4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l40383f3v293j4n2j56463k6v4n4?t=680697</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680635" resname="txs.details.title.successful">
+        <source>Successful</source>
+        <target state="needs-translation">Successful</target>
+        <context-group purpose="information">
+          <context context-type="source">txs -&gt; details -&gt; title -&gt; successful</context>
+          <context context-type="x-crowdin-screenshot">Screenshot 1: https://crowdin.com/s/wrap/93e33383l4g3v6c3f3p4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l40383f3v293j4n2j56463k6v4n4?t=680635
+Screenshot 2: https://crowdin.com/s/wrap/93e33383l4g3v6c3e3r4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l40383i3v283j4n2j56463k6v4n4?t=680635</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680637" resname="txs.details.title.failed">
+        <source>Failed</source>
+        <target state="needs-translation">Failed</target>
+        <context-group purpose="information">
+          <context context-type="source">txs -&gt; details -&gt; title -&gt; failed</context>
+          <context context-type="x-crowdin-screenshot">Screenshot: https://crowdin.com/s/wrap/93e33383l4g3v6c3e3p4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l40383i3v2a3j4n2j56463k6v4n4?t=680637</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680639" resname="txs.details.title.replaced">
+        <source>Replaced</source>
+        <target state="needs-translation">Replaced</target>
+        <context-group purpose="information">
+          <context context-type="source">txs -&gt; details -&gt; title -&gt; replaced</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680641" resname="txs.details.title.pending">
+        <source>Pending</source>
+        <target state="needs-translation">Pending</target>
+        <context-group purpose="information">
+          <context context-type="source">txs -&gt; details -&gt; title -&gt; pending</context>
+          <context context-type="x-crowdin-screenshot">Screenshot 1: https://crowdin.com/s/wrap/93e33383l4g3v6c3d3n4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l4039393v2b3j4n2j56463k6v4n4?t=680641
+Screenshot 2: https://crowdin.com/s/wrap/93e33383l4g3v6c3d3l4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l4039393v2c3h4n2j56463k6v4n4?t=680641
+Screenshot 3: https://crowdin.com/s/wrap/93e33383l4g3v6c3c3t4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l40393a3v273i4n2j56463k6v4n4?t=680641
+Screenshot 4: https://crowdin.com/s/wrap/93e33383l4g3v6c3d3t4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l4039393v283l4n2j56463k6v4n4?t=680641
+Screenshot 5: https://crowdin.com/s/wrap/93e33383l4g3v6c3b3r4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l40393b3v293l4n2j56463k6v4n4?t=680641</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680643" resname="txs.details.state.header">
+        <source>State</source>
+        <target state="needs-translation">State</target>
+        <context-group purpose="information">
+          <context context-type="source">txs -&gt; details -&gt; state -&gt; header</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680645" resname="txs.details.state.before">
+        <source>Before</source>
+        <target state="needs-translation">Before</target>
+        <context-group purpose="information">
+          <context context-type="source">txs -&gt; details -&gt; state -&gt; before</context>
+          <context context-type="x-crowdin-screenshot">Screenshot: https://crowdin.com/s/wrap/93e33383l4g3v6c3f3l4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l40383f3v2a3n4n2j56463k6v4n4?t=680645</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680647" resname="txs.details.state.after">
+        <source>After</source>
+        <target state="needs-translation">After</target>
+        <context-group purpose="information">
+          <context context-type="source">txs -&gt; details -&gt; state -&gt; after</context>
+          <context context-type="x-crowdin-screenshot">Screenshot: https://crowdin.com/s/wrap/93e33383l4g3v6c3f3l4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l40383f3v2a3n4n2j56463k6v4n4?t=680647</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680649" resname="txs.details.state.notFound">
+        <source>No transaction state difference avaialble</source>
+        <target state="needs-translation">No transaction state difference avaialble</target>
+        <context-group purpose="information">
+          <context context-type="source">txs -&gt; details -&gt; state -&gt; notFound</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680651" resname="txs.details.state.difference">
+        <source>State Difference</source>
+        <target state="needs-translation">State Difference</target>
+        <context-group purpose="information">
+          <context context-type="source">txs -&gt; details -&gt; state -&gt; difference</context>
+          <context context-type="x-crowdin-screenshot">Screenshot: https://crowdin.com/s/wrap/93e33383l4g3v6c3f3l4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l40383f3v2a3n4n2j56463k6v4n4?t=680651</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680699" resname="txs.details.other.header">
+        <source>Other</source>
+        <target state="needs-translation">Other</target>
+        <context-group purpose="information">
+          <context context-type="source">txs -&gt; details -&gt; other -&gt; header</context>
+          <context context-type="x-crowdin-screenshot">Screenshot 1: https://crowdin.com/s/wrap/93e33383l4g3v6c3f3p4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l40383f3v293j4n2j56463k6v4n4?t=680699
+Screenshot 2: https://crowdin.com/s/wrap/93e33383l4g3v6c3f3l4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l40383f3v2a3n4n2j56463k6v4n4?t=680699
+Screenshot 3: https://crowdin.com/s/wrap/93e33383l4g3v6c3f3n4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l40383f3v2a3h4n2j56463k6v4n4?t=680699
+Screenshot 4: https://crowdin.com/s/wrap/93e33383l4g3v6c3e3t4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l40383f3v2b3i4n2j56463k6v4n4?t=680699
+Screenshot 5: https://crowdin.com/s/wrap/93e33383l4g3v6c3e3r4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l40383i3v283j4n2j56463k6v4n4?t=680699
+Screenshot 6: https://crowdin.com/s/wrap/93e33383l4g3v6c3c3r4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l40393a3v273m4n2j56463k6v4n4?t=680699</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680701" resname="txs.details.other.gasUsed">
+        <source>Gas Used</source>
+        <target state="needs-translation">Gas Used</target>
+        <context-group purpose="information">
+          <context context-type="source">txs -&gt; details -&gt; other -&gt; gasUsed</context>
+          <context context-type="x-crowdin-screenshot">Screenshot 1: https://crowdin.com/s/wrap/93e33383l4g3v6d383t4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4h473937323f31474g57385i6o4?t=680701
+Screenshot 2: https://crowdin.com/s/wrap/93e33383l4g3v6c3e3t4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l40383f3v2b3i4n2j56463k6v4n4?t=680701</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680703" resname="txs.details.other.baseFee">
+        <source>Base fee</source>
+        <target state="needs-translation">Base fee</target>
+        <context-group purpose="information">
+          <context context-type="source">txs -&gt; details -&gt; other -&gt; baseFee</context>
+          <context context-type="x-crowdin-screenshot">Screenshot: https://crowdin.com/s/wrap/93e33383l4g3v6c3e3t4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l40383f3v2b3i4n2j56463k6v4n4?t=680703</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680705" resname="txs.details.other.maxFee">
+        <source>Max fee per gas</source>
+        <target state="needs-translation">Max fee per gas</target>
+        <context-group purpose="information">
+          <context context-type="source">txs -&gt; details -&gt; other -&gt; maxFee</context>
+          <context context-type="x-crowdin-screenshot">Screenshot: https://crowdin.com/s/wrap/93e33383l4g3v6c3e3t4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l40383f3v2b3i4n2j56463k6v4n4?t=680705</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680707" resname="txs.details.other.notFound">
+        <source>No transaction state difference avaialble</source>
+        <target state="needs-translation">No transaction state difference avaialble</target>
+        <context-group purpose="information">
+          <context context-type="source">txs -&gt; details -&gt; other -&gt; notFound</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680709" resname="txs.details.other.index">
+        <source>TX Index</source>
+        <target state="needs-translation">TX Index</target>
+        <context-group purpose="information">
+          <context context-type="source">txs -&gt; details -&gt; other -&gt; index</context>
+          <context context-type="x-crowdin-screenshot">Screenshot: https://crowdin.com/s/wrap/93e33383l4g3v6c3e3t4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l40383f3v2b3i4n2j56463k6v4n4?t=680709</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680711" resname="txs.details.other.difference">
+        <source>State</source>
+        <target state="needs-translation">State</target>
+        <context-group purpose="information">
+          <context context-type="source">txs -&gt; details -&gt; other -&gt; difference</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680667" resname="txs.details.actions.header">
+        <source>Actions</source>
+        <target state="needs-translation">Actions</target>
+        <context-group purpose="information">
+          <context context-type="source">txs -&gt; details -&gt; actions -&gt; header</context>
+          <context context-type="x-crowdin-screenshot">Screenshot 1: https://crowdin.com/s/wrap/93e33383l4g3v6c3f3p4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l40383f3v293j4n2j56463k6v4n4?t=680667
+Screenshot 2: https://crowdin.com/s/wrap/93e33383l4g3v6c3f3l4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l40383f3v2a3n4n2j56463k6v4n4?t=680667
+Screenshot 3: https://crowdin.com/s/wrap/93e33383l4g3v6c3f3n4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l40383f3v2a3h4n2j56463k6v4n4?t=680667
+Screenshot 4: https://crowdin.com/s/wrap/93e33383l4g3v6c3e3t4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l40383f3v2b3i4n2j56463k6v4n4?t=680667
+Screenshot 5: https://crowdin.com/s/wrap/93e33383l4g3v6c3e3r4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l40383i3v283j4n2j56463k6v4n4?t=680667
+Screenshot 6: https://crowdin.com/s/wrap/93e33383l4g3v6c3c3r4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l40393a3v273m4n2j56463k6v4n4?t=680667</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680669" resname="txs.details.actions.tokenTransfers">
+        <source>Token Transfers</source>
+        <target state="needs-translation">Token Transfers</target>
+        <context-group purpose="information">
+          <context context-type="source">txs -&gt; details -&gt; actions -&gt; tokenTransfers</context>
+          <context context-type="x-crowdin-screenshot">Screenshot: https://crowdin.com/s/wrap/93e33383l4g3v6c3f3p4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l40383f3v293j4n2j56463k6v4n4?t=680669</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680671" resname="txs.details.actions.nftTransfers">
+        <source>NFT Transfers</source>
+        <target state="needs-translation">NFT Transfers</target>
+        <context-group purpose="information">
+          <context context-type="source">txs -&gt; details -&gt; actions -&gt; nftTransfers</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680713" resname="txs.details.logs.header">
+        <source>Logs</source>
+        <target state="needs-translation">Logs</target>
+        <context-group purpose="information">
+          <context context-type="source">txs -&gt; details -&gt; logs -&gt; header</context>
+          <context context-type="x-crowdin-screenshot">Screenshot 1: https://crowdin.com/s/wrap/93e33383l4g3v6c3f3p4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l40383f3v293j4n2j56463k6v4n4?t=680713
+Screenshot 2: https://crowdin.com/s/wrap/93e33383l4g3v6c3f3l4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l40383f3v2a3n4n2j56463k6v4n4?t=680713
+Screenshot 3: https://crowdin.com/s/wrap/93e33383l4g3v6c3f3n4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l40383f3v2a3h4n2j56463k6v4n4?t=680713
+Screenshot 4: https://crowdin.com/s/wrap/93e33383l4g3v6c3e3t4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l40383f3v2b3i4n2j56463k6v4n4?t=680713
+Screenshot 5: https://crowdin.com/s/wrap/93e33383l4g3v6c3e3r4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l40383i3v283j4n2j56463k6v4n4?t=680713
+Screenshot 6: https://crowdin.com/s/wrap/93e33383l4g3v6c3c3r4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l40393a3v273m4n2j56463k6v4n4?t=680713</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680715" resname="txs.details.logs.decoded">
+        <source>Decoded</source>
+        <target state="needs-translation">Decoded</target>
+        <context-group purpose="information">
+          <context context-type="source">txs -&gt; details -&gt; logs -&gt; decoded</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680717" resname="txs.details.logs.data">
+        <source>Raw Data</source>
+        <target state="needs-translation">Raw Data</target>
+        <context-group purpose="information">
+          <context context-type="source">txs -&gt; details -&gt; logs -&gt; data</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680719" resname="txs.details.logs.signature">
+        <source>Signature</source>
+        <target state="needs-translation">Signature</target>
+        <context-group purpose="information">
+          <context context-type="source">txs -&gt; details -&gt; logs -&gt; signature</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680721" resname="txs.details.logs.event">
+        <source>Event | Events</source>
+        <target state="needs-translation">Event | Events</target>
+        <context-group purpose="information">
+          <context context-type="source">txs -&gt; details -&gt; logs -&gt; event</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680723" resname="txs.details.logs.searchEvents">
+        <source>Search events</source>
+        <target state="needs-translation">Search events</target>
+        <context-group purpose="information">
+          <context context-type="source">txs -&gt; details -&gt; logs -&gt; searchEvents</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680725" resname="txs.details.logs.searchAdrs">
+        <source>Search Addresses</source>
+        <target state="needs-translation">Search Addresses</target>
+        <context-group purpose="information">
+          <context context-type="source">txs -&gt; details -&gt; logs -&gt; searchAdrs</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680727" resname="txs.details.logs.noEvents">
+        <source>No events found</source>
+        <target state="needs-translation">No events found</target>
+        <context-group purpose="information">
+          <context context-type="source">txs -&gt; details -&gt; logs -&gt; noEvents</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680729" resname="txs.details.logs.noAdrs">
+        <source>No addresses found</source>
+        <target state="needs-translation">No addresses found</target>
+        <context-group purpose="information">
+          <context context-type="source">txs -&gt; details -&gt; logs -&gt; noAdrs</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680731" resname="txs.details.logs.clear">
+        <source>Clear All</source>
+        <target state="needs-translation">Clear All</target>
+        <context-group purpose="information">
+          <context context-type="source">txs -&gt; details -&gt; logs -&gt; clear</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680773" resname="common.add">
+        <source>add</source>
+        <target state="needs-translation">add</target>
+        <context-group purpose="information">
+          <context context-type="source">common -&gt; add</context>
+          <context context-type="x-crowdin-screenshot">Screenshot 1: https://crowdin.com/s/wrap/93e33383l4g3v6d3b3n4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2n4h423837343a31474g57385i6o4?t=680773
+Screenshot 2: https://crowdin.com/s/wrap/93e33383l4g3v6c383r4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l403a3e3v2b3o4n2j56463k6v4n4?t=680773</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680775" resname="common.all">
+        <source>All</source>
+        <target state="needs-translation">All</target>
+        <context-group purpose="information">
+          <context context-type="source">common -&gt; all</context>
+          <context context-type="x-crowdin-screenshot">Screenshot 1: https://crowdin.com/s/wrap/93e33383l4g3v6d3c3r4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2p4h423a37333931474g57385i6o4?t=680775
+Screenshot 2: https://crowdin.com/s/wrap/93e33383l4g3v6d393p4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2n4h423637333731474g57385i6o4?t=680775
+Screenshot 3: https://crowdin.com/s/wrap/93e33383l4g3v6d393l4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4h473837363c31474g57385i6o4?t=680775
+Screenshot 4: https://crowdin.com/s/wrap/93e33383l4g3v6c3d3n4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l4039393v2b3j4n2j56463k6v4n4?t=680775
+Screenshot 5: https://crowdin.com/s/wrap/93e33383l4g3v6c3d3t4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l4039393v283l4n2j56463k6v4n4?t=680775
+Screenshot 6: https://crowdin.com/s/wrap/93e33383l4g3v6c3b3r4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l40393b3v293l4n2j56463k6v4n4?t=680775</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680777" resname="common.id">
+        <source>Id</source>
+        <target state="needs-translation">Id</target>
+        <context-group purpose="information">
+          <context context-type="source">common -&gt; id</context>
+          <context context-type="x-crowdin-screenshot">Screenshot 1: https://crowdin.com/s/wrap/93e33383l4g3v6c3a3p4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l40393c3v273m4n2j56463k6v4n4?t=680777
+Screenshot 2: https://crowdin.com/s/wrap/93e33383l4g3v6c393r4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l403a3d3v2c3k4n2j56463k6v4n4?t=680777
+Screenshot 3: https://crowdin.com/s/wrap/93e33383l4g3v6c393p4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l403a3e3v273h4n2j56463k6v4n4?t=680777
+Screenshot 4: https://crowdin.com/s/wrap/93e33383l4g3v6c383n4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l403a3e3v2c3l4n2j564o2c433p2333545u4?t=680777
+Screenshot 5: https://crowdin.com/s/wrap/93e33383l4g3v6d3d3r4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k453g2j495k2p4h433a37353c31474g57385i6o4?t=680777</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680779" resname="common.block">
+        <source>Block</source>
+        <target state="needs-translation">Block</target>
+        <context-group purpose="information">
+          <context context-type="source">common -&gt; block</context>
+          <context context-type="x-crowdin-screenshot">Screenshot 1: https://crowdin.com/s/wrap/93e33383l4g3v6d383t4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4h473937323f31474g57385i6o4?t=680779
+Screenshot 2: https://crowdin.com/s/wrap/93e33383l4g3v6d3c3t4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k453g2j495k2n4h473e37323e31474g57385i6o4?t=680779
+Screenshot 3: https://crowdin.com/s/wrap/93e33383l4g3v6c3e3l4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l40383i3v2c3o4n2j56463k6v4n4?t=680779
+Screenshot 4: https://crowdin.com/s/wrap/93e33383l4g3v6c3c3p4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l40393a3v2a3p4n2j56463k6v4n4?t=680779</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680781" resname="common.details">
+        <source>Details</source>
+        <target state="needs-translation">Details</target>
+        <context-group purpose="information">
+          <context context-type="source">common -&gt; details</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680673" resname="common.blockMined">
+        <source>Block Mined</source>
+        <target state="needs-translation">Block Mined</target>
+        <context-group purpose="information">
+          <context context-type="source">common -&gt; blockMined</context>
+          <context context-type="x-crowdin-screenshot">Screenshot 1: https://crowdin.com/s/wrap/93e33383l4g3v6c3f3p4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l40383f3v293j4n2j56463k6v4n4?t=680673
+Screenshot 2: https://crowdin.com/s/wrap/93e33383l4g3v6c3e3r4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l40383i3v283j4n2j56463k6v4n4?t=680673</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680675" resname="common.confirmations">
+        <source>Confirmations</source>
+        <target state="needs-translation">Confirmations</target>
+        <context-group purpose="information">
+          <context context-type="source">common -&gt; confirmations</context>
+          <context context-type="x-crowdin-screenshot">Screenshot 1: https://crowdin.com/s/wrap/93e33383l4g3v6c3f3p4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l40383f3v293j4n2j56463k6v4n4?t=680675
+Screenshot 2: https://crowdin.com/s/wrap/93e33383l4g3v6c3e3r4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l40383i3v283j4n2j56463k6v4n4?t=680675</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680677" resname="common.copy">
+        <source>copy | copies</source>
+        <target state="needs-translation">copy | copies</target>
+        <context-group purpose="information">
+          <context context-type="source">common -&gt; copy</context>
+          <context context-type="x-crowdin-screenshot">Screenshot 1: https://crowdin.com/s/wrap/93e33383l4g3v6c3a3t4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l40393b3v2c3j4n2j56463k6v4n4?t=680677
+Screenshot 2: https://crowdin.com/s/wrap/93e33383l4g3v6c3a3p4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l40393c3v273m4n2j56463k6v4n4?t=680677
+Screenshot 3: https://crowdin.com/s/wrap/93e33383l4g3v6c383n4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l403a3e3v2c3l4n2j564o2c433p2333545u4?t=680677</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680513" resname="common.timestamp">
+        <source>Timestamp</source>
+        <target state="needs-translation">Timestamp</target>
+        <context-group purpose="information">
+          <context context-type="source">common -&gt; timestamp</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680499" resname="common.hash">
+        <source>Hash</source>
+        <target state="needs-translation">Hash</target>
+        <context-group purpose="information">
+          <context context-type="source">common -&gt; hash</context>
+          <context context-type="x-crowdin-screenshot">Screenshot 1: https://crowdin.com/s/wrap/93e33383l4g3v6d383r4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4h473937333b31474g57385i6o4?t=680499
+Screenshot 2: https://crowdin.com/s/wrap/93e33383l4g3v6c3h3l4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4k40373d3v2c3q4n2456463k6v4n4?t=680499
+Screenshot 3: https://crowdin.com/s/wrap/93e33383l4g3v6d383t4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4h473937323f31474g57385i6o4?t=680499
+Screenshot 4: https://crowdin.com/s/wrap/93e33383l4g3v6b3h3l4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l403a3f3v2c3h4n2j56463k6v4n4?t=680499
+Screenshot 5: https://crowdin.com/s/wrap/93e33383l4g3v6d3c3t4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k453g2j495k2n4h473e37323e31474g57385i6o4?t=680499
+Screenshot 6: https://crowdin.com/s/wrap/93e33383l4g3v6c3e3l4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l40383i3v2c3o4n2j56463k6v4n4?t=680499
+Screenshot 7: https://crowdin.com/s/wrap/93e33383l4g3v6c3d3n4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l4039393v2b3j4n2j56463k6v4n4?t=680499
+Screenshot 8: https://crowdin.com/s/wrap/93e33383l4g3v6c3d3l4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l4039393v2c3h4n2j56463k6v4n4?t=680499
+Screenshot 9: https://crowdin.com/s/wrap/93e33383l4g3v6c3d3t4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l4039393v283l4n2j56463k6v4n4?t=680499
+Screenshot 10: https://crowdin.com/s/wrap/93e33383l4g3v6c3a3p4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l40393c3v273m4n2j56463k6v4n4?t=680499
+Screenshot 11: https://crowdin.com/s/wrap/93e33383l4g3v6c3a3l4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l40393c3v283m4n2j56463k6v4n4?t=680499
+Screenshot 12: https://crowdin.com/s/wrap/93e33383l4g3v6c383n4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l403a3e3v2c3l4n2j564o2c433p2333545u4?t=680499
+Screenshot 13: https://crowdin.com/s/wrap/93e33383l4g3v6b3h3t4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l403a3f3v283h4n2j56463k6v4n4?t=680499
+Screenshot 14: https://crowdin.com/s/wrap/93e33383l4g3v6b3h3p4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l403a3f3v2a3j4n2j56463k6v4n4?t=680499
+Screenshot 15: https://crowdin.com/s/wrap/93e33383l4g3v6d3d3n4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k453g2j495k2p4h423c37333731474g57385i6o4?t=680499
+Screenshot 16: https://crowdin.com/s/wrap/93e33383l4g3v6d3d3r4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k453g2j495k2p4h433a37353c31474g57385i6o4?t=680499
+Screenshot 17: https://crowdin.com/s/wrap/93e33383l4g3v6c3b3r4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l40393b3v293l4n2j56463k6v4n4?t=680499</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680849" resname="common.parentHash">
+        <source>Parent Hash</source>
+        <target state="needs-translation">Parent Hash</target>
+        <context-group purpose="information">
+          <context context-type="source">common -&gt; parentHash</context>
+          <context context-type="x-crowdin-screenshot">Screenshot: https://crowdin.com/s/wrap/93e33383l4g3v6d383t4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4h473937323f31474g57385i6o4?t=680849</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680783" resname="common.history">
+        <source>History</source>
+        <target state="needs-translation">History</target>
+        <context-group purpose="information">
+          <context context-type="source">common -&gt; history</context>
+          <context context-type="x-crowdin-screenshot">Screenshot: https://crowdin.com/s/wrap/93e33383l4g3v6c3e3l4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l40383i3v2c3o4n2j56463k6v4n4?t=680783</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680501" resname="common.from">
+        <source>From</source>
+        <target state="needs-translation">From</target>
+        <context-group purpose="information">
+          <context context-type="source">common -&gt; from</context>
+          <context context-type="x-crowdin-screenshot">Screenshot 1: https://crowdin.com/s/wrap/93e33383l4g3v6d3c3t4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k453g2j495k2n4h473e37323e31474g57385i6o4?t=680501
+Screenshot 2: https://crowdin.com/s/wrap/93e33383l4g3v6c3f3p4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l40383f3v293j4n2j56463k6v4n4?t=680501
+Screenshot 3: https://crowdin.com/s/wrap/93e33383l4g3v6c3e3r4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l40383i3v283j4n2j56463k6v4n4?t=680501
+Screenshot 4: https://crowdin.com/s/wrap/93e33383l4g3v6c3d3p4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l4039393v2a3o4n2j56463k6v4n4?t=680501
+Screenshot 5: https://crowdin.com/s/wrap/93e33383l4g3v6c3d3l4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l4039393v2c3h4n2j56463k6v4n4?t=680501
+Screenshot 6: https://crowdin.com/s/wrap/93e33383l4g3v6c3d3t4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l4039393v283l4n2j56463k6v4n4?t=680501
+Screenshot 7: https://crowdin.com/s/wrap/93e33383l4g3v6c3c3l4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l40393b3v273j4n2j56463k6v4n4?t=680501
+Screenshot 8: https://crowdin.com/s/wrap/93e33383l4g3v6c3a3p4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l40393c3v273m4n2j56463k6v4n4?t=680501
+Screenshot 9: https://crowdin.com/s/wrap/93e33383l4g3v6c3a3l4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l40393c3v283m4n2j56463k6v4n4?t=680501
+Screenshot 10: https://crowdin.com/s/wrap/93e33383l4g3v6c383n4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l403a3e3v2c3l4n2j564o2c433p2333545u4?t=680501
+Screenshot 11: https://crowdin.com/s/wrap/93e33383l4g3v6b3h3t4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l403a3f3v283h4n2j56463k6v4n4?t=680501
+Screenshot 12: https://crowdin.com/s/wrap/93e33383l4g3v6d3d3n4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k453g2j495k2p4h423c37333731474g57385i6o4?t=680501
+Screenshot 13: https://crowdin.com/s/wrap/93e33383l4g3v6d3d3r4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k453g2j495k2p4h433a37353c31474g57385i6o4?t=680501</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680503" resname="common.to">
+        <source>To</source>
+        <target state="needs-translation">To</target>
+        <context-group purpose="information">
+          <context context-type="source">common -&gt; to</context>
+          <context context-type="x-crowdin-screenshot">Screenshot 1: https://crowdin.com/s/wrap/93e33383l4g3v6d3c3t4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k453g2j495k2n4h473e37323e31474g57385i6o4?t=680503
+Screenshot 2: https://crowdin.com/s/wrap/93e33383l4g3v6c3e3r4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l40383i3v283j4n2j56463k6v4n4?t=680503
+Screenshot 3: https://crowdin.com/s/wrap/93e33383l4g3v6c3d3r4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l4039393v293j4n2j56463k6v4n4?t=680503
+Screenshot 4: https://crowdin.com/s/wrap/93e33383l4g3v6c3d3l4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l4039393v2c3h4n2j56463k6v4n4?t=680503
+Screenshot 5: https://crowdin.com/s/wrap/93e33383l4g3v6c3d3t4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l4039393v283l4n2j56463k6v4n4?t=680503
+Screenshot 6: https://crowdin.com/s/wrap/93e33383l4g3v6c3a3p4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l40393c3v273m4n2j56463k6v4n4?t=680503
+Screenshot 7: https://crowdin.com/s/wrap/93e33383l4g3v6c3a3l4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l40393c3v283m4n2j56463k6v4n4?t=680503
+Screenshot 8: https://crowdin.com/s/wrap/93e33383l4g3v6c383n4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l403a3e3v2c3l4n2j564o2c433p2333545u4?t=680503
+Screenshot 9: https://crowdin.com/s/wrap/93e33383l4g3v6b3h3p4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l403a3f3v2a3j4n2j56463k6v4n4?t=680503
+Screenshot 10: https://crowdin.com/s/wrap/93e33383l4g3v6d3d3n4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k453g2j495k2p4h423c37333731474g57385i6o4?t=680503
+Screenshot 11: https://crowdin.com/s/wrap/93e33383l4g3v6d3d3r4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k453g2j495k2p4h433a37353c31474g57385i6o4?t=680503</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680785" resname="common.type">
+        <source>Type</source>
+        <target state="needs-translation">Type</target>
+        <context-group purpose="information">
+          <context context-type="source">common -&gt; type</context>
+          <context context-type="x-crowdin-screenshot">Screenshot: https://crowdin.com/s/wrap/93e33383l4g3v6c3e3l4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l40383i3v2c3o4n2j56463k6v4n4?t=680785</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680505" resname="common.amount">
+        <source>Amount</source>
+        <target state="needs-translation">Amount</target>
+        <context-group purpose="information">
+          <context context-type="source">common -&gt; amount</context>
+          <context context-type="x-crowdin-screenshot">Screenshot 1: https://crowdin.com/s/wrap/93e33383l4g3v6d383r4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4h473937333b31474g57385i6o4?t=680505
+Screenshot 2: https://crowdin.com/s/wrap/93e33383l4g3v6c3h3l4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4k40373d3v2c3q4n2456463k6v4n4?t=680505
+Screenshot 3: https://crowdin.com/s/wrap/93e33383l4g3v6d383t4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4h473937323f31474g57385i6o4?t=680505
+Screenshot 4: https://crowdin.com/s/wrap/93e33383l4g3v6d3c3t4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k453g2j495k2n4h473e37323e31474g57385i6o4?t=680505
+Screenshot 5: https://crowdin.com/s/wrap/93e33383l4g3v6c3a3l4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l40393c3v283m4n2j56463k6v4n4?t=680505
+Screenshot 6: https://crowdin.com/s/wrap/93e33383l4g3v6b3h3p4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l403a3f3v2a3j4n2j56463k6v4n4?t=680505
+Screenshot 7: https://crowdin.com/s/wrap/93e33383l4g3v6d3d3n4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k453g2j495k2p4h423c37333731474g57385i6o4?t=680505</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680679" resname="common.gasLimit">
+        <source>Gas limit</source>
+        <target state="needs-translation">Gas limit</target>
+        <context-group purpose="information">
+          <context context-type="source">common -&gt; gasLimit</context>
+          <context context-type="x-crowdin-screenshot">Screenshot 1: https://crowdin.com/s/wrap/93e33383l4g3v6d383t4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4h473937323f31474g57385i6o4?t=680679
+Screenshot 2: https://crowdin.com/s/wrap/93e33383l4g3v6c3e3t4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l40383f3v2b3i4n2j56463k6v4n4?t=680679</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680787" resname="common.txFee">
+        <source>Tx Fee</source>
+        <target state="needs-translation">Tx Fee</target>
+        <context-group purpose="information">
+          <context context-type="source">common -&gt; txFee</context>
+          <context context-type="x-crowdin-screenshot">Screenshot 1: https://crowdin.com/s/wrap/93e33383l4g3v6d383r4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4h473937333b31474g57385i6o4?t=680787
+Screenshot 2: https://crowdin.com/s/wrap/93e33383l4g3v6c3h3l4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4k40373d3v2c3q4n2456463k6v4n4?t=680787
+Screenshot 3: https://crowdin.com/s/wrap/93e33383l4g3v6d383t4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4h473937323f31474g57385i6o4?t=680787
+Screenshot 4: https://crowdin.com/s/wrap/93e33383l4g3v6d3c3t4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k453g2j495k2n4h473e37323e31474g57385i6o4?t=680787</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680789" resname="common.txFeePaid">
+        <source>Tx Fee Paid</source>
+        <target state="needs-translation">Tx Fee Paid</target>
+        <context-group purpose="information">
+          <context context-type="source">common -&gt; txFeePaid</context>
+          <context context-type="x-crowdin-screenshot">Screenshot 1: https://crowdin.com/s/wrap/93e33383l4g3v6b3h3l4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l403a3f3v2c3h4n2j56463k6v4n4?t=680789
+Screenshot 2: https://crowdin.com/s/wrap/93e33383l4g3v6c3e3l4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l40383i3v2c3o4n2j56463k6v4n4?t=680789</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680791" resname="common.txValue">
+        <source>Tx Value</source>
+        <target state="needs-translation">Tx Value</target>
+        <context-group purpose="information">
+          <context context-type="source">common -&gt; txValue</context>
+          <context context-type="x-crowdin-screenshot">Screenshot 1: https://crowdin.com/s/wrap/93e33383l4g3v6c3d3n4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l4039393v2b3j4n2j56463k6v4n4?t=680791
+Screenshot 2: https://crowdin.com/s/wrap/93e33383l4g3v6c3d3t4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l4039393v283l4n2j56463k6v4n4?t=680791
+Screenshot 3: https://crowdin.com/s/wrap/93e33383l4g3v6c3b3r4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l40393b3v293l4n2j56463k6v4n4?t=680791</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680793" resname="common.paid">
+        <source>Paid</source>
+        <target state="needs-translation">Paid</target>
+        <context-group purpose="information">
+          <context context-type="source">common -&gt; paid</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680683" resname="common.input">
+        <source>Input</source>
+        <target state="needs-translation">Input</target>
+        <context-group purpose="information">
+          <context context-type="source">common -&gt; input</context>
+          <context context-type="x-crowdin-screenshot">Screenshot: https://crowdin.com/s/wrap/93e33383l4g3v6c3e3t4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l40383f3v2b3i4n2j56463k6v4n4?t=680683</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680685" resname="common.nonce">
+        <source>Nonce</source>
+        <target state="needs-translation">Nonce</target>
+        <context-group purpose="information">
+          <context context-type="source">common -&gt; nonce</context>
+          <context context-type="x-crowdin-screenshot">Screenshot 1: https://crowdin.com/s/wrap/93e33383l4g3v6d383n4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4h473937343d31474g57385i6o4?t=680685
+Screenshot 2: https://crowdin.com/s/wrap/93e33383l4g3v6c3e3t4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l40383f3v2b3i4n2j56463k6v4n4?t=680685</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680687" resname="common.fee">
+        <source>Fee</source>
+        <target state="needs-translation">Fee</target>
+        <context-group purpose="information">
+          <context context-type="source">common -&gt; fee</context>
+          <context context-type="x-crowdin-screenshot">Screenshot 1: https://crowdin.com/s/wrap/93e33383l4g3v6c3f3p4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l40383f3v293j4n2j56463k6v4n4?t=680687
+Screenshot 2: https://crowdin.com/s/wrap/93e33383l4g3v6c3e3r4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l40383i3v283j4n2j56463k6v4n4?t=680687</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680509" resname="common.status">
+        <source>Status</source>
+        <target state="needs-translation">Status</target>
+        <context-group purpose="information">
+          <context context-type="source">common -&gt; status</context>
+          <context context-type="x-crowdin-screenshot">Screenshot 1: https://crowdin.com/s/wrap/93e33383l4g3v6c3e3l4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l40383i3v2c3o4n2j56463k6v4n4?t=680509
+Screenshot 2: https://crowdin.com/s/wrap/93e33383l4g3v6c3c3p4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l40393a3v2a3p4n2j56463k6v4n4?t=680509</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680795" resname="common.symbol">
+        <source>Symbol</source>
+        <target state="needs-translation">Symbol</target>
+        <context-group purpose="information">
+          <context context-type="source">common -&gt; symbol</context>
+          <context context-type="x-crowdin-screenshot">Screenshot 1: https://crowdin.com/s/wrap/93e33383l4g3v6c3a3l4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l40393c3v283m4n2j56463k6v4n4?t=680795
+Screenshot 2: https://crowdin.com/s/wrap/93e33383l4g3v6b3h3p4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l403a3f3v2a3j4n2j56463k6v4n4?t=680795</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680733" resname="common.address">
+        <source>Address | Addresses</source>
+        <target state="needs-translation">Address | Addresses</target>
+        <context-group purpose="information">
+          <context context-type="source">common -&gt; address</context>
+          <context context-type="x-crowdin-screenshot">Screenshot 1: https://crowdin.com/s/wrap/93e33383l4g3v6c3h3r4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4k40373d3v2a3p4n2456463k6v4n4?t=680733
+Screenshot 2: https://crowdin.com/s/wrap/93e33383l4g3v6d393t4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2n4h423a37313731474g57385i6o4?t=680733
+Screenshot 3: https://crowdin.com/s/wrap/93e33383l4g3v6d3c3l4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2o4h473f37313d31474g57385i6o4?t=680733
+Screenshot 4: https://crowdin.com/s/wrap/93e33383l4g3v6d393n4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4h473837353f31474g57385i6o4?t=680733
+Screenshot 5: https://crowdin.com/s/wrap/93e33383l4g3v6c3f3l4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l40383f3v2a3n4n2j56463k6v4n4?t=680733
+Screenshot 6: https://crowdin.com/s/wrap/93e33383l4g3v6c3e3l4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l40383i3v2c3o4n2j56463k6v4n4?t=680733
+Screenshot 7: https://crowdin.com/s/wrap/93e33383l4g3v6c3d3t4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l4039393v283l4n2j56463k6v4n4?t=680733
+Screenshot 8: https://crowdin.com/s/wrap/93e33383l4g3v6c3a3p4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l40393c3v273m4n2j56463k6v4n4?t=680733
+Screenshot 9: https://crowdin.com/s/wrap/93e33383l4g3v6c3a3l4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l40393c3v283m4n2j56463k6v4n4?t=680733
+Screenshot 10: https://crowdin.com/s/wrap/93e33383l4g3v6c383n4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l403a3e3v2c3l4n2j564o2c433p2333545u4?t=680733
+Screenshot 11: https://crowdin.com/s/wrap/93e33383l4g3v6b3h3p4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l403a3f3v2a3j4n2j56463k6v4n4?t=680733</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680569" resname="common.total">
+        <source>Total</source>
+        <target state="needs-translation">Total</target>
+        <context-group purpose="information">
+          <context context-type="source">common -&gt; total</context>
+          <context context-type="x-crowdin-screenshot">Screenshot 1: https://crowdin.com/s/wrap/93e33383l4g3v6c3h3r4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4k40373d3v2a3p4n2456463k6v4n4?t=680569
+Screenshot 2: https://crowdin.com/s/wrap/93e33383l4g3v6d393t4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2n4h423a37313731474g57385i6o4?t=680569
+Screenshot 3: https://crowdin.com/s/wrap/93e33383l4g3v6d3c3l4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2o4h473f37313d31474g57385i6o4?t=680569
+Screenshot 4: https://crowdin.com/s/wrap/93e33383l4g3v6d393n4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4h473837353f31474g57385i6o4?t=680569</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680689" resname="common.transfer">
+        <source>Transfers</source>
+        <target state="needs-translation">Transfers</target>
+        <context-group purpose="information">
+          <context context-type="source">common -&gt; transfer</context>
+          <context context-type="x-crowdin-screenshot">Screenshot 1: https://crowdin.com/s/wrap/93e33383l4g3v6b3h3l4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l403a3f3v2c3h4n2j56463k6v4n4?t=680689
+Screenshot 2: https://crowdin.com/s/wrap/93e33383l4g3v6c3d3n4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l4039393v2b3j4n2j56463k6v4n4?t=680689
+Screenshot 3: https://crowdin.com/s/wrap/93e33383l4g3v6c3d3t4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l4039393v283l4n2j56463k6v4n4?t=680689
+Screenshot 4: https://crowdin.com/s/wrap/93e33383l4g3v6c3a3p4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l40393c3v273m4n2j56463k6v4n4?t=680689
+Screenshot 5: https://crowdin.com/s/wrap/93e33383l4g3v6c3a3r4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l40393c3v273h4n2j56463k6v4n4?t=680689
+Screenshot 6: https://crowdin.com/s/wrap/93e33383l4g3v6c3a3n4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l40393c3v283h4n2j56463k6v4n4?t=680689
+Screenshot 7: https://crowdin.com/s/wrap/93e33383l4g3v6c3a3l4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l40393c3v283m4n2j56463k6v4n4?t=680689
+Screenshot 8: https://crowdin.com/s/wrap/93e33383l4g3v6c393t4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l403a3d3v2b3j4n2j56463k6v4n4?t=680689
+Screenshot 9: https://crowdin.com/s/wrap/93e33383l4g3v6c383n4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l403a3e3v2c3l4n2j564o2c433p2333545u4?t=680689
+Screenshot 10: https://crowdin.com/s/wrap/93e33383l4g3v6b3h3r4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l403a3f3v293p4n2j56463k6v4n4?t=680689
+Screenshot 11: https://crowdin.com/s/wrap/93e33383l4g3v6b3h3p4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l403a3f3v2a3j4n2j56463k6v4n4?t=680689
+Screenshot 12: https://crowdin.com/s/wrap/93e33383l4g3v6d3d3n4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k453g2j495k2p4h423c37333731474g57385i6o4?t=680689
+Screenshot 13: https://crowdin.com/s/wrap/93e33383l4g3v6c3b3r4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l40393b3v293l4n2j56463k6v4n4?t=680689</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680571" resname="common.balance">
+        <source>Balance | Balances</source>
+        <target state="needs-translation">Balance | Balances</target>
+        <context-group purpose="information">
+          <context context-type="source">common -&gt; balance</context>
+          <context context-type="x-crowdin-screenshot">Screenshot 1: https://crowdin.com/s/wrap/93e33383l4g3v6d393t4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2n4h423a37313731474g57385i6o4?t=680571
+Screenshot 2: https://crowdin.com/s/wrap/93e33383l4g3v6d3c3l4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2o4h473f37313d31474g57385i6o4?t=680571
+Screenshot 3: https://crowdin.com/s/wrap/93e33383l4g3v6d3c3r4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2p4h423a37333931474g57385i6o4?t=680571
+Screenshot 4: https://crowdin.com/s/wrap/93e33383l4g3v6b3h3l4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l403a3f3v2c3h4n2j56463k6v4n4?t=680571
+Screenshot 5: https://crowdin.com/s/wrap/93e33383l4g3v6d393l4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4h473837363c31474g57385i6o4?t=680571
+Screenshot 6: https://crowdin.com/s/wrap/93e33383l4g3v6d393n4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4h473837353f31474g57385i6o4?t=680571
+Screenshot 7: https://crowdin.com/s/wrap/93e33383l4g3v6c3e3n4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l40383i3v2b3m4n2j56463k6v4n4?t=680571
+Screenshot 8: https://crowdin.com/s/wrap/93e33383l4g3v6c3c3n4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l40393a3v2b3l4n2j56463k6v4n4?t=680571
+Screenshot 9: https://crowdin.com/s/wrap/93e33383l4g3v6c3a3n4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l40393c3v283h4n2j56463k6v4n4?t=680571
+Screenshot 10: https://crowdin.com/s/wrap/93e33383l4g3v6c3a3l4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l40393c3v283m4n2j56463k6v4n4?t=680571
+Screenshot 11: https://crowdin.com/s/wrap/93e33383l4g3v6b3h3r4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l403a3f3v293p4n2j56463k6v4n4?t=680571
+Screenshot 12: https://crowdin.com/s/wrap/93e33383l4g3v6b3h3p4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l403a3f3v2a3j4n2j56463k6v4n4?t=680571</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680573" resname="common.value">
+        <source>Value</source>
+        <target state="needs-translation">Value</target>
+        <context-group purpose="information">
+          <context context-type="source">common -&gt; value</context>
+          <context context-type="x-crowdin-screenshot">Screenshot 1: https://crowdin.com/s/wrap/93e33383l4g3v6c3h3r4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4k40373d3v2a3p4n2456463k6v4n4?t=680573
+Screenshot 2: https://crowdin.com/s/wrap/93e33383l4g3v6d383p4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4h473937343731474g57385i6o4?t=680573
+Screenshot 3: https://crowdin.com/s/wrap/93e33383l4g3v6d393t4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2n4h423a37313731474g57385i6o4?t=680573
+Screenshot 4: https://crowdin.com/s/wrap/93e33383l4g3v6d3c3l4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2o4h473f37313d31474g57385i6o4?t=680573
+Screenshot 5: https://crowdin.com/s/wrap/93e33383l4g3v6d393n4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4h473837353f31474g57385i6o4?t=680573
+Screenshot 6: https://crowdin.com/s/wrap/93e33383l4g3v6c3f3p4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l40383f3v293j4n2j56463k6v4n4?t=680573
+Screenshot 7: https://crowdin.com/s/wrap/93e33383l4g3v6c3e3r4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l40383i3v283j4n2j56463k6v4n4?t=680573
+Screenshot 8: https://crowdin.com/s/wrap/93e33383l4g3v6c3e3l4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l40383i3v2c3o4n2j56463k6v4n4?t=680573
+Screenshot 9: https://crowdin.com/s/wrap/93e33383l4g3v6c3d3l4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l4039393v2c3h4n2j56463k6v4n4?t=680573
+Screenshot 10: https://crowdin.com/s/wrap/93e33383l4g3v6c3c3p4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l40393a3v2a3p4n2j56463k6v4n4?t=680573</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680737" resname="common.validator">
+        <source>Validator</source>
+        <target state="needs-translation">Validator</target>
+        <context-group purpose="information">
+          <context context-type="source">common -&gt; validator</context>
+          <context context-type="x-crowdin-screenshot">Screenshot 1: https://crowdin.com/s/wrap/93e33383l4g3v6d383p4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4h473937343731474g57385i6o4?t=680737
+Screenshot 2: https://crowdin.com/s/wrap/93e33383l4g3v6c3c3p4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l40393a3v2a3p4n2j56463k6v4n4?t=680737</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680575" resname="common.token">
+        <source>Token</source>
+        <target state="needs-translation">Token</target>
+        <context-group purpose="information">
+          <context context-type="source">common -&gt; token</context>
+          <context context-type="x-crowdin-screenshot">Screenshot 1: https://crowdin.com/s/wrap/93e33383l4g3v6d3c3r4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2p4h423a37333931474g57385i6o4?t=680575
+Screenshot 2: https://crowdin.com/s/wrap/93e33383l4g3v6d393p4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2n4h423637333731474g57385i6o4?t=680575
+Screenshot 3: https://crowdin.com/s/wrap/93e33383l4g3v6d393l4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4h473837363c31474g57385i6o4?t=680575
+Screenshot 4: https://crowdin.com/s/wrap/93e33383l4g3v6c3h3p4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4k40373d3v2b3m4n2456463k6v4n4?t=680575
+Screenshot 5: https://crowdin.com/s/wrap/93e33383l4g3v6c3e3n4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l40383i3v2b3m4n2j56463k6v4n4?t=680575
+Screenshot 6: https://crowdin.com/s/wrap/93e33383l4g3v6c3a3n4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l40393c3v283h4n2j56463k6v4n4?t=680575
+Screenshot 7: https://crowdin.com/s/wrap/93e33383l4g3v6c3a3l4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l40393c3v283m4n2j56463k6v4n4?t=680575
+Screenshot 8: https://crowdin.com/s/wrap/93e33383l4g3v6b3h3r4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l403a3f3v293p4n2j56463k6v4n4?t=680575
+Screenshot 9: https://crowdin.com/s/wrap/93e33383l4g3v6b3h3p4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l403a3f3v2a3j4n2j56463k6v4n4?t=680575</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680577" resname="common.price">
+        <source>Price</source>
+        <target state="needs-translation">Price</target>
+        <context-group purpose="information">
+          <context context-type="source">common -&gt; price</context>
+          <context context-type="x-crowdin-screenshot">Screenshot 1: https://crowdin.com/s/wrap/93e33383l4g3v6c3h3r4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4k40373d3v2a3p4n2456463k6v4n4?t=680577
+Screenshot 2: https://crowdin.com/s/wrap/93e33383l4g3v6d3c3r4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2p4h423a37333931474g57385i6o4?t=680577
+Screenshot 3: https://crowdin.com/s/wrap/93e33383l4g3v6d393p4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2n4h423637333731474g57385i6o4?t=680577
+Screenshot 4: https://crowdin.com/s/wrap/93e33383l4g3v6d393l4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4h473837363c31474g57385i6o4?t=680577
+Screenshot 5: https://crowdin.com/s/wrap/93e33383l4g3v6c3h3p4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4k40373d3v2b3m4n2456463k6v4n4?t=680577
+Screenshot 6: https://crowdin.com/s/wrap/93e33383l4g3v6c3e3n4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l40383i3v2b3m4n2j56463k6v4n4?t=680577
+Screenshot 7: https://crowdin.com/s/wrap/93e33383l4g3v6c3c3n4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l40393a3v2b3l4n2j56463k6v4n4?t=680577
+Screenshot 8: https://crowdin.com/s/wrap/93e33383l4g3v6c3a3n4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l40393c3v283h4n2j56463k6v4n4?t=680577
+Screenshot 9: https://crowdin.com/s/wrap/93e33383l4g3v6b3h3r4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l403a3f3v293p4n2j56463k6v4n4?t=680577
+Screenshot 10: https://crowdin.com/s/wrap/93e33383l4g3v6d3d3n4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k453g2j495k2p4h423c37333731474g57385i6o4?t=680577</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680797" resname="common.marketCap">
+        <source>Market Cap</source>
+        <target state="needs-translation">Market Cap</target>
+        <context-group purpose="information">
+          <context context-type="source">common -&gt; marketCap</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680799" resname="common.more">
+        <source>More</source>
+        <target state="needs-translation">More</target>
+        <context-group purpose="information">
+          <context context-type="source">common -&gt; more</context>
+          <context context-type="x-crowdin-screenshot">Screenshot 1: https://crowdin.com/s/wrap/93e33383l4g3v6d383p4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4h473937343731474g57385i6o4?t=680799
+Screenshot 2: https://crowdin.com/s/wrap/93e33383l4g3v6c3h3l4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4k40373d3v2c3q4n2456463k6v4n4?t=680799
+Screenshot 3: https://crowdin.com/s/wrap/93e33383l4g3v6c3h3n4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4k40373d3v2c3l4n2456463k6v4n4?t=680799
+Screenshot 4: https://crowdin.com/s/wrap/93e33383l4g3v6c3h3p4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4k40373d3v2b3m4n2456463k6v4n4?t=680799
+Screenshot 5: https://crowdin.com/s/wrap/93e33383l4g3v6c3e3n4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l40383i3v2b3m4n2j56463k6v4n4?t=680799
+Screenshot 6: https://crowdin.com/s/wrap/93e33383l4g3v6c3e3l4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l40383i3v2c3o4n2j56463k6v4n4?t=680799
+Screenshot 7: https://crowdin.com/s/wrap/93e33383l4g3v6c3a3l4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l40393c3v283m4n2j56463k6v4n4?t=680799
+Screenshot 8: https://crowdin.com/s/wrap/93e33383l4g3v6b3h3p4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l403a3f3v2a3j4n2j56463k6v4n4?t=680799</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680579" resname="common.24h">
+        <source>24h</source>
+        <target state="needs-translation">24h</target>
+        <context-group purpose="information">
+          <context context-type="source">common -&gt; 24h</context>
+          <context context-type="x-crowdin-screenshot">Screenshot 1: https://crowdin.com/s/wrap/93e33383l4g3v6d3c3r4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2p4h423a37333931474g57385i6o4?t=680579
+Screenshot 2: https://crowdin.com/s/wrap/93e33383l4g3v6d393p4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2n4h423637333731474g57385i6o4?t=680579
+Screenshot 3: https://crowdin.com/s/wrap/93e33383l4g3v6d393l4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4h473837363c31474g57385i6o4?t=680579
+Screenshot 4: https://crowdin.com/s/wrap/93e33383l4g3v6c3h3p4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4k40373d3v2b3m4n2456463k6v4n4?t=680579
+Screenshot 5: https://crowdin.com/s/wrap/93e33383l4g3v6c3a3n4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l40393c3v283h4n2j56463k6v4n4?t=680579
+Screenshot 6: https://crowdin.com/s/wrap/93e33383l4g3v6b3h3r4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l403a3f3v293p4n2j56463k6v4n4?t=680579</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680581" resname="common.usdValue">
+        <source>USD Value</source>
+        <target state="needs-translation">USD Value</target>
+        <context-group purpose="information">
+          <context context-type="source">common -&gt; usdValue</context>
+          <context context-type="x-crowdin-screenshot">Screenshot 1: https://crowdin.com/s/wrap/93e33383l4g3v6d3c3r4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2p4h423a37333931474g57385i6o4?t=680581
+Screenshot 2: https://crowdin.com/s/wrap/93e33383l4g3v6d393l4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4h473837363c31474g57385i6o4?t=680581
+Screenshot 3: https://crowdin.com/s/wrap/93e33383l4g3v6c3e3n4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l40383i3v2b3m4n2j56463k6v4n4?t=680581
+Screenshot 4: https://crowdin.com/s/wrap/93e33383l4g3v6c3a3n4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l40393c3v283h4n2j56463k6v4n4?t=680581
+Screenshot 5: https://crowdin.com/s/wrap/93e33383l4g3v6b3h3r4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l403a3f3v293p4n2j56463k6v4n4?t=680581
+Screenshot 6: https://crowdin.com/s/wrap/93e33383l4g3v6d3d3l4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k453g2j495k2p4h423c37343d31474g57385i6o4?t=680581</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680583" resname="common.name">
+        <source>Name</source>
+        <target state="needs-translation">Name</target>
+        <context-group purpose="information">
+          <context context-type="source">common -&gt; name</context>
+          <context context-type="x-crowdin-screenshot">Screenshot 1: https://crowdin.com/s/wrap/93e33383l4g3v6c3h3r4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4k40373d3v2a3p4n2456463k6v4n4?t=680583
+Screenshot 2: https://crowdin.com/s/wrap/93e33383l4g3v6d393t4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2n4h423a37313731474g57385i6o4?t=680583
+Screenshot 3: https://crowdin.com/s/wrap/93e33383l4g3v6d3c3l4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2o4h473f37313d31474g57385i6o4?t=680583
+Screenshot 4: https://crowdin.com/s/wrap/93e33383l4g3v6d3a3l4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2n4h423937363831474g57385i6o4?t=680583
+Screenshot 5: https://crowdin.com/s/wrap/93e33383l4g3v6d393n4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4h473837353f31474g57385i6o4?t=680583
+Screenshot 6: https://crowdin.com/s/wrap/93e33383l4g3v6c3a3p4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l40393c3v273m4n2j56463k6v4n4?t=680583
+Screenshot 7: https://crowdin.com/s/wrap/93e33383l4g3v6c383n4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l403a3e3v2c3l4n2j564o2c433p2333545u4?t=680583</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680611" resname="common.button.export">
+        <source>Export</source>
+        <target state="needs-translation">Export</target>
+        <context-group purpose="information">
+          <context context-type="source">common -&gt; button -&gt; export</context>
+          <context context-type="x-crowdin-screenshot">Screenshot: https://crowdin.com/s/wrap/93e33383l4g3v6d3a3l4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2n4h423937363831474g57385i6o4?t=680611</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680613" resname="common.button.import">
+        <source>Import</source>
+        <target state="needs-translation">Import</target>
+        <context-group purpose="information">
+          <context context-type="source">common -&gt; button -&gt; import</context>
+          <context context-type="x-crowdin-screenshot">Screenshot 1: https://crowdin.com/s/wrap/93e33383l4g3v6d3a3l4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2n4h423937363831474g57385i6o4?t=680613
+Screenshot 2: https://crowdin.com/s/wrap/93e33383l4g3v6d3d3t4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k453g2j495k2p4h433e37363731474g57385i6o4?t=680613</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680735" resname="common.filter">
+        <source>Filter</source>
+        <target state="needs-translation">Filter</target>
+        <context-group purpose="information">
+          <context context-type="source">common -&gt; filter</context>
+          <context context-type="x-crowdin-screenshot">Screenshot: https://crowdin.com/s/wrap/93e33383l4g3v6c3f3n4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l40383f3v2a3h4n2j56463k6v4n4?t=680735</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680585" resname="portfolio.addAddressIcon">
+        <source>Add Address</source>
+        <target state="needs-translation">Add Address</target>
+        <context-group purpose="information">
+          <context context-type="source">portfolio -&gt; addAddressIcon</context>
+          <context context-type="x-crowdin-screenshot">Screenshot 1: https://crowdin.com/s/wrap/93e33383l4g3v6d3b3n4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2n4h423837343a31474g57385i6o4?t=680585
+Screenshot 2: https://crowdin.com/s/wrap/93e33383l4g3v6d3c3l4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2o4h473f37313d31474g57385i6o4?t=680585
+Screenshot 3: https://crowdin.com/s/wrap/93e33383l4g3v6d3c3r4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2p4h423a37333931474g57385i6o4?t=680585
+Screenshot 4: https://crowdin.com/s/wrap/93e33383l4g3v6d3a3l4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2n4h423937363831474g57385i6o4?t=680585
+Screenshot 5: https://crowdin.com/s/wrap/93e33383l4g3v6d393n4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4h473837353f31474g57385i6o4?t=680585
+Screenshot 6: https://crowdin.com/s/wrap/93e33383l4g3v6c3d3n4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l4039393v2b3j4n2j56463k6v4n4?t=680585
+Screenshot 7: https://crowdin.com/s/wrap/93e33383l4g3v6c3d3l4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l4039393v2c3h4n2j56463k6v4n4?t=680585
+Screenshot 8: https://crowdin.com/s/wrap/93e33383l4g3v6c383r4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l403a3e3v2b3o4n2j56463k6v4n4?t=680585
+Screenshot 9: https://crowdin.com/s/wrap/93e33383l4g3v6d3d3l4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k453g2j495k2p4h423c37343d31474g57385i6o4?t=680585
+Screenshot 10: https://crowdin.com/s/wrap/93e33383l4g3v6c3b3r4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l40393b3v293l4n2j56463k6v4n4?t=680585</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680587" resname="portfolio.limit">
+        <source>You can only store 10 addresses in your portfolio</source>
+        <target state="needs-translation">You can only store 10 addresses in your portfolio</target>
+        <context-group purpose="information">
+          <context context-type="source">portfolio -&gt; limit</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680589" resname="portfolio.errorDuplicateName">
+        <source>This name is already saved</source>
+        <target state="needs-translation">This name is already saved</target>
+        <context-group purpose="information">
+          <context context-type="source">portfolio -&gt; errorDuplicateName</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680591" resname="portfolio.tokenName">
+        <source>Token Name</source>
+        <target state="needs-translation">Token Name</target>
+        <context-group purpose="information">
+          <context context-type="source">portfolio -&gt; tokenName</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680801" resname="portfolio.viewInSettings">
+        <source>View in Settings</source>
+        <target state="needs-translation">View in Settings</target>
+        <context-group purpose="information">
+          <context context-type="source">portfolio -&gt; viewInSettings</context>
+          <context context-type="x-crowdin-screenshot">Screenshot: https://crowdin.com/s/wrap/93e33383l4g3v6c383t4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l403a3e3v2a3i4n2j56463k6v4n4?t=680801</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680593" resname="portfolio.placeholder.addAddress">
+        <source>Enter Address Hash / Domain Name</source>
+        <target state="needs-translation">Enter Address Hash / Domain Name</target>
+        <context-group purpose="information">
+          <context context-type="source">portfolio -&gt; placeholder -&gt; addAddress</context>
+          <context context-type="x-crowdin-screenshot">Screenshot: https://crowdin.com/s/wrap/93e33383l4g3v6d3b3n4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2n4h423837343a31474g57385i6o4?t=680593</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680595" resname="portfolio.placeholder.searchTokenName">
+        <source>Search token name</source>
+        <target state="needs-translation">Search token name</target>
+        <context-group purpose="information">
+          <context context-type="source">portfolio -&gt; placeholder -&gt; searchTokenName</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680597" resname="portfolio.placeholder.name">
+        <source>Enter Name</source>
+        <target state="needs-translation">Enter Name</target>
+        <context-group purpose="information">
+          <context context-type="source">portfolio -&gt; placeholder -&gt; name</context>
+          <context context-type="x-crowdin-screenshot">Screenshot 1: https://crowdin.com/s/wrap/93e33383l4g3v6d3b3n4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2n4h423837343a31474g57385i6o4?t=680597
+Screenshot 2: https://crowdin.com/s/wrap/93e33383l4g3v6c383r4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l403a3e3v2b3o4n2j56463k6v4n4?t=680597
+Screenshot 3: https://crowdin.com/s/wrap/93e33383l4g3v6c383t4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l403a3e3v2a3i4n2j56463k6v4n4?t=680597</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680893" resname="uncle.number">
+        <source>Uncle #</source>
+        <target state="needs-translation">Uncle #</target>
+        <context-group purpose="information">
+          <context context-type="source">uncle -&gt; number</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680895" resname="uncle.included">
+        <source>Included in block</source>
+        <target state="needs-translation">Included in block</target>
+        <context-group purpose="information">
+          <context context-type="source">uncle -&gt; included</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680897" resname="uncle.error">
+        <source>This is not a valid uncle hash</source>
+        <target state="needs-translation">This is not a valid uncle hash</target>
+        <context-group purpose="information">
+          <context context-type="source">uncle -&gt; error</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680899" resname="uncle.errorExist">
+        <source>This uncle does not exist.</source>
+        <target state="needs-translation">This uncle does not exist.</target>
+        <context-group purpose="information">
+          <context context-type="source">uncle -&gt; errorExist</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680901" resname="uncle.position">
+        <source>Position</source>
+        <target state="needs-translation">Position</target>
+        <context-group purpose="information">
+          <context context-type="source">uncle -&gt; position</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680863" resname="token.maxSupply">
+        <source>Max Supply</source>
+        <target state="needs-translation">Max Supply</target>
+        <context-group purpose="information">
+          <context context-type="source">token -&gt; maxSupply</context>
+          <context context-type="x-crowdin-screenshot">Screenshot 1: https://crowdin.com/s/wrap/93e33383l4g3v6d3c3r4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2p4h423a37333931474g57385i6o4?t=680863
+Screenshot 2: https://crowdin.com/s/wrap/93e33383l4g3v6d3d3n4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k453g2j495k2p4h423c37333731474g57385i6o4?t=680863</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680865" resname="token.contract">
+        <source>Contract</source>
+        <target state="needs-translation">Contract</target>
+        <context-group purpose="information">
+          <context context-type="source">token -&gt; contract</context>
+          <context context-type="x-crowdin-screenshot">Screenshot 1: https://crowdin.com/s/wrap/93e33383l4g3v6c393r4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l403a3d3v2c3k4n2j56463k6v4n4?t=680865
+Screenshot 2: https://crowdin.com/s/wrap/93e33383l4g3v6c393p4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l403a3e3v273h4n2j56463k6v4n4?t=680865
+Screenshot 3: https://crowdin.com/s/wrap/93e33383l4g3v6d3d3n4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k453g2j495k2p4h423c37333731474g57385i6o4?t=680865
+Screenshot 4: https://crowdin.com/s/wrap/93e33383l4g3v6d3d3r4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k453g2j495k2p4h433a37353c31474g57385i6o4?t=680865
+Screenshot 5: https://crowdin.com/s/wrap/93e33383l4g3v6d3d3p4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k453g2j495k2p4h433a37363g31474g57385i6o4?t=680865</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680867" resname="token.tokenStandard">
+        <source>Token Standard</source>
+        <target state="needs-translation">Token Standard</target>
+        <context-group purpose="information">
+          <context context-type="source">token -&gt; tokenStandard</context>
+          <context context-type="x-crowdin-screenshot">Screenshot 1: https://crowdin.com/s/wrap/93e33383l4g3v6c393r4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l403a3d3v2c3k4n2j56463k6v4n4?t=680867
+Screenshot 2: https://crowdin.com/s/wrap/93e33383l4g3v6c393p4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l403a3e3v273h4n2j56463k6v4n4?t=680867
+Screenshot 3: https://crowdin.com/s/wrap/93e33383l4g3v6d3d3n4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k453g2j495k2p4h423c37333731474g57385i6o4?t=680867
+Screenshot 4: https://crowdin.com/s/wrap/93e33383l4g3v6d3d3r4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k453g2j495k2p4h433a37353c31474g57385i6o4?t=680867</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680869" resname="token.decimals">
+        <source>Decimals</source>
+        <target state="needs-translation">Decimals</target>
+        <context-group purpose="information">
+          <context context-type="source">token -&gt; decimals</context>
+          <context context-type="x-crowdin-screenshot">Screenshot: https://crowdin.com/s/wrap/93e33383l4g3v6d3d3n4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k453g2j495k2p4h423c37333731474g57385i6o4?t=680869</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680871" resname="token.collections">
+        <source>Collections</source>
+        <target state="needs-translation">Collections</target>
+        <context-group purpose="information">
+          <context context-type="source">token -&gt; collections</context>
+          <context context-type="x-crowdin-screenshot">Screenshot: https://crowdin.com/s/wrap/93e33383l4g3v6d3d3r4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k453g2j495k2p4h433a37353c31474g57385i6o4?t=680871</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680873" resname="token.circulatingSupply">
+        <source>Circulating Supply</source>
+        <target state="needs-translation">Circulating Supply</target>
+        <context-group purpose="information">
+          <context context-type="source">token -&gt; circulatingSupply</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680875" resname="token.24hHigh">
+        <source>24h High</source>
+        <target state="needs-translation">24h High</target>
+        <context-group purpose="information">
+          <context context-type="source">token -&gt; 24hHigh</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680877" resname="token.24hTradingVolume">
+        <source>24h Trading Volume</source>
+        <target state="needs-translation">24h Trading Volume</target>
+        <context-group purpose="information">
+          <context context-type="source">token -&gt; 24hTradingVolume</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680879" resname="token.marketCap">
+        <source>Market Cap</source>
+        <target state="needs-translation">Market Cap</target>
+        <context-group purpose="information">
+          <context context-type="source">token -&gt; marketCap</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680881" resname="token.id">
+        <source>ID</source>
+        <target state="needs-translation">ID</target>
+        <context-group purpose="information">
+          <context context-type="source">token -&gt; id</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680883" resname="token.percentage">
+        <source>Percentage</source>
+        <target state="needs-translation">Percentage</target>
+        <context-group purpose="information">
+          <context context-type="source">token -&gt; percentage</context>
+          <context context-type="x-crowdin-screenshot">Screenshot: https://crowdin.com/s/wrap/93e33383l4g3v6d3d3l4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k453g2j495k2p4h423c37343d31474g57385i6o4?t=680883</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680885" resname="token.image">
+        <source>Image</source>
+        <target state="needs-translation">Image</target>
+        <context-group purpose="information">
+          <context context-type="source">token -&gt; image</context>
+          <context context-type="x-crowdin-screenshot">Screenshot: https://crowdin.com/s/wrap/93e33383l4g3v6d3d3r4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k453g2j495k2p4h433a37353c31474g57385i6o4?t=680885</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680887" resname="token.quantity">
+        <source>Quantity</source>
+        <target state="needs-translation">Quantity</target>
+        <context-group purpose="information">
+          <context context-type="source">token -&gt; quantity</context>
+          <context context-type="x-crowdin-screenshot">Screenshot: https://crowdin.com/s/wrap/93e33383l4g3v6d3d3l4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k453g2j495k2p4h423c37343d31474g57385i6o4?t=680887</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680889" resname="token.noHolder">
+        <source>There are no holders for this token</source>
+        <target state="needs-translation">There are no holders for this token</target>
+        <context-group purpose="information">
+          <context context-type="source">token -&gt; noHolder</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680891" resname="token.noTransfers">
+        <source>No transfers available</source>
+        <target state="needs-translation">No transfers available</target>
+        <context-group purpose="information">
+          <context context-type="source">token -&gt; noTransfers</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680615" resname="settings.emptyList">
+        <source>This list is empty</source>
+        <target state="needs-translation">This list is empty</target>
+        <context-group purpose="information">
+          <context context-type="source">settings -&gt; emptyList</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680617" resname="settings.darkModeOn">
+        <source>Dark Mode On</source>
+        <target state="needs-translation">Dark Mode On</target>
+        <context-group purpose="information">
+          <context context-type="source">settings -&gt; darkModeOn</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680619" resname="settings.darkModeOff">
+        <source>Dark Mode Off</source>
+        <target state="needs-translation">Dark Mode Off</target>
+        <context-group purpose="information">
+          <context context-type="source">settings -&gt; darkModeOff</context>
+          <context context-type="x-crowdin-screenshot">Screenshot: https://crowdin.com/s/wrap/93e33383l4g3v6d3a3n4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2n4h423937353c31474g57385i6o4?t=680619</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680621" resname="settings.header.general">
+        <source>General Settings</source>
+        <target state="needs-translation">General Settings</target>
+        <context-group purpose="information">
+          <context context-type="source">settings -&gt; header -&gt; general</context>
+          <context context-type="x-crowdin-screenshot">Screenshot: https://crowdin.com/s/wrap/93e33383l4g3v6d3a3n4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2n4h423937353c31474g57385i6o4?t=680621</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680623" resname="settings.header.addressName">
+        <source>Address Names</source>
+        <target state="needs-translation">Address Names</target>
+        <context-group purpose="information">
+          <context context-type="source">settings -&gt; header -&gt; addressName</context>
+          <context context-type="x-crowdin-screenshot">Screenshot: https://crowdin.com/s/wrap/93e33383l4g3v6d3a3l4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2n4h423937363831474g57385i6o4?t=680623</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680625" resname="settings.placeholder.search">
+        <source>Search by hash or name</source>
+        <target state="needs-translation">Search by hash or name</target>
+        <context-group purpose="information">
+          <context context-type="source">settings -&gt; placeholder -&gt; search</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680627" resname="settings.tagline.addressName">
+        <source>Add custom names to addresses in order to easily track them through ethVM</source>
+        <target state="needs-translation">Add custom names to addresses in order to easily track them through ethVM</target>
+        <context-group purpose="information">
+          <context context-type="source">settings -&gt; tagline -&gt; addressName</context>
+          <context context-type="x-crowdin-screenshot">Screenshot: https://crowdin.com/s/wrap/93e33383l4g3v6d3a3l4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2n4h423937363831474g57385i6o4?t=680627</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680693" resname="settings.data-share.on">
+        <source>Data Sharing On</source>
+        <target state="needs-translation">Data Sharing On</target>
+        <context-group purpose="information">
+          <context context-type="source">settings -&gt; data-share -&gt; on</context>
+          <context context-type="x-crowdin-screenshot">Screenshot: https://crowdin.com/s/wrap/93e33383l4g3v6d3a3n4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2n4h423937353c31474g57385i6o4?t=680693</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680695" resname="settings.data-share.off">
+        <source>Data Sharing Off</source>
+        <target state="needs-translation">Data Sharing Off</target>
+        <context-group purpose="information">
+          <context context-type="source">settings -&gt; data-share -&gt; off</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680803" resname="address.circulatingSupply">
+        <source>Circulating Supply</source>
+        <target state="needs-translation">Circulating Supply</target>
+        <context-group purpose="information">
+          <context context-type="source">address -&gt; circulatingSupply</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680805" resname="address.24hTradingVolume">
+        <source>24h Trading Volume</source>
+        <target state="needs-translation">24h Trading Volume</target>
+        <context-group purpose="information">
+          <context context-type="source">address -&gt; 24hTradingVolume</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680807" resname="address.blockRewards">
+        <source>Block rewards</source>
+        <target state="needs-translation">Block rewards</target>
+        <context-group purpose="information">
+          <context context-type="source">address -&gt; blockRewards</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680809" resname="address.uncleRewards">
+        <source>Uncle rewards</source>
+        <target state="needs-translation">Uncle rewards</target>
+        <context-group purpose="information">
+          <context context-type="source">address -&gt; uncleRewards</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680811" resname="address.totalSupply">
+        <source>Total Supply</source>
+        <target state="needs-translation">Total Supply</target>
+        <context-group purpose="information">
+          <context context-type="source">address -&gt; totalSupply</context>
+          <context context-type="x-crowdin-screenshot">Screenshot: https://crowdin.com/s/wrap/93e33383l4g3v6c3c3n4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l40393a3v2b3l4n2j56463k6v4n4?t=680811</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680813" resname="address.24h.high">
+        <source>24h High</source>
+        <target state="needs-translation">24h High</target>
+        <context-group purpose="information">
+          <context context-type="source">address -&gt; 24h -&gt; high</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680815" resname="address.24h.change">
+        <source>24h Change</source>
+        <target state="needs-translation">24h Change</target>
+        <context-group purpose="information">
+          <context context-type="source">address -&gt; 24h -&gt; change</context>
+          <context context-type="x-crowdin-screenshot">Screenshot: https://crowdin.com/s/wrap/93e33383l4g3v6c3c3n4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l40393a3v2b3l4n2j56463k6v4n4?t=680815</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680817" resname="address.24h.low">
+        <source>24h low</source>
+        <target state="needs-translation">24h low</target>
+        <context-group purpose="information">
+          <context context-type="source">address -&gt; 24h -&gt; low</context>
+          <context context-type="x-crowdin-screenshot">Screenshot 1: https://crowdin.com/s/wrap/93e33383l4g3v6d3c3r4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2p4h423a37333931474g57385i6o4?t=680817
+Screenshot 2: https://crowdin.com/s/wrap/93e33383l4g3v6c3c3n4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l40393a3v2b3l4n2j56463k6v4n4?t=680817
+Screenshot 3: https://crowdin.com/s/wrap/93e33383l4g3v6d3d3n4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k453g2j495k2p4h423c37333731474g57385i6o4?t=680817</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680819" resname="address.placeholder.search">
+        <source>Search by hash or name</source>
+        <target state="needs-translation">Search by hash or name</target>
+        <context-group purpose="information">
+          <context context-type="source">address -&gt; placeholder -&gt; search</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680821" resname="address.tagline.noToken">
+        <source>This address does not hold any tokens</source>
+        <target state="needs-translation">This address does not hold any tokens</target>
+        <context-group purpose="information">
+          <context context-type="source">address -&gt; tagline -&gt; noToken</context>
+          <context context-type="x-crowdin-screenshot">Screenshot 1: https://crowdin.com/s/wrap/93e33383l4g3v6c3a3t4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l40393b3v2c3j4n2j56463k6v4n4?t=680821
+Screenshot 2: https://crowdin.com/s/wrap/93e33383l4g3v6c3a3n4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l40393c3v283h4n2j56463k6v4n4?t=680821</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680823" resname="address.tagline.noTransactionHistory">
+        <source>This address does not have any token transfer history</source>
+        <target state="needs-translation">This address does not have any token transfer history</target>
+        <context-group purpose="information">
+          <context context-type="source">address -&gt; tagline -&gt; noTransactionHistory</context>
+          <context context-type="x-crowdin-screenshot">Screenshot 1: https://crowdin.com/s/wrap/93e33383l4g3v6c3a3t4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l40393b3v2c3j4n2j56463k6v4n4?t=680823
+Screenshot 2: https://crowdin.com/s/wrap/93e33383l4g3v6c3a3l4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l40393c3v283m4n2j56463k6v4n4?t=680823</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680825" resname="address.tagline.noNFT">
+        <source>This address does not have any NFTs</source>
+        <target state="needs-translation">This address does not have any NFTs</target>
+        <context-group purpose="information">
+          <context context-type="source">address -&gt; tagline -&gt; noNFT</context>
+          <context context-type="x-crowdin-screenshot">Screenshot 1: https://crowdin.com/s/wrap/93e33383l4g3v6c3e3n4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l40383i3v2b3m4n2j56463k6v4n4?t=680825
+Screenshot 2: https://crowdin.com/s/wrap/93e33383l4g3v6c3a3t4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l40393b3v2c3j4n2j56463k6v4n4?t=680825
+Screenshot 3: https://crowdin.com/s/wrap/93e33383l4g3v6c3a3r4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l40393c3v273h4n2j56463k6v4n4?t=680825</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680827" resname="address.tagline.noNFTTransfer">
+        <source>This address does not have any NFT transfer history</source>
+        <target state="needs-translation">This address does not have any NFT transfer history</target>
+        <context-group purpose="information">
+          <context context-type="source">address -&gt; tagline -&gt; noNFTTransfer</context>
+          <context context-type="x-crowdin-screenshot">Screenshot 1: https://crowdin.com/s/wrap/93e33383l4g3v6c3a3t4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l40393b3v2c3j4n2j56463k6v4n4?t=680827
+Screenshot 2: https://crowdin.com/s/wrap/93e33383l4g3v6c3a3p4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l40393c3v273m4n2j56463k6v4n4?t=680827</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680829" resname="address.tagline.noPendingTransactions">
+        <source>This address does not have pending transactions</source>
+        <target state="needs-translation">This address does not have pending transactions</target>
+        <context-group purpose="information">
+          <context context-type="source">address -&gt; tagline -&gt; noPendingTransactions</context>
+          <context context-type="x-crowdin-screenshot">Screenshot 1: https://crowdin.com/s/wrap/93e33383l4g3v6c3b3n4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l40393b3v2a3m4n2j56463k6v4n4?t=680829
+Screenshot 2: https://crowdin.com/s/wrap/93e33383l4g3v6c3b3r4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l40393b3v293l4n2j56463k6v4n4?t=680829</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680831" resname="address.tagline.noStakeWithdrawals">
+        <source>This address does not have any stake withdrawals</source>
+        <target state="needs-translation">This address does not have any stake withdrawals</target>
+        <context-group purpose="information">
+          <context context-type="source">address -&gt; tagline -&gt; noStakeWithdrawals</context>
+          <context context-type="x-crowdin-screenshot">Screenshot: https://crowdin.com/s/wrap/93e33383l4g3v6c3c3p4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l40393a3v2a3p4n2j56463k6v4n4?t=680831</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680833" resname="address.tagline.noTransfer">
+        <source>This address does not have any transfers</source>
+        <target state="needs-translation">This address does not have any transfers</target>
+        <context-group purpose="information">
+          <context context-type="source">address -&gt; tagline -&gt; noTransfer</context>
+          <context context-type="x-crowdin-screenshot">Screenshot 1: https://crowdin.com/s/wrap/93e33383l4g3v6c3a3t4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l40393b3v2c3j4n2j56463k6v4n4?t=680833
+Screenshot 2: https://crowdin.com/s/wrap/93e33383l4g3v6c3b3l4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l40393b3v2b3i4n2j56463k6v4n4?t=680833
+Screenshot 3: https://crowdin.com/s/wrap/93e33383l4g3v6c3b3p4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l40393b3v2a3h4n2j56463k6v4n4?t=680833</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680515" resname="block.lastBlockTitle">
+        <source>Last Blocks</source>
+        <target state="needs-translation">Last Blocks</target>
+        <context-group purpose="information">
+          <context context-type="source">block -&gt; lastBlockTitle</context>
+          <context context-type="x-crowdin-screenshot">Screenshot 1: https://crowdin.com/s/wrap/93e33383l4g3v6c3h3r4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4k40373d3v2a3p4n2456463k6v4n4?t=680515
+Screenshot 2: https://crowdin.com/s/wrap/93e33383l4g3v6c3h3n4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4k40373d3v2c3l4n2456463k6v4n4?t=680515</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680739" resname="block.size">
+        <source>Size</source>
+        <target state="needs-translation">Size</target>
+        <context-group purpose="information">
+          <context context-type="source">block -&gt; size</context>
+          <context context-type="x-crowdin-screenshot">Screenshot: https://crowdin.com/s/wrap/93e33383l4g3v6d383n4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4h473937343d31474g57385i6o4?t=680739</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680851" resname="block.totalDifficulty">
+        <source>Total Difficulty</source>
+        <target state="needs-translation">Total Difficulty</target>
+        <context-group purpose="information">
+          <context context-type="source">block -&gt; totalDifficulty</context>
+          <context context-type="x-crowdin-screenshot">Screenshot: https://crowdin.com/s/wrap/93e33383l4g3v6d383n4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4h473937343d31474g57385i6o4?t=680851</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680853" resname="block.baseFee">
+        <source>Base Fee per Gas</source>
+        <target state="needs-translation">Base Fee per Gas</target>
+        <context-group purpose="information">
+          <context context-type="source">block -&gt; baseFee</context>
+          <context context-type="x-crowdin-screenshot">Screenshot: https://crowdin.com/s/wrap/93e33383l4g3v6d383t4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4h473937323f31474g57385i6o4?t=680853</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680855" resname="block.blockReward">
+        <source>Block Reward</source>
+        <target state="needs-translation">Block Reward</target>
+        <context-group purpose="information">
+          <context context-type="source">block -&gt; blockReward</context>
+          <context context-type="x-crowdin-screenshot">Screenshot: https://crowdin.com/s/wrap/93e33383l4g3v6d383t4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4h473937323f31474g57385i6o4?t=680855</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680857" resname="block.uncleReward">
+        <source>Uncle Reward</source>
+        <target state="needs-translation">Uncle Reward</target>
+        <context-group purpose="information">
+          <context context-type="source">block -&gt; uncleReward</context>
+          <context context-type="x-crowdin-screenshot">Screenshot: https://crowdin.com/s/wrap/93e33383l4g3v6d383t4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4h473937323f31474g57385i6o4?t=680857</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680859" resname="block.totalTxs">
+        <source>Total Txs</source>
+        <target state="needs-translation">Total Txs</target>
+        <context-group purpose="information">
+          <context context-type="source">block -&gt; totalTxs</context>
+          <context context-type="x-crowdin-screenshot">Screenshot: https://crowdin.com/s/wrap/93e33383l4g3v6d383t4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4h473937323f31474g57385i6o4?t=680859</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680741" resname="block.uncle">
+        <source>Uncle | Uncles</source>
+        <target state="needs-translation">Uncle | Uncles</target>
+        <context-group purpose="information">
+          <context context-type="source">block -&gt; uncle</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680743" resname="block.difficulty">
+        <source>Difficulty</source>
+        <target state="needs-translation">Difficulty</target>
+        <context-group purpose="information">
+          <context context-type="source">block -&gt; difficulty</context>
+          <context context-type="x-crowdin-screenshot">Screenshot: https://crowdin.com/s/wrap/93e33383l4g3v6d383n4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4h473937343d31474g57385i6o4?t=680743</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680745" resname="block.stateRoot">
+        <source>State Root</source>
+        <target state="needs-translation">State Root</target>
+        <context-group purpose="information">
+          <context context-type="source">block -&gt; stateRoot</context>
+          <context context-type="x-crowdin-screenshot">Screenshot: https://crowdin.com/s/wrap/93e33383l4g3v6d383n4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4h473937343d31474g57385i6o4?t=680745</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680747" resname="block.receiptRoot">
+        <source>Receipt Root</source>
+        <target state="needs-translation">Receipt Root</target>
+        <context-group purpose="information">
+          <context context-type="source">block -&gt; receiptRoot</context>
+          <context context-type="x-crowdin-screenshot">Screenshot: https://crowdin.com/s/wrap/93e33383l4g3v6d383n4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4h473937343d31474g57385i6o4?t=680747</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680749" resname="block.transactionRoot">
+        <source>Transaction Root</source>
+        <target state="needs-translation">Transaction Root</target>
+        <context-group purpose="information">
+          <context context-type="source">block -&gt; transactionRoot</context>
+          <context context-type="x-crowdin-screenshot">Screenshot: https://crowdin.com/s/wrap/93e33383l4g3v6d383n4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4h473937343d31474g57385i6o4?t=680749</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680751" resname="block.logBloom">
+        <source>Logs Bloom</source>
+        <target state="needs-translation">Logs Bloom</target>
+        <context-group purpose="information">
+          <context context-type="source">block -&gt; logBloom</context>
+          <context context-type="x-crowdin-screenshot">Screenshot: https://crowdin.com/s/wrap/93e33383l4g3v6d383n4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4h473937343d31474g57385i6o4?t=680751</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680753" resname="block.extraData">
+        <source>Extra Data</source>
+        <target state="needs-translation">Extra Data</target>
+        <context-group purpose="information">
+          <context context-type="source">block -&gt; extraData</context>
+          <context context-type="x-crowdin-screenshot">Screenshot: https://crowdin.com/s/wrap/93e33383l4g3v6d383n4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4h473937343d31474g57385i6o4?t=680753</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680517" resname="block.addressBlockTitle">
+        <source>Mined Blocks</source>
+        <target state="needs-translation">Mined Blocks</target>
+        <context-group purpose="information">
+          <context context-type="source">block -&gt; addressBlockTitle</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680519" resname="block.allBlockTitle">
+        <source>All Blocks</source>
+        <target state="needs-translation">All Blocks</target>
+        <context-group purpose="information">
+          <context context-type="source">block -&gt; allBlockTitle</context>
+          <context context-type="x-crowdin-screenshot">Screenshot 1: https://crowdin.com/s/wrap/93e33383l4g3v6c3f3t4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4k40373f3v2a3l4n2456463k6v4n4?t=680519
+Screenshot 2: https://crowdin.com/s/wrap/93e33383l4g3v6c3f3r4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4k40373f3v2c3q4n2456463k6v4n4?t=680519</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680521" resname="block.topTokenTitle">
+        <source>Top Tokens</source>
+        <target state="needs-translation">Top Tokens</target>
+        <context-group purpose="information">
+          <context context-type="source">block -&gt; topTokenTitle</context>
+          <context context-type="x-crowdin-screenshot">Screenshot: https://crowdin.com/s/wrap/93e33383l4g3v6c3h3p4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4k40373d3v2b3m4n2456463k6v4n4?t=680521</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680523" resname="block.favoriteTokenTitle">
+        <source>Favorite Tokens</source>
+        <target state="needs-translation">Favorite Tokens</target>
+        <context-group purpose="information">
+          <context context-type="source">block -&gt; favoriteTokenTitle</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680525" resname="block.marketTokenTitle">
+        <source>Token Market</source>
+        <target state="needs-translation">Token Market</target>
+        <context-group purpose="information">
+          <context context-type="source">block -&gt; marketTokenTitle</context>
+          <context context-type="x-crowdin-screenshot">Screenshot: https://crowdin.com/s/wrap/93e33383l4g3v6d393p4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2n4h423637333731474g57385i6o4?t=680525</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680599" resname="block.totalAddress">
+        <source>Total Addresses</source>
+        <target state="needs-translation">Total Addresses</target>
+        <context-group purpose="information">
+          <context context-type="source">block -&gt; totalAddress</context>
+          <context context-type="x-crowdin-screenshot">Screenshot 1: https://crowdin.com/s/wrap/93e33383l4g3v6d3c3l4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2o4h473f37313d31474g57385i6o4?t=680599
+Screenshot 2: https://crowdin.com/s/wrap/93e33383l4g3v6d3c3r4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2p4h423a37333931474g57385i6o4?t=680599
+Screenshot 3: https://crowdin.com/s/wrap/93e33383l4g3v6d393n4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4h473837353f31474g57385i6o4?t=680599</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680601" resname="block.tokenBalance">
+        <source>Token Balance</source>
+        <target state="needs-translation">Token Balance</target>
+        <context-group purpose="information">
+          <context context-type="source">block -&gt; tokenBalance</context>
+          <context context-type="x-crowdin-screenshot">Screenshot 1: https://crowdin.com/s/wrap/93e33383l4g3v6d3c3l4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2o4h473f37313d31474g57385i6o4?t=680601
+Screenshot 2: https://crowdin.com/s/wrap/93e33383l4g3v6d3c3r4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2p4h423a37333931474g57385i6o4?t=680601
+Screenshot 3: https://crowdin.com/s/wrap/93e33383l4g3v6b3h3l4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l403a3f3v2c3h4n2j56463k6v4n4?t=680601
+Screenshot 4: https://crowdin.com/s/wrap/93e33383l4g3v6d393n4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4h473837353f31474g57385i6o4?t=680601
+Screenshot 5: https://crowdin.com/s/wrap/93e33383l4g3v6c3e3n4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l40383i3v2b3m4n2j56463k6v4n4?t=680601
+Screenshot 6: https://crowdin.com/s/wrap/93e33383l4g3v6c3a3n4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l40393c3v283h4n2j56463k6v4n4?t=680601
+Screenshot 7: https://crowdin.com/s/wrap/93e33383l4g3v6c3a3l4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l40393c3v283m4n2j56463k6v4n4?t=680601
+Screenshot 8: https://crowdin.com/s/wrap/93e33383l4g3v6b3h3r4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l403a3f3v293p4n2j56463k6v4n4?t=680601
+Screenshot 9: https://crowdin.com/s/wrap/93e33383l4g3v6b3h3p4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l403a3f3v2a3j4n2j56463k6v4n4?t=680601</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680835" resname="block.tokenHistory">
+        <source>Token History</source>
+        <target state="needs-translation">Token History</target>
+        <context-group purpose="information">
+          <context context-type="source">block -&gt; tokenHistory</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680837" resname="block.tokenSearch">
+        <source>Search token name</source>
+        <target state="needs-translation">Search token name</target>
+        <context-group purpose="information">
+          <context context-type="source">block -&gt; tokenSearch</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680603" resname="block.tokenTotal">
+        <source>total tokens</source>
+        <target state="needs-translation">total tokens</target>
+        <context-group purpose="information">
+          <context context-type="source">block -&gt; tokenTotal</context>
+          <context context-type="x-crowdin-screenshot">Screenshot 1: https://crowdin.com/s/wrap/93e33383l4g3v6d3c3l4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2o4h473f37313d31474g57385i6o4?t=680603
+Screenshot 2: https://crowdin.com/s/wrap/93e33383l4g3v6d3c3r4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2p4h423a37333931474g57385i6o4?t=680603
+Screenshot 3: https://crowdin.com/s/wrap/93e33383l4g3v6b3h3l4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l403a3f3v2c3h4n2j56463k6v4n4?t=680603
+Screenshot 4: https://crowdin.com/s/wrap/93e33383l4g3v6d393n4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4h473837353f31474g57385i6o4?t=680603
+Screenshot 5: https://crowdin.com/s/wrap/93e33383l4g3v6c3e3n4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l40383i3v2b3m4n2j56463k6v4n4?t=680603
+Screenshot 6: https://crowdin.com/s/wrap/93e33383l4g3v6c3a3n4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l40393c3v283h4n2j56463k6v4n4?t=680603
+Screenshot 7: https://crowdin.com/s/wrap/93e33383l4g3v6c3a3l4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l40393c3v283m4n2j56463k6v4n4?t=680603
+Screenshot 8: https://crowdin.com/s/wrap/93e33383l4g3v6b3h3r4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l403a3f3v293p4n2j56463k6v4n4?t=680603
+Screenshot 9: https://crowdin.com/s/wrap/93e33383l4g3v6b3h3p4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l403a3f3v2a3j4n2j56463k6v4n4?t=680603</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680839" resname="block.tokenBalanceRefresh">
+        <source>Token's Balance Changed, Refresh</source>
+        <target state="needs-translation">Token's Balance Changed, Refresh</target>
+        <context-group purpose="information">
+          <context context-type="source">block -&gt; tokenBalanceRefresh</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680841" resname="block.newTransfer">
+        <source>New ERC20 Transfers</source>
+        <target state="needs-translation">New ERC20 Transfers</target>
+        <context-group purpose="information">
+          <context context-type="source">block -&gt; newTransfer</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680843" resname="block.nftTotal">
+        <source>Total NFT's</source>
+        <target state="needs-translation">Total NFT's</target>
+        <context-group purpose="information">
+          <context context-type="source">block -&gt; nftTotal</context>
+          <context context-type="x-crowdin-screenshot">Screenshot: https://crowdin.com/s/wrap/93e33383l4g3v6c3e3n4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l40383i3v2b3m4n2j56463k6v4n4?t=680843</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680845" resname="block.nftCollection">
+        <source>NFT Collection</source>
+        <target state="needs-translation">NFT Collection</target>
+        <context-group purpose="information">
+          <context context-type="source">block -&gt; nftCollection</context>
+          <context context-type="x-crowdin-screenshot">Screenshot: https://crowdin.com/s/wrap/93e33383l4g3v6c3e3n4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l40383i3v2b3m4n2j56463k6v4n4?t=680845</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680847" resname="block.unknown">
+        <source>Unknown</source>
+        <target state="needs-translation">Unknown</target>
+        <context-group purpose="information">
+          <context context-type="source">block -&gt; unknown</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680605" resname="block.portfolioEmpty">
+        <source>Your portfolio is empty</source>
+        <target state="needs-translation">Your portfolio is empty</target>
+        <context-group purpose="information">
+          <context context-type="source">block -&gt; portfolioEmpty</context>
+          <context context-type="x-crowdin-screenshot">Screenshot: https://crowdin.com/s/wrap/93e33383l4g3v6d3b3p4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2n4h423c37363831474g57385i6o4?t=680605</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680607" resname="block.portfolioValue">
+        <source>Portfolio Value</source>
+        <target state="needs-translation">Portfolio Value</target>
+        <context-group purpose="information">
+          <context context-type="source">block -&gt; portfolioValue</context>
+          <context context-type="x-crowdin-screenshot">Screenshot 1: https://crowdin.com/s/wrap/93e33383l4g3v6d3c3l4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2o4h473f37313d31474g57385i6o4?t=680607
+Screenshot 2: https://crowdin.com/s/wrap/93e33383l4g3v6d3c3r4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2p4h423a37333931474g57385i6o4?t=680607
+Screenshot 3: https://crowdin.com/s/wrap/93e33383l4g3v6d393n4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4h473837353f31474g57385i6o4?t=680607
+Screenshot 4: https://crowdin.com/s/wrap/93e33383l4g3v6c3e3n4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l40383i3v2b3m4n2j56463k6v4n4?t=680607</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680527" resname="block.header.blockNumber">
+        <source>Block #</source>
+        <target state="needs-translation">Block #</target>
+        <context-group purpose="information">
+          <context context-type="source">block -&gt; header -&gt; blockNumber</context>
+          <context context-type="x-crowdin-screenshot">Screenshot 1: https://crowdin.com/s/wrap/93e33383l4g3v6c3h3n4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4k40373d3v2c3l4n2456463k6v4n4?t=680527
+Screenshot 2: https://crowdin.com/s/wrap/93e33383l4g3v6c3f3t4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4k40373f3v2a3l4n2456463k6v4n4?t=680527</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680609" resname="block.header.watchList">
+        <source>Watchlist</source>
+        <target state="needs-translation">Watchlist</target>
+        <context-group purpose="information">
+          <context context-type="source">block -&gt; header -&gt; watchList</context>
+          <context context-type="x-crowdin-screenshot">Screenshot 1: https://crowdin.com/s/wrap/93e33383l4g3v6d393t4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2n4h423a37313731474g57385i6o4?t=680609
+Screenshot 2: https://crowdin.com/s/wrap/93e33383l4g3v6d3c3l4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2o4h473f37313d31474g57385i6o4?t=680609
+Screenshot 3: https://crowdin.com/s/wrap/93e33383l4g3v6d3c3r4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2p4h423a37333931474g57385i6o4?t=680609
+Screenshot 4: https://crowdin.com/s/wrap/93e33383l4g3v6d393l4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4h473837363c31474g57385i6o4?t=680609
+Screenshot 5: https://crowdin.com/s/wrap/93e33383l4g3v6d393n4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4h473837353f31474g57385i6o4?t=680609</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680529" resname="block.header.time">
+        <source>Timestamp</source>
+        <target state="needs-translation">Timestamp</target>
+        <context-group purpose="information">
+          <context context-type="source">block -&gt; header -&gt; time</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680531" resname="block.header.transactions">
+        <source>Transactions</source>
+        <target state="needs-translation">Transactions</target>
+        <context-group purpose="information">
+          <context context-type="source">block -&gt; header -&gt; transactions</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680533" resname="block.header.miner">
+        <source>Miner</source>
+        <target state="needs-translation">Miner</target>
+        <context-group purpose="information">
+          <context context-type="source">block -&gt; header -&gt; miner</context>
+          <context context-type="x-crowdin-screenshot">Screenshot 1: https://crowdin.com/s/wrap/93e33383l4g3v6d383t4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4h473937323f31474g57385i6o4?t=680533
+Screenshot 2: https://crowdin.com/s/wrap/93e33383l4g3v6c3h3n4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4k40373d3v2c3l4n2456463k6v4n4?t=680533
+Screenshot 3: https://crowdin.com/s/wrap/93e33383l4g3v6c3f3t4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4k40373f3v2a3l4n2456463k6v4n4?t=680533</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680535" resname="block.header.reward">
+        <source>Reward</source>
+        <target state="needs-translation">Reward</target>
+        <context-group purpose="information">
+          <context context-type="source">block -&gt; header -&gt; reward</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680755" resname="block.error.withdrawal">
+        <source>This block does not have any withdrawals</source>
+        <target state="needs-translation">This block does not have any withdrawals</target>
+        <context-group purpose="information">
+          <context context-type="source">block -&gt; error -&gt; withdrawal</context>
+          <context context-type="x-crowdin-screenshot">Screenshot: https://crowdin.com/s/wrap/93e33383l4g3v6c3d3n4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4l4039393v2b3j4n2j56463k6v4n4?t=680755</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680861" resname="block.error.notMined">
+        <source>This block has not been mined yet</source>
+        <target state="needs-translation">This block has not been mined yet</target>
+        <context-group purpose="information">
+          <context context-type="source">block -&gt; error -&gt; notMined</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680757" resname="block.error.reward">
+        <source>Reward</source>
+        <target state="needs-translation">Reward</target>
+        <context-group purpose="information">
+          <context context-type="source">block -&gt; error -&gt; reward</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680537" resname="home.tagline.row1">
+        <source>Track, analyze and explore</source>
+        <target state="needs-translation">Track, analyze and explore</target>
+        <context-group purpose="information">
+          <context context-type="source">home -&gt; tagline -&gt; row1</context>
+          <context context-type="x-crowdin-screenshot">Screenshot: https://crowdin.com/s/wrap/93e33383l4g3v6c3h3r4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4k40373d3v2a3p4n2456463k6v4n4?t=680537</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680539" resname="home.tagline.row2">
+        <source>on the Ethereum blockchain.</source>
+        <target state="needs-translation">on the Ethereum blockchain.</target>
+        <context-group purpose="information">
+          <context context-type="source">home -&gt; tagline -&gt; row2</context>
+          <context context-type="x-crowdin-screenshot">Screenshot: https://crowdin.com/s/wrap/93e33383l4g3v6c3h3r4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4k40373d3v2a3p4n2456463k6v4n4?t=680539</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680541" resname="home.tagline.row3">
+        <source>on the Sepolia Testnet.</source>
+        <target state="needs-translation">on the Sepolia Testnet.</target>
+        <context-group purpose="information">
+          <context context-type="source">home -&gt; tagline -&gt; row3</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680543" resname="home.footer.discover">
+        <source>Discover</source>
+        <target state="needs-translation">Discover</target>
+        <context-group purpose="information">
+          <context context-type="source">home -&gt; footer -&gt; discover</context>
+          <context context-type="x-crowdin-screenshot">Screenshot 1: https://crowdin.com/s/wrap/93e33383l4g3v6d3b3p4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2n4h423c37363831474g57385i6o4?t=680543
+Screenshot 2: https://crowdin.com/s/wrap/93e33383l4g3v6c3g3t4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4k40373e3v273k4n2456463k6v4n4?t=680543</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680545" resname="home.footer.about">
+        <source>About Us</source>
+        <target state="needs-translation">About Us</target>
+        <context-group purpose="information">
+          <context context-type="source">home -&gt; footer -&gt; about</context>
+          <context context-type="x-crowdin-screenshot">Screenshot 1: https://crowdin.com/s/wrap/93e33383l4g3v6d3b3p4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2n4h423c37363831474g57385i6o4?t=680545
+Screenshot 2: https://crowdin.com/s/wrap/93e33383l4g3v6c3g3t4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4k40373e3v273k4n2456463k6v4n4?t=680545</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680547" resname="home.footer.policy">
+        <source>Privacy Policy</source>
+        <target state="needs-translation">Privacy Policy</target>
+        <context-group purpose="information">
+          <context context-type="source">home -&gt; footer -&gt; policy</context>
+          <context context-type="x-crowdin-screenshot">Screenshot 1: https://crowdin.com/s/wrap/93e33383l4g3v6d3b3p4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2n4h423c37363831474g57385i6o4?t=680547
+Screenshot 2: https://crowdin.com/s/wrap/93e33383l4g3v6c3g3t4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4k40373e3v273k4n2456463k6v4n4?t=680547</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680549" resname="home.footer.help">
+        <source>Help Center</source>
+        <target state="needs-translation">Help Center</target>
+        <context-group purpose="information">
+          <context context-type="source">home -&gt; footer -&gt; help</context>
+          <context context-type="x-crowdin-screenshot">Screenshot 1: https://crowdin.com/s/wrap/93e33383l4g3v6d3b3p4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2n4h423c37363831474g57385i6o4?t=680549
+Screenshot 2: https://crowdin.com/s/wrap/93e33383l4g3v6c3g3t4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4k40373e3v273k4n2456463k6v4n4?t=680549</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680551" resname="home.footer.love">
+        <source>Love ethVM?</source>
+        <target state="needs-translation">Love ethVM?</target>
+        <context-group purpose="information">
+          <context context-type="source">home -&gt; footer -&gt; love</context>
+          <context context-type="x-crowdin-screenshot">Screenshot 1: https://crowdin.com/s/wrap/93e33383l4g3v6d3b3p4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2n4h423c37363831474g57385i6o4?t=680551
+Screenshot 2: https://crowdin.com/s/wrap/93e33383l4g3v6c3g3t4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4k40373e3v273k4n2456463k6v4n4?t=680551</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680553" resname="home.footer.free">
+        <source>Help us keep ethVM free and open-source, your donations go a long way towards making that possible.</source>
+        <target state="needs-translation">Help us keep ethVM free and open-source, your donations go a long way towards making that possible.</target>
+        <context-group purpose="information">
+          <context context-type="source">home -&gt; footer -&gt; free</context>
+          <context context-type="x-crowdin-screenshot">Screenshot: https://crowdin.com/s/wrap/93e33383l4g3v6c3g3t4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4k40373e3v273k4n2456463k6v4n4?t=680553</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680555" resname="home.footer.eDonate">
+        <source>Ethereum Donation</source>
+        <target state="needs-translation">Ethereum Donation</target>
+        <context-group purpose="information">
+          <context context-type="source">home -&gt; footer -&gt; eDonate</context>
+          <context context-type="x-crowdin-screenshot">Screenshot 1: https://crowdin.com/s/wrap/93e33383l4g3v6d3b3p4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2n4h423c37363831474g57385i6o4?t=680555
+Screenshot 2: https://crowdin.com/s/wrap/93e33383l4g3v6c3g3t4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4k40373e3v273k4n2456463k6v4n4?t=680555</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680557" resname="home.footer.bDonate">
+        <source>Bitcoin Donation</source>
+        <target state="needs-translation">Bitcoin Donation</target>
+        <context-group purpose="information">
+          <context context-type="source">home -&gt; footer -&gt; bDonate</context>
+          <context context-type="x-crowdin-screenshot">Screenshot 1: https://crowdin.com/s/wrap/93e33383l4g3v6d3b3p4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2n4h423c37363831474g57385i6o4?t=680557
+Screenshot 2: https://crowdin.com/s/wrap/93e33383l4g3v6c3g3t4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4k40373e3v273k4n2456463k6v4n4?t=680557</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680559" resname="home.footer.pricing">
+        <source>Pricing from Coingecko</source>
+        <target state="needs-translation">Pricing from Coingecko</target>
+        <context-group purpose="information">
+          <context context-type="source">home -&gt; footer -&gt; pricing</context>
+          <context context-type="x-crowdin-screenshot">Screenshot: https://crowdin.com/s/wrap/93e33383l4g3v6d3b3p4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2n4h423c37363831474g57385i6o4?t=680559</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680561" resname="home.footer.power">
+        <source>Powered by</source>
+        <target state="needs-translation">Powered by</target>
+        <context-group purpose="information">
+          <context context-type="source">home -&gt; footer -&gt; power</context>
+          <context context-type="x-crowdin-screenshot">Screenshot: https://crowdin.com/s/wrap/93e33383l4g3v6d3b3p4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2n4h423c37363831474g57385i6o4?t=680561</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680563" resname="home.footer.rights">
+        <source>All rights reserved.</source>
+        <target state="needs-translation">All rights reserved.</target>
+        <context-group purpose="information">
+          <context context-type="source">home -&gt; footer -&gt; rights</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680565" resname="home.footer.settings">
+        <source>Settings</source>
+        <target state="needs-translation">Settings</target>
+        <context-group purpose="information">
+          <context context-type="source">home -&gt; footer -&gt; settings</context>
+          <context context-type="x-crowdin-screenshot">Screenshot 1: https://crowdin.com/s/wrap/93e33383l4g3v6d3b3p4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2n4h423c37363831474g57385i6o4?t=680565
+Screenshot 2: https://crowdin.com/s/wrap/93e33383l4g3v6c3g3t4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4k40373e3v273k4n2456463k6v4n4?t=680565</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="680691" resname="home.footer.advertise">
+        <source>Advertise with us</source>
+        <target state="needs-translation">Advertise with us</target>
+        <context-group purpose="information">
+          <context context-type="source">home -&gt; footer -&gt; advertise</context>
+          <context context-type="x-crowdin-screenshot">Screenshot 1: https://crowdin.com/s/wrap/93e33383l4g3v6d3b3p4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2n4h423c37363831474g57385i6o4?t=680691
+Screenshot 2: https://crowdin.com/s/wrap/93e33383l4g3v6c3g3t4d534o455r4s4v4h2949655b5m283l4l4m4t2l493j4k443g2j495k2m4k40373e3v273k4n2456463k6v4n4?t=680691</context>
+        </context-group>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>
