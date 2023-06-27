@@ -15,7 +15,7 @@
                 <template
                     v-if="search.hashType === HASH_TYPE.AddressHash || search.hashType === HASH_TYPE.TokenHash || searchSavedNames.length > 0 || resolvedAdr"
                 >
-                    <v-list-subheader>Address</v-list-subheader>
+                    <v-list-subheader>{{ $t('common.address', 1) }}</v-list-subheader>
                     <!--
                         Resolved Adr
                     -->
@@ -72,7 +72,7 @@
                     Search has Token result
                 -->
                 <template v-if="tokensResult.length > 0">
-                    <v-list-subheader>Tokens</v-list-subheader>
+                    <v-list-subheader>{{ $t('common.token', 2) }}</v-list-subheader>
                     <v-list-item
                         v-for="(item, index) in tokensResult"
                         :key="`${item.contract}+${index}`"
@@ -95,7 +95,7 @@
                     Search has Tx result
                 -->
                 <template v-if="search.hashType === HASH_TYPE.TxHash">
-                    <v-list-subheader>Transaction</v-list-subheader>
+                    <v-list-subheader>{{ $t('txs.name', 1) }}</v-list-subheader>
                     <v-list-item
                         :title="removeSpaces(search.param)"
                         prepend-icon="sync_alt"
@@ -111,7 +111,7 @@
                 Search has Block result
                 -->
                 <template v-if="search.isBlockNumber || search.hashType === HASH_TYPE.BlockHash">
-                    <v-list-subheader>Block</v-list-subheader>
+                    <v-list-subheader>{{ $t('common.block', 2) }}</v-list-subheader>
                     <v-list-item
                         prepend-icon="widgets"
                         :title="formatNumber(Number(removeSpaces(search.param).replace(/[_,\s]/g, '')))"
@@ -126,7 +126,7 @@
                     Search has Uncle result
                 -->
                 <template v-if="search.hashType === HASH_TYPE.UncleHash">
-                    <v-list-subheader>Uncle</v-list-subheader>
+                    <v-list-subheader>{{ $t('block.uncle', 1) }}</v-list-subheader>
                     <v-list-item
                         prepend-icon="widgets"
                         :title="removeSpaces(search.param)"
