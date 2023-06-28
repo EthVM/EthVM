@@ -25,6 +25,12 @@
 - decrease adr hash font size [#1170](https://github.com/EthVM/EthVM/pull/1170)
 
 ======================================================================
+### Release v2.1.3-hotfix.1
+
+###  Fix
+- Add propoer to link in tx actions [#1172](https://github.com/EthVM/EthVM/pull/1172)
+
+======================================================================
 
 ### Release v2.1.3
 Add partially decoded transaction logs:
