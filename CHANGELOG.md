@@ -1,3 +1,10 @@
+### Release v2.1.5
+
+### Devop
+- refactor missing string, add translations [#1175](https://github.com/EthVM/EthVM/pull/1175)
+
+======================================================================
+
 ### Release v2.1.4
 
 ###  Fix
