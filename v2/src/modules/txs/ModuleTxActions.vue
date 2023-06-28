@@ -130,7 +130,7 @@ import AppNoResult from '@core/components/AppNoResult.vue'
 import AppExpansionPanel from '@/core/components/AppExpansionPanel.vue'
 import TxActionRow from './components/TxActionRow.vue'
 import AppPagination from '@core/components/AppPagination.vue'
-import { computed, reactive } from 'vue'
+import { computed, reactive, onMounted } from 'vue'
 import {
     EthTransferInTxFragment as EthTransfer,
     useGetEthTransfersInTxQuery,
@@ -192,6 +192,14 @@ const {
 )
 onEthTransafersResult(({ data }) => {
     if (data && data.getEthTransfersByHash) {
+        clearTimeout(timeoutState.timeout)
+        timeoutState.active = false
+        timeoutState.startWaitTime = undefined
+    }
+})
+
+onMounted(() => {
+    if (ethTransfersData.value && ethTransfersData.value.getEthTransfersByHash) {
         clearTimeout(timeoutState.timeout)
         timeoutState.active = false
         timeoutState.startWaitTime = undefined
