@@ -20,6 +20,9 @@ import AppError from '@core/components/AppError.vue'
 import { eth } from '@core/helper'
 import { useRoute } from 'vue-router'
 import { onMounted } from 'vue'
+import { onBeforeRouteUpdate } from 'vue-router'
+import { tabViewRouteGuardOnUpdate } from '@/core/router/helpers'
+import { Q_TOKEN_DETAILS } from '@/core/router/routesNames'
 
 onMounted(() => {
     window.scrollTo(0, 0)
@@ -106,4 +109,8 @@ const setError = (hasError: boolean, message: ErrorMessageToken): void => {
         }
     }
 }
+
+onBeforeRouteUpdate(async (to, from, next) => {
+    tabViewRouteGuardOnUpdate(Q_TOKEN_DETAILS[0], to, from, next)
+})
 </script>

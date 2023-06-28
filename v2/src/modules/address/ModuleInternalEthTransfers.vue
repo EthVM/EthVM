@@ -4,13 +4,13 @@
             <v-row align="center" justify="start" class="text-info mt-2 mt-sm-3">
                 <v-col :sm="mdAndDown ? 3 : 2">
                     <span style="width: 30px; height: 1px" class="d-inline-block"></span>
-                    <span class="ml-4">Tx Value</span>
+                    <span class="ml-4">{{ $t('common.txValue') }}</span>
                 </v-col>
                 <v-spacer />
-                <v-col md="3" lg="2"> Address </v-col>
-                <v-col sm="2"> Hash </v-col>
-                <v-col sm="2"> Balance Before </v-col>
-                <v-col sm="2" lg="3"> Balance After </v-col>
+                <v-col md="3" lg="2"> {{ $t('common.address') }} </v-col>
+                <v-col sm="2"> {{ $t('common.hash') }} </v-col>
+                <v-col sm="2"> {{ $t('txs.balanceBefore') }} </v-col>
+                <v-col sm="2" lg="3"> {{ $t('txs.balanceAfter') }} </v-col>
             </v-row>
         </template>
         <v-divider class="my-0 mt-sm-4 mx-n4 mx-sm-n6" />

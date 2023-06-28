@@ -32,7 +32,8 @@
                                 :title="$t('block.tokenBalance')"
                                 :is-loading="!store.portfolioTokensIsLoaded()"
                                 :subtext="`${tokensCount} ${$t('block.tokenTotal')}`"
-                                :balance="tokenBalanceFiat"
+                                :balance="tokenBalanceFiat.value"
+                                :balance-tooltip="tokenBalanceFiat.tooltipText"
                             />
                             <app-token-icon-row v-if="store.portfolioTokensIsLoaded()" :tokens="tokenIcons" class="ml-5"></app-token-icon-row>
                         </div>
@@ -46,7 +47,8 @@
                     :title="$t('block.tokenBalance')"
                     :is-loading="!store.portfolioTokensIsLoaded()"
                     :subtext="`${tokensCount} total tokens`"
-                    :balance="tokenBalanceFiat"
+                    :balance="tokenBalanceFiat.value"
+                    :balance-tooltip="tokenBalanceFiat.tooltipText"
                 />
                 <app-token-icon-row v-if="store.portfolioTokensIsLoaded()" :tokens="tokenIcons" class="mt-3"></app-token-icon-row>
             </v-card>
@@ -89,12 +91,13 @@ import { reactive, computed } from 'vue'
 import { useStore } from '@/store'
 import { useDisplay } from 'vuetify/lib/framework.mjs'
 import { onBeforeRouteUpdate } from 'vue-router'
-import { formatUsdValue, formatNumber } from '@core/helper/number-format-helper'
+import { formatUsdValue, formatNumber, FormattedNumber } from '@core/helper/number-format-helper'
 import { TokenSort, TOKEN_FILTER_VALUES } from '@module/address/models/TokenSort'
 import { MarketDataFragment } from '@core/composables/CoinData/getLatestPrices.generated'
 import { useCoinData } from '@core/composables/CoinData/coinData.composable'
 import { onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { tabViewRouteGuardOnUpdate } from '@/core/router/helpers'
 
 const { t } = useI18n()
 
@@ -134,7 +137,7 @@ const state = reactive<StateType>({
     tab: props.tab
 })
 
-onBeforeRouteUpdate(to => {
+onBeforeRouteUpdate(async (to, from, next) => {
     if (to.query.t === Q_PORTFOLIO[0]) {
         state.addressRef = undefined
     } else {
@@ -142,10 +145,11 @@ onBeforeRouteUpdate(to => {
             state.addressRef = to.params.addressRef as string
         }
     }
+    tabViewRouteGuardOnUpdate(Q_PORTFOLIO[0], to, from, next)
 })
 
-const tokenBalanceFiat = computed<string>(() => {
-    return formatUsdValue(store.portfolioTokensFiatBN).value
+const tokenBalanceFiat = computed<FormattedNumber>(() => {
+    return formatUsdValue(store.portfolioTokensFiatBN)
 })
 
 const tokensCount = computed<string>(() => {

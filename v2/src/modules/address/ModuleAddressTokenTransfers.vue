@@ -10,36 +10,37 @@
                 <v-row align="center" class="my-0 mx-0">
                     <div v-if="!props.isOverview" class="mr-10">
                         <address-balance-totals
-                            title="Token Balance"
+                            :title="$t('block.tokenBalance')"
                             :is-loading="loadingAddressTokens || loadingMarketInfo"
-                            :balance="tokenBalanceValue"
-                            :subtext="`${tokenCount} total tokens`"
+                            :balance="tokenBalance.value"
+                            :balance-tooltip="tokenBalance.tooltipText"
+                            :subtext="`${tokenCount} ${$t('block.tokenTotal')}`"
                         />
                     </div>
-                    <span v-if="props.isOverview" class="text-h6 font-weight-bold">Token History</span>
+                    <span v-if="props.isOverview" class="text-h6 font-weight-bold">{{ $t('block.tokenHistory') }}</span>
                     <app-new-update
                         :icon-only="props.isOverview"
-                        text="New ERC20 Transfers"
+                        :text="$t('block.newTransfer')"
                         :update-count="props.newErc20Transfer"
                         @reload="setPage(0, true)"
                     />
                 </v-row>
             </div>
-            <app-btn v-if="props.isOverview && !xs" text="More" isSmall icon="east" @click="goToTokenTransfersPage"></app-btn>
+            <app-btn v-if="props.isOverview && !xs" :text="$t('common.more')" isSmall icon="east" @click="goToTokenTransfersPage"></app-btn>
             <app-btn-icon v-if="props.isOverview && xs" icon="east" @click="goToTokenTransfersPage"></app-btn-icon>
         </v-card-title>
         <div class="mb-n5">
             <!--            Table Header-->
 
             <v-row v-if="!mdAndDown" class="my-0 text-body-1 text-info">
-                <v-col :cols="props.isOverview ? 3 : 2" class="py-0"> Token </v-col>
-                <v-col v-if="!props.isOverview" cols="1" class="py-0"> Symbol </v-col>
-                <v-col :cols="props.isOverview ? 3 : 2" class="py-0"> Amount </v-col>
-                <v-col :cols="props.isOverview ? 2 : 1" class="py-0"> From/To </v-col>
-                <v-col :cols="props.isOverview ? 4 : 2" class="py-0"> Address </v-col>
-                <v-col v-if="!props.isOverview" cols="2" class="py-0"> Hash </v-col>
-                <v-col v-if="!props.isOverview" cols="1" class="py-0"> Timestamp </v-col>
-                <v-col v-if="!props.isOverview" cols="1" class="py-0 text-right"> More </v-col>
+                <v-col :cols="props.isOverview ? 3 : 2" class="py-0"> {{ $t('common.token') }} </v-col>
+                <v-col v-if="!props.isOverview" cols="1" class="py-0"> {{ $t('common.symbol') }} </v-col>
+                <v-col :cols="props.isOverview ? 3 : 2" class="py-0"> {{ $t('common.amount') }} </v-col>
+                <v-col :cols="props.isOverview ? 2 : 1" class="py-0"> {{ $t('common.from') }}/{{ $t('common.to') }} </v-col>
+                <v-col :cols="props.isOverview ? 4 : 2" class="py-0"> {{ $t('common.address') }} </v-col>
+                <v-col v-if="!props.isOverview" cols="2" class="py-0"> {{ $t('common.hash') }}</v-col>
+                <v-col v-if="!props.isOverview" cols="1" class="py-0"> {{ $t('common.timestamp') }} </v-col>
+                <v-col v-if="!props.isOverview" cols="1" class="py-0 text-right"> {{ $t('common.more') }} </v-col>
             </v-row>
             <v-divider class="my-0 mt-sm-4 mx-n4 mx-sm-n6" />
             <div v-if="initialLoad || loadingTransfers" class="p-ten-top">
@@ -59,7 +60,7 @@
                         />
                     </div>
                 </div>
-                <app-no-result v-else text="This address does not have any token transfer history" class="mt-4 mt-sm-6 mb-5"></app-no-result>
+                <app-no-result v-else :text="$t('address.tagline.noTransactionHistory')" class="mt-4 mt-sm-6 mb-5"></app-no-result>
             </template>
             <template v-if="showPagination">
                 <app-pagination :length="numberOfPages" :has-more="hasMore" @update:modelValue="loadMoreData" :current-page="pageNum" />
@@ -118,7 +119,7 @@ const queryPolicy = computed<WatchQueryFetchPolicy>(() => {
     return store.addressHashIsSaved(props.addressHash.toLowerCase()) || props.isOverview ? 'cache-only' : 'cache-first'
 })
 const { addressHash } = toRefs(props)
-const { tokenBalanceValue, tokenCount, initialLoad: loadingAddressTokens } = useAddressToken(addressHash, queryPolicy)
+const { tokenBalance, tokenCount, initialLoad: loadingAddressTokens } = useAddressToken(addressHash, queryPolicy)
 const { loading: loadingMarketInfo } = useCoinData()
 
 const {

@@ -13,6 +13,17 @@ export const tabViewRouteGuard = (tab: string) => {
     }
 }
 
+export const tabViewRouteGuardOnUpdate = (tab: string, to: RouteLocationNormalized, from: RouteLocationNormalized, next: NavigationGuardNext) => {
+    // check if TO query exhists and valid
+    if (!to.query.t) {
+        // redirect the user to current tab or default
+        to.query.t = from.query.t ? from.query.t : tab
+        next(to)
+    } else {
+        next()
+    }
+}
+
 export const loadImages = () => {
     return async (to: RouteLocationNormalized, from: RouteLocationNormalized, next: NavigationGuardNext) => {
         const images = [

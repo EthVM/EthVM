@@ -68,8 +68,8 @@
                             </v-card-title>
                             <module-portfolio-list is-home-page /> </v-card
                     ></v-col>
-                    <v-col cols="12" :class="columnPadding">
-                        <app-ad-buttons-large v-if="showPortfolio" />
+                    <v-col cols="12" v-if="showPortfolio" :class="columnPadding">
+                        <app-ad-buttons-large />
                     </v-col>
                     <!--
                     ========================

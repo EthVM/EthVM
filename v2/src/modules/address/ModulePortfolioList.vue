@@ -108,7 +108,7 @@ import TableRowPortfolioItem from './components/TableRowPortfolioItem.vue'
 import { computed, reactive } from 'vue'
 import { useStore } from '@/store'
 import { useDisplay } from 'vuetify/lib/framework.mjs'
-import { formatUsdValue } from '@core/helper/number-format-helper'
+import { formatUsdValue, formatNonVariableEthValue, FormattedNumberUnit } from '@core/helper/number-format-helper'
 import BN from 'bignumber.js'
 import { useNetwork } from '@core/composables/Network/useNetwork'
 
@@ -148,11 +148,11 @@ interface DisplayItem {
     name: string
     hash: string
     eth?: string
+    ethTooltip?: string
     ethUSD?: string
     total?: string
     weiBN?: BN
     ethUSDBN?: BN
-    // totalBN?: BN
 }
 
 const addressList = computed<DisplayItem[]>(() => {
@@ -160,10 +160,15 @@ const addressList = computed<DisplayItem[]>(() => {
         const isLoaded = store.addressEthBalanceLoaded(i.hash)
         const cleanHash = i.hash.toLocaleLowerCase()
         const total = store.addressTotalBalance(cleanHash)
+        const ethBalanceRaw = formatNonVariableEthValue(new BN(store.portfolioEthBalanceMap[cleanHash].weiBalance))
+        const unit = ethBalanceRaw.unit === FormattedNumberUnit.GWEI || ethBalanceRaw.unit === FormattedNumberUnit.WEI ? ethBalanceRaw.unit : ''
+        const ethBalance = unit !== '' ? `${ethBalanceRaw.value} ${unit}` : ethBalanceRaw.value
+        const tooltip = unit !== '' ? `${ethBalanceRaw.tooltipText} ${currencyName.value}` : undefined
         return {
             name: i.name,
             hash: i.hash,
-            eth: isLoaded ? store.portfolioEthBalanceMap[cleanHash].balanceFormatted : undefined,
+            eth: isLoaded ? ethBalance : undefined,
+            ethTooltip: tooltip,
             ethUSD: isLoaded ? store.portfolioEthBalanceMap[cleanHash].balanceFiatFormatted : undefined,
             total: total ? formatUsdValue(total).value : undefined,
             weiBN: isLoaded ? new BN(store.portfolioEthBalanceMap[cleanHash].weiBalance) : undefined,

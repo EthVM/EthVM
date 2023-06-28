@@ -145,46 +145,6 @@ watch(
 )
 
 /** -------------------
- * OLD STORE Migration
- * --------------------*/
-
-interface OldToken {
-    address: string
-    symbol: string
-}
-
-const oldTokens = useStorage('favToksData', null as OldToken[] | null)
-if (oldTokens.value && oldTokens.value.length > 0) {
-    oldTokens.value.forEach(i => {
-        if (!store.tokenIsFav(i.address)) {
-            store.addFavToken(i.address)
-        }
-    })
-}
-oldTokens.value = null
-
-interface oldAdrBook {
-    address: string
-    name: string
-}
-
-const oldAdrs = useStorage('favAdrsData', null as oldAdrBook[] | null)
-if (oldAdrs.value && oldAdrs.value.length > 0) {
-    oldAdrs.value.forEach(i => {
-        if (!store.addressHashIsSaved(i.address, true) && !store.addressHashIsSaved(i.address)) {
-            store.addAddress(i.address, i.name, true)
-        }
-    })
-}
-oldAdrs.value = null
-
-//Migrate old consent if any
-const oldConsentOne = useStorage('consentToTrack', null as null | boolean)
-const dataShare = useStorage('dataShare', null as null | boolean)
-oldConsentOne.value = null
-dataShare.value = null
-
-/** -------------------
  * Check Data Sharing Settings
  * --------------------*/
 const { isEnabled } = useState()
@@ -212,6 +172,19 @@ onMounted(() => {
     }
     if (isEnabled && configs.NODE_ENV !== 'development') {
         isEnabled.value = store.dataShare
+    }
+    //Clean old Storage
+    if (localStorage.getItem('dataShare')) {
+        localStorage.removeItem('dataShare')
+    }
+    if (localStorage.getItem('consentToTrack')) {
+        localStorage.removeItem('consentToTrack')
+    }
+    if (localStorage.getItem('favAdrsData')) {
+        localStorage.removeItem('favAdrsData')
+    }
+    if (localStorage.getItem('favToksData')) {
+        localStorage.removeItem('favToksData')
     }
 })
 </script>

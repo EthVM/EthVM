@@ -17,7 +17,7 @@
                     hide-count
                 />
             </div>
-            <app-btn v-if="isHome && !xs" :text="$t('txs.more')" isSmall icon="east" @click="goToTransactionsPage"></app-btn>
+            <app-btn v-if="isHome && !xs" :text="$t('common.more')" isSmall icon="east" @click="goToTransactionsPage"></app-btn>
             <app-btn-icon v-else-if="isHome && xs" icon="east" @click="goToTransactionsPage"></app-btn-icon>
         </v-card-title>
         <txs-table
