@@ -8,13 +8,17 @@
         <address-balance-totals
             :title="`${currencyName} ${$t('common.balance')}`"
             :is-loading="loadingBalanceData"
-            :balance="`${balanceFormatted} ${currencyName}`"
+            :balance="balanceFormatted"
+            :balance-tooltip="balanceFormattedTooltip"
         >
             <template #extra>
                 <v-col v-if="loadingMarketInfo || loadingBalanceData" cols="6" sm="4" md="6" class="pa-0">
                     <div class="skeleton-box rounded-xl mt-1" style="height: 24px"></div>
                 </v-col>
-                <p v-else class="text-h5 font-weight-regular">{{ balanceFiatFormatted }}</p>
+                <p v-else class="text-h5 font-weight-regular">
+                    {{ balanceFiatFormattedNumber.value
+                    }}<span v-if="balanceFiatFormattedNumber.tooltipText"><app-tooltip :text="balanceFiatFormattedNumber.tooltipText"></app-tooltip></span>
+                </p>
             </template>
         </address-balance-totals>
         <!-- <div class="temp-chart pa-4 rounded-xl">
@@ -36,13 +40,17 @@
         <address-balance-totals
             :title="`${currencyName} ${$t('common.balance')}`"
             :is-loading="loadingBalanceData"
-            :balance="`${balanceFormatted} ${currencyName}`"
+            :balance="balanceFormatted"
+            :balance-tooltip="balanceFormattedTooltip"
         >
             <template #extra>
                 <v-col v-if="loadingMarketInfo || loadingBalanceData" cols="6" sm="4" md="6" class="pa-0">
                     <div class="skeleton-box rounded-xl mt-1" style="height: 24px"></div>
                 </v-col>
-                <p v-else class="text-h4 font-weight-medium">{{ balanceFiatFormatted }}</p>
+                <p v-else class="text-h4 font-weight-medium">
+                    {{ balanceFiatFormattedNumber.value
+                    }}<span v-if="balanceFiatFormattedNumber.tooltipText"><app-tooltip :text="balanceFiatFormattedNumber.tooltipText"></app-tooltip></span>
+                </p>
             </template>
         </address-balance-totals>
         <!--
@@ -122,11 +130,12 @@
 </template>
 
 <script setup lang="ts">
+import AppTooltip from '@/core/components/AppTooltip.vue'
 import { computed, toRefs } from 'vue'
 import { useCoinData } from '@core/composables/CoinData/coinData.composable'
 import { useAddressEthBalance } from '@core/composables/AddressEthBalance/addressEthBalance.composable'
 import BN from 'bignumber.js'
-import { formatUsdValue, formatPercentageValue } from '@/core/helper/number-format-helper'
+import { formatUsdValue, formatPercentageValue, FormattedNumberUnit } from '@/core/helper/number-format-helper'
 // import AppTokenIcon from '@/core/components/AppTokenIcon.vue'
 import AddressBalanceTotals from './components/AddressBalanceTotals.vue'
 import { useDisplay } from 'vuetify/lib/framework.mjs'
@@ -152,7 +161,20 @@ const props = defineProps({
  -------------------------*/
 const { addressRef } = toRefs(props)
 
-const { initialLoad: loadingBalanceData, balanceFiatFormatted, balanceFormatted } = useAddressEthBalance(addressRef)
+const { initialLoad: loadingBalanceData, balanceFiatFormattedNumber, balanceFormattedNumber } = useAddressEthBalance(addressRef)
+
+const balanceFormatted = computed<string>(() => {
+    const unit =
+        balanceFormattedNumber.value?.unit === FormattedNumberUnit.GWEI || balanceFormattedNumber.value?.unit === FormattedNumberUnit.WEI
+            ? balanceFormattedNumber.value.unit
+            : currencyName.value
+    return `${balanceFormattedNumber.value.value} ${unit}`
+})
+
+const balanceFormattedTooltip = computed<string | undefined>(() => {
+    const tooltip = balanceFormattedNumber.value.tooltipText
+    return tooltip ? `${tooltip} ${currencyName.value}` : undefined
+})
 
 /**------------------------
  * Price and Change Handling

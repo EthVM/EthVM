@@ -2,20 +2,30 @@
     <v-card fluid class="pa-4 pa-sm-6" elevation="1" rounded="xl" height="100%">
         <v-row align="center" :class="['fill-height', { 'flex-sm-nowrap': !props.addressRef }]" justify="space-between" class="mt-0">
             <v-col cols="12" :sm="props.addressRef ? '12' : 'auto'" align-self="start" class="py-0 pr-sm-0">
-                <address-balance-totals :title="$t('block.portfolioValue')" :is-loading="isLoading" :balance="portfolioValue"> </address-balance-totals>
+                <address-balance-totals
+                    :title="$t('block.portfolioValue')"
+                    :is-loading="isLoading"
+                    :balance="portfolioValue.value"
+                    :balanceTooltip="portfolioValue.tooltipText"
+                >
+                </address-balance-totals>
                 <v-divider v-if="!props.addressRef && !xs" class="mt-10 mb-6" length="154"></v-divider>
                 <address-balance-totals
                     v-if="!props.addressRef"
                     :title="`${currencyName} ${$t('common.balance')}`"
                     :is-loading="!store.portfolioEthIsLoaded()"
-                    :balance="`${ethBalancePortfolio} ${currencyName}`"
+                    :balance="`${ethBalancePortfolio}`"
+                    :balanceTooltip="ethBalanceTooltip"
                     class="mt-7"
                 >
                     <template #extra>
                         <v-col v-if="!store.portfolioEthIsLoaded()" cols="6" sm="4" md="6" class="pa-0">
                             <div class="skeleton-box rounded-xl mt-1" style="height: 24px"></div>
                         </v-col>
-                        <p v-else class="text-h5 font-weight-regular">{{ ethBalanceFiat }}</p>
+                        <p v-else class="text-h5 font-weight-regular">
+                            {{ ethBalanceFiat.value }}
+                            <span v-if="ethBalanceFiat.tooltipText"><app-tooltip :text="ethBalanceFiat.tooltipText"></app-tooltip></span>
+                        </p>
                     </template>
                 </address-balance-totals>
             </v-col>
@@ -57,11 +67,12 @@
 </template>
 
 <script setup lang="ts">
+import AppTooltip from '@/core/components/AppTooltip.vue'
 import { useAddressToken } from '@core/composables/AddressTokens/addressTokens.composable'
 import { useAddressEthBalance } from '@core/composables/AddressEthBalance/addressEthBalance.composable'
 import { useCoinData } from '@core/composables/CoinData/coinData.composable'
 import { computed, toRefs } from 'vue'
-import { formatUsdValue, formatPercentageValue, formatNonVariableEthValue } from '@/core/helper/number-format-helper'
+import { formatUsdValue, formatPercentageValue, formatNonVariableEthValue, FormattedNumberUnit, FormattedNumber } from '@/core/helper/number-format-helper'
 import { useTheme } from 'vuetify/lib/framework.mjs'
 import BN from 'bignumber.js'
 import { ChartData } from 'chart.js'
@@ -73,6 +84,7 @@ import AppTokenIcon from '@/core/components/AppTokenIcon.vue'
 import { useStore } from '@/store'
 import { TokenSort } from '@module/address/models/TokenSort'
 import { useNetwork } from '@core/composables/Network/useNetwork'
+
 const { xs } = useDisplay()
 const { currencyName } = useNetwork()
 const store = useStore()
@@ -124,18 +136,25 @@ const portfolioValueBN = computed<BN>(() => {
 /**
  * Returns formatted number for the total usd value of tokens + eth balance
  */
-const portfolioValue = computed<string>(() => {
-    return formatUsdValue(portfolioValueBN.value).value
+const portfolioValue = computed<FormattedNumber>(() => {
+    return formatUsdValue(portfolioValueBN.value)
 })
 
 /**
  * Returns formatted number for the total usd value of eth balance for the portfolio
  */
 const ethBalancePortfolio = computed<string>(() => {
-    return formatNonVariableEthValue(store.portfolioWeiBalanceBN).value
+    const balance = formatNonVariableEthValue(store.portfolioWeiBalanceBN)
+    const unit = balance.unit === FormattedNumberUnit.GWEI || balance.unit === FormattedNumberUnit.WEI ? balance.unit : currencyName.value
+    return `${balance.value} ${unit}`
 })
-const ethBalanceFiat = computed<string>(() => {
-    return formatUsdValue(store.portfolioEthFiatBN).value
+
+const ethBalanceTooltip = computed<string | undefined>(() => {
+    const tooltip = formatNonVariableEthValue(store.portfolioWeiBalanceBN).tooltipText
+    return tooltip ? `${tooltip} ${currencyName.value}` : undefined
+})
+const ethBalanceFiat = computed<FormattedNumber>(() => {
+    return formatUsdValue(store.portfolioEthFiatBN)
 })
 
 /**------------------------

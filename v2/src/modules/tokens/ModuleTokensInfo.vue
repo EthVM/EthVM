@@ -7,7 +7,15 @@
             <app-btn v-if="isHomePage && !xs" text="More" isSmall icon="east" @click="goToTokens"></app-btn>
             <app-btn-icon v-else-if="isHomePage && xs" icon="east" @click="goToTokens"></app-btn-icon>
         </v-card-title>
-        <app-tabs v-if="!isHomePage && supportsFiat" v-model="state.activeList" :routes="routes" :tabs="list" class="my-5" btn-variant></app-tabs>
+        <app-tabs
+            v-if="!isHomePage && supportsFiat"
+            v-model="state.activeList"
+            :routes="routes"
+            :tabs="list"
+            class="my-5"
+            btn-variant
+            @update:modelValue="changeRoute"
+        ></app-tabs>
         <v-row v-if="!isHomePage" class="mb-10 flex-nowrap" align="center">
             <app-input :place-holder="t('token.searchTokens')" v-model="state.tokenSearch" class="w-100 mr-5" />
             <module-add-fav-token v-if="state.activeList === list[1].value" />
@@ -129,12 +137,11 @@ import { useStore } from '@/store'
 import { useCoinData } from '@core/composables/CoinData/coinData.composable'
 import { MarketDataFragment as TokenMarketData } from '@core/composables/CoinData/getLatestPrices.generated'
 import { TOKEN_FILTER_VALUES, KEY, DIRECTION, TokenSortMarket, TokenMarket } from '@module/address/models/TokenSort'
-import { ROUTE_NAME } from '@core/router/routesNames'
-import { ADDRESS_ROUTE_QUERY } from '@core/router/routesNames'
+import { ROUTE_NAME, Q_TOKENS } from '@core/router/routesNames'
 import { searchHelper } from '@core/helper/search'
 import { useAppPaginate } from '@core/composables/AppPaginate/useAppPaginate.composable'
 import { TOKENS_VIEW } from './models/tokensView'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 import { useDisplay } from 'vuetify'
 import { useI18n } from 'vue-i18n'
 import { useNetwork } from '@/core/composables/Network/useNetwork'
@@ -143,24 +150,24 @@ const { t } = useI18n()
 
 const { xs } = useDisplay()
 const { supportsFiat } = useNetwork()
-const routes = ADDRESS_ROUTE_QUERY.Q_NFTS
-
+const routes = Q_TOKENS
 // const MAX_TOKENS = 200
 const store = useStore()
 
 interface PropType {
     homePage?: TOKENS_VIEW
+    tab?: string
 }
 const props = withDefaults(defineProps<PropType>(), {})
 const list: Tab[] = [
     {
-        value: 'fav',
+        value: routes[1],
         title: t('token.favorites')
     }
 ]
 if (supportsFiat.value) {
     list.unshift({
-        value: 'all',
+        value: routes[0],
         title: t('common.all')
     })
 }
@@ -180,7 +187,7 @@ const state: ComponentState = reactive({
     sortKey: TOKEN_FILTER_VALUES[13],
     sortDirection: DIRECTION.HIGH,
     tokenSearch: '',
-    activeList: list[0].value
+    activeList: props.tab || list[0].value
 })
 
 const { tokensWithMarketCap, loading: loadingCoinData, getEthereumTokenByContract } = useCoinData()
@@ -296,9 +303,27 @@ const title = computed<string>(() => {
 
 const router = useRouter()
 const goToTokens = async (): Promise<void> => {
+    const _tab = props.homePage === TOKENS_VIEW.FAV || !supportsFiat.value ? Q_TOKENS[1] : Q_TOKENS[0]
     await router.push({
-        name: ROUTE_NAME.TOKENS.NAME
+        name: ROUTE_NAME.TOKENS.NAME,
+        query: {
+            t: _tab
+        }
     })
+}
+
+/**------------------------
+ * Tab Change
+ -------------------------*/
+
+const route = useRoute()
+
+const changeRoute = () => {
+    if (route.query.t !== state.activeList) {
+        router.push({
+            query: { t: state.activeList }
+        })
+    }
 }
 </script>
 

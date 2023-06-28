@@ -3,7 +3,16 @@
         <app-error :has-error="hasError" :message="state.error" />
     </v-container>
 
-    <div v-if="isValid && props.addressRef" :class="[xs ? 'adr-core-background-mobile' : 'adr-core-background', 'pb-6']">
+    <div
+        v-if="isValid && props.addressRef"
+        :class="[
+            { 'adr-core-background-mobile': xs },
+            { 'adr-core-background-sm': sm },
+            { 'adr-core-background-md': md },
+            { 'adr-core-background': lgAndUp },
+            'pb-6'
+        ]"
+    >
         <v-card class="px-sm-6 px-xl-auto mx-0" flat rounded="0" :min-height="smAndDown ? '100%' : '92px'">
             <v-container class="core-container px-2 px-sm-0 pb-4 pb-sm-6 pt-4 pt-sm-10">
                 <v-row no-gutters align="center">
@@ -11,18 +20,18 @@
                         <v-row align="center" justify="start" class="px-0 px-sm-0 flex-nowrap" no-gutters style="min-height: 48px">
                             <app-address-blockie :address="props.addressRef || ''" :size="xs ? 9 : 10" />
                             <v-col cols="6" sm="7" :md="store.getAddressName(props.addressRef) ? '8' : 'auto'" lg="auto" class="pl-2 pl-sm-4 pr-sm-0">
-                                <div v-if="store.getAddressName(props.addressRef)" class="text-h4 font-weight-bold text-ellipses">
+                                <div v-if="store.getAddressName(props.addressRef)" class="text-h5 font-weight-bold text-ellipses">
                                     {{ store.getAddressName(props.addressRef) }}
                                 </div>
                                 <div>
                                     <app-transform-hash
                                         v-if="(xs && store.getAddressName(props.addressRef)) || (smAndDown && !store.getAddressName(props.addressRef))"
                                         :hash="eth.toCheckSum(props.addressRef)"
-                                        :class="['font-weight-regular font-mono', { 'text-h4': !store.getAddressName(props.addressRef) }]"
+                                        :class="['font-weight-regular font-mono', { 'text-h5': !store.getAddressName(props.addressRef) }]"
                                         :show-name="false"
                                         :is-short="xs"
                                     ></app-transform-hash>
-                                    <p v-else :class="[{ 'text-h4 font-mono': !store.getAddressName(props.addressRef) }]">
+                                    <p v-else :class="[{ 'text-h5 font-mono': !store.getAddressName(props.addressRef) }]">
                                         {{ eth.toCheckSum(props.addressRef) }}
                                     </p>
                                 </div>
@@ -144,7 +153,7 @@ import { useNetwork } from '@/core/composables/Network/useNetwork'
 import { useI18n } from 'vue-i18n'
 
 const { t } = useI18n()
-const { smAndDown, xs } = useDisplay()
+const { smAndDown, xs, sm, md, lgAndUp } = useDisplay()
 const { currencyName } = useNetwork()
 const store = useStore()
 const tabs = reactive([
@@ -293,6 +302,12 @@ if (!isValid.value) {
 }
 .adr-core-background {
     background: linear-gradient(to bottom, rgb(var(--v-theme-primary)) 316px, rgb(var(--v-theme-background)) 316px, rgb(var(--v-theme-background)) 100%);
+}
+.adr-core-background-sm {
+    background: linear-gradient(to bottom, rgb(var(--v-theme-primary)) 420px, rgb(var(--v-theme-background)) 420px, rgb(var(--v-theme-background)) 100%);
+}
+.adr-core-background-md {
+    background: linear-gradient(to bottom, rgb(var(--v-theme-primary)) 420px, rgb(var(--v-theme-background)) 420px, rgb(var(--v-theme-background)) 100%);
 }
 .adr-core-background-mobile {
     background: linear-gradient(to bottom, rgb(var(--v-theme-primary)) 200px, rgb(var(--v-theme-background)) 200px, rgb(var(--v-theme-background)) 100%);

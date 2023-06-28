@@ -130,7 +130,7 @@ import AppNoResult from '@core/components/AppNoResult.vue'
 import AppExpansionPanel from '@/core/components/AppExpansionPanel.vue'
 import TxActionRow from './components/TxActionRow.vue'
 import AppPagination from '@core/components/AppPagination.vue'
-import { computed } from 'vue'
+import { computed, reactive, onMounted } from 'vue'
 import {
     EthTransferInTxFragment as EthTransfer,
     useGetEthTransfersInTxQuery,
@@ -145,7 +145,8 @@ import { useNetwork } from '@/core/composables/Network/useNetwork'
 import { useGetNftsMeta } from '@core/composables/NftMeta/useGetNftsMeta.composable'
 import { NftId, generateId, generateMapId } from '@/core/composables/NftMeta/helpers'
 import { NftMetaFragment } from '@core/composables/NftMeta/nftMeta.generated'
-
+import { excpFailedToDeserialize } from '@/apollo/errorExceptions'
+import BigNumber from 'bignumber.js'
 const LIMIT = 10
 const { currencyName } = useNetwork()
 
@@ -156,6 +157,19 @@ const props = defineProps({
     }
 })
 
+interface TimeoutSate {
+    timeout: number
+    value: number
+    active: boolean
+    startWaitTime?: number
+}
+
+const timeoutState: TimeoutSate = reactive({
+    timeout: 0,
+    value: 3000,
+    active: true
+})
+
 /** -------------------
  * Eth Transfers
  * --------------------*/
@@ -163,7 +177,10 @@ const props = defineProps({
 const {
     result: ethTransfersData,
     loading: loadingEthTransfersData,
-    fetchMore: fetchMoreEthTransfersData
+    fetchMore: fetchMoreEthTransfersData,
+    onResult: onEthTransafersResult,
+    onError: onEthTransafersError,
+    refetch: ethTransfersRefetch
 } = useGetEthTransfersInTxQuery(
     () => ({
         hash: props.txHash,
@@ -173,6 +190,43 @@ const {
         notifyOnNetworkStatusChange: true
     }
 )
+onEthTransafersResult(({ data }) => {
+    if (data && data.getEthTransfersByHash) {
+        clearTimeout(timeoutState.timeout)
+        timeoutState.active = false
+        timeoutState.startWaitTime = undefined
+    }
+})
+
+onMounted(() => {
+    if (ethTransfersData.value && ethTransfersData.value.getEthTransfersByHash) {
+        clearTimeout(timeoutState.timeout)
+        timeoutState.active = false
+        timeoutState.startWaitTime = undefined
+    }
+})
+onEthTransafersError(error => {
+    const newError = JSON.stringify(error.message)
+    if (
+        newError.toLowerCase().includes(excpFailedToDeserialize) &&
+        (!timeoutState.startWaitTime || timeoutState.startWaitTime < timeoutState.startWaitTime + 600000)
+    ) {
+        clearTimeout(timeoutState.timeout)
+        timeoutState.active = true
+        if (!timeoutState.startWaitTime) {
+            timeoutState.startWaitTime = Date.now()
+        }
+        timeoutState.timeout = window.setTimeout(() => {
+            if (timeoutState.value < 60000) {
+                timeoutState.value = BigNumber.min(timeoutState.value * 2, 60000).toNumber()
+            }
+            ethTransfersRefetch()
+        }, timeoutState.value)
+    }
+    if (timeoutState.startWaitTime && timeoutState.startWaitTime >= timeoutState.startWaitTime + 600000) {
+        clearTimeout(timeoutState.timeout)
+    }
+})
 
 const ethTransfers = computed<Action[]>(() => {
     return (
@@ -192,7 +246,7 @@ const ethTransfers = computed<Action[]>(() => {
 const { numberOfPages, pageData: currentPageData, setPageNum, pageNum } = useAppPaginate(ethTransfers, 'ethTransfers', LIMIT)
 
 const initialLoadingEthTransfers = computed<boolean>(() => {
-    return !ethTransfersData.value
+    return !ethTransfersData.value || timeoutState.active
 })
 
 const hasMoreEthTransfers = computed<boolean>(() => {

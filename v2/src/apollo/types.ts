@@ -1,3 +1,5 @@
+/** * NOTE: THIS IS AN AUTO-GENERATED FILE. DO NOT MODIFY IT DIRECTLY. */
+
 export type Maybe<T> = T | null
 export type InputMaybe<T> = Maybe<T>
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] }
@@ -10,30 +12,35 @@ export type Scalars = {
     Boolean: boolean
     Int: number
     Float: number
-    BigDecimal: any
-    BigInt: any
-    Bytes: any
-    EthVMCurrencyFloat: any
-    EthVMIso8601DateTimeMilliseconds: any
-    EthVMPrefixedBase16String: any
-    EthVMPrefixedEthereumAddress: any
-    EthVMPrefixedHexString: any
-    EthVMUnixEpochMilliseconds: any
-    EthVMUnixEpochSeconds: any
-    EthVMUrl: any
+    BigDecimal: string
+    BigInt: string
+    Bytes: string
+    EthVMCurrencyFloat: number
+    EthVMIso8601DateTimeMilliseconds: string
+    EthVMPrefixedBase16String: string
+    EthVMPrefixedEthereumAddress: string
+    EthVMPrefixedHexString: string
+    EthVMUnixEpochMilliseconds: number
+    EthVMUnixEpochSeconds: number
+    EthVMUrl: string
     /**
      * 8 bytes signed integer
      *
      */
-    Int8: any
+    Int8: string
 }
 
 export type AbiChanged = ResolverEvent & {
     __typename?: 'AbiChanged'
+    /** The block number at which the event was emitted */
     blockNumber: Scalars['Int']
+    /** The content type of the ABI change */
     contentType: Scalars['BigInt']
+    /** Concatenation of block number and log ID */
     id: Scalars['ID']
+    /** Used to derive relationships to Resolvers */
     resolver: Resolver
+    /** The transaction hash of the transaction in which the event was emitted */
     transactionID: Scalars['Bytes']
 }
 
@@ -112,9 +119,13 @@ export enum AbiChanged_OrderBy {
 
 export type Account = {
     __typename?: 'Account'
+    /** The domains owned by the account */
     domains: Array<Domain>
+    /** The unique identifier for the account */
     id: Scalars['ID']
+    /** The Registrations made by the account */
     registrations?: Maybe<Array<Registration>>
+    /** The WrappedDomains owned by the account */
     wrappedDomains?: Maybe<Array<WrappedDomain>>
 }
 
@@ -169,10 +180,15 @@ export enum Account_OrderBy {
 
 export type AddrChanged = ResolverEvent & {
     __typename?: 'AddrChanged'
+    /** The new address associated with the resolver */
     addr: Account
+    /** The block number at which this event occurred */
     blockNumber: Scalars['Int']
+    /** Unique identifier for this event */
     id: Scalars['ID']
+    /** The resolver associated with this event */
     resolver: Resolver
+    /** The transaction ID for the transaction in which this event occurred */
     transactionID: Scalars['Bytes']
 }
 
@@ -320,12 +336,19 @@ export type AllTransfersWithErrors = {
 
 export type AuthorisationChanged = ResolverEvent & {
     __typename?: 'AuthorisationChanged'
+    /** The block number at which the event occurred */
     blockNumber: Scalars['Int']
+    /** Unique identifier for this event */
     id: Scalars['ID']
+    /** Whether the authorisation was added or removed */
     isAuthorized: Scalars['Boolean']
+    /** The owner of the authorisation */
     owner: Scalars['Bytes']
+    /** The resolver associated with this event */
     resolver: Resolver
+    /** The target of the authorisation */
     target: Scalars['Bytes']
+    /** The transaction hash associated with the event */
     transactionID: Scalars['Bytes']
 }
 
@@ -551,10 +574,15 @@ export type CoinGeckoTokenPrice = {
 
 export type ContenthashChanged = ResolverEvent & {
     __typename?: 'ContenthashChanged'
+    /** The block number where the event occurred */
     blockNumber: Scalars['Int']
+    /** The new content hash for the domain */
     hash: Scalars['Bytes']
+    /** Concatenation of block number and log ID */
     id: Scalars['ID']
+    /** Used to derive relationships to Resolvers */
     resolver: Resolver
+    /** The ID of the transaction where the event occurred */
     transactionID: Scalars['Bytes']
 }
 
@@ -650,22 +678,44 @@ export type ContractVerify = {
 
 export type Domain = {
     __typename?: 'Domain'
+    /** The time when the domain was created */
     createdAt: Scalars['BigInt']
+    /** The events associated with the domain */
     events: Array<DomainEvent>
+    /** The expiry date for the domain, from either the registration, or the wrapped domain if PCC is burned */
+    expiryDate?: Maybe<Scalars['BigInt']>
+    /** The namehash of the name */
     id: Scalars['ID']
+    /** Indicates whether the domain has been migrated to a new registrar */
     isMigrated: Scalars['Boolean']
+    /** The human readable label name (imported from CSV), if known */
     labelName?: Maybe<Scalars['String']>
+    /** keccak256(labelName) */
     labelhash?: Maybe<Scalars['Bytes']>
+    /** The human readable name, if known. Unknown portions replaced with hash in square brackets (eg, foo.[1234].eth) */
     name?: Maybe<Scalars['String']>
+    /** The account that owns the domain */
     owner: Account
+    /** The namehash (id) of the parent name */
     parent?: Maybe<Domain>
+    /** The account that owns the ERC721 NFT for the domain */
+    registrant?: Maybe<Account>
+    /** The registration associated with the domain */
     registration?: Maybe<Registration>
+    /** Address logged from current resolver, if any */
     resolvedAddress?: Maybe<Account>
+    /** The resolver that controls the domain's settings */
     resolver?: Maybe<Resolver>
+    /** The number of subdomains */
     subdomainCount: Scalars['Int']
+    /** Can count domains from length of array */
     subdomains: Array<Domain>
+    /** The time-to-live (TTL) value of the domain's records */
     ttl?: Maybe<Scalars['BigInt']>
+    /** The wrapped domain associated with the domain */
     wrappedDomain?: Maybe<WrappedDomain>
+    /** The account that owns the wrapped domain */
+    wrappedOwner?: Maybe<Account>
 }
 
 export type DomainEventsArgs = {
@@ -685,9 +735,13 @@ export type DomainSubdomainsArgs = {
 }
 
 export type DomainEvent = {
+    /** The block number at which the event occurred */
     blockNumber: Scalars['Int']
+    /** The domain name associated with the event */
     domain: Domain
+    /** The unique identifier of the event */
     id: Scalars['ID']
+    /** The transaction hash of the transaction that triggered the event */
     transactionID: Scalars['Bytes']
 }
 
@@ -749,6 +803,7 @@ export enum DomainEvent_OrderBy {
     BlockNumber = 'blockNumber',
     Domain = 'domain',
     DomainCreatedAt = 'domain__createdAt',
+    DomainExpiryDate = 'domain__expiryDate',
     DomainId = 'domain__id',
     DomainIsMigrated = 'domain__isMigrated',
     DomainLabelName = 'domain__labelName',
@@ -773,6 +828,14 @@ export type Domain_Filter = {
     createdAt_not?: InputMaybe<Scalars['BigInt']>
     createdAt_not_in?: InputMaybe<Array<Scalars['BigInt']>>
     events_?: InputMaybe<DomainEvent_Filter>
+    expiryDate?: InputMaybe<Scalars['BigInt']>
+    expiryDate_gt?: InputMaybe<Scalars['BigInt']>
+    expiryDate_gte?: InputMaybe<Scalars['BigInt']>
+    expiryDate_in?: InputMaybe<Array<Scalars['BigInt']>>
+    expiryDate_lt?: InputMaybe<Scalars['BigInt']>
+    expiryDate_lte?: InputMaybe<Scalars['BigInt']>
+    expiryDate_not?: InputMaybe<Scalars['BigInt']>
+    expiryDate_not_in?: InputMaybe<Array<Scalars['BigInt']>>
     id?: InputMaybe<Scalars['ID']>
     id_gt?: InputMaybe<Scalars['ID']>
     id_gte?: InputMaybe<Scalars['ID']>
@@ -878,6 +941,27 @@ export type Domain_Filter = {
     parent_not_starts_with_nocase?: InputMaybe<Scalars['String']>
     parent_starts_with?: InputMaybe<Scalars['String']>
     parent_starts_with_nocase?: InputMaybe<Scalars['String']>
+    registrant?: InputMaybe<Scalars['String']>
+    registrant_?: InputMaybe<Account_Filter>
+    registrant_contains?: InputMaybe<Scalars['String']>
+    registrant_contains_nocase?: InputMaybe<Scalars['String']>
+    registrant_ends_with?: InputMaybe<Scalars['String']>
+    registrant_ends_with_nocase?: InputMaybe<Scalars['String']>
+    registrant_gt?: InputMaybe<Scalars['String']>
+    registrant_gte?: InputMaybe<Scalars['String']>
+    registrant_in?: InputMaybe<Array<Scalars['String']>>
+    registrant_lt?: InputMaybe<Scalars['String']>
+    registrant_lte?: InputMaybe<Scalars['String']>
+    registrant_not?: InputMaybe<Scalars['String']>
+    registrant_not_contains?: InputMaybe<Scalars['String']>
+    registrant_not_contains_nocase?: InputMaybe<Scalars['String']>
+    registrant_not_ends_with?: InputMaybe<Scalars['String']>
+    registrant_not_ends_with_nocase?: InputMaybe<Scalars['String']>
+    registrant_not_in?: InputMaybe<Array<Scalars['String']>>
+    registrant_not_starts_with?: InputMaybe<Scalars['String']>
+    registrant_not_starts_with_nocase?: InputMaybe<Scalars['String']>
+    registrant_starts_with?: InputMaybe<Scalars['String']>
+    registrant_starts_with_nocase?: InputMaybe<Scalars['String']>
     registration_?: InputMaybe<Registration_Filter>
     resolvedAddress?: InputMaybe<Scalars['String']>
     resolvedAddress_?: InputMaybe<Account_Filter>
@@ -939,11 +1023,33 @@ export type Domain_Filter = {
     ttl_not?: InputMaybe<Scalars['BigInt']>
     ttl_not_in?: InputMaybe<Array<Scalars['BigInt']>>
     wrappedDomain_?: InputMaybe<WrappedDomain_Filter>
+    wrappedOwner?: InputMaybe<Scalars['String']>
+    wrappedOwner_?: InputMaybe<Account_Filter>
+    wrappedOwner_contains?: InputMaybe<Scalars['String']>
+    wrappedOwner_contains_nocase?: InputMaybe<Scalars['String']>
+    wrappedOwner_ends_with?: InputMaybe<Scalars['String']>
+    wrappedOwner_ends_with_nocase?: InputMaybe<Scalars['String']>
+    wrappedOwner_gt?: InputMaybe<Scalars['String']>
+    wrappedOwner_gte?: InputMaybe<Scalars['String']>
+    wrappedOwner_in?: InputMaybe<Array<Scalars['String']>>
+    wrappedOwner_lt?: InputMaybe<Scalars['String']>
+    wrappedOwner_lte?: InputMaybe<Scalars['String']>
+    wrappedOwner_not?: InputMaybe<Scalars['String']>
+    wrappedOwner_not_contains?: InputMaybe<Scalars['String']>
+    wrappedOwner_not_contains_nocase?: InputMaybe<Scalars['String']>
+    wrappedOwner_not_ends_with?: InputMaybe<Scalars['String']>
+    wrappedOwner_not_ends_with_nocase?: InputMaybe<Scalars['String']>
+    wrappedOwner_not_in?: InputMaybe<Array<Scalars['String']>>
+    wrappedOwner_not_starts_with?: InputMaybe<Scalars['String']>
+    wrappedOwner_not_starts_with_nocase?: InputMaybe<Scalars['String']>
+    wrappedOwner_starts_with?: InputMaybe<Scalars['String']>
+    wrappedOwner_starts_with_nocase?: InputMaybe<Scalars['String']>
 }
 
 export enum Domain_OrderBy {
     CreatedAt = 'createdAt',
     Events = 'events',
+    ExpiryDate = 'expiryDate',
     Id = 'id',
     IsMigrated = 'isMigrated',
     LabelName = 'labelName',
@@ -953,6 +1059,7 @@ export enum Domain_OrderBy {
     OwnerId = 'owner__id',
     Parent = 'parent',
     ParentCreatedAt = 'parent__createdAt',
+    ParentExpiryDate = 'parent__expiryDate',
     ParentId = 'parent__id',
     ParentIsMigrated = 'parent__isMigrated',
     ParentLabelName = 'parent__labelName',
@@ -960,6 +1067,8 @@ export enum Domain_OrderBy {
     ParentName = 'parent__name',
     ParentSubdomainCount = 'parent__subdomainCount',
     ParentTtl = 'parent__ttl',
+    Registrant = 'registrant',
+    RegistrantId = 'registrant__id',
     Registration = 'registration',
     RegistrationCost = 'registration__cost',
     RegistrationExpiryDate = 'registration__expiryDate',
@@ -979,7 +1088,9 @@ export enum Domain_OrderBy {
     WrappedDomainExpiryDate = 'wrappedDomain__expiryDate',
     WrappedDomainFuses = 'wrappedDomain__fuses',
     WrappedDomainId = 'wrappedDomain__id',
-    WrappedDomainName = 'wrappedDomain__name'
+    WrappedDomainName = 'wrappedDomain__name',
+    WrappedOwner = 'wrappedOwner',
+    WrappedOwnerId = 'wrappedOwner__id'
 }
 
 export type Erc20TokenBalance = {
@@ -1164,10 +1275,15 @@ export type EthTransfer = {
 
 export type ExpiryExtended = DomainEvent & {
     __typename?: 'ExpiryExtended'
+    /** The block number at which the event occurred */
     blockNumber: Scalars['Int']
+    /** The domain name associated with the event */
     domain: Domain
+    /** The new expiry date associated with the domain after the extension event */
     expiryDate: Scalars['BigInt']
+    /** The unique identifier of the event */
     id: Scalars['ID']
+    /** The transaction hash of the transaction that triggered the event */
     transactionID: Scalars['Bytes']
 }
 
@@ -1237,6 +1353,7 @@ export enum ExpiryExtended_OrderBy {
     BlockNumber = 'blockNumber',
     Domain = 'domain',
     DomainCreatedAt = 'domain__createdAt',
+    DomainExpiryDate = 'domain__expiryDate',
     DomainId = 'domain__id',
     DomainIsMigrated = 'domain__isMigrated',
     DomainLabelName = 'domain__labelName',
@@ -1251,10 +1368,15 @@ export enum ExpiryExtended_OrderBy {
 
 export type FusesSet = DomainEvent & {
     __typename?: 'FusesSet'
+    /** The block number at which the event occurred */
     blockNumber: Scalars['Int']
+    /** The domain name associated with the event */
     domain: Domain
+    /** The number of fuses associated with the domain after the set event */
     fuses: Scalars['Int']
+    /** The unique identifier of the event */
     id: Scalars['ID']
+    /** The transaction hash of the transaction that triggered the event */
     transactionID: Scalars['Bytes']
 }
 
@@ -1324,6 +1446,7 @@ export enum FusesSet_OrderBy {
     BlockNumber = 'blockNumber',
     Domain = 'domain',
     DomainCreatedAt = 'domain__createdAt',
+    DomainExpiryDate = 'domain__expiryDate',
     DomainId = 'domain__id',
     DomainIsMigrated = 'domain__isMigrated',
     DomainLabelName = 'domain__labelName',
@@ -1347,11 +1470,17 @@ export enum HashType {
 
 export type InterfaceChanged = ResolverEvent & {
     __typename?: 'InterfaceChanged'
+    /** The block number in which the event occurred */
     blockNumber: Scalars['Int']
+    /** Concatenation of block number and log ID */
     id: Scalars['ID']
+    /** The address of the contract that implements the interface */
     implementer: Scalars['Bytes']
+    /** The ID of the EIP-1820 interface that was changed */
     interfaceID: Scalars['Bytes']
+    /** Used to derive relationships to Resolvers */
     resolver: Resolver
+    /** The transaction ID for the transaction in which the event occurred */
     transactionID: Scalars['Bytes']
 }
 
@@ -1554,7 +1683,14 @@ export type MmTokenMarketData = {
 export enum MmTokenMarketDataByChainSortOption {
     MarketCap = 'MarketCap',
     Price = 'Price',
+    PriceChangePercentage1H = 'PriceChangePercentage1H',
+    PriceChangePercentage1Y = 'PriceChangePercentage1Y',
+    PriceChangePercentage5M = 'PriceChangePercentage5M',
+    PriceChangePercentage7D = 'PriceChangePercentage7D',
+    PriceChangePercentage14D = 'PriceChangePercentage14D',
     PriceChangePercentage24H = 'PriceChangePercentage24H',
+    PriceChangePercentage30D = 'PriceChangePercentage30D',
+    PriceChangePercentage200D = 'PriceChangePercentage200D',
     Volume24h = 'Volume24h'
 }
 
@@ -1614,11 +1750,17 @@ export type MmTokenSearchResult = {
 
 export type MulticoinAddrChanged = ResolverEvent & {
     __typename?: 'MulticoinAddrChanged'
+    /** The new address value for the given coin type */
     addr: Scalars['Bytes']
+    /** Block number in which this event was emitted */
     blockNumber: Scalars['Int']
+    /** The coin type of the changed address */
     coinType: Scalars['BigInt']
+    /** Unique identifier for the event */
     id: Scalars['ID']
+    /** Resolver associated with this event */
     resolver: Resolver
+    /** Transaction ID in which this event was emitted */
     transactionID: Scalars['Bytes']
 }
 
@@ -1785,10 +1927,15 @@ export enum NftType {
 
 export type NameChanged = ResolverEvent & {
     __typename?: 'NameChanged'
+    /** Block number where event occurred */
     blockNumber: Scalars['Int']
+    /** Concatenation of block number and log ID */
     id: Scalars['ID']
+    /** New ENS name value */
     name: Scalars['String']
+    /** Used to derive relationships to Resolvers */
     resolver: Resolver
+    /** Unique transaction ID where event occurred */
     transactionID: Scalars['Bytes']
 }
 
@@ -1879,11 +2026,17 @@ export enum NameChanged_OrderBy {
 
 export type NameRegistered = RegistrationEvent & {
     __typename?: 'NameRegistered'
+    /** The block number of the event */
     blockNumber: Scalars['Int']
+    /** The expiry date of the registration */
     expiryDate: Scalars['BigInt']
+    /** The unique identifier of the NameRegistered event */
     id: Scalars['ID']
+    /** The account that registered the name */
     registrant: Account
+    /** The registration associated with the event */
     registration: Registration
+    /** The transaction ID associated with the event */
     transactionID: Scalars['Bytes']
 }
 
@@ -1987,10 +2140,15 @@ export enum NameRegistered_OrderBy {
 
 export type NameRenewed = RegistrationEvent & {
     __typename?: 'NameRenewed'
+    /** The block number of the event */
     blockNumber: Scalars['Int']
+    /** The new expiry date of the registration */
     expiryDate: Scalars['BigInt']
+    /** The unique identifier of the NameRenewed event */
     id: Scalars['ID']
+    /** The registration associated with the event */
     registration: Registration
+    /** The transaction ID associated with the event */
     transactionID: Scalars['Bytes']
 }
 
@@ -2071,10 +2229,15 @@ export enum NameRenewed_OrderBy {
 
 export type NameTransferred = RegistrationEvent & {
     __typename?: 'NameTransferred'
+    /** The block number of the event */
     blockNumber: Scalars['Int']
+    /** The ID of the event */
     id: Scalars['ID']
+    /** The new owner of the domain */
     newOwner: Account
+    /** The registration associated with the event */
     registration: Registration
+    /** The transaction ID of the event */
     transactionID: Scalars['Bytes']
 }
 
@@ -2169,10 +2332,15 @@ export enum NameTransferred_OrderBy {
 
 export type NameUnwrapped = DomainEvent & {
     __typename?: 'NameUnwrapped'
+    /** The block number at which the event occurred */
     blockNumber: Scalars['Int']
+    /** The domain name associated with the event */
     domain: Domain
+    /** The unique identifier of the event */
     id: Scalars['ID']
+    /** The account that owns the domain after it was unwrapped */
     owner: Account
+    /** The transaction hash of the transaction that triggered the event */
     transactionID: Scalars['Bytes']
 }
 
@@ -2255,6 +2423,7 @@ export enum NameUnwrapped_OrderBy {
     BlockNumber = 'blockNumber',
     Domain = 'domain',
     DomainCreatedAt = 'domain__createdAt',
+    DomainExpiryDate = 'domain__expiryDate',
     DomainId = 'domain__id',
     DomainIsMigrated = 'domain__isMigrated',
     DomainLabelName = 'domain__labelName',
@@ -2270,13 +2439,21 @@ export enum NameUnwrapped_OrderBy {
 
 export type NameWrapped = DomainEvent & {
     __typename?: 'NameWrapped'
+    /** The block number at which the wrapped domain was wrapped */
     blockNumber: Scalars['Int']
+    /** The domain name associated with the wrapped domain */
     domain: Domain
+    /** The expiry date of the wrapped domain registration */
     expiryDate: Scalars['BigInt']
+    /** The number of fuses associated with the wrapped domain */
     fuses: Scalars['Int']
+    /** The unique identifier of the wrapped domain */
     id: Scalars['ID']
+    /** The human-readable name of the wrapped domain */
     name?: Maybe<Scalars['String']>
+    /** The account that owns the wrapped domain */
     owner: Account
+    /** The transaction hash of the transaction that wrapped the domain */
     transactionID: Scalars['Bytes']
 }
 
@@ -2395,6 +2572,7 @@ export enum NameWrapped_OrderBy {
     BlockNumber = 'blockNumber',
     Domain = 'domain',
     DomainCreatedAt = 'domain__createdAt',
+    DomainExpiryDate = 'domain__expiryDate',
     DomainId = 'domain__id',
     DomainIsMigrated = 'domain__isMigrated',
     DomainLabelName = 'domain__labelName',
@@ -2413,11 +2591,17 @@ export enum NameWrapped_OrderBy {
 
 export type NewOwner = DomainEvent & {
     __typename?: 'NewOwner'
+    /** The block number at which the event occurred */
     blockNumber: Scalars['Int']
+    /** The domain name associated with the event */
     domain: Domain
+    /** The unique identifier of the event */
     id: Scalars['ID']
+    /** The new account that owns the domain */
     owner: Account
+    /** The parent domain of the domain name associated with the event */
     parentDomain: Domain
+    /** The transaction hash of the transaction that triggered the event */
     transactionID: Scalars['Bytes']
 }
 
@@ -2521,6 +2705,7 @@ export enum NewOwner_OrderBy {
     BlockNumber = 'blockNumber',
     Domain = 'domain',
     DomainCreatedAt = 'domain__createdAt',
+    DomainExpiryDate = 'domain__expiryDate',
     DomainId = 'domain__id',
     DomainIsMigrated = 'domain__isMigrated',
     DomainLabelName = 'domain__labelName',
@@ -2533,6 +2718,7 @@ export enum NewOwner_OrderBy {
     OwnerId = 'owner__id',
     ParentDomain = 'parentDomain',
     ParentDomainCreatedAt = 'parentDomain__createdAt',
+    ParentDomainExpiryDate = 'parentDomain__expiryDate',
     ParentDomainId = 'parentDomain__id',
     ParentDomainIsMigrated = 'parentDomain__isMigrated',
     ParentDomainLabelName = 'parentDomain__labelName',
@@ -2545,10 +2731,15 @@ export enum NewOwner_OrderBy {
 
 export type NewResolver = DomainEvent & {
     __typename?: 'NewResolver'
+    /** The block number at which the event occurred */
     blockNumber: Scalars['Int']
+    /** The domain name associated with the event */
     domain: Domain
+    /** The unique identifier of the event */
     id: Scalars['ID']
+    /** The new resolver contract address associated with the domain */
     resolver: Resolver
+    /** The transaction hash of the transaction that triggered the event */
     transactionID: Scalars['Bytes']
 }
 
@@ -2631,6 +2822,7 @@ export enum NewResolver_OrderBy {
     BlockNumber = 'blockNumber',
     Domain = 'domain',
     DomainCreatedAt = 'domain__createdAt',
+    DomainExpiryDate = 'domain__expiryDate',
     DomainId = 'domain__id',
     DomainIsMigrated = 'domain__isMigrated',
     DomainLabelName = 'domain__labelName',
@@ -2648,10 +2840,15 @@ export enum NewResolver_OrderBy {
 
 export type NewTtl = DomainEvent & {
     __typename?: 'NewTTL'
+    /** The block number at which the event occurred */
     blockNumber: Scalars['Int']
+    /** The domain name associated with the event */
     domain: Domain
+    /** The unique identifier of the event */
     id: Scalars['ID']
+    /** The transaction hash of the transaction that triggered the event */
     transactionID: Scalars['Bytes']
+    /** The new TTL value (in seconds) associated with the domain */
     ttl: Scalars['BigInt']
 }
 
@@ -2721,6 +2918,7 @@ export enum NewTtl_OrderBy {
     BlockNumber = 'blockNumber',
     Domain = 'domain',
     DomainCreatedAt = 'domain__createdAt',
+    DomainExpiryDate = 'domain__expiryDate',
     DomainId = 'domain__id',
     DomainIsMigrated = 'domain__isMigrated',
     DomainLabelName = 'domain__labelName',
@@ -2768,11 +2966,17 @@ export type PrimaryAssetContract = {
 
 export type PubkeyChanged = ResolverEvent & {
     __typename?: 'PubkeyChanged'
+    /** Block number of the Ethereum block where the event occurred */
     blockNumber: Scalars['Int']
+    /** Concatenation of block number and log ID */
     id: Scalars['ID']
+    /** Used to derive relationships to Resolvers */
     resolver: Resolver
+    /** Transaction hash of the Ethereum transaction where the event occurred */
     transactionID: Scalars['Bytes']
+    /** The x-coordinate of the new public key */
     x: Scalars['Bytes']
+    /** The y-coordinate of the new public key */
     y: Scalars['Bytes']
 }
 
@@ -3868,13 +4072,21 @@ export type QueryWrappedTransfersArgs = {
 
 export type Registration = {
     __typename?: 'Registration'
+    /** The cost associated with the domain registration */
     cost?: Maybe<Scalars['BigInt']>
+    /** The domain name associated with the registration */
     domain: Domain
+    /** The events associated with the domain registration */
     events: Array<RegistrationEvent>
+    /** The expiry date of the domain */
     expiryDate: Scalars['BigInt']
+    /** The unique identifier of the registration */
     id: Scalars['ID']
+    /** The human-readable label name associated with the domain registration */
     labelName?: Maybe<Scalars['String']>
+    /** The account that registered the domain */
     registrant: Account
+    /** The registration date of the domain */
     registrationDate: Scalars['BigInt']
 }
 
@@ -3887,9 +4099,13 @@ export type RegistrationEventsArgs = {
 }
 
 export type RegistrationEvent = {
+    /** The block number of the event */
     blockNumber: Scalars['Int']
+    /** The unique identifier of the registration event */
     id: Scalars['ID']
+    /** The registration associated with the event */
     registration: Registration
+    /** The transaction ID associated with the event */
     transactionID: Scalars['Bytes']
 }
 
@@ -4065,6 +4281,7 @@ export enum Registration_OrderBy {
     Cost = 'cost',
     Domain = 'domain',
     DomainCreatedAt = 'domain__createdAt',
+    DomainExpiryDate = 'domain__expiryDate',
     DomainId = 'domain__id',
     DomainIsMigrated = 'domain__isMigrated',
     DomainLabelName = 'domain__labelName',
@@ -4083,13 +4300,21 @@ export enum Registration_OrderBy {
 
 export type Resolver = {
     __typename?: 'Resolver'
+    /** The current value of the 'addr' record for this resolver, as determined by the associated events */
     addr?: Maybe<Account>
+    /** The address of the resolver contract */
     address: Scalars['Bytes']
+    /** The set of observed SLIP-44 coin types for this resolver */
     coinTypes?: Maybe<Array<Scalars['BigInt']>>
+    /** The content hash for this resolver, in binary format */
     contentHash?: Maybe<Scalars['Bytes']>
+    /** The domain that this resolver is associated with */
     domain?: Maybe<Domain>
+    /** The events associated with this resolver */
     events: Array<ResolverEvent>
+    /** The unique identifier for this resolver, which is a concatenation of the resolver address and the domain namehash */
     id: Scalars['ID']
+    /** The set of observed text record keys for this resolver */
     texts?: Maybe<Array<Scalars['String']>>
 }
 
@@ -4102,9 +4327,13 @@ export type ResolverEventsArgs = {
 }
 
 export type ResolverEvent = {
+    /** The block number that the event occurred on */
     blockNumber: Scalars['Int']
+    /** Concatenation of block number and log ID */
     id: Scalars['ID']
+    /** Used to derive relationships to Resolvers */
     resolver: Resolver
+    /** The transaction hash of the event */
     transactionID: Scalars['Bytes']
 }
 
@@ -4270,6 +4499,7 @@ export enum Resolver_OrderBy {
     ContentHash = 'contentHash',
     Domain = 'domain',
     DomainCreatedAt = 'domain__createdAt',
+    DomainExpiryDate = 'domain__expiryDate',
     DomainId = 'domain__id',
     DomainIsMigrated = 'domain__isMigrated',
     DomainLabelName = 'domain__labelName',
@@ -4989,11 +5219,17 @@ export type SubscriptionWrappedTransfersArgs = {
 
 export type TextChanged = ResolverEvent & {
     __typename?: 'TextChanged'
+    /** Block number of the Ethereum block in which the event occurred */
     blockNumber: Scalars['Int']
+    /** Concatenation of block number and log ID */
     id: Scalars['ID']
+    /** The key of the text record that was changed */
     key: Scalars['String']
+    /** Used to derive relationships to Resolvers */
     resolver: Resolver
+    /** Hash of the Ethereum transaction in which the event occurred */
     transactionID: Scalars['Bytes']
+    /** The new value of the text record that was changed */
     value?: Maybe<Scalars['String']>
 }
 
@@ -5274,16 +5510,21 @@ export type TransactionStateDiffChange = {
 export type Transfer = DomainEvent & {
     __typename?: 'Transfer'
     block: Scalars['Int']
+    /** The block number at which the event occurred */
     blockNumber: Scalars['Int']
+    /** The domain name associated with the event */
     domain: Domain
     from: Scalars['String']
+    /** The unique identifier of the event */
     id: Scalars['ID']
+    /** The account that owns the domain after the transfer */
     owner: Account
     status?: Maybe<Scalars['Boolean']>
     subtype: TransferSubtype
     timestamp: Scalars['Int']
     to: Scalars['String']
     transactionHash: Scalars['String']
+    /** The transaction hash of the transaction that triggered the event */
     transactionID: Scalars['Bytes']
     txFee: Scalars['String']
     type: TransferType
@@ -5422,6 +5663,7 @@ export enum Transfer_OrderBy {
     BlockNumber = 'blockNumber',
     Domain = 'domain',
     DomainCreatedAt = 'domain__createdAt',
+    DomainExpiryDate = 'domain__expiryDate',
     DomainId = 'domain__id',
     DomainIsMigrated = 'domain__isMigrated',
     DomainLabelName = 'domain__labelName',
@@ -5488,10 +5730,15 @@ export type Uncle = {
 
 export type VersionChanged = ResolverEvent & {
     __typename?: 'VersionChanged'
+    /** The block number at which the event occurred */
     blockNumber: Scalars['Int']
+    /** Unique identifier for this event */
     id: Scalars['ID']
+    /** The resolver associated with this event */
     resolver: Resolver
+    /** The transaction hash associated with the event */
     transactionID: Scalars['Bytes']
+    /** The new version number of the resolver */
     version: Scalars['BigInt']
 }
 
@@ -5570,11 +5817,17 @@ export enum VersionChanged_OrderBy {
 
 export type WrappedDomain = {
     __typename?: 'WrappedDomain'
+    /** The domain that is wrapped by this WrappedDomain */
     domain: Domain
+    /** The expiry date of the wrapped domain */
     expiryDate: Scalars['BigInt']
+    /** The number of fuses remaining on the wrapped domain */
     fuses: Scalars['Int']
+    /** unique identifier for each instance of the WrappedDomain entity */
     id: Scalars['ID']
+    /** The name of the wrapped domain */
     name?: Maybe<Scalars['String']>
+    /** The account that owns this WrappedDomain */
     owner: Account
 }
 
@@ -5674,6 +5927,7 @@ export type WrappedDomain_Filter = {
 export enum WrappedDomain_OrderBy {
     Domain = 'domain',
     DomainCreatedAt = 'domain__createdAt',
+    DomainExpiryDate = 'domain__expiryDate',
     DomainId = 'domain__id',
     DomainIsMigrated = 'domain__isMigrated',
     DomainLabelName = 'domain__labelName',
@@ -5691,10 +5945,15 @@ export enum WrappedDomain_OrderBy {
 
 export type WrappedTransfer = DomainEvent & {
     __typename?: 'WrappedTransfer'
+    /** The block number at which the event occurred */
     blockNumber: Scalars['Int']
+    /** The domain name associated with the event */
     domain: Domain
+    /** The unique identifier of the event */
     id: Scalars['ID']
+    /** The account that owns the wrapped domain after the transfer */
     owner: Account
+    /** The transaction hash of the transaction that triggered the event */
     transactionID: Scalars['Bytes']
 }
 
@@ -5777,6 +6036,7 @@ export enum WrappedTransfer_OrderBy {
     BlockNumber = 'blockNumber',
     Domain = 'domain',
     DomainCreatedAt = 'domain__createdAt',
+    DomainExpiryDate = 'domain__expiryDate',
     DomainId = 'domain__id',
     DomainIsMigrated = 'domain__isMigrated',
     DomainLabelName = 'domain__labelName',
@@ -5832,4 +6092,1930 @@ export type MinedTransfer = {
     transactionHash: Scalars['String']
     txFee: Scalars['String']
     value: Scalars['String']
+}
+
+export type GetEthBalanceQueryVariables = Exact<{
+    hash: Scalars['String']
+}>
+
+export type GetEthBalanceQuery = { __typename?: 'Query'; getEthBalance: { __typename?: 'EthOwner'; balance: string; owner: string } }
+
+export type MarketDataFragment = {
+    __typename?: 'TokenMarketInfo'
+    id: string
+    symbol: string
+    name: string
+    image: string
+    contract?: string | null
+    current_price?: number | null
+    market_cap?: number | null
+    total_volume?: number | null
+    total_supply?: string | null
+    price_change_percentage_24h?: number | null
+    circulating_supply?: number | null
+    high_24h?: number | null
+    low_24h?: number | null
+}
+
+export type GetLatestPricesQueryVariables = Exact<{ [key: string]: never }>
+
+export type GetLatestPricesQuery = {
+    __typename?: 'Query'
+    getLatestPrices: Array<{
+        __typename?: 'TokenMarketInfo'
+        id: string
+        symbol: string
+        name: string
+        image: string
+        contract?: string | null
+        current_price?: number | null
+        market_cap?: number | null
+        total_volume?: number | null
+        total_supply?: string | null
+        price_change_percentage_24h?: number | null
+        circulating_supply?: number | null
+        high_24h?: number | null
+        low_24h?: number | null
+    } | null>
+}
+
+export type NewBlockFeedSubscriptionVariables = Exact<{ [key: string]: never }>
+
+export type NewBlockFeedSubscription = {
+    __typename?: 'Subscription'
+    newBlockFeed: { __typename?: 'BlockSummary'; number: number; miner: string; txCount: number; timestamp: number; baseFeePerGas?: string | null }
+}
+
+export type GetNftTokensMetaQueryVariables = Exact<{
+    input: Scalars['String']
+}>
+
+export type GetNftTokensMetaQuery = {
+    __typename?: 'Query'
+    getNFTTokensMeta?: {
+        __typename?: 'RespTokens'
+        nfts?: Array<{
+            __typename?: 'RespNFT'
+            nft_id: string
+            chain: string
+            contract_address: string
+            token_id?: string | null
+            name?: string | null
+            description?: string | null
+            image_url?: string | null
+            video_url?: string | null
+            audio_url?: string | null
+            model_url?: string | null
+            previews: { __typename?: 'RespNftPreviews'; image_small_url?: string | null; image_large_url?: string | null }
+            extra_metadata?: { __typename?: 'RespNftMeta'; attributes: Array<{ __typename?: 'RespNftTrait'; trait_type: string; value: string }> } | null
+        }> | null
+    } | null
+}
+
+export type NftMetaFragment = {
+    __typename?: 'RespNFT'
+    nft_id: string
+    chain: string
+    contract_address: string
+    token_id?: string | null
+    name?: string | null
+    description?: string | null
+    image_url?: string | null
+    video_url?: string | null
+    audio_url?: string | null
+    model_url?: string | null
+    previews: { __typename?: 'RespNftPreviews'; image_small_url?: string | null; image_large_url?: string | null }
+    extra_metadata?: { __typename?: 'RespNftMeta'; attributes: Array<{ __typename?: 'RespNftTrait'; trait_type: string; value: string }> } | null
+}
+
+export type EnsResolveNameQueryVariables = Exact<{
+    hash: Scalars['ID']
+}>
+
+export type EnsResolveNameQuery = {
+    __typename?: 'Query'
+    domains: Array<{ __typename?: 'Domain'; name?: string | null; labelName?: string | null; resolvedAddress?: { __typename?: 'Account'; id: string } | null }>
+}
+
+export type AddressEventSubscriptionVariables = Exact<{
+    owner: Scalars['String']
+    event?: InputMaybe<AddressEventType>
+}>
+
+export type AddressEventSubscription = {
+    __typename?: 'Subscription'
+    addressEvent: { __typename?: 'AddressEvent'; blockNumber: number; event: AddressEventType; timestamp: number; owner: string }
+}
+
+export type BalanceFragmentFragment = { __typename?: 'BalanceDiff'; before: string; after: string }
+
+export type RewardTransferFragment = {
+    __typename?: 'EthTransfer'
+    value: string
+    transfer: { __typename?: 'Transfer'; block: number; timestamp: number; txFee: string }
+    stateDiff?: {
+        __typename?: 'StateDiffChange'
+        to: { __typename?: 'BalanceDiff'; before: string; after: string }
+        from?: { __typename?: 'BalanceDiff'; before: string; after: string } | null
+    } | null
+}
+
+export type RewardSummaryFragment = {
+    __typename?: 'ETHTransfers'
+    nextKey?: string | null
+    transfers: Array<{
+        __typename?: 'EthTransfer'
+        value: string
+        transfer: { __typename?: 'Transfer'; block: number; timestamp: number; txFee: string }
+        stateDiff?: {
+            __typename?: 'StateDiffChange'
+            to: { __typename?: 'BalanceDiff'; before: string; after: string }
+            from?: { __typename?: 'BalanceDiff'; before: string; after: string } | null
+        } | null
+    } | null>
+}
+
+export type GetAddrRewardsBlockQueryVariables = Exact<{
+    hash: Scalars['String']
+    _limit?: InputMaybe<Scalars['Int']>
+    _nextKey?: InputMaybe<Scalars['String']>
+}>
+
+export type GetAddrRewardsBlockQuery = {
+    __typename?: 'Query'
+    getBlockRewards: {
+        __typename?: 'ETHTransfers'
+        nextKey?: string | null
+        transfers: Array<{
+            __typename?: 'EthTransfer'
+            value: string
+            transfer: { __typename?: 'Transfer'; block: number; timestamp: number; txFee: string }
+            stateDiff?: {
+                __typename?: 'StateDiffChange'
+                to: { __typename?: 'BalanceDiff'; before: string; after: string }
+                from?: { __typename?: 'BalanceDiff'; before: string; after: string } | null
+            } | null
+        } | null>
+    }
+}
+
+export type GetAddrRewardsUncleQueryVariables = Exact<{
+    hash: Scalars['String']
+    _limit?: InputMaybe<Scalars['Int']>
+    _nextKey?: InputMaybe<Scalars['String']>
+}>
+
+export type GetAddrRewardsUncleQuery = {
+    __typename?: 'Query'
+    getUncleRewards: {
+        __typename?: 'ETHTransfers'
+        nextKey?: string | null
+        transfers: Array<{
+            __typename?: 'EthTransfer'
+            value: string
+            transfer: { __typename?: 'Transfer'; block: number; timestamp: number; txFee: string }
+            stateDiff?: {
+                __typename?: 'StateDiffChange'
+                to: { __typename?: 'BalanceDiff'; before: string; after: string }
+                from?: { __typename?: 'BalanceDiff'; before: string; after: string } | null
+            } | null
+        } | null>
+    }
+}
+
+export type GetAddrRewardsGenesisQueryVariables = Exact<{
+    hash: Scalars['String']
+    _limit?: InputMaybe<Scalars['Int']>
+    _nextKey?: InputMaybe<Scalars['String']>
+}>
+
+export type GetAddrRewardsGenesisQuery = {
+    __typename?: 'Query'
+    getGenesisRewards: {
+        __typename?: 'ETHTransfers'
+        nextKey?: string | null
+        transfers: Array<{
+            __typename?: 'EthTransfer'
+            value: string
+            transfer: { __typename?: 'Transfer'; block: number; timestamp: number; txFee: string }
+            stateDiff?: {
+                __typename?: 'StateDiffChange'
+                to: { __typename?: 'BalanceDiff'; before: string; after: string }
+                from?: { __typename?: 'BalanceDiff'; before: string; after: string } | null
+            } | null
+        } | null>
+    }
+}
+
+export type GetBlockUncleRewardsQueryVariables = Exact<{
+    blockRef: Scalars['Int']
+}>
+
+export type GetBlockUncleRewardsQuery = {
+    __typename?: 'Query'
+    getBlockByNumber: { __typename?: 'Block'; summary: { __typename?: 'BlockSummary'; rewards: { __typename?: 'BlockRewards'; uncles: string } } }
+}
+
+export type TokenFragmentFragment = { __typename?: 'EthTokenInfo'; name?: string | null; symbol?: string | null; decimals?: number | null }
+
+export type TokenOwnersFragment = {
+    __typename?: 'ERC20TokenBalance'
+    balance: string
+    tokenInfo: { __typename?: 'EthTokenInfo'; contract: string; name?: string | null; symbol?: string | null; decimals?: number | null }
+}
+
+export type GetOwnersErc20TokensQueryVariables = Exact<{
+    hash: Scalars['String']
+    _nextKey?: InputMaybe<Scalars['String']>
+}>
+
+export type GetOwnersErc20TokensQuery = {
+    __typename?: 'Query'
+    getOwnersERC20Tokens: {
+        __typename?: 'ERC20TokenOwners'
+        nextKey?: string | null
+        owners: Array<{
+            __typename?: 'ERC20TokenBalance'
+            balance: string
+            tokenInfo: { __typename?: 'EthTokenInfo'; contract: string; name?: string | null; symbol?: string | null; decimals?: number | null }
+        } | null>
+    }
+}
+
+export type Erc721BalanceFragment = {
+    __typename?: 'ERC721TokenBalance'
+    balance: string
+    tokenInfo: { __typename?: 'EthTokenInfo'; name?: string | null; symbol?: string | null; contract: string }
+}
+
+export type GetOwnersErc721BalancesQueryVariables = Exact<{
+    hash: Scalars['String']
+}>
+
+export type GetOwnersErc721BalancesQuery = {
+    __typename?: 'Query'
+    getOwnersERC721Balances: Array<{
+        __typename?: 'ERC721TokenBalance'
+        balance: string
+        tokenInfo: { __typename?: 'EthTokenInfo'; name?: string | null; symbol?: string | null; contract: string }
+    }>
+}
+
+export type TokenFragment = { __typename?: 'ERC721TokenOwner'; token: string }
+
+export type OwnerErc721Fragment = {
+    __typename?: 'ERC721TokenContract'
+    nextKey?: string | null
+    tokens: Array<{ __typename?: 'ERC721TokenOwner'; token: string } | null>
+}
+
+export type GetOwnersErc721TokensQueryVariables = Exact<{
+    hash: Scalars['String']
+    tokenContract?: InputMaybe<Scalars['String']>
+    _nextKey?: InputMaybe<Scalars['String']>
+}>
+
+export type GetOwnersErc721TokensQuery = {
+    __typename?: 'Query'
+    getOwnersERC721Tokens: {
+        __typename?: 'ERC721TokenContract'
+        nextKey?: string | null
+        tokens: Array<{ __typename?: 'ERC721TokenOwner'; token: string } | null>
+    }
+}
+
+export type PrimaryAssetContractFragment = {
+    __typename?: 'PrimaryAssetContract'
+    address: string
+    name?: string | null
+    symbol?: string | null
+    total_supply?: number | null
+    description?: string | null
+    external_link?: string | null
+    image_url?: string | null
+}
+
+export type TokenContractFragment = {
+    __typename?: 'NFTContract'
+    contractIdAddress: string
+    owned_asset_count: number
+    name?: string | null
+    contractImage?: string | null
+    primary_asset_contracts?: Array<{
+        __typename?: 'PrimaryAssetContract'
+        address: string
+        name?: string | null
+        symbol?: string | null
+        total_supply?: number | null
+        description?: string | null
+        external_link?: string | null
+        image_url?: string | null
+    }> | null
+}
+
+export type GetNfTcontractsMetaQueryVariables = Exact<{
+    address: Scalars['String']
+}>
+
+export type GetNfTcontractsMetaQuery = {
+    __typename?: 'Query'
+    getNFTcontractsMeta: {
+        __typename?: 'AddressNFTcontracts'
+        tokenContracts?: Array<{
+            __typename?: 'NFTContract'
+            contractIdAddress: string
+            owned_asset_count: number
+            name?: string | null
+            contractImage?: string | null
+            primary_asset_contracts?: Array<{
+                __typename?: 'PrimaryAssetContract'
+                address: string
+                name?: string | null
+                symbol?: string | null
+                total_supply?: number | null
+                description?: string | null
+                external_link?: string | null
+                image_url?: string | null
+            }> | null
+        } | null> | null
+    }
+}
+
+export type GetOwnersNftTokensQueryVariables = Exact<{
+    address: Scalars['String']
+    limit: Scalars['Int']
+    nextKey?: InputMaybe<Scalars['String']>
+}>
+
+export type GetOwnersNftTokensQuery = {
+    __typename?: 'Query'
+    getOwnersNFTTokens: {
+        __typename?: 'NFTTokens'
+        nextKey?: string | null
+        tokens: Array<{
+            __typename?: 'NFTToken'
+            type: NftType
+            balance: string
+            tokenInfo: { __typename?: 'EthTokenInfo'; contract: string; tokenId?: string | null; name?: string | null }
+        }>
+    }
+}
+
+export type GetOwnersNftBalanceQueryVariables = Exact<{
+    address: Scalars['String']
+}>
+
+export type GetOwnersNftBalanceQuery = { __typename?: 'Query'; getOwnersNFTBalance: { __typename?: 'NFTTokenBalance'; balance: string } }
+
+export type TransferSummaryFragment = {
+    __typename?: 'Transfer'
+    transactionHash: string
+    timestamp: number
+    from: string
+    to: string
+    txFee: string
+    type: TransferType
+}
+
+export type GetAddressEthTransfersQueryVariables = Exact<{
+    hash?: InputMaybe<Scalars['String']>
+    filter?: InputMaybe<TransferDirection>
+    _limit?: InputMaybe<Scalars['Int']>
+    _nextKey?: InputMaybe<Scalars['String']>
+}>
+
+export type GetAddressEthTransfersQuery = {
+    __typename?: 'Query'
+    fdfashtwjnakfgn: {
+        __typename?: 'ETHTransfers'
+        nextKey?: string | null
+        transfers: Array<{
+            __typename?: 'EthTransfer'
+            value: string
+            transfer: {
+                __typename?: 'Transfer'
+                block: number
+                status?: boolean | null
+                transactionHash: string
+                timestamp: number
+                from: string
+                to: string
+                txFee: string
+                type: TransferType
+            }
+            stateDiff?: {
+                __typename?: 'StateDiffChange'
+                to: { __typename?: 'BalanceDiff'; before: string; after: string }
+                from?: { __typename?: 'BalanceDiff'; before: string; after: string } | null
+            } | null
+        } | null>
+    }
+}
+
+export type TransferFragmentFragment = {
+    __typename?: 'ERC20Transfer'
+    value: string
+    contract: string
+    transfer: { __typename?: 'Transfer'; transactionHash: string; timestamp: number; from: string; to: string; txFee: string; type: TransferType }
+    stateDiff?: {
+        __typename?: 'StateDiffChange'
+        to: { __typename?: 'BalanceDiff'; before: string; after: string }
+        from?: { __typename?: 'BalanceDiff'; before: string; after: string } | null
+    } | null
+    tokenInfo: { __typename?: 'EthTokenInfo'; name?: string | null; symbol?: string | null; decimals?: number | null }
+}
+
+export type GetAddressErc20TransfersQueryVariables = Exact<{
+    hash: Scalars['String']
+    _limit?: InputMaybe<Scalars['Int']>
+    _nextKey?: InputMaybe<Scalars['String']>
+}>
+
+export type GetAddressErc20TransfersQuery = {
+    __typename?: 'Query'
+    getERC20Transfers: {
+        __typename?: 'ERC20Transfers'
+        nextKey?: string | null
+        transfers: Array<{
+            __typename?: 'ERC20Transfer'
+            value: string
+            contract: string
+            transfer: { __typename?: 'Transfer'; transactionHash: string; timestamp: number; from: string; to: string; txFee: string; type: TransferType }
+            stateDiff?: {
+                __typename?: 'StateDiffChange'
+                to: { __typename?: 'BalanceDiff'; before: string; after: string }
+                from?: { __typename?: 'BalanceDiff'; before: string; after: string } | null
+            } | null
+            tokenInfo: { __typename?: 'EthTokenInfo'; name?: string | null; symbol?: string | null; decimals?: number | null }
+        } | null>
+    }
+}
+
+export type NftTransferFragmentFragment = {
+    __typename?: 'NFTTransfer'
+    tokenId: string
+    contract: string
+    value?: string | null
+    transfer: { __typename?: 'Transfer'; transactionHash: string; timestamp: number; from: string; to: string; txFee: string; type: TransferType }
+    tokenInfo: { __typename?: 'EthTokenInfo'; name?: string | null }
+}
+
+export type GetAddressNftTransfersQueryVariables = Exact<{
+    hash: Scalars['String']
+    _limit?: InputMaybe<Scalars['Int']>
+    _nextKey?: InputMaybe<Scalars['String']>
+}>
+
+export type GetAddressNftTransfersQuery = {
+    __typename?: 'Query'
+    getNFTTransfers: {
+        __typename?: 'NFTTransfers'
+        nextKey?: string | null
+        transfers: Array<{
+            __typename?: 'NFTTransfer'
+            tokenId: string
+            contract: string
+            value?: string | null
+            transfer: { __typename?: 'Transfer'; transactionHash: string; timestamp: number; from: string; to: string; txFee: string; type: TransferType }
+            tokenInfo: { __typename?: 'EthTokenInfo'; name?: string | null }
+        } | null>
+    }
+}
+
+export type StateDiffFragmentFragment = { __typename?: 'TxStateDiff'; owner: string; from: string; to: string }
+
+export type GetTransactionStateDiffQueryVariables = Exact<{
+    hash: Scalars['String']
+}>
+
+export type GetTransactionStateDiffQuery = {
+    __typename?: 'Query'
+    getTransactionStateDiff: Array<{ __typename?: 'TxStateDiff'; owner: string; from: string; to: string } | null>
+}
+
+export type AdrWithdrawalFragment = {
+    __typename?: 'ETHWithdrawalTransfer'
+    validatorIndex: string
+    value: string
+    transfer: { __typename?: 'Transfer'; block: number; timestamp: number }
+}
+
+export type GetAdrWithdrawalsQueryVariables = Exact<{
+    address: Scalars['String']
+    nextKey?: InputMaybe<Scalars['String']>
+    limit: Scalars['Int']
+}>
+
+export type GetAdrWithdrawalsQuery = {
+    __typename?: 'Query'
+    getEthWithdrawalTransfers: {
+        __typename?: 'ETHWithdrawalTransfers'
+        nextKey?: string | null
+        transfers: Array<{
+            __typename?: 'ETHWithdrawalTransfer'
+            validatorIndex: string
+            value: string
+            transfer: { __typename?: 'Transfer'; block: number; timestamp: number }
+        }>
+    }
+}
+
+export type AllTransfersFragment = {
+    __typename?: 'Transfer'
+    type: TransferType
+    subtype: TransferSubtype
+    transactionHash: string
+    block: number
+    timestamp: number
+    from: string
+    to: string
+    txFee: string
+    status?: boolean | null
+    validatorIndex?: string | null
+}
+
+export type AllEthTransfersFragment = {
+    __typename?: 'EthTransfer'
+    value: string
+    transfer: {
+        __typename?: 'Transfer'
+        type: TransferType
+        subtype: TransferSubtype
+        transactionHash: string
+        block: number
+        timestamp: number
+        from: string
+        to: string
+        txFee: string
+        status?: boolean | null
+        validatorIndex?: string | null
+    }
+    stateDiff?: {
+        __typename?: 'StateDiffChange'
+        to: { __typename?: 'BalanceDiff'; before: string; after: string }
+        from?: { __typename?: 'BalanceDiff'; before: string; after: string } | null
+    } | null
+}
+
+export type GetAllEthTransfersQueryVariables = Exact<{
+    hash: Scalars['String']
+    _limit?: InputMaybe<Scalars['Int']>
+    _nextKey?: InputMaybe<Scalars['String']>
+}>
+
+export type GetAllEthTransfersQuery = {
+    __typename?: 'Query'
+    getAllEthTransfers: {
+        __typename?: 'ETHTransfers'
+        nextKey?: string | null
+        transfers: Array<{
+            __typename?: 'EthTransfer'
+            value: string
+            transfer: {
+                __typename?: 'Transfer'
+                type: TransferType
+                subtype: TransferSubtype
+                transactionHash: string
+                block: number
+                timestamp: number
+                from: string
+                to: string
+                txFee: string
+                status?: boolean | null
+                validatorIndex?: string | null
+            }
+            stateDiff?: {
+                __typename?: 'StateDiffChange'
+                to: { __typename?: 'BalanceDiff'; before: string; after: string }
+                from?: { __typename?: 'BalanceDiff'; before: string; after: string } | null
+            } | null
+        } | null>
+    }
+}
+
+export type InternalTransactionTransferFragment = {
+    __typename?: 'Transfer'
+    type: TransferType
+    subtype: TransferSubtype
+    transactionHash: string
+    block: number
+    timestamp: number
+    from: string
+    to: string
+    txFee: string
+    status?: boolean | null
+}
+
+export type EthInternalTransactionTransfersFragment = {
+    __typename?: 'EthTransfer'
+    value: string
+    transfer: {
+        __typename?: 'Transfer'
+        type: TransferType
+        subtype: TransferSubtype
+        transactionHash: string
+        block: number
+        timestamp: number
+        from: string
+        to: string
+        txFee: string
+        status?: boolean | null
+    }
+    stateDiff?: {
+        __typename?: 'StateDiffChange'
+        to: { __typename?: 'BalanceDiff'; before: string; after: string }
+        from?: { __typename?: 'BalanceDiff'; before: string; after: string } | null
+    } | null
+}
+
+export type GetEthInternalTransactionTransfersQueryVariables = Exact<{
+    hash: Scalars['String']
+    _limit?: InputMaybe<Scalars['Int']>
+    _nextKey?: InputMaybe<Scalars['String']>
+}>
+
+export type GetEthInternalTransactionTransfersQuery = {
+    __typename?: 'Query'
+    getEthInternalTransactionTransfers: {
+        __typename?: 'ETHTransfers'
+        nextKey?: string | null
+        transfers: Array<{
+            __typename?: 'EthTransfer'
+            value: string
+            transfer: {
+                __typename?: 'Transfer'
+                type: TransferType
+                subtype: TransferSubtype
+                transactionHash: string
+                block: number
+                timestamp: number
+                from: string
+                to: string
+                txFee: string
+                status?: boolean | null
+            }
+            stateDiff?: {
+                __typename?: 'StateDiffChange'
+                to: { __typename?: 'BalanceDiff'; before: string; after: string }
+                from?: { __typename?: 'BalanceDiff'; before: string; after: string } | null
+            } | null
+        } | null>
+    }
+}
+
+export type PendingTxsFragmentFragment = {
+    __typename?: 'Tx'
+    baseFeePerGas?: string | null
+    blockHash?: string | null
+    blockNumber?: number | null
+    contractAddress?: string | null
+    from: string
+    gas: string
+    gasPrice: string
+    gasUsed?: string | null
+    hash: string
+    input: string
+    maxFeePerGas?: string | null
+    maxPriorityFeePerGas?: string | null
+    nonce: number
+    r?: string | null
+    replacedBy?: string | null
+    s?: string | null
+    status?: string | null
+    timestamp?: number | null
+    to?: string | null
+    transactionIndex?: number | null
+    v?: string | null
+    value: string
+    logs: Array<{ __typename?: 'Log'; address: string; data: string; logIndex: number; removed: boolean; topics: Array<string>; type?: string | null }>
+    trace?: Array<{
+        __typename?: 'Trace'
+        subtraces?: number | null
+        traceAddress?: Array<number> | null
+        transactionPosition?: number | null
+        type?: string | null
+        action?: {
+            __typename?: 'TraceAction'
+            callType?: string | null
+            from?: string | null
+            gas?: string | null
+            input?: string | null
+            to?: string | null
+            value?: string | null
+        } | null
+        result?: { __typename?: 'TraceResult'; gasUsed?: string | null; output?: string | null } | null
+    }> | null
+}
+
+export type GetPendingTransactionsQueryVariables = Exact<{
+    hash: Scalars['String']
+    _limit?: InputMaybe<Scalars['Int']>
+    _nextKey?: InputMaybe<Scalars['String']>
+}>
+
+export type GetPendingTransactionsQuery = {
+    __typename?: 'Query'
+    getPendingTransactionsV2: {
+        __typename?: 'PendingTransactions'
+        nextKey?: string | null
+        items: Array<{
+            __typename?: 'Tx'
+            baseFeePerGas?: string | null
+            blockHash?: string | null
+            blockNumber?: number | null
+            contractAddress?: string | null
+            from: string
+            gas: string
+            gasPrice: string
+            gasUsed?: string | null
+            hash: string
+            input: string
+            maxFeePerGas?: string | null
+            maxPriorityFeePerGas?: string | null
+            nonce: number
+            r?: string | null
+            replacedBy?: string | null
+            s?: string | null
+            status?: string | null
+            timestamp?: number | null
+            to?: string | null
+            transactionIndex?: number | null
+            v?: string | null
+            value: string
+            logs: Array<{ __typename?: 'Log'; address: string; data: string; logIndex: number; removed: boolean; topics: Array<string>; type?: string | null }>
+            trace?: Array<{
+                __typename?: 'Trace'
+                subtraces?: number | null
+                traceAddress?: Array<number> | null
+                transactionPosition?: number | null
+                type?: string | null
+                action?: {
+                    __typename?: 'TraceAction'
+                    callType?: string | null
+                    from?: string | null
+                    gas?: string | null
+                    input?: string | null
+                    to?: string | null
+                    value?: string | null
+                } | null
+                result?: { __typename?: 'TraceResult'; gasUsed?: string | null; output?: string | null } | null
+            }> | null
+        }>
+    }
+}
+
+export type TransfersFragment = {
+    __typename?: 'Transfer'
+    type: TransferType
+    subtype: TransferSubtype
+    transactionHash: string
+    block: number
+    timestamp: number
+    from: string
+    to: string
+    txFee: string
+    status?: boolean | null
+}
+
+export type TxsTransfersFragment = {
+    __typename?: 'ETHTransactionTransfer'
+    value: string
+    transfer: {
+        __typename?: 'Transfer'
+        type: TransferType
+        subtype: TransferSubtype
+        transactionHash: string
+        block: number
+        timestamp: number
+        from: string
+        to: string
+        txFee: string
+        status?: boolean | null
+    }
+    stateDiff?: {
+        __typename?: 'StateDiffChange'
+        to: { __typename?: 'BalanceDiff'; before: string; after: string }
+        from?: { __typename?: 'BalanceDiff'; before: string; after: string } | null
+    } | null
+    transactionStateDiff: {
+        __typename?: 'TransactionStateDiffChange'
+        to: { __typename?: 'BalanceDiff'; before: string; after: string }
+        from?: { __typename?: 'BalanceDiff'; before: string; after: string } | null
+    }
+}
+
+export type GetEthTransactionTransfersQueryVariables = Exact<{
+    direction?: InputMaybe<TransferDirection>
+    hash: Scalars['String']
+    _limit?: InputMaybe<Scalars['Int']>
+    _nextKey?: InputMaybe<Scalars['String']>
+}>
+
+export type GetEthTransactionTransfersQuery = {
+    __typename?: 'Query'
+    getEthTransactionTransfers: {
+        __typename?: 'ETHTransactionTransfers'
+        nextKey?: string | null
+        transfers: Array<{
+            __typename?: 'ETHTransactionTransfer'
+            value: string
+            transfer: {
+                __typename?: 'Transfer'
+                type: TransferType
+                subtype: TransferSubtype
+                transactionHash: string
+                block: number
+                timestamp: number
+                from: string
+                to: string
+                txFee: string
+                status?: boolean | null
+            }
+            stateDiff?: {
+                __typename?: 'StateDiffChange'
+                to: { __typename?: 'BalanceDiff'; before: string; after: string }
+                from?: { __typename?: 'BalanceDiff'; before: string; after: string } | null
+            } | null
+            transactionStateDiff: {
+                __typename?: 'TransactionStateDiffChange'
+                to: { __typename?: 'BalanceDiff'; before: string; after: string }
+                from?: { __typename?: 'BalanceDiff'; before: string; after: string } | null
+            }
+        }>
+    }
+}
+
+export type GetEthTransfersByHashQueryVariables = Exact<{
+    owner: Scalars['String']
+    _limit?: InputMaybe<Scalars['Int']>
+    hash: Scalars['String']
+}>
+
+export type GetEthTransfersByHashQuery = {
+    __typename?: 'Query'
+    getEthTransfersByHash: {
+        __typename?: 'ETHTransfers'
+        nextKey?: string | null
+        transfers: Array<{
+            __typename?: 'EthTransfer'
+            transfer: { __typename?: 'Transfer'; type: TransferType; subtype: TransferSubtype; transactionHash: string }
+        } | null>
+    }
+}
+
+export type BlockDetailsFragment = {
+    __typename?: 'Block'
+    hash: string
+    parentHash: string
+    nonce: string
+    sha3Uncles: string
+    logsBloom: string
+    transactionsRoot: string
+    stateRoot: string
+    receiptsRoot: string
+    difficulty: string
+    totalDifficulty: string
+    extraData: string
+    size: number
+    gasLimit: number
+    gasUsed: number
+    transactions: Array<string | null>
+    withdrawalCount: number
+    summary: {
+        __typename?: 'BlockSummary'
+        number: number
+        miner: string
+        txCount: number
+        timestamp: number
+        uncles: Array<string | null>
+        txFail: number
+        baseFeePerGas?: string | null
+        rewards: { __typename?: 'BlockRewards'; txFees: string; total: string; uncles: string }
+    }
+}
+
+export type GetBlockByNumberQueryVariables = Exact<{
+    blockRef: Scalars['Int']
+}>
+
+export type GetBlockByNumberQuery = {
+    __typename?: 'Query'
+    getBlockByNumber: {
+        __typename?: 'Block'
+        hash: string
+        parentHash: string
+        nonce: string
+        sha3Uncles: string
+        logsBloom: string
+        transactionsRoot: string
+        stateRoot: string
+        receiptsRoot: string
+        difficulty: string
+        totalDifficulty: string
+        extraData: string
+        size: number
+        gasLimit: number
+        gasUsed: number
+        transactions: Array<string | null>
+        withdrawalCount: number
+        summary: {
+            __typename?: 'BlockSummary'
+            number: number
+            miner: string
+            txCount: number
+            timestamp: number
+            uncles: Array<string | null>
+            txFail: number
+            baseFeePerGas?: string | null
+            rewards: { __typename?: 'BlockRewards'; txFees: string; total: string; uncles: string }
+        }
+    }
+}
+
+export type GetBlockByHashQueryVariables = Exact<{
+    blockRef: Scalars['String']
+}>
+
+export type GetBlockByHashQuery = {
+    __typename?: 'Query'
+    getBlockByHash: {
+        __typename?: 'Block'
+        hash: string
+        parentHash: string
+        nonce: string
+        sha3Uncles: string
+        logsBloom: string
+        transactionsRoot: string
+        stateRoot: string
+        receiptsRoot: string
+        difficulty: string
+        totalDifficulty: string
+        extraData: string
+        size: number
+        gasLimit: number
+        gasUsed: number
+        transactions: Array<string | null>
+        withdrawalCount: number
+        summary: {
+            __typename?: 'BlockSummary'
+            number: number
+            miner: string
+            txCount: number
+            timestamp: number
+            uncles: Array<string | null>
+            txFail: number
+            baseFeePerGas?: string | null
+            rewards: { __typename?: 'BlockRewards'; txFees: string; total: string; uncles: string }
+        }
+    }
+}
+
+export type GetLastBlockNumberQueryVariables = Exact<{ [key: string]: never }>
+
+export type GetLastBlockNumberQuery = { __typename?: 'Query'; getLatestBlockInfo: { __typename?: 'LatestBlockData'; number: number } }
+
+export type BlockInfoFragment = {
+    __typename?: 'LatestBlockData'
+    number: number
+    avgBlockTime: number
+    hashRate: string
+    difficulty: string
+    avgGasPrice: string
+    baseFeePerGas?: string | null
+}
+
+export type GetLatestBlockInfoQueryVariables = Exact<{ [key: string]: never }>
+
+export type GetLatestBlockInfoQuery = {
+    __typename?: 'Query'
+    getLatestBlockInfo: {
+        __typename?: 'LatestBlockData'
+        number: number
+        avgBlockTime: number
+        hashRate: string
+        difficulty: string
+        avgGasPrice: string
+        baseFeePerGas?: string | null
+    }
+}
+
+export type BlockWithdrawalFragment = {
+    __typename?: 'ETHWithdrawalTransfer'
+    validatorIndex: string
+    value: string
+    transfer: { __typename?: 'Transfer'; to: string }
+}
+
+export type GetBlockWithdrawalsQueryVariables = Exact<{
+    blockNumber: Scalars['Int']
+    nextKey?: InputMaybe<Scalars['String']>
+}>
+
+export type GetBlockWithdrawalsQuery = {
+    __typename?: 'Query'
+    getEthWithdrawalTransfers: {
+        __typename?: 'ETHWithdrawalTransfers'
+        nextKey?: string | null
+        transfers: Array<{ __typename?: 'ETHWithdrawalTransfer'; validatorIndex: string; value: string; transfer: { __typename?: 'Transfer'; to: string } }>
+    }
+}
+
+export type BlockSummaryFragment = {
+    __typename?: 'BlockSummary'
+    number: number
+    miner: string
+    txCount: number
+    timestamp: number
+    txFail: number
+    rewards: { __typename?: 'BlockRewards'; total: string }
+}
+
+export type GetBlocksArrayByNumberQueryVariables = Exact<{
+    fromBlock?: InputMaybe<Scalars['Int']>
+    limit?: InputMaybe<Scalars['Int']>
+}>
+
+export type GetBlocksArrayByNumberQuery = {
+    __typename?: 'Query'
+    getBlocksArrayByNumber: Array<{
+        __typename?: 'BlockSummary'
+        number: number
+        miner: string
+        txCount: number
+        timestamp: number
+        txFail: number
+        rewards: { __typename?: 'BlockRewards'; total: string }
+    } | null>
+}
+
+export type NewBlockTableSubscriptionVariables = Exact<{ [key: string]: never }>
+
+export type NewBlockTableSubscription = {
+    __typename?: 'Subscription'
+    newBlockFeed: {
+        __typename?: 'BlockSummary'
+        number: number
+        miner: string
+        txCount: number
+        timestamp: number
+        rewards: { __typename?: 'BlockRewards'; total: string }
+    }
+}
+
+export type GetHashTypeQueryVariables = Exact<{
+    hash: Scalars['String']
+}>
+
+export type GetHashTypeQuery = { __typename?: 'Query'; getHashType: HashType }
+
+export type GetTokensBeginsWithQueryVariables = Exact<{
+    keyword: Scalars['String']
+}>
+
+export type GetTokensBeginsWithQuery = {
+    __typename?: 'Query'
+    getTokensBeginsWith: Array<{ __typename?: 'TokenSearch'; contract: string; keyword: string } | null>
+}
+
+export type TokenDetailsFragment = {
+    __typename?: 'EthTokenInfo'
+    name?: string | null
+    symbol?: string | null
+    decimals?: number | null
+    totalSupply?: string | null
+    contract: string
+    tokenId?: string | null
+}
+
+export type Erc20TokenOwnerDetailsFragment = {
+    __typename?: 'ERC20TokenBalance'
+    owner: string
+    balance: string
+    tokenInfo: {
+        __typename?: 'EthTokenInfo'
+        name?: string | null
+        symbol?: string | null
+        decimals?: number | null
+        totalSupply?: string | null
+        contract: string
+        tokenId?: string | null
+    }
+}
+
+export type GetTokenInfoByContractQueryVariables = Exact<{
+    contract: Scalars['String']
+}>
+
+export type GetTokenInfoByContractQuery = {
+    __typename?: 'Query'
+    getTokenInfoByContract: {
+        __typename?: 'EthTokenInfo'
+        name?: string | null
+        symbol?: string | null
+        decimals?: number | null
+        totalSupply?: string | null
+        contract: string
+        tokenId?: string | null
+    }
+}
+
+export type GetErc20TokenBalanceQueryVariables = Exact<{
+    contract: Scalars['String']
+    owner: Scalars['String']
+}>
+
+export type GetErc20TokenBalanceQuery = {
+    __typename?: 'Query'
+    getERC20TokenBalance: {
+        __typename?: 'ERC20TokenBalance'
+        owner: string
+        balance: string
+        tokenInfo: {
+            __typename?: 'EthTokenInfo'
+            name?: string | null
+            symbol?: string | null
+            decimals?: number | null
+            totalSupply?: string | null
+            contract: string
+            tokenId?: string | null
+        }
+    }
+}
+
+export type GetNftContractMetaQueryVariables = Exact<{
+    input: Scalars['String']
+}>
+
+export type GetNftContractMetaQuery = {
+    __typename?: 'Query'
+    getNFTContractMeta?: {
+        __typename?: 'RespCollections'
+        nextKey?: string | null
+        collections: Array<{
+            __typename?: 'RespCollection'
+            name?: string | null
+            description?: string | null
+            image_url?: string | null
+            external_url?: string | null
+            twitter_username?: string | null
+            discord_url?: string | null
+            distinct_owner_count?: number | null
+            distinct_nft_count?: number | null
+            floor_prices: Array<{
+                __typename?: 'RespNftFloorPrice'
+                value?: number | null
+                payment_token: { __typename?: 'RespPaymentToken'; name?: string | null; address?: string | null }
+            }>
+        }>
+    } | null
+}
+
+export type NftCollectionFragment = {
+    __typename?: 'RespCollection'
+    name?: string | null
+    description?: string | null
+    image_url?: string | null
+    external_url?: string | null
+    twitter_username?: string | null
+    discord_url?: string | null
+    distinct_owner_count?: number | null
+    distinct_nft_count?: number | null
+    floor_prices: Array<{
+        __typename?: 'RespNftFloorPrice'
+        value?: number | null
+        payment_token: { __typename?: 'RespPaymentToken'; name?: string | null; address?: string | null }
+    }>
+}
+
+export type Erc20TokenOwnersFragment = {
+    __typename?: 'ERC20TokenOwners'
+    nextKey?: string | null
+    owners: Array<{
+        __typename?: 'ERC20TokenBalance'
+        owner: string
+        balance: string
+        tokenInfo: {
+            __typename?: 'EthTokenInfo'
+            name?: string | null
+            symbol?: string | null
+            decimals?: number | null
+            totalSupply?: string | null
+            contract: string
+            tokenId?: string | null
+        }
+    } | null>
+}
+
+export type Erc721TokenOwnerDetailsFragment = {
+    __typename?: 'ERC721TokenOwner'
+    owner: string
+    tokenId: string
+    tokenInfo: {
+        __typename?: 'EthTokenInfo'
+        name?: string | null
+        symbol?: string | null
+        decimals?: number | null
+        totalSupply?: string | null
+        contract: string
+        tokenId?: string | null
+    }
+}
+
+export type Erc721TokenOwnersFragment = {
+    __typename?: 'ERC721TokenOwners'
+    nextKey?: string | null
+    owners: Array<{
+        __typename?: 'ERC721TokenOwner'
+        owner: string
+        tokenId: string
+        tokenInfo: {
+            __typename?: 'EthTokenInfo'
+            name?: string | null
+            symbol?: string | null
+            decimals?: number | null
+            totalSupply?: string | null
+            contract: string
+            tokenId?: string | null
+        }
+    } | null>
+}
+
+export type Erc1155TokenOwnerDetailsFragment = {
+    __typename?: 'ERC1155TokenBalance'
+    owner: string
+    balance: string
+    tokenInfo: {
+        __typename?: 'EthTokenInfo'
+        name?: string | null
+        symbol?: string | null
+        decimals?: number | null
+        totalSupply?: string | null
+        contract: string
+        tokenId?: string | null
+    }
+}
+
+export type Erc1155TokenOwnersFragment = {
+    __typename?: 'ERC1155TokenBalances'
+    nextKey?: string | null
+    balances: Array<{
+        __typename?: 'ERC1155TokenBalance'
+        owner: string
+        balance: string
+        tokenInfo: {
+            __typename?: 'EthTokenInfo'
+            name?: string | null
+            symbol?: string | null
+            decimals?: number | null
+            totalSupply?: string | null
+            contract: string
+            tokenId?: string | null
+        }
+    }>
+}
+
+export type GetErc20TokenOwnersQueryVariables = Exact<{
+    contract: Scalars['String']
+    _limit?: InputMaybe<Scalars['Int']>
+    _nextKey?: InputMaybe<Scalars['String']>
+}>
+
+export type GetErc20TokenOwnersQuery = {
+    __typename?: 'Query'
+    getERC20TokenOwners: {
+        __typename?: 'ERC20TokenOwners'
+        nextKey?: string | null
+        owners: Array<{
+            __typename?: 'ERC20TokenBalance'
+            owner: string
+            balance: string
+            tokenInfo: {
+                __typename?: 'EthTokenInfo'
+                name?: string | null
+                symbol?: string | null
+                decimals?: number | null
+                totalSupply?: string | null
+                contract: string
+                tokenId?: string | null
+            }
+        } | null>
+    }
+}
+
+export type GetErc721TokenOwnersQueryVariables = Exact<{
+    contract: Scalars['String']
+    _limit?: InputMaybe<Scalars['Int']>
+    _nextKey?: InputMaybe<Scalars['String']>
+}>
+
+export type GetErc721TokenOwnersQuery = {
+    __typename?: 'Query'
+    getERC721TokenOwners: {
+        __typename?: 'ERC721TokenOwners'
+        nextKey?: string | null
+        owners: Array<{
+            __typename?: 'ERC721TokenOwner'
+            owner: string
+            tokenId: string
+            tokenInfo: {
+                __typename?: 'EthTokenInfo'
+                name?: string | null
+                symbol?: string | null
+                decimals?: number | null
+                totalSupply?: string | null
+                contract: string
+                tokenId?: string | null
+            }
+        } | null>
+    }
+}
+
+export type GetErc1155TokenOwnersQueryVariables = Exact<{
+    contract: Scalars['String']
+    _limit?: InputMaybe<Scalars['Int']>
+    _nextKey?: InputMaybe<Scalars['String']>
+}>
+
+export type GetErc1155TokenOwnersQuery = {
+    __typename?: 'Query'
+    getERC1155TokensByContract: {
+        __typename?: 'ERC1155TokenBalances'
+        nextKey?: string | null
+        balances: Array<{
+            __typename?: 'ERC1155TokenBalance'
+            owner: string
+            balance: string
+            tokenInfo: {
+                __typename?: 'EthTokenInfo'
+                name?: string | null
+                symbol?: string | null
+                decimals?: number | null
+                totalSupply?: string | null
+                contract: string
+                tokenId?: string | null
+            }
+        }>
+    }
+}
+
+export type TokenInfoFragment = {
+    __typename?: 'EthTokenInfo'
+    name?: string | null
+    symbol?: string | null
+    decimals?: number | null
+    totalSupply?: string | null
+    contract: string
+}
+
+export type TokenTransferFragment = {
+    __typename?: 'ERC20Transfer'
+    value: string
+    transfer: { __typename?: 'Transfer'; transactionHash: string; timestamp: number; from: string; to: string; txFee: string; type: TransferType }
+}
+
+export type Erc20TokenTransfersFragment = {
+    __typename?: 'ERC20Transfers'
+    nextKey?: string | null
+    transfers: Array<{
+        __typename?: 'ERC20Transfer'
+        value: string
+        transfer: { __typename?: 'Transfer'; transactionHash: string; timestamp: number; from: string; to: string; txFee: string; type: TransferType }
+    } | null>
+}
+
+export type GetErc20TokenTransfersQueryVariables = Exact<{
+    _contract: Scalars['String']
+    _limit?: InputMaybe<Scalars['Int']>
+    _nextKey?: InputMaybe<Scalars['String']>
+}>
+
+export type GetErc20TokenTransfersQuery = {
+    __typename?: 'Query'
+    getERC20TokenTransfers: {
+        __typename?: 'ERC20Transfers'
+        nextKey?: string | null
+        transfers: Array<{
+            __typename?: 'ERC20Transfer'
+            value: string
+            transfer: { __typename?: 'Transfer'; transactionHash: string; timestamp: number; from: string; to: string; txFee: string; type: TransferType }
+        } | null>
+    }
+}
+
+export type Erc721TransferFragment = {
+    __typename?: 'ERC721Transfer'
+    tokenId: string
+    contract: string
+    transfer: { __typename?: 'Transfer'; transactionHash: string; timestamp: number; from: string; to: string; txFee: string; type: TransferType }
+    tokenInfo: {
+        __typename?: 'EthTokenInfo'
+        name?: string | null
+        symbol?: string | null
+        decimals?: number | null
+        totalSupply?: string | null
+        contract: string
+    }
+}
+
+export type Erc721TokenTransfersFragment = {
+    __typename?: 'ERC721Transfers'
+    nextKey?: string | null
+    transfers: Array<{
+        __typename?: 'ERC721Transfer'
+        tokenId: string
+        contract: string
+        transfer: { __typename?: 'Transfer'; transactionHash: string; timestamp: number; from: string; to: string; txFee: string; type: TransferType }
+        tokenInfo: {
+            __typename?: 'EthTokenInfo'
+            name?: string | null
+            symbol?: string | null
+            decimals?: number | null
+            totalSupply?: string | null
+            contract: string
+        }
+    } | null>
+}
+
+export type GetErc721TokenTransfersQueryVariables = Exact<{
+    _contract: Scalars['String']
+    _limit?: InputMaybe<Scalars['Int']>
+    _nextKey?: InputMaybe<Scalars['String']>
+}>
+
+export type GetErc721TokenTransfersQuery = {
+    __typename?: 'Query'
+    getERC721TokenTransfers: {
+        __typename?: 'ERC721Transfers'
+        nextKey?: string | null
+        transfers: Array<{
+            __typename?: 'ERC721Transfer'
+            tokenId: string
+            contract: string
+            transfer: { __typename?: 'Transfer'; transactionHash: string; timestamp: number; from: string; to: string; txFee: string; type: TransferType }
+            tokenInfo: {
+                __typename?: 'EthTokenInfo'
+                name?: string | null
+                symbol?: string | null
+                decimals?: number | null
+                totalSupply?: string | null
+                contract: string
+            }
+        } | null>
+    }
+}
+
+export type Erc1155TokenTransferFragment = {
+    __typename?: 'ERC1155Transfer'
+    tokenId: string
+    value: string
+    contract: string
+    transfer: { __typename?: 'Transfer'; transactionHash: string; timestamp: number; from: string; to: string; txFee: string; type: TransferType }
+    tokenInfo: {
+        __typename?: 'EthTokenInfo'
+        name?: string | null
+        symbol?: string | null
+        decimals?: number | null
+        totalSupply?: string | null
+        contract: string
+    }
+}
+
+export type Erc1155TokenTransfersFragment = {
+    __typename?: 'ERC1155Transfers'
+    nextKey?: string | null
+    transfers: Array<{
+        __typename?: 'ERC1155Transfer'
+        tokenId: string
+        value: string
+        contract: string
+        transfer: { __typename?: 'Transfer'; transactionHash: string; timestamp: number; from: string; to: string; txFee: string; type: TransferType }
+        tokenInfo: {
+            __typename?: 'EthTokenInfo'
+            name?: string | null
+            symbol?: string | null
+            decimals?: number | null
+            totalSupply?: string | null
+            contract: string
+        }
+    } | null>
+}
+
+export type GetErc1155TokenTransfersQueryVariables = Exact<{
+    _contract: Scalars['String']
+    _limit?: InputMaybe<Scalars['Int']>
+    _nextKey?: InputMaybe<Scalars['String']>
+}>
+
+export type GetErc1155TokenTransfersQuery = {
+    __typename?: 'Query'
+    getERC1155TokenTransfers: {
+        __typename?: 'ERC1155Transfers'
+        nextKey?: string | null
+        transfers: Array<{
+            __typename?: 'ERC1155Transfer'
+            tokenId: string
+            value: string
+            contract: string
+            transfer: { __typename?: 'Transfer'; transactionHash: string; timestamp: number; from: string; to: string; txFee: string; type: TransferType }
+            tokenInfo: {
+                __typename?: 'EthTokenInfo'
+                name?: string | null
+                symbol?: string | null
+                decimals?: number | null
+                totalSupply?: string | null
+                contract: string
+            }
+        } | null>
+    }
+}
+
+export type EthTransferInTxFragment = {
+    __typename?: 'EthTransfer'
+    value: string
+    transfer: { __typename?: 'Transfer'; type: TransferType; from: string; to: string }
+}
+
+export type GetEthTransfersInTxQueryVariables = Exact<{
+    limit?: InputMaybe<Scalars['Int']>
+    hash: Scalars['String']
+    nextKey?: InputMaybe<Scalars['String']>
+}>
+
+export type GetEthTransfersInTxQuery = {
+    __typename?: 'Query'
+    getEthTransfersByHash: {
+        __typename?: 'ETHTransfers'
+        nextKey?: string | null
+        transfers: Array<{
+            __typename?: 'EthTransfer'
+            value: string
+            transfer: { __typename?: 'Transfer'; type: TransferType; from: string; to: string }
+        } | null>
+    }
+}
+
+export type Erc20TransferInTxFragment = {
+    __typename?: 'ERC20Transfer'
+    value: string
+    contract: string
+    transfer: { __typename?: 'Transfer'; type: TransferType; from: string; to: string }
+    tokenInfo: { __typename?: 'EthTokenInfo'; name?: string | null; symbol?: string | null; decimals?: number | null; iconPng?: string | null }
+}
+
+export type Erc20MetaFragment = {
+    __typename?: 'ERC20Transfer'
+    contract: string
+    tokenInfo: { __typename?: 'EthTokenInfo'; name?: string | null; symbol?: string | null; decimals?: number | null; iconPng?: string | null }
+}
+
+export type GetErc20TransfersInTxQueryVariables = Exact<{
+    limit?: InputMaybe<Scalars['Int']>
+    hash: Scalars['String']
+    nextKey?: InputMaybe<Scalars['String']>
+}>
+
+export type GetErc20TransfersInTxQuery = {
+    __typename?: 'Query'
+    getERC20TransfersByHash: {
+        __typename?: 'ERC20Transfers'
+        nextKey?: string | null
+        transfers: Array<{
+            __typename?: 'ERC20Transfer'
+            value: string
+            contract: string
+            transfer: { __typename?: 'Transfer'; type: TransferType; from: string; to: string }
+            tokenInfo: { __typename?: 'EthTokenInfo'; name?: string | null; symbol?: string | null; decimals?: number | null; iconPng?: string | null }
+        } | null>
+    }
+}
+
+export type NftTransferInTxFragment = {
+    __typename?: 'NFTTransfer'
+    value?: string | null
+    tokenId: string
+    contract: string
+    transfer: { __typename?: 'Transfer'; type: TransferType; from: string; to: string }
+    tokenInfo: { __typename?: 'EthTokenInfo'; name?: string | null; symbol?: string | null; decimals?: number | null; iconPng?: string | null }
+}
+
+export type GetNftTransfersInTxQueryVariables = Exact<{
+    limit?: InputMaybe<Scalars['Int']>
+    hash: Scalars['String']
+    nextKey?: InputMaybe<Scalars['String']>
+}>
+
+export type GetNftTransfersInTxQuery = {
+    __typename?: 'Query'
+    getNFTTransfersByHash: {
+        __typename?: 'NFTTransfers'
+        nextKey?: string | null
+        transfers: Array<{
+            __typename?: 'NFTTransfer'
+            value?: string | null
+            tokenId: string
+            contract: string
+            transfer: { __typename?: 'Transfer'; type: TransferType; from: string; to: string }
+            tokenInfo: { __typename?: 'EthTokenInfo'; name?: string | null; symbol?: string | null; decimals?: number | null; iconPng?: string | null }
+        } | null>
+    }
+}
+
+export type LogFragmentFragment = {
+    __typename?: 'Log'
+    address: string
+    data: string
+    logIndex: number
+    removed: boolean
+    topics: Array<string>
+    type?: string | null
+    signature?: string | null
+}
+
+export type TraceActionFragment = {
+    __typename?: 'TraceAction'
+    callType?: string | null
+    from?: string | null
+    gas?: string | null
+    input?: string | null
+    to?: string | null
+    value?: string | null
+}
+
+export type TraceResultFragment = { __typename?: 'TraceResult'; gasUsed?: string | null; output?: string | null }
+
+export type TraceFragmentFragment = {
+    __typename?: 'Trace'
+    subtraces?: number | null
+    traceAddress?: Array<number> | null
+    transactionPosition?: number | null
+    type?: string | null
+    action?: {
+        __typename?: 'TraceAction'
+        callType?: string | null
+        from?: string | null
+        gas?: string | null
+        input?: string | null
+        to?: string | null
+        value?: string | null
+    } | null
+    result?: { __typename?: 'TraceResult'; gasUsed?: string | null; output?: string | null } | null
+}
+
+export type TxDetailsFragment = {
+    __typename?: 'Tx'
+    blockHash?: string | null
+    blockNumber?: number | null
+    from: string
+    gas: string
+    gasPrice: string
+    maxFeePerGas?: string | null
+    maxPriorityFeePerGas?: string | null
+    baseFeePerGas?: string | null
+    timestamp?: number | null
+    gasUsed?: string | null
+    hash: string
+    status?: string | null
+    input: string
+    nonce: number
+    to?: string | null
+    transactionIndex?: number | null
+    value: string
+    replacedBy?: string | null
+    v?: string | null
+    r?: string | null
+    s?: string | null
+    contractAddress?: string | null
+    isContractCall?: boolean | null
+    logs: Array<{
+        __typename?: 'Log'
+        address: string
+        data: string
+        logIndex: number
+        removed: boolean
+        topics: Array<string>
+        type?: string | null
+        signature?: string | null
+    }>
+}
+
+export type GetTransactionByHashQueryVariables = Exact<{
+    hash: Scalars['String']
+}>
+
+export type GetTransactionByHashQuery = {
+    __typename?: 'Query'
+    getTransactionByHash: {
+        __typename?: 'Tx'
+        blockHash?: string | null
+        blockNumber?: number | null
+        from: string
+        gas: string
+        gasPrice: string
+        maxFeePerGas?: string | null
+        maxPriorityFeePerGas?: string | null
+        baseFeePerGas?: string | null
+        timestamp?: number | null
+        gasUsed?: string | null
+        hash: string
+        status?: string | null
+        input: string
+        nonce: number
+        to?: string | null
+        transactionIndex?: number | null
+        value: string
+        replacedBy?: string | null
+        v?: string | null
+        r?: string | null
+        s?: string | null
+        contractAddress?: string | null
+        isContractCall?: boolean | null
+        logs: Array<{
+            __typename?: 'Log'
+            address: string
+            data: string
+            logIndex: number
+            removed: boolean
+            topics: Array<string>
+            type?: string | null
+            signature?: string | null
+        }>
+    }
+}
+
+export type TransactionEventSubscriptionVariables = Exact<{
+    hash: Scalars['String']
+}>
+
+export type TransactionEventSubscription = { __typename?: 'Subscription'; transactionEvent: string }
+
+export type SummaryFragment = {
+    __typename?: 'Transfer'
+    transactionHash: string
+    to: string
+    block: number
+    timestamp: number
+    from: string
+    txFee: string
+    status?: boolean | null
+}
+
+export type BlockTransactionFragment = {
+    __typename?: 'EthTransfer'
+    value: string
+    transfer: {
+        __typename?: 'Transfer'
+        transactionHash: string
+        to: string
+        block: number
+        timestamp: number
+        from: string
+        txFee: string
+        status?: boolean | null
+    }
+}
+
+export type BlockTransactionsFragment = {
+    __typename?: 'ETHTransfers'
+    transfers: Array<{
+        __typename?: 'EthTransfer'
+        value: string
+        transfer: {
+            __typename?: 'Transfer'
+            transactionHash: string
+            to: string
+            block: number
+            timestamp: number
+            from: string
+            txFee: string
+            status?: boolean | null
+        }
+    } | null>
+}
+
+export type GetBlockTransfersQueryVariables = Exact<{
+    _number?: InputMaybe<Scalars['Int']>
+}>
+
+export type GetBlockTransfersQuery = {
+    __typename?: 'Query'
+    getBlockTransfers: {
+        __typename?: 'ETHTransfers'
+        transfers: Array<{
+            __typename?: 'EthTransfer'
+            value: string
+            transfer: {
+                __typename?: 'Transfer'
+                transactionHash: string
+                to: string
+                block: number
+                timestamp: number
+                from: string
+                txFee: string
+                status?: boolean | null
+            }
+        } | null>
+    }
+}
+
+export type TransferFragment = {
+    __typename?: 'ETHTransactionTransfer'
+    value: string
+    transfer: {
+        __typename?: 'Transfer'
+        transactionHash: string
+        to: string
+        block: number
+        timestamp: number
+        from: string
+        txFee: string
+        status?: boolean | null
+    }
+}
+
+export type EthTransfersFragment = {
+    __typename?: 'ETHTransactionTransfers'
+    nextKey?: string | null
+    transfers: Array<{
+        __typename?: 'ETHTransactionTransfer'
+        value: string
+        transfer: {
+            __typename?: 'Transfer'
+            transactionHash: string
+            to: string
+            block: number
+            timestamp: number
+            from: string
+            txFee: string
+            status?: boolean | null
+        }
+    }>
+}
+
+export type GetAllTxsQueryVariables = Exact<{
+    _limit?: InputMaybe<Scalars['Int']>
+    _nextKey?: InputMaybe<Scalars['String']>
+}>
+
+export type GetAllTxsQuery = {
+    __typename?: 'Query'
+    getEthTransactionTransfers: {
+        __typename?: 'ETHTransactionTransfers'
+        nextKey?: string | null
+        transfers: Array<{
+            __typename?: 'ETHTransactionTransfer'
+            value: string
+            transfer: {
+                __typename?: 'Transfer'
+                transactionHash: string
+                to: string
+                block: number
+                timestamp: number
+                from: string
+                txFee: string
+                status?: boolean | null
+            }
+        }>
+    }
+}
+
+export type NewTransfersCompleteFeedSubscriptionVariables = Exact<{ [key: string]: never }>
+
+export type NewTransfersCompleteFeedSubscription = {
+    __typename?: 'Subscription'
+    newTransfersCompleteFeed: { __typename?: 'TransferComplete'; block: number; type: TransferType }
+}
+
+export type UncleDetailsFragment = {
+    __typename?: 'Uncle'
+    unclePosition: number
+    parentBlockNumber: number
+    block: {
+        __typename?: 'Block'
+        hash: string
+        sha3Uncles: string
+        gasLimit: number
+        gasUsed: number
+        summary: { __typename?: 'BlockSummary'; number: number; miner: string; timestamp: number }
+    }
+}
+
+export type GetUncleByHashQueryVariables = Exact<{
+    hash: Scalars['String']
+}>
+
+export type GetUncleByHashQuery = {
+    __typename?: 'Query'
+    getUncleByHash: {
+        __typename?: 'Uncle'
+        unclePosition: number
+        parentBlockNumber: number
+        block: {
+            __typename?: 'Block'
+            hash: string
+            sha3Uncles: string
+            gasLimit: number
+            gasUsed: number
+            summary: { __typename?: 'BlockSummary'; number: number; miner: string; timestamp: number }
+        }
+    }
 }

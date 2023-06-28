@@ -20,14 +20,14 @@
         </v-img>
         <app-dialog v-model="state.showDetails" @update:modelValue="setDialog" width="656" :height="supportsNft ? '550' : '340'">
             <template v-if="state.showDetails" #no-scroll-content>
-                <v-carousel hide-delimiters :show-arrows="!xs && tokens !== undefined" :height="supportsNft ? '550' : '340'">
+                <v-carousel hide-delimiters :show-arrows="!xs && tokens !== undefined" :height="supportsNft ? '536' : '326'">
                     <template #prev="{ props }">
                         <app-btn-icon icon="chevron_left" @click="props.onClick" size="large" />
                     </template>
                     <template #next="{ props }">
                         <app-btn-icon icon="chevron_right" @click="props.onClick" size="large" />
                     </template>
-                    <v-carousel-item v-for="(token, index) in displayTokens" :key="index" class="overflow-y-auto">
+                    <v-carousel-item v-for="(token, index) in displayTokens" :key="index">
                         <token-nft-details :nft="token" />
                     </v-carousel-item>
                 </v-carousel>

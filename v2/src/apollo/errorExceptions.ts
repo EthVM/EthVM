@@ -46,6 +46,14 @@ const excpInvariantViolation = 'invariant violation'
 const excpIntViolation = 'int cannot represent non 32-bit signed integer value'
 
 /**
+ *  @event - This error is thrown on tx details page, most likely due to requsting
+ *          data while it's finished inserting into 1 table (eg transactions) but not in another another table (eg transfers)
+ *          Solution: Refetch Tx in several seconds
+ **/
+const excpFailedToDeserialize =
+    'failed to deserialize: block_number: must be a string, number or bigint, ord: must be a string, number or bigint, type: must be a string;'
+
+/**
  *  @function = checks whether or no an error is an exepction in production mode
  *  @param {string} - errorMessage
  *  @returns {boolean}
@@ -59,7 +67,8 @@ const isAPIExceptionProduction = (errorMessage: string): boolean => {
         newE.includes(excpAddrNotContract) ||
         newE.includes(excpInvariantViolation) ||
         newE.includes(excpInvalidHash) ||
-        newE.includes(excpIntViolation)
+        newE.includes(excpIntViolation) ||
+        newE.includes(excpFailedToDeserialize)
     )
 }
 
@@ -86,5 +95,6 @@ export {
     excpAddrNotContract,
     excpInvariantViolation,
     excpIntViolation,
+    excpFailedToDeserialize,
     isOverOrEq32Bit
 }
