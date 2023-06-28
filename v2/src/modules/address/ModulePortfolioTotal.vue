@@ -12,7 +12,7 @@
                 <v-divider v-if="!props.addressRef && !xs" class="mt-10 mb-6" length="154"></v-divider>
                 <address-balance-totals
                     v-if="!props.addressRef"
-                    :title="`${currencyName} ${$t('block.portfolioValue')}`"
+                    :title="`${currencyName} ${$t('common.balance')}`"
                     :is-loading="!store.portfolioEthIsLoaded()"
                     :balance="`${ethBalancePortfolio}`"
                     :balanceTooltip="ethBalanceTooltip"

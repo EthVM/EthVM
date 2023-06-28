@@ -41,7 +41,7 @@
                 </div>
             </div>
             <div v-else class="mb-13 mb-sm-10">
-                <app-no-result text="There are no logs found in this transaction" class="mx-4 mx-sm-6"></app-no-result>
+                <app-no-result :text="$t('message.txNoLogs')" class="mx-4 mx-sm-6"></app-no-result>
             </div>
         </div>
         <template v-else>

@@ -5,9 +5,9 @@
                 <div class="mobile-chip rounded-circle mr-2 bg-success">
                     <v-icon size="12"> south_east </v-icon>
                 </div>
-                <span> Recieved </span>
+                <span> {{ $t('txs.status.recieve') }}</span>
             </div>
-            <p class="text-info">{{ timeAgo(new Date(props.withdrawal.transfer.timestamp * 1e3)) }} from</p></v-col
+            <p class="text-info">{{ timeAgo(new Date(props.withdrawal.transfer.timestamp * 1e3)) }} {{ $t('common.from') }}'</p></v-col
         >
         <v-col sm="2" md="3" lg="3" class="d-none d-sm-flex">{{ validatorFormatted }}</v-col>
         <v-col sm="4" md="3" lg="5" class="d-none d-sm-flex">{{ valueFormatted.value }} {{ valueFormatted.unit }} </v-col>

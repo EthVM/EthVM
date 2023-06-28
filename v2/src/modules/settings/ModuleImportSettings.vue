@@ -3,7 +3,14 @@
         <template v-if="state.openDialog" #no-scroll-content>
             <div class="d-flex flex-column align-center">
                 <app-upload-file :error="fileError" @fileUpdate="setFile" class="mt-4 mb-5" />
-                <app-btn text="Import" :disabled="disableImport" @click="importSettings" key="btn-import" min-width="160" :loading="loading"></app-btn>
+                <app-btn
+                    :text="$t('common.button.import')"
+                    :disabled="disableImport"
+                    @click="importSettings"
+                    key="btn-import"
+                    min-width="160"
+                    :loading="loading"
+                ></app-btn>
             </div>
         </template>
     </app-dialog>
@@ -17,7 +24,9 @@ import { useStore } from '@/store'
 import { IMPORT_TYPE, EXPORT_KEYS } from './helpers/index'
 import AppUploadFile from '@/core/components/AppUploadFile.vue'
 import { isPortfolioItem, PortfolioItem } from '@/store/helpers'
+import { useI18n } from 'vue-i18n'
 
+const { t } = useI18n()
 const store = useStore()
 interface PropType {
     type?: IMPORT_TYPE
@@ -58,7 +67,11 @@ watch(
 )
 
 const title = computed<string>(() => {
-    return props.type === IMPORT_TYPE.NAMES ? 'Import Names' : props.type === IMPORT_TYPE.PORTFOLIO ? 'Import Portfolio' : 'Import All Settings'
+    return props.type === IMPORT_TYPE.NAMES
+        ? t('settings.import.name')
+        : props.type === IMPORT_TYPE.PORTFOLIO
+        ? t('settings.import.portfolio')
+        : t('settings.import.all')
 })
 
 /**------------------------
@@ -87,7 +100,7 @@ const fileError = computed<string | undefined>(() => {
             }
         }
     }
-    return 'File contents are not valid'
+    return t('settings.import.invalidFile')
 })
 
 const keysAreValid = (keys: string[]): boolean => {

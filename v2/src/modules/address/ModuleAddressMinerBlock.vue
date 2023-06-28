@@ -33,7 +33,7 @@
                 <!--Table Header-->
                 <v-row class="d-none d-sm-flex text-body-1 text-info mt-2 mt-sm-5 mb-1">
                     <v-col md="3" class="py-0"> {{ $t('common.block') }} # </v-col>
-                    <v-col md="3" class="py-0"> {{ $t('block.header.reward') }} </v-col>
+                    <v-col md="3" class="py-0"> {{ $t('common.reward') }} </v-col>
                     <v-col md="3" class="py-0"> {{ $t('txs.balanceBefore') }} </v-col>
                     <v-col md="3" class="py-0"> {{ $t('txs.balanceAfter') }} </v-col>
                 </v-row>
@@ -80,9 +80,10 @@ import { ADDRESS_ROUTE_QUERY } from '@core/router/routesNames'
 import { useAddressUpdate } from '@core/composables/AddressUpdate/addressUpdate.composable'
 import { useAppPaginate } from '@core/composables/AppPaginate/useAppPaginate.composable'
 import { ITEMS_PER_PAGE } from '@core/constants'
+import { useI18n } from 'vue-i18n'
 
 const minerRoutes = ADDRESS_ROUTE_QUERY.Q_MINER
-
+const { t } = useI18n()
 interface ComponentState {
     isEnd: number
     tab: string
@@ -147,9 +148,9 @@ const addressRewards = computed<RewardSummaryFragment | undefined>(() => {
 
 const noResultText = computed<string>(() => {
     if (state.tab === minerRoutes[0]) {
-        return 'This address does not have any block rewards'
+        return t('message.adrNoBlockRewards')
     }
-    return 'This address does not have any uncle rewards'
+    return t('message.adrNoUnclerewards')
 })
 
 /*

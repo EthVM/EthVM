@@ -38,7 +38,7 @@
                         <txs-table-row :tx="tx" :is-pending="props.pending" :is-block="props.isBlock" />
                     </div>
                 </template>
-                <app-no-result v-else text="This block does not have any transactions" class="mt-4 mt-sm-6" />
+                <app-no-result v-else :text="$t('block.error.txs')" class="mt-4 mt-sm-6" />
             </div>
             <div v-if="props.isLoading" class="p-ten-top">
                 <div v-for="i in props.maxItems" :key="i" style="padding: 10px 0">

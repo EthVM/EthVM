@@ -53,7 +53,7 @@
                     <div v-if="!props.loading" class="d-flex align-center">
                         <app-address-blockie :address="holder.holder || ''" :size="8" class="mr-1 mr-sm-2" />
                         <div>
-                            <p>Owned By</p>
+                            <p>{{ $t('nft.ownedBy') }}</p>
                             <app-transform-hash is-blue is-short :hash="eth.toCheckSum(holder.holder || '')" :link="`/address/${holder.holder}`" />
                         </div>
                     </div>

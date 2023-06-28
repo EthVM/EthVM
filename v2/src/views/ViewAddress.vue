@@ -150,30 +150,32 @@ import { useDisplay } from 'vuetify/lib/framework.mjs'
 import { useStore } from '@/store'
 import { useIsAddressMiner } from '@core/composables/IsAddressMiner/isAddressMiner.composable'
 import { useNetwork } from '@/core/composables/Network/useNetwork'
+import { useI18n } from 'vue-i18n'
 
+const { t } = useI18n()
 const { smAndDown, xs, sm, md, lgAndUp } = useDisplay()
 const { currencyName } = useNetwork()
 const store = useStore()
 const tabs = reactive([
     {
         id: 0,
-        text: 'Overview',
+        text: t('common.overview'),
         routeName: ROUTE_NAME.ADDRESS.NAME
     },
     {
         id: 1,
-        text: `${currencyName.value} Balance`,
+        text: `${currencyName.value} ${t('common.balance', 1)}`,
         routeName: ROUTE_NAME.ADDRESS_BALANCE.NAME
     },
     {
         id: 2,
-        text: 'NFTS',
+        text: t('common.nft', 2),
         routeName: ROUTE_NAME.ADDRESS_NFTS.NAME,
         secondaryTab: ADDRESS_ROUTE_QUERY.Q_NFTS[0]
     },
     {
         id: 3,
-        text: 'Tokens',
+        text: t('common.token', 2),
         routeName: ROUTE_NAME.ADDRESS_TOKENS.NAME,
         secondaryTab: ADDRESS_ROUTE_QUERY.Q_TOKENS[0]
     }

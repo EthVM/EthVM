@@ -18,7 +18,7 @@
                 >
             </v-col>
             <v-col cols="12">
-                <app-input :place-holder="$t('portfolio.placeholder.searchTokenName')" v-model="state.searchParams" class="mt-5" />
+                <app-input :place-holder="$t('token.searchTokenName')" v-model="state.searchParams" class="mt-5" />
             </v-col>
         </v-row>
 

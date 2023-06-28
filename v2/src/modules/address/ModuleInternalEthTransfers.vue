@@ -20,7 +20,7 @@
                     <table-internal-eth-transfer-row :transfer="transfer" :address-ref="props.addressRef" />
                 </div>
             </template>
-            <app-no-result v-else text="This address does not have any internal transfers" class="mt-4 mt-sm-6 mb-5"></app-no-result>
+            <app-no-result v-else :text="$t('message.adrNoInternal')" class="mt-4 mt-sm-6 mb-5"></app-no-result>
         </div>
         <div v-else class="p-ten-top">
             <div v-for="item in 10" :key="item" style="padding: 10px 0">

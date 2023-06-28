@@ -35,7 +35,7 @@
             <v-spacer v-if="props.isOverview && xs" />
             <app-btn-icon v-if="props.isOverview && xs" icon="east" @click="goToTokensBalancePage"></app-btn-icon>
             <div class="flex-grow-1 my-5 my-sm-0">
-                <app-input :place-holder="$t('block.tokenSearch')" v-model="state.searchParams" />
+                <app-input :place-holder="$t('token.searchTokenName')" v-model="state.searchParams" />
             </div>
         </div>
 
@@ -167,7 +167,7 @@
                     </table-row-token-balance>
                 </div>
             </div>
-            <app-no-result v-else :title="$t('address.tagline.noToken')" class="mt-3 mt-sm-1"></app-no-result>
+            <app-no-result v-else :text="$t('address.tagline.noToken')" class="mt-4 mt-sm-6"></app-no-result>
             <template v-if="showPagination">
                 <app-pagination :length="numberOfPages" @update:modelValue="loadMoreData" :current-page="pageNum" />
             </template>

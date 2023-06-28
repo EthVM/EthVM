@@ -34,7 +34,7 @@
             @click="onSearchEnter"
         >
             <v-icon v-if="xs">search</v-icon>
-            <div v-else>Search</div>
+            <div v-else>{{ $t('common.search') }}</div>
         </v-btn>
         <v-menu location="bottom" activator="#search-options-activator" v-model="search.focus" :open-on-click="false">
             <v-card v-if="search.value !== ''" max-width="380" max-height="300px" rounded="xl" class="mt-1">

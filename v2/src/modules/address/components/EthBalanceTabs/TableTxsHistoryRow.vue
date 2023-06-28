@@ -107,7 +107,9 @@ import BN from 'bignumber.js'
 import { useDisplay } from 'vuetify'
 import { TransferSubtype } from '@/apollo/types'
 import { useNetwork } from '@core/composables/Network/useNetwork'
+import { useI18n } from 'vue-i18n'
 
+const { t } = useI18n()
 const { smAndDown, mdAndDown } = useDisplay()
 const { currencyName } = useNetwork()
 interface ComponentProps {
@@ -143,7 +145,7 @@ const transferDirection = computed<{ [key: string]: string }>(() => {
     if (props.transfer.transfer.to === props.addressRef.toLowerCase() && props.transfer.transfer.from === props.addressRef.toLowerCase()) {
         return {
             direction: TRANSFER_DIRECTION.SELF,
-            text: 'Self',
+            text: t('txs.status.selfSent'),
             color: 'info',
             icon: 'refresh'
         }
@@ -151,22 +153,22 @@ const transferDirection = computed<{ [key: string]: string }>(() => {
     if (props.transfer.transfer.to === props.addressRef.toLowerCase()) {
         return {
             direction: TRANSFER_DIRECTION.FROM,
-            text: 'Received',
+            text: t('txs.status.recieve'),
             color: 'success',
             icon: 'south_east'
         }
     } else if (props.transfer.transfer.from === props.addressRef.toLowerCase()) {
         return {
             direction: TRANSFER_DIRECTION.TO,
-            text: 'Sent',
+            text: t('txs.status.sent'),
             color: 'warning',
             icon: 'north_west'
         }
     }
     return {
         direction: TRANSFER_DIRECTION.SELF,
-        text: 'Self',
-        color: 'orange',
+        text: t('txs.status.selfSent'),
+        color: 'info',
         icon: 'refresh'
     }
 })
