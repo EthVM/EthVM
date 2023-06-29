@@ -225,7 +225,7 @@
         "lastBlockTitle": "Last Blocks",
         "size": "Size",
         "totalDifficulty": "Total Difficulty",
-        "baseFee": "Base Fee per Gas",
+        "baseFee": "Базовая Плата за Газ",
         "blockReward": "Block Reward",
         "uncleReward": "Uncle Reward",
         "totalTxs": "Total Txs",
