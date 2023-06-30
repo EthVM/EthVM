@@ -31,7 +31,7 @@
         "refresh": "New Txs Found, Refresh",
         "name": "Transaction | Transactions",
         "nameShort": "Tx | Txs",
-        "newNft": "New ERC20 Transfers",
+        "newNft": "New ERC721 Transfers",
         "details": {
             "header": "Transaction Summary",
             "txHash": "Tx Hash",
@@ -112,7 +112,6 @@
         "txFee": "Tx Fee",
         "txFeePaid": "Tx Fee Paid",
         "txValue": "Tx Value",
-        "paid": "Paid",
         "input": "Input",
         "nonce": "Nonce",
         "fee": "Fee",
