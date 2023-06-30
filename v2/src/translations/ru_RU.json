@@ -31,7 +31,7 @@
         "refresh": "Найдены Новые Txs, Обновить",
         "name": "Транзакция | Транзакции",
         "nameShort": "Tx | Txs",
-        "newNft": "New ERC20 Transfers",
+        "newNft": "New ERC721 Transfers",
         "details": {
             "header": "Сводка Транзакции",
             "txHash": "Хэш Тх",
@@ -112,7 +112,6 @@
         "txFee": "Tx Fee",
         "txFeePaid": "Tx Fee Paid",
         "txValue": "Tx Value",
-        "paid": "Paid",
         "input": "Input",
         "nonce": "Nonce",
         "fee": "Fee",
