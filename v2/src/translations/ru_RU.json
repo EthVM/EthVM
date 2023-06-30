@@ -55,7 +55,7 @@
                 "gasUsed": "Использованный Газ",
                 "baseFee": "Базовая комиссия",
                 "maxFee": "Макс комиссия за газ",
-                "notFound": "No transaction state difference avaialble",
+                "notFound": "No transaction state difference availаble",
                 "index": "Tx индекс"
             },
             "actions": {
