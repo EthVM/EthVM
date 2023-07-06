@@ -26,12 +26,13 @@ import { useSetPortfolio } from './core/composables/Portfolio/useSetPortfolioBal
 import { computed, watch, reactive, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { ROUTE_NAME } from '@core/router/routesNames'
-import { useStorage } from '@vueuse/core'
 import { usePreferredColorScheme } from '@vueuse/core'
 import { useTheme } from 'vuetify/lib/framework.mjs'
 import { themes } from './core/plugins/vuetify'
 import { useNetwork } from './core/composables/Network/useNetwork'
 import { useState } from 'vue-gtag-next'
+import { useI18n } from 'vue-i18n'
+import { isOfTypeMes } from './translations/helpers'
 import configs from './configs'
 
 const store = useStore()
@@ -162,6 +163,8 @@ watch(
  * Set Default Theme
  * --------------------*/
 const theme = useTheme()
+const { locale } = useI18n()
+
 onMounted(() => {
     const preferredColor = usePreferredColorScheme()
     if (store.appTheme) {
@@ -172,6 +175,9 @@ onMounted(() => {
     }
     if (isEnabled && configs.NODE_ENV !== 'development') {
         isEnabled.value = store.dataShare
+    }
+    if (store.lang && isOfTypeMes(store.lang)) {
+        locale.value = store.lang
     }
     //Clean old Storage
     if (localStorage.getItem('dataShare')) {

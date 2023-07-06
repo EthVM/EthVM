@@ -1,5 +1,5 @@
 import { eth } from '@core/helper/eth'
-
+import { Mess } from '@/translations/helpers'
 export interface PortfolioItem {
     hash: string
     name: string
@@ -34,4 +34,16 @@ export const PROMOS = {
     enkrypt: 'enkrypt',
     ruffle: 'ruffle',
     mewwallet: 'mewallet'
+}
+
+export type Lang = {
+    [i in Mess]: {
+        title: string
+        id: string
+    }
+}
+
+export const LANGUAGE: Lang = {
+    en_US: { title: 'English', id: 'EN' },
+    ru_RU: { title: 'Русский', id: 'RU' }
 }

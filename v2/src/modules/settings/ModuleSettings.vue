@@ -10,7 +10,7 @@
                     v-model="isDarkMode"
                     hide-details
                     density="compact"
-                    :color="switchColor"
+                    color="secondary"
                     class="theme-toggle"
                 ></v-switch>
             </v-col>
@@ -22,9 +22,24 @@
                     v-model="dataShareOn"
                     hide-details
                     density="compact"
-                    :color="switchColor"
+                    color="secondary"
                     class="theme-toggle"
                 ></v-switch>
+            </v-col>
+            <v-col cols="12" class="d-flex align-center justify-space-between mt-5">
+                <p>{{ $t('settings.language') }}</p>
+                <v-spacer />
+                <v-btn id="activator-lang-menu" variant="text" class="font-weight-regular mr-n1" rounded="pill" size="small">{{
+                    getTitle($i18n.locale)
+                }}</v-btn>
+
+                <app-menu min-width="170" activator="#activator-lang-menu">
+                    <v-list-item v-for="locale in $i18n.availableLocales" :key="locale" :title="getTitle(locale)" class="py-2" @click="toggleLang(locale)">
+                        <template #append>
+                            <p class="font-weight-bold">{{ getId(locale) }}</p>
+                        </template>
+                    </v-list-item>
+                </app-menu>
             </v-col>
         </v-row>
     </v-card>
@@ -36,8 +51,10 @@ import { useStore } from '@/store'
 import { useTheme } from 'vuetify'
 import { themes } from '@core/plugins/vuetify'
 import { useI18n } from 'vue-i18n'
-
-const { t } = useI18n()
+import { LANGUAGE } from '@/store/helpers'
+import { isOfTypeMes } from '@/translations/helpers'
+import AppMenu from '@/core/components/AppMenu.vue'
+const { t, locale } = useI18n()
 
 const store = useStore()
 
@@ -63,10 +80,6 @@ watch(
         isDarkMode.value = theme.global.name.value === themes.dark
     }
 )
-
-const switchColor = computed<string>(() => {
-    return isDarkMode.value ? 'secondary' : 'secondary'
-})
 
 /**------------------------
  * Data Sharing Switch
@@ -94,6 +107,22 @@ onMounted(() => {
     isDarkMode.value = theme.global.name.value === themes.dark
     dataShareOn.value = store.dataShare
 })
+
+/**------------------------
+ * Language Switch
+ -------------------------*/
+
+const getTitle = (locale: string): string => {
+    return isOfTypeMes(locale) ? LANGUAGE[locale]?.title : 'English'
+}
+
+const getId = (locale: string): string => {
+    return isOfTypeMes(locale) ? LANGUAGE[locale]?.id : 'EN'
+}
+const toggleLang = (lang: string) => {
+    locale.value = lang
+    store.setLang(lang)
+}
 </script>
 
 <style lang="scss" scoped>
