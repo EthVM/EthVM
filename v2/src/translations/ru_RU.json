@@ -31,7 +31,7 @@
         "refresh": "Найдены Новые Txs, Обновить",
         "name": "Транзакция | Транзакции",
         "nameShort": "Tx | Txs",
-        "newNft": "New ERC20 Transfers",
+        "newNft": "New ERC721 Transfers",
         "details": {
             "header": "Сводка Транзакции",
             "txHash": "Хэш Тх",
@@ -55,7 +55,7 @@
                 "gasUsed": "Использованный Газ",
                 "baseFee": "Базовая комиссия",
                 "maxFee": "Макс комиссия за газ",
-                "notFound": "No transaction state difference avaialble",
+                "notFound": "No transaction state difference availаble",
                 "index": "Tx индекс"
             },
             "actions": {
@@ -71,8 +71,8 @@
                 "event": "Операция | Операции",
                 "searchEvents": "Поиск операций",
                 "searchAdrs": "Поиск адресов",
-                "noEvents": "No events found",
-                "noAdrs": "No addresses found",
+                "noEvents": "Еvent not found",
+                "noAdrs": "Address not found",
                 "clear": "Clear All"
             }
         },
@@ -112,7 +112,6 @@
         "txFee": "Tx Fee",
         "txFeePaid": "Tx Fee Paid",
         "txValue": "Tx Value",
-        "paid": "Paid",
         "input": "Input",
         "nonce": "Nonce",
         "fee": "Fee",
