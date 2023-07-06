@@ -206,7 +206,8 @@
             "invalidFile": "File contents are not valid",
             "selectFile": "Select File",
             "dragAndDrop": "Drag and drop your ethVM-adrs-names.json file or click to browse"
-        }
+        },
+        "language": "Language"
     },
     "address": {
         "blockRewards": "Block rewards",

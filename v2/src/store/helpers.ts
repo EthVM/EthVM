@@ -35,3 +35,15 @@ export const PROMOS = {
     ruffle: 'ruffle',
     mewwallet: 'mewallet'
 }
+
+export interface Lang {
+    [key: string]: {
+        title: string
+        id: string
+    }
+}
+
+export const LANGUAGE: Lang = {
+    en_US: { title: 'English', id: 'EN' },
+    ru_RU: { title: 'Русский', id: 'RU' }
+}

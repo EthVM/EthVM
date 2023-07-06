@@ -26,7 +26,6 @@ import { useSetPortfolio } from './core/composables/Portfolio/useSetPortfolioBal
 import { computed, watch, reactive, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { ROUTE_NAME } from '@core/router/routesNames'
-import { useStorage } from '@vueuse/core'
 import { usePreferredColorScheme } from '@vueuse/core'
 import { useTheme } from 'vuetify/lib/framework.mjs'
 import { themes } from './core/plugins/vuetify'
