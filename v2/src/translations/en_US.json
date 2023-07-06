@@ -31,7 +31,7 @@
         "refresh": "New Txs Found, Refresh",
         "name": "Transaction | Transactions",
         "nameShort": "Tx | Txs",
-        "newNft": "New ERC20 Transfers",
+        "newNft": "New ERC721 Transfers",
         "details": {
             "header": "Transaction Summary",
             "txHash": "Tx Hash",
@@ -55,7 +55,7 @@
                 "gasUsed": "Gas Used",
                 "baseFee": "Base fee",
                 "maxFee": "Max fee per gas",
-                "notFound": "No transaction state difference avaialble",
+                "notFound": "No transaction state difference availаble",
                 "index": "Tx Index"
             },
             "actions": {
@@ -71,8 +71,8 @@
                 "event": "Event | Events",
                 "searchEvents": "Search events",
                 "searchAdrs": "Search Addresses",
-                "noEvents": "No events found",
-                "noAdrs": "No addresses found",
+                "noEvents": "Еvent not found",
+                "noAdrs": "Address not found",
                 "clear": "Clear All"
             }
         },
@@ -112,7 +112,6 @@
         "txFee": "Tx Fee",
         "txFeePaid": "Tx Fee Paid",
         "txValue": "Tx Value",
-        "paid": "Paid",
         "input": "Input",
         "nonce": "Nonce",
         "fee": "Fee",
@@ -206,8 +205,7 @@
             "invalidFile": "File contents are not valid",
             "selectFile": "Select File",
             "dragAndDrop": "Drag and drop your ethVM-adrs-names.json file or click to browse"
-        },
-        "language": "Language"
+        }
     },
     "address": {
         "blockRewards": "Block rewards",
@@ -301,7 +299,7 @@
         "gas": "Gas"
     },
     "message": {
-        "txNoactions"  : "There are no actions performed in this transaction",
+        "txNoactions": "There are no actions performed in this transaction",
         "txNoLogs": "There are no logs found in this transaction",
         "adrNoBlockRewards": "This address does not have any block rewards",
         "adrNoUnclerewards": "This address does not have any uncle rewards",
@@ -311,12 +309,12 @@
         "adrNoInternal": "This address does not have any internal transfers"
     },
     "nft": {
-        "items":"items",
+        "items": "items",
         "owner": "owner | owners",
         "ownedBy": "Owned By"
     },
     "market": {
-        "marketCap":"Market Cap",
+        "marketCap": "Market Cap",
         "volume": "Volume",
         "circulatingSupply": "Circulating Supply",
         "24hHigh": "24h High",
@@ -324,7 +322,7 @@
         "totalSupply": "Total Supply",
         "24hTradingVolume": "24h Trading Volume",
         "maxSupply": "Max Supply",
-        "24hChange":  "24h Change",
+        "24hChange": "24h Change",
         "priceChange": "Price Change",
         "totalUsdValue": "Total USD Value"
     }
