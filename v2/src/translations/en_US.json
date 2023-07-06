@@ -31,7 +31,7 @@
         "refresh": "New Txs Found, Refresh",
         "name": "Transaction | Transactions",
         "nameShort": "Tx | Txs",
-        "newNft": "New ERC721 Transfers",
+        "newNft": "New ERC20 Transfers",
         "details": {
             "header": "Transaction Summary",
             "txHash": "Tx Hash",
@@ -55,7 +55,7 @@
                 "gasUsed": "Gas Used",
                 "baseFee": "Base fee",
                 "maxFee": "Max fee per gas",
-                "notFound": "No transaction state difference availаble",
+                "notFound": "No transaction state difference avaialble",
                 "index": "Tx Index"
             },
             "actions": {
@@ -71,8 +71,8 @@
                 "event": "Event | Events",
                 "searchEvents": "Search events",
                 "searchAdrs": "Search Addresses",
-                "noEvents": "Еvent not found",
-                "noAdrs": "Address not found",
+                "noEvents": "No events found",
+                "noAdrs": "No addresses found",
                 "clear": "Clear All"
             }
         },
