@@ -143,7 +143,9 @@ function subscribeToMoreHandler() {
                     }
                 } catch (error) {
                     Sentry.captureException(
-                        `ERROR in subscribeToMoreHandler: ${error}. previousResult : ${previousResult}. subscriptionData: ${subscriptionData}`
+                        `ERROR in subscribeToMoreHandler: ${error}. previousResult : ${JSON.stringify(previousResult)}. subscriptionData: ${JSON.stringify(
+                            subscriptionData
+                        )}`
                     )
                 }
             }
@@ -227,7 +229,7 @@ onBlockArrayLoaded(result => {
             const newBlocks = result.data.getBlocksArrayByNumber
             state.indexedBlocks[pageNum.value] = props.pageType === 'home' ? newBlocks.slice(0, ITEMS_PER_PAGE) : newBlocks
         } catch (error) {
-            Sentry.captureException(`ERROR in onBlockArrayLoaded: ${error}. state.initialLoad : ${state.initialLoad}. result: ${result}`)
+            Sentry.captureException(`ERROR in onBlockArrayLoaded: ${error}. state.initialLoad : ${state.initialLoad}. result: ${JSON.stringify(result)}`)
         }
     }
 })
