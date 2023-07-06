@@ -2,7 +2,9 @@ import { createI18n } from 'vue-i18n'
 
 import en_US from './en_US.json'
 import ru_RU from './ru_RU.json'
-const messages = {
+import { MassagesShema } from './helpers'
+
+const messages: MassagesShema = {
     en_US,
     ru_RU
 }

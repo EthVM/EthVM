@@ -16,7 +16,6 @@
             </v-col>
             <v-col cols="12" class="d-flex align-center justify-space-between mt-5">
                 <p>{{ dataSwitchLabel }}</p>
-                <p>{{ $t('settings.darkModeOn') }}</p>
                 <v-spacer />
                 <v-switch
                     @update:modelValue="toggleData"
@@ -53,6 +52,7 @@ import { useTheme } from 'vuetify'
 import { themes } from '@core/plugins/vuetify'
 import { useI18n } from 'vue-i18n'
 import { LANGUAGE } from '@/store/helpers'
+import { isOfTypeMes } from '@/translations/helpers'
 import AppMenu from '@/core/components/AppMenu.vue'
 const { t, locale } = useI18n()
 
@@ -113,14 +113,15 @@ onMounted(() => {
  -------------------------*/
 
 const getTitle = (locale: string): string => {
-    return LANGUAGE[locale]?.title || 'English'
+    return isOfTypeMes(locale) ? LANGUAGE[locale]?.title : 'English'
 }
 
 const getId = (locale: string): string => {
-    return LANGUAGE[locale]?.id || 'EN'
+    return isOfTypeMes(locale) ? LANGUAGE[locale]?.id : 'EN'
 }
 const toggleLang = (lang: string) => {
     locale.value = lang
+    store.setLang(lang)
 }
 </script>
 

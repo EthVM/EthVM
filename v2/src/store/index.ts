@@ -35,6 +35,7 @@ interface StoreState {
     appTheme: RemovableRef<string>
     currentLargeButtonPromo: string
     dataShare: RemovableRef<boolean>
+    lang: RemovableRef<string>
 }
 
 const getKeySumBN = <T>(map: Record<string, T>, _key: keyof T): BN => {
@@ -70,7 +71,8 @@ export const useStore = defineStore('main', {
         paginationStateMap: new Map(),
         appTheme: useStorage('app-theme', ''),
         currentLargeButtonPromo: PROMOS.enkrypt,
-        dataShare: useStorage('allowDataShare', true)
+        dataShare: useStorage('allowDataShare', true),
+        lang: useStorage('lang', 'en_US')
     }),
     getters: {
         /**
@@ -354,6 +356,9 @@ export const useStore = defineStore('main', {
         },
         setDataShare(_value: boolean) {
             this.dataShare = _value
+        },
+        setLang(_value: string) {
+            this.lang = _value
         }
     }
 })
