@@ -151,7 +151,7 @@
         "tokenName": "Token Name",
         "viewInSettings": "View in Settings",
         "placeholder": {
-            "addAddress": "Введите Хэш Адреса / Имя Домена",
+            "addAddress": "Введите Адрес / Имя Домена",
             "name": "Enter Name"
         }
     },
