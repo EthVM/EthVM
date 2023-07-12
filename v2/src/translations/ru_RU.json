@@ -11,7 +11,7 @@
         },
         "why": {
             "header": "Почему мы создали ethVM?",
-            "body": " We made ethVM so that users, developers, and communities have a beautiful choice when it comes to block explorers. ethVM is open source, which makes it adaptable to any crypto ecosystem. So whether you want a better way to track your contract approvals or a solution for an ambitious new project - this is for you!"
+            "body": " Мы создали ethVM, чтобы у пользователей, разработчиков и сообществ был прекрасный выбор, когда речь заходит об обозревателях блоков. У ethVM открытый исходный код, что позволяет адаптировать его к любой криптоэкосистеме. Нужен ли вам наиболее удобный способ отслеживать подтверждения контрактов, или же полноценное решение для нового амбициозного проекта -- эта платформа для вас!"
         },
         "foot": "Лицензия SSPL, авторское право ©️ 2023 MyEtherWallet Inc. Для ознакомления с Правилами и Условиями посетите наш GitHub."
     },
