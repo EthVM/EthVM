@@ -7,7 +7,7 @@
         "who": {
             "header": "Кто мы?",
             "body": "ethVM создан командой MyEtherWallet!",
-            "body2": "MEW was the first wallet interface in Ethereum and was founded 2 weeks after Ethereum mainnet went live. You can basically call us a crypto OG. Ever since our founding, our mission has been to make products that people love to use."
+            "body2": "MEW был основан всего через 2 недели после запуска основной сети Ethereum, и стал первым кошельком Ethereum доступным для любого пользователя. Нас можно назвать крипто-пионерами. С момента основания, наша миссия заключалась в том, чтобы создавать продукты, которыми люди любят пользоваться."
         },
         "why": {
             "header": "Почему мы создали ethVM?",
@@ -130,8 +130,8 @@
         "name": "Название",
         "validator": "Валидатор",
         "button": {
-            "export": "Экспортировать",
-            "import": "Импортировать"
+            "export": "Экспорт",
+            "import": "Импорт"
         },
         "filter": "Фильтр",
         "save": "Сохранить",
@@ -142,7 +142,7 @@
         "search": "Поиск"
     },
     "portfolio": {
-        "yourPortfolio": "Your portfolio",
+        "yourPortfolio": "Moe Портфолио",
         "addAddressIcon": "Добавить Адрес",
         "editName": "Изменить Название",
         "deleteAdr": "Удалить Адрес",
@@ -199,7 +199,7 @@
             "off": "Обмен Данными Выкл"
         },
         "import": {
-            "name": "Import Names",
+            "name": "Импортировать названия адресов",
             "portfolio": "Импорт Портфолио",
             "all": "Импорт Настроек",
             "invalidFile": "Содержимое файла не является допустимым",
