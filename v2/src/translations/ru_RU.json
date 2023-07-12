@@ -148,7 +148,7 @@
         "deleteAdr": "Удалить Адрес",
         "limit": "В портфолио можно хранить не более 10 адресов",
         "errorDuplicateName": "Это название уже используется",
-        "tokenName": "Token Name",
+        "tokenName": "Название Токена",
         "viewInSettings": "Показать в Настройках",
         "placeholder": {
             "addAddress": "Введите Адрес / Имя Домена",
