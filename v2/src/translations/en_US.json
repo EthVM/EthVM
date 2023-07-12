@@ -189,7 +189,7 @@
             "addressName": "Address Names"
         },
         "placeholder": {
-            "search": "Search by hash or name"
+            "search": "Search by address or name"
         },
         "tagline": {
             "addressName": "Add custom names to addresses in order to easily track them through ethVM"
