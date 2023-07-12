@@ -23,7 +23,7 @@
         "header": "Все транзакции",
         "incoming": "Входящие",
         "outcoming": "Исходящие",
-        "balanceChange": "Изменение баланса",
+        "balanceChange": "Изменение Баланса",
         "balanceBefore": "Баланс До",
         "balanceAfter": "Баланс После",
         "estimatedFee": "Примерная Kомиссия",
@@ -31,12 +31,12 @@
         "refresh": "Найдены Новые Txs, Обновить",
         "name": "Транзакция | Транзакции",
         "nameShort": "Tx | Txs",
-        "newNft": "Новые переводы ERC721",
+        "newNft": "Новые Переводы ERC721",
         "details": {
             "header": "Сводка Транзакции",
             "txHash": "Хэш Тх",
             "createdContract": "Создал Контракт",
-            "interactedWith": "Взаимодействовал с контрактом",
+            "interactedWith": "Взаимодействовал с Контрактом",
             "title": {
                 "successful": "Успешная",
                 "failed": "Неудачная",
@@ -44,42 +44,42 @@
                 "pending": "В обработке"
             },
             "state": {
-                "header": "State",
+                "header": "Балансы",
                 "before": "До",
                 "after": "После",
-                "notFound": "No transaction state difference avaialble",
-                "difference": "State Difference"
+                "notFound": "Нет доступной разницы в балансах",
+                "difference": "Разница в Балансах"
             },
             "other": {
                 "header": "Другое",
                 "gasUsed": "Использованный Газ",
-                "baseFee": "Базовая комиссия",
-                "maxFee": "Макс комиссия за газ",
-                "notFound": "No transaction state difference availаble",
-                "index": "Tx индекс"
+                "baseFee": "Базовая Комиссия",
+                "maxFee": "Макс Комиссия за Газ",
+                "notFound": "Нет доступной разницы в балансах транзакций",
+                "index": "Tx Индекс"
             },
             "actions": {
                 "header": "Действия",
                 "tokenTransfers": "Переводы Токенов",
-                "nftTransfers": "NFT Transfers"
+                "nftTransfers": "Переводы NFT"
             },
             "logs": {
                 "header": "Логи",
-                "decoded": "Decoded",
-                "data": "Необработанные данные",
+                "decoded": "Раскодированные",
+                "data": "Необработанные Данные",
                 "signature": "Подпись",
                 "event": "Операция | Операции",
                 "searchEvents": "Поиск операций",
                 "searchAdrs": "Поиск адресов",
-                "noEvents": "Еvent not found",
-                "noAdrs": "Address not found",
-                "clear": "Clear All"
+                "noEvents": "Операций не найдено",
+                "noAdrs": "Адрес не найден",
+                "clear": "Очистить Все"
             }
         },
         "status": {
             "sent": "Отправлено",
             "failSend": "Не удалось отправить",
-            "selfSent": "Self Sent",
+            "selfSent": "Tx Себе",
             "recieve": "Получено",
             "failRecieve": "Не удалось получить"
         },
@@ -87,55 +87,55 @@
             "genesis": "genesis награда",
             "internal": "внутренний",
             "dao": "dao hard fork",
-            "withdrawal": "withdrawal"
+            "withdrawal": "вывод"
         }
     },
     "common": {
         "add": "добавить",
-        "all": "All",
+        "all": "Все",
         "id": "Id",
-        "block": "Block | Blocks",
-        "details": "Details",
-        "blockMined": "Block Mined",
-        "confirmations": "Confirmations",
-        "copy": "copy | copies",
-        "timestamp": "Timestamp",
-        "hash": "Hash",
-        "parentHash": "Parent Hash",
-        "history": "History",
-        "from": "From",
-        "to": "To",
-        "type": "Type",
-        "amount": "Amount",
-        "gasLimit": "Gas limit",
-        "gasPrice": "Gas Price",
+        "block": "Блок | Блоки",
+        "details": "Детали",
+        "blockMined": "Записано в Блок",
+        "confirmations": "Подтверждений",
+        "copy": "копия | копии",
+        "timestamp": "Время",
+        "hash": "Хэш",
+        "parentHash": "Родительский Хэш",
+        "history": "История",
+        "from": "От",
+        "to": "Кому",
+        "type": "Тип",
+        "amount": "Сумма",
+        "gasLimit": "Лимит Газа",
+        "gasPrice": "Цена Газа",
         "txFee": "Комиссия",
         "txFeePaid": "Опл. Комиссия",
-        "txValue": "Tx Value",
-        "input": "Input",
-        "nonce": "Nonce",
+        "txValue": "Tx Значение",
+        "input": "Input Данные",
+        "nonce": "Nonce-Число",
         "fee": "Комиссия",
-        "status": "Status",
+        "status": "Статус",
         "symbol": "Символ",
         "address": "Адрес | Адреса",
         "total": "Всего",
-        "transfer": "Transfers",
-        "balance": "Balance | Balances",
-        "value": "Value",
+        "transfer": "Переводы",
+        "balance": "Баланс | Балансы",
+        "value": "Значение",
         "token": "Токен | Токены",
-        "price": "Price",
-        "more": "More",
+        "price": "Цена",
+        "more": "Еще",
         "24h": "24ч",
-        "usdValue": "USD Value",
-        "name": "Name",
+        "usdValue": "Стоимость в USD",
+        "name": "Название",
         "validator": "Валидатор",
         "button": {
-            "export": "Export",
-            "import": "Import"
+            "export": "Экспортировать",
+            "import": "Импортировать"
         },
         "filter": "Фильтр",
         "save": "Сохранить",
-        "overview": "Overview",
+        "overview": "Обзор",
         "nft": "NFT | NFTS",
         "reward": "Наградa | Награды",
         "height": "Высота",
@@ -143,125 +143,125 @@
     },
     "portfolio": {
         "yourPortfolio": "Your portfolio",
-        "addAddressIcon": "Add Address",
-        "editName": "Edit name",
-        "deleteAdr": "Удалить адрес",
+        "addAddressIcon": "Добавить Адрес",
+        "editName": "Изменить Название",
+        "deleteAdr": "Удалить Адрес",
         "limit": "В портфолио можно хранить не более 10 адресов",
-        "errorDuplicateName": "Это имя уже используется",
+        "errorDuplicateName": "Это название уже используется",
         "tokenName": "Token Name",
-        "viewInSettings": "Показать в настройках",
+        "viewInSettings": "Показать в Настройках",
         "placeholder": {
             "addAddress": "Введите Адрес / Имя Домена",
-            "name": "Введите Имя"
+            "name": "Введите Название"
         }
     },
     "uncle": {
         "number": "Uncle-Блок №",
-        "included": "Included in block",
+        "included": "Записан в Блок",
         "error": "Это неверный хэш Uncle-Блока",
-        "errorExist": "Этот Uncle-блок не существует.",
+        "errorExist": "Этот Uncle-Блок не существует.",
         "position": "Позиция"
     },
     "token": {
         "contract": "Контракт",
-        "tokenStandard": "Стандарт токена",
-        "decimals": "Decimals",
-        "collection": "Collection | Collections",
+        "tokenStandard": "Стандарт Токена",
+        "decimals": "Десятичные Знаки",
+        "collection": "Коллекция | Коллекции",
         "id": "ID",
-        "percentage": "Percentage",
-        "image": "Image",
-        "quantity": "Quantity",
-        "noHolder": "There are no holders for this token",
-        "noTransfers": "No transfers available",
-        "searchTokenName": "Search token name",
-        "searchTokens": "Search tokens",
-        "addToken": "Add Token",
-        "noMatch": "We could not find anything mathching",
-        "holder": "Holder | Holders",
-        "favorites": "Favorites"
+        "percentage": "Процент",
+        "image": "Изображение",
+        "quantity": "Количество",
+        "noHolder": "Нет владельцев этого токена",
+        "noTransfers": "Нет доступных переводов",
+        "searchTokenName": "Поиск по названию токена",
+        "searchTokens": "Поиск токенов",
+        "addToken": "Добавить Tокен",
+        "noMatch": "Не удалось ничего найти",
+        "holder": "Владелец | Владельцы",
+        "favorites": "Избранные"
     },
     "settings": {
-        "emptyList": "This list is empty",
-        "darkModeOn": "Dark Mode On",
-        "darkModeOff": "Dark Mode Off",
+        "emptyList": "Список пуст",
+        "darkModeOn": "Тёмный Режим Вкл",
+        "darkModeOff": "Тёмный Режим Выкл",
         "header": {
-            "general": "General Settings",
-            "addressName": "Address Names"
+            "general": "Общие Настройки",
+            "addressName": "Названия Адресов"
         },
         "placeholder": {
-            "search": "Search by hash or name"
+            "search": "Поиск по адресу или названию"
         },
         "tagline": {
-            "addressName": "Add custom names to addresses in order to easily track them through ethVM"
+            "addressName": "Добавляйте собственные названия к адресам, чтобы легко отслеживать их в ethVM"
         },
         "data-share": {
-            "on": "Data Sharing On",
-            "off": "Data Sharing Off"
+            "on": "Обмен Данными Вкл",
+            "off": "Обмен Данными Выкл"
         },
         "import": {
             "name": "Import Names",
-            "portfolio": "Import Portfolio",
-            "all": "Import All Settings",
-            "invalidFile": "File contents are not valid",
-            "selectFile": "Select File",
+            "portfolio": "Импорт Портфолио",
+            "all": "Импорт Настроек",
+            "invalidFile": "Содержимое файла не является допустимым",
+            "selectFile": "Выбрать Файл",
             "dragAndDrop": "Перетащите файл ethVM-adrs-names.json или нажмите кнопку Выбрать Файл"
         },
         "language": "Язык"
     },
     "address": {
-        "blockRewards": "Награды за блок",
+        "blockRewards": "Награды за Блок",
         "uncleRewards": "Награды за Uncle-Блок",
         "tagline": {
-            "noToken": "This address does not hold any tokens",
-            "noTransactionHistory": "This address does not have any token transfer history",
-            "noNFT": "This address does not have any NFTs",
-            "noNFTTransfer": "This address does not have any NFT transfer history",
+            "noToken": "Этот адрес не держит токены",
+            "noTransactionHistory": "Этот адрес не имеет истории переводов токенов",
+            "noNFT": "Этот адрес не держит NFTs",
+            "noNFTTransfer": "Этот адрес не имеет истории переводов NFT",
             "noPendingTransactions": "Этот адрес не имеет ожидающих транзакций",
-            "noStakeWithdrawals": "This address does not have any stake withdrawals",
-            "noTransfer": "This address does not have any transfers"
+            "noStakeWithdrawals": "Этот адрес не имеет выводов ставок",
+            "noTransfer": "Этот адрес не имеет истории переводов"
         }
     },
     "block": {
-        "lastBlockTitle": "Last Blocks",
+        "lastBlockTitle": "Последние Блоки",
         "size": "Размер",
-        "totalDifficulty": "Total Difficulty",
+        "totalDifficulty": "Общая Сложность",
         "baseFee": "Базовая Комиссия за Газ",
         "blockReward": "Награда за Блок",
         "uncleReward": "Наградa за Uncle-Блок",
         "totalTxs": "Всего Txs",
-        "uncle": "Uncle | Uncles",
-        "difficulty": "Difficulty",
-        "stateRoot": "State Root",
-        "receiptRoot": "Receipts Root",
-        "transactionRoot": "Transactions Root",
-        "logBloom": "Logs Bloom",
-        "extraData": "Extra Data",
-        "addressBlockTitle": "Mined Blocks",
+        "uncle": "Uncle-Блок | Uncle-Блоки",
+        "difficulty": "Сложность",
+        "stateRoot": "Корень Состояния",
+        "receiptRoot": "Корень Отчётов",
+        "transactionRoot": "Корень Транзакций",
+        "logBloom": "Логи Bloom",
+        "extraData": "Доп. Данные",
+        "addressBlockTitle": "Подтвержденные Блоки",
         "allBlockTitle": "Все Блоки",
         "topTokenTitle": "Топ Токены",
         "favoriteTokenTitle": "Избранные Токены",
-        "marketTokenTitle": "Рынок токенов",
-        "totalAddress": "Всего адресов",
-        "tokenBalance": "Token Balance",
-        "tokenHistory": "Token History",
-        "tokenTotal": "total tokens",
-        "tokenBalanceRefresh": "Token's Balance Changed, Refresh",
-        "newTransfer": "Новые переводы ERC20",
+        "marketTokenTitle": "Рынок Токенов",
+        "totalAddress": "Всего Адресов",
+        "tokenBalance": "Баланс Токенов",
+        "tokenHistory": "История Токенов",
+        "tokenTotal": "всего токенов",
+        "tokenBalanceRefresh": "Баланс Tокенов Изменен, Обновить",
+        "newTransfer": "Новые Переводы ERC20",
         "nftTotal": "Всего NFT",
         "nftCollection": "NFT Коллекция",
-        "unknown": "Unknown",
-        "portfolioEmpty": "Your portfolio is empty",
-        "portfolioValue": "Portfolio Value",
-        "stakeWithdrawals": "Вывод ставок",
+        "unknown": "Неизвестный",
+        "portfolioEmpty": "Ваше портфолио пусто",
+        "portfolioValue": "Общая Стоимость Портфеля",
+        "stakeWithdrawals": "Вывод Ставок",
         "header": {
             "blockNumber": "Блок №",
-            "watchList": "Watchlist",
-            "miner": "Miner"
+            "watchList": "Мои Адреса",
+            "miner": "Майнер"
         },
         "error": {
-            "withdrawal": "This block does not have any withdrawals",
-            "notMined": "This block has not been mined yet",
-            "txs": "This block does not have any transactions"
+            "withdrawal": "В этом блоке нет выводов ставок",
+            "notMined": "Этот блок еще не подтвержден",
+            "txs": "Этот блок не имеет транзакций"
         },
         "totalRewards": "Общее Вознаграждение",
         "txFee": "Комиссия за транзакцию",
@@ -269,15 +269,15 @@
     },
     "home": {
         "tagline": {
-            "row1": "Track, analyze and explore",
-            "row2": "on the Ethereum blockchain.",
-            "row3": "on the Sepolia Testnet."
+            "row1": "Отслеживайте, анализируйте и исследуйте",
+            "row2": "блокчейн Ethereum.",
+            "row3": "тестовую сеть Sepolia."
         },
         "footer": {
-            "discover": "Discover",
+            "discover": "Узнать",
             "about": "О Нас",
-            "policy": "Политика конфиденциальности",
-            "help": "Центр поддержки",
+            "policy": "Политика Конфиденциальности",
+            "help": "Центр Поддержки",
             "love": "Нравится ethVM?",
             "free": "Мы хотим, чтобы ethVM оставался бесплатным и его исходный код оставался открытым. Ваши пожертвования помогут сделать это возможным.",
             "eDonate": "Поддержка в Ether",
@@ -290,8 +290,8 @@
         }
     },
     "stats": {
-        "lastUpdate": "Последнее обновление",
-        "lastBlock": "Последний блок"
+        "lastUpdate": "Последнее Обновление",
+        "lastBlock": "Последний Блок"
     },
     "coreMenu": {
         "home": "Главная",
@@ -303,28 +303,28 @@
         "txNoactions": "В этой транзакции нет действий",
         "txNoLogs": "В этой транзакции нет логов",
         "adrNoBlockRewards": "Этот адрес не имеет наград за блоки",
-        "adrNoUnclerewards": "Этот адрес не имеет наград за Uncle-блоки",
-        "adrNoOutgoing": "This address does not have any outgoing transactions",
-        "adrNoIncoming": "This address does not have any incoming transactions",
-        "adrNoTxs": "This address does not have any transactions",
-        "adrNoInternal": "This address does not have any internal transfers"
+        "adrNoUnclerewards": "Этот адрес не имеет наград за Uncle-Блоки",
+        "adrNoOutgoing": "Этот адрес не имеет исходящих транзакций",
+        "adrNoIncoming": "Этот адрес не имеет входящих транзакций",
+        "adrNoTxs": "Этот адрес не имеет транзакций",
+        "adrNoInternal": "Этот адрес не имеет внутренних переводов"
     },
     "nft": {
         "items": "предметов",
         "owner": "владелец | владельцы",
-        "ownedBy": "Owned By"
+        "ownedBy": "Владелец"
     },
     "market": {
-        "marketCap": "Market Cap",
-        "volume": "Volume",
-        "circulatingSupply": "Circulating Supply",
-        "24hHigh": "24h High",
-        "24hLow": "24h Low",
+        "marketCap": "Рыночная Капитализация",
+        "volume": "Объём",
+        "circulatingSupply": "Циркулирующее Предложение",
+        "24hHigh": "24ч Максимум",
+        "24hLow": "24ч Минимум",
         "totalSupply": "Общее Предложение",
-        "24hTradingVolume": "24ч Торговый объем",
+        "24hTradingVolume": "24ч Торговый Объем",
         "maxSupply": "Макс Предложение",
         "24hChange": "Изменение за 24ч",
-        "priceChange": "Изменение цены",
+        "priceChange": "Изменение Цены",
         "totalUsdValue": "Общая стоимость в USD"
     }
 }
