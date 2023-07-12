@@ -31,7 +31,7 @@
                             <address-balance-totals
                                 :title="$t('block.tokenBalance')"
                                 :is-loading="!store.portfolioTokensIsLoaded()"
-                                :subtext="`${tokensCount} ${$t('block.tokenTotal')}`"
+                                :subtext="tokenCountSubtext"
                                 :balance="tokenBalanceFiat.value"
                                 :balance-tooltip="tokenBalanceFiat.tooltipText"
                             />
@@ -46,7 +46,7 @@
                 <address-balance-totals
                     :title="$t('block.tokenBalance')"
                     :is-loading="!store.portfolioTokensIsLoaded()"
-                    :subtext="`${tokensCount} total tokens`"
+                    :subtext="tokenCountSubtext"
                     :balance="tokenBalanceFiat.value"
                     :balance-tooltip="tokenBalanceFiat.tooltipText"
                 />
@@ -183,6 +183,10 @@ const tokenIcons = computed<string[]>(() => {
             .filter(i => i !== '')
     }
     return []
+})
+
+const tokenCountSubtext = computed<string>(() => {
+    return store.portfolioTokensRaw().length === 1 ? t('token.tokenTotal') : t('token.tokenTotal', { n: store.portfolioTokensRaw().length })
 })
 </script>
 <style lang="scss">

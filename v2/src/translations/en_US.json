@@ -37,7 +37,7 @@
             "txHash": "Tx Hash",
             "createdContract": "Created Contract",
             "interactedWith": "Interacted With Contract",
-            "title": {
+            "status": {
                 "successful": "Successful",
                 "failed": "Failed",
                 "replaced": "Replaced",
@@ -153,7 +153,11 @@
         "placeholder": {
             "addAddress": "Enter Address / Domain Name",
             "name": "Enter Name"
-        }
+        },
+        "nameAdded" : "{name} has been added to your portfolio",
+        "viewTokens": "View tokens",
+        "noTokens": "This portfolio does not have any tokens", 
+        "addressNoTokens": "Selected addresses do not own this token"
     },
     "uncle": {
         "number": "Uncle #",
@@ -178,7 +182,8 @@
         "addToken": "Add Token",
         "noMatch": "We could not find anything mathching",
         "holder": "Holder | Holders",
-        "favorites": "Favorites"
+        "favorites": "Favorites",
+        "tokenTotal": "total 1 tokens | total {n} tokens"
     },
     "settings": {
         "emptyList": "This list is empty",
@@ -206,7 +211,10 @@
             "selectFile": "Select File",
             "dragAndDrop": "Drag and drop your ethVM-adrs-names.json file or click to browse"
         },
-        "language": "Language"
+        "language": "Language",
+        "viewInPortfolio": "View in Portfolio",
+        "delete": "Delete"
+
     },
     "address": {
         "blockRewards": "Block rewards",
@@ -244,7 +252,6 @@
         "totalAddress": "Total Addresses",
         "tokenBalance": "Token Balance",
         "tokenHistory": "Token History",
-        "tokenTotal": "total tokens",
         "tokenBalanceRefresh": "Token's Balance Changed, Refresh",
         "newTransfer": "New ERC20 Transfers",
         "nftTotal": "Total NFT's",
@@ -265,7 +272,8 @@
         },
         "totalRewards": "Total Rewards",
         "txFee": "Transaction fees",
-        "uncleSha": "Uncles SHA3"
+        "uncleSha": "Uncles SHA3",
+        "newBlock": "1 new block | {count} new blocks" 
     },
     "home": {
         "tagline": {
@@ -287,7 +295,8 @@
             "rights": "All rights reserved.",
             "settings": "Settings",
             "advertise": "Advertise with us"
-        }
+        },
+        "search": "Search by address/transaction/token"
     },
     "stats": {
         "lastUpdate": "Last update",

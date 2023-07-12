@@ -37,7 +37,7 @@
             "txHash": "Хэш Тх",
             "createdContract": "Создал Контракт",
             "interactedWith": "Взаимодействовал с Контрактом",
-            "title": {
+            "status": {
                 "successful": "Успешная",
                 "failed": "Неудачная",
                 "replaced": "Заменена",
@@ -153,7 +153,11 @@
         "placeholder": {
             "addAddress": "Введите Адрес / Имя Домена",
             "name": "Введите Название"
-        }
+        },
+        "nameAdded" : "{name} добавленно в ваше портфолио",
+        "viewTokens": "Показать Токены",
+        "noTokens": "В этом портфолио нет токенoв", 
+        "addressNoTokens": "Выбранные адреса не владеют этим токеном"
     },
     "uncle": {
         "number": "Uncle-Блок №",
@@ -178,7 +182,8 @@
         "addToken": "Добавить Tокен",
         "noMatch": "Не удалось ничего найти",
         "holder": "Владелец | Владельцы",
-        "favorites": "Избранные"
+        "favorites": "Избранные",
+        "tokenTotal": "всего 1 токен | всего {n} токенoв"
     },
     "settings": {
         "emptyList": "Список пуст",
@@ -206,7 +211,9 @@
             "selectFile": "Выбрать Файл",
             "dragAndDrop": "Перетащите файл ethVM-adrs-names.json или нажмите кнопку Выбрать Файл"
         },
-        "language": "Язык"
+        "language": "Язык",
+        "viewInPortfolio": "Показать в Портфолио",
+        "delete": "Удалить"
     },
     "address": {
         "blockRewards": "Награды за Блок",
@@ -244,14 +251,13 @@
         "totalAddress": "Всего Адресов",
         "tokenBalance": "Баланс Токенов",
         "tokenHistory": "История Токенов",
-        "tokenTotal": "всего токенов",
         "tokenBalanceRefresh": "Баланс Tокенов Изменен, Обновить",
         "newTransfer": "Новые Переводы ERC20",
         "nftTotal": "Всего NFT",
         "nftCollection": "NFT Коллекция",
         "unknown": "Неизвестный",
         "portfolioEmpty": "Ваше портфолио пусто",
-        "portfolioValue": "Общая Стоимость Портфеля",
+        "portfolioValue": "Общая Стоимость Портфoлио",
         "stakeWithdrawals": "Вывод Ставок",
         "header": {
             "blockNumber": "Блок №",
@@ -265,12 +271,13 @@
         },
         "totalRewards": "Общее Вознаграждение",
         "txFee": "Комиссия за транзакцию",
-        "uncleSha": "Uncle-Блок SHA3"
+        "uncleSha": "Uncle-Блок SHA3",
+        "newBlock": "новый блок | новых блока" 
     },
     "home": {
         "tagline": {
-            "row1": "Отслеживайте, анализируйте и исследуйте",
-            "row2": "блокчейн Ethereum.",
+            "row1": "Отслеживайте, анализируйте и ",
+            "row2": "исследуйте блокчейн Ethereum.",
             "row3": "тестовую сеть Sepolia."
         },
         "footer": {
@@ -287,7 +294,8 @@
             "rights": "Все права защищены.",
             "settings": "Настройки",
             "advertise": "Рекламируйте у нас"
-        }
+        },
+        "search": "Поиск адреса/транзакции/токена"
     },
     "stats": {
         "lastUpdate": "Последнее Обновление",

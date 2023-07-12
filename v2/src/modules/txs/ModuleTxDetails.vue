@@ -12,14 +12,14 @@
                             <div v-else>
                                 <app-chip :bg="titleBg" rounded="xl" text="" class="">
                                     <p>
-                                        {{ titleStatus }}
+                                        {{ titleStatusString }}
                                         <span>
                                             <v-progress-circular
                                                 v-if="txStatus === TxStatus.pending"
                                                 indeterminate
                                                 color="white"
                                                 size="15"
-                                                width="3"
+                                                width="2"
                                                 class="ml-2"
                                             />
                                         </span>
@@ -307,6 +307,18 @@ const titleStatus = computed<TitleStatus>(() => {
     }
     return TitleStatus.replaced
 })
+const titleStatusString = computed<string>(() => {
+    switch (titleStatus.value) {
+        case TitleStatus.success:
+            return t('txs.details.status.successful')
+        case TitleStatus.failed:
+            return t('txs.details.status.failed')
+        case TitleStatus.pending:
+            return t('txs.details.status.pending')
+        default:
+            return t('txs.details.status.replaced')
+    }
+})
 
 const titleBg = computed<string>(() => {
     switch (titleStatus.value) {
@@ -314,8 +326,10 @@ const titleBg = computed<string>(() => {
             return 'success'
         case TitleStatus.failed:
             return 'error'
+        case TitleStatus.pending:
+            return 'purple'
         default:
-            return 'warning'
+            return 'info'
     }
 })
 

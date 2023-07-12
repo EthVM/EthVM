@@ -4,7 +4,7 @@
             <h1 :class="[isHomePage ? 'text-h6' : 'text-h4 ', 'font-weight-bold']">
                 {{ title }}
             </h1>
-            <app-btn v-if="isHomePage && !xs" text="More" isSmall icon="east" @click="goToTokens"></app-btn>
+            <app-btn v-if="isHomePage && !xs" :text="$t('common.more')" isSmall icon="east" @click="goToTokens"></app-btn>
             <app-btn-icon v-else-if="isHomePage && xs" icon="east" @click="goToTokens"></app-btn-icon>
         </v-card-title>
         <app-tabs

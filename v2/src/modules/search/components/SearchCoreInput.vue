@@ -6,7 +6,7 @@
                 color="secondary"
                 :density="xs ? 'compact' : 'comfortable'"
                 variant="solo"
-                :placeholder="xs ? 'Search' : 'Search by address/transaction/token'"
+                :placeholder="xs ? $t('common.search') : $t('home.search')"
                 hide-details
                 clearable
                 max-width="380"

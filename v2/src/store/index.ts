@@ -5,6 +5,7 @@ import { GetLatestPricesQuery } from '@core/composables/CoinData/getLatestPrices
 import { useStorage, RemovableRef } from '@vueuse/core'
 import { TokenOwnersFragment } from '@module/address/apollo/AddressTokens/tokens.generated'
 import { NotificationType, NotificationDeleteAddress, Notification, MAX_PORTFOLIO_ITEMS, PortfolioItem, PROMOS } from './helpers'
+import { i18nGlobal } from '@/translations/index'
 
 interface PortfolioEthBalanceMap {
     [key: string]: {
@@ -257,7 +258,7 @@ export const useStore = defineStore('main', {
                     if (notify) {
                         this.addNotification({
                             _type: NotificationType.PLAIN,
-                            text: `${_name} has been added to your portfolio`
+                            text: `${i18nGlobal.t('portfolio.nameAdded', { name: _name })}`
                         })
                     }
                 }
