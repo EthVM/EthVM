@@ -80,8 +80,8 @@
             "sent": "Sent",
             "failSend": "Fail Send",
             "selfSent": "Self Sent",
-            "recieve": "Recieved",
-            "failRecieve": "Fail Recieve"
+            "recieve": "Received",
+            "failRecieve": "Fail Receive"
         },
         "type": {
             "genesis": "genesis reward",
@@ -151,7 +151,7 @@
         "tokenName": "Token Name",
         "viewInSettings": "View in Settings",
         "placeholder": {
-            "addAddress": "Enter Address Hash / Domain Name",
+            "addAddress": "Enter Address / Domain Name",
             "name": "Enter Name"
         }
     },
@@ -189,7 +189,7 @@
             "addressName": "Address Names"
         },
         "placeholder": {
-            "search": "Search by hash or name"
+            "search": "Search by address or name"
         },
         "tagline": {
             "addressName": "Add custom names to addresses in order to easily track them through ethVM"
@@ -199,7 +199,7 @@
             "off": "Data Sharing Off"
         },
         "import": {
-            "name": "Import Names",
+            "name": "Import Address Names",
             "portfolio": "Import Portfolio",
             "all": "Import All Settings",
             "invalidFile": "File contents are not valid",
