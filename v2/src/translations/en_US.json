@@ -199,7 +199,7 @@
             "off": "Data Sharing Off"
         },
         "import": {
-            "name": "Import Names",
+            "name": "Import Address Names",
             "portfolio": "Import Portfolio",
             "all": "Import All Settings",
             "invalidFile": "File contents are not valid",
