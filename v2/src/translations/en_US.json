@@ -25,6 +25,7 @@
         "outcoming": "Outgoing",
         "balanceChange": "Balance Change",
         "balanceBefore": "Balance Before",
+        "totalBalanceChange": "Total Balance Change",
         "balanceAfter": "Balance After",
         "estimatedFee": "Estimated Fee",
         "isHomeHeader": "Last Transactions",
@@ -32,6 +33,10 @@
         "name": "Transaction | Transactions",
         "nameShort": "Tx | Txs",
         "newNft": "New ERC721 Transfers",
+        "internal": "Internal Transfer",
+        "value": "Transaction Value",
+        "internalValue":"Internal Transfer Value",
+        "viewTx": "View Transaction",
         "details": {
             "header": "Transaction Summary",
             "txHash": "Tx Hash",
@@ -81,7 +86,8 @@
             "failSend": "Fail Send",
             "selfSent": "Self Sent",
             "recieve": "Received",
-            "failRecieve": "Fail Receive"
+            "failRecieve": "Fail Receive",
+            "self": "self"
         },
         "type": {
             "genesis": "genesis reward",
@@ -227,7 +233,8 @@
             "noPendingTransactions": "This address does not have pending transactions",
             "noStakeWithdrawals": "This address does not have any stake withdrawals",
             "noTransfer": "This address does not have any transfers"
-        }
+        },
+        "balanceChangeBreakdown": "Balance Change Breakdown"
     },
     "block": {
         "lastBlockTitle": "Last Blocks",

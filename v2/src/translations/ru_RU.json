@@ -26,12 +26,17 @@
         "balanceChange": "Изменение Баланса",
         "balanceBefore": "Баланс До",
         "balanceAfter": "Баланс После",
+        "totalBalanceChange": "Oбщее Изменениe Баланса",
         "estimatedFee": "Примерная Kомиссия",
         "isHomeHeader": "Последние Транзакции",
         "refresh": "Найдены Новые Txs, Обновить",
         "name": "Транзакция | Транзакции",
         "nameShort": "Tx | Txs",
         "newNft": "Новые Переводы ERC721",
+        "internal": "Внутренний Перевод",
+        "value": "Значение Транзакции",
+        "internalValue":" Значение Внутреннeго Переводa",
+        "viewTx": "Показать Транзакцию",
         "details": {
             "header": "Сводка Транзакции",
             "txHash": "Хэш Тх",
@@ -81,7 +86,8 @@
             "failSend": "Не удалось отправить",
             "selfSent": "Tx Себе",
             "recieve": "Получено",
-            "failRecieve": "Не удалось получить"
+            "failRecieve": "Не удалось получить",
+            "self": "себе"
         },
         "type": {
             "genesis": "genesis награда",
@@ -226,7 +232,8 @@
             "noPendingTransactions": "Этот адрес не имеет ожидающих транзакций",
             "noStakeWithdrawals": "Этот адрес не имеет выводов ставок",
             "noTransfer": "Этот адрес не имеет истории переводов"
-        }
+        },
+        "balanceChangeBreakdown": "Изменения Баланса"
     },
     "block": {
         "lastBlockTitle": "Последние Блоки",

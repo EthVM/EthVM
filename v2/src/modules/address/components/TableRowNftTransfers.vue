@@ -81,14 +81,14 @@
                     </v-row>
                     <v-row class="ma-0 justify-space-between pb-5">
                         <div>
-                            <p class="text-info mb-2">From</p>
+                            <p class="text-info mb-2">{{ $t('common.address') }}</p>
                             <div class="d-flex">
                                 <app-address-blockie :address="transferTypeAddress || ''" :size="6" class="mr-2" />
                                 <app-transform-hash is-blue is-short :hash="eth.toCheckSum(transferTypeAddress)" :link="`/address/${transferTypeAddress}`" />
                             </div>
                         </div>
                         <div>
-                            <p class="text-info mb-2">Hash</p>
+                            <p class="text-info mb-2">{{ $t('common.hash') }}</p>
                             <app-transform-hash
                                 is-blue
                                 is-short

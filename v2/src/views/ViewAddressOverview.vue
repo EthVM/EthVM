@@ -28,7 +28,7 @@
             <v-card class="pa-4 pa-sm-6" elevation="1" rounded="xl">
                 <v-card-title class="d-flex justify-space-between align-center pa-0 mb-5">
                     <div>
-                        <span class="text-h6 font-weight-bold">{{ currencyName }} History</span>
+                        <span class="text-h6 font-weight-bold">{{ currencyName }} {{ $t('common.history') }}</span>
                     </div>
                     <app-btn v-if="!xs" :text="$t('common.more')" isSmall icon="east" @click="goToEthPage"></app-btn>
                     <app-btn-icon v-if="xs" icon="east" @click="goToEthPage"></app-btn-icon>
