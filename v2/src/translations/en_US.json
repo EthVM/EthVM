@@ -163,7 +163,8 @@
         "nameAdded" : "{name} has been added to your portfolio",
         "viewTokens": "View tokens",
         "noTokens": "This portfolio does not have any tokens", 
-        "addressNoTokens": "Selected addresses do not own this token"
+        "addressNoTokens": "Selected addresses do not own this token",
+        "sort": "sort"
     },
     "uncle": {
         "number": "Uncle #",
@@ -332,6 +333,7 @@
     },
     "market": {
         "marketCap": "Market Cap",
+        "marketCapShort": "Market Cap",
         "volume": "Volume",
         "circulatingSupply": "Circulating Supply",
         "24hHigh": "24h High",

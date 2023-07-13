@@ -14,7 +14,7 @@
                 v-if="imagePreview === require('@/assets/icon-nft.png') && displayNoImageMes"
                 class="no-image text-uppercase text-caption text-center py-2 justify-end"
             >
-                image not available
+                {{ $t('message.imageNotAvailable') }}
             </div>
             <div v-if="balance" class="nft-balance text-caption text-center px-3 py-2 rounded-pill elevation-4">{{ balance }}</div>
         </v-img>
