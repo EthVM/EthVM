@@ -11,6 +11,7 @@
             </v-container>
             <the-notifications />
         </v-main>
+        <the-promo />
         <the-app-footer />
     </v-app>
 </template>
@@ -20,6 +21,7 @@ import TheAppHeader from './core/components/TheAppHeader.vue'
 import TheAppFooter from '@core/components/TheAppFooter.vue'
 import TheAppNavigationDrawerVue from './core/components/TheAppNavigationDrawer.vue'
 import TheNotifications from './core/components/TheNotifications.vue'
+import ThePromo from '@core/components/ThePromo.vue'
 import { useStore } from '@/store'
 import { useGetLatestPricesQuery } from '@core/composables/CoinData/getLatestPrices.generated'
 import { useSetPortfolio } from './core/composables/Portfolio/useSetPortfolioBalance'
@@ -191,6 +193,12 @@ onMounted(() => {
     }
     if (localStorage.getItem('favToksData')) {
         localStorage.removeItem('favToksData')
+    }
+    //Check Survey and hide after aug 18th:
+    const _now = Date.now()
+    const _end = 1692403200000
+    if (_now > _end) {
+        store.setPopup(false)
     }
 })
 </script>
