@@ -118,7 +118,7 @@ const txValue = computed<FormattedNumber>(() => {
 
 const timestamp = computed<string>(() => {
     const date = props.tx?.timestamp ? new Date(props.tx?.timestamp * 1e3) : new Date()
-    return timeAgo(date, smAndDown.value)
+    return timeAgo(date)
 })
 
 enum TRANSFER_DIRECTION {

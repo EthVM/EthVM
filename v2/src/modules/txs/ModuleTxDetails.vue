@@ -337,7 +337,7 @@ const timestamp = computed<string>(() => {
     if (transactionData.value && transactionData.value?.timestamp) {
         const date = new Date(transactionData.value.timestamp * 1e3).toLocaleDateString()
         const time = new Date(transactionData.value.timestamp * 1e3).toTimeString().split('GMT')[0]
-        const timeago = timeAgo(new Date(transactionData.value.timestamp * 1e3))
+        const timeago = timeAgo(new Date(transactionData.value.timestamp * 1e3), false)
         const [month, day, year] = date.split('/')
         return `${year}-${month}-${day}, ${time}, ${timeago}`
     }

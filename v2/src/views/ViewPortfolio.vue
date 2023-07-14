@@ -91,7 +91,7 @@ import { reactive, computed } from 'vue'
 import { useStore } from '@/store'
 import { useDisplay } from 'vuetify/lib/framework.mjs'
 import { onBeforeRouteUpdate } from 'vue-router'
-import { formatUsdValue, formatNumber, FormattedNumber } from '@core/helper/number-format-helper'
+import { formatUsdValue, FormattedNumber } from '@core/helper/number-format-helper'
 import { TokenSort, TOKEN_FILTER_VALUES } from '@module/address/models/TokenSort'
 import { MarketDataFragment } from '@core/composables/CoinData/getLatestPrices.generated'
 import { useCoinData } from '@core/composables/CoinData/coinData.composable'
@@ -150,10 +150,6 @@ onBeforeRouteUpdate(async (to, from, next) => {
 
 const tokenBalanceFiat = computed<FormattedNumber>(() => {
     return formatUsdValue(store.portfolioTokensFiatBN)
-})
-
-const tokensCount = computed<string>(() => {
-    return formatNumber(store.portfolioTokensRaw().length)
 })
 
 const { getEthereumTokensMap } = useCoinData()

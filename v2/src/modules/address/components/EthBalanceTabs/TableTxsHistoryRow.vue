@@ -31,7 +31,7 @@
                     {{ txValue.value }} {{ currencyName }}
                     <div class="text-lowercase text-info">
                         {{ timestamp }}
-                        <span v-if="mdAndDown">{{ transferDirection.direction }}</span>
+                        <span v-if="smAndDown">{{ transferDirection.direction }}</span>
                     </div>
                 </div>
             </div>
@@ -234,7 +234,7 @@ const txAddress = computed<string>(() => {
 
 const timestamp = computed<string>(() => {
     const date = new Date(props.transfer.transfer.timestamp * 1e3)
-    return timeAgo(date, smAndDown.value)
+    return timeAgo(date)
 })
 
 const txValue = computed<FormattedNumber>(() => {

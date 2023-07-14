@@ -120,12 +120,6 @@ const statusIcon = computed<{ [key: string]: string }>(() => {
     }
 })
 
-enum TRANSFER_DIRECTION {
-    FROM = 'From',
-    TO = 'To',
-    SELF = 'Self'
-}
-
 const transferDirection = computed<{ [key: string]: string }>(() => {
     // If to and from address is the same, then transfer is self
     if (props.transfer.transfer.to === props.addressRef.toLowerCase() && props.transfer.transfer.from === props.addressRef.toLowerCase()) {
@@ -188,7 +182,7 @@ const txAddress = computed<string>(() => {
 
 const timestamp = computed<string>(() => {
     const date = new Date(props.transfer.transfer.timestamp * 1e3)
-    return timeAgo(date, smAndDown.value)
+    return timeAgo(date)
 })
 
 const txValue = computed<FormattedNumber>(() => {
