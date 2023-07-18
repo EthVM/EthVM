@@ -57,7 +57,7 @@ import {
     TokenTransferFragment,
     Erc721TransferFragment,
     Erc1155TokenTransferFragment
-} from '@module/tokens/apollo/TokenDetailsTransfer/tokenTransfers.generated'
+} from '@module/tokens/apollo/token-details-transfer/tokenTransfers.generated'
 import { generateMapId } from '@/core/composables/NftMeta/helpers'
 
 const { lgAndUp } = useDisplay()

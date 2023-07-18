@@ -55,7 +55,7 @@
 <script setup lang="ts">
 import AppTransformHash from '@core/components/AppTransformHash.vue'
 import AppAddressBlockie from '@core/components/AppAddressBlockie.vue'
-import { GetTokenInfoByContractQuery as TokenInfo } from '@module/tokens/apollo/TokenDetails/tokenDetails.generated'
+import { GetTokenInfoByContractQuery as TokenInfo } from '@module/tokens/apollo/token-details/tokenDetails.generated'
 import { eth } from '@core/helper'
 import { useDisplay } from 'vuetify'
 import { computed } from 'vue'

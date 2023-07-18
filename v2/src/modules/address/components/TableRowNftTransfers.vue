@@ -115,8 +115,8 @@ import { formatNumber } from '@core/helper/number-format-helper'
 import { computed, reactive } from 'vue'
 import { timeAgo, eth } from '@core/helper'
 import { NftMetaFragment } from '@core/composables/NftMeta/nftMeta.generated'
-import TokenNftImg from '@module/tokens/components/TokenNFT/TokenNftImg.vue'
-import { NFTDetails } from '@module/tokens/components/TokenNFT/propModel'
+import TokenNftImg from '@module/tokens/components/token-nft/TokenNftImg.vue'
+import { NFTDetails } from '@module/tokens/components/token-nft/propModel'
 import Web3Utils from 'web3-utils'
 
 const { mdAndDown, smAndDown } = useDisplay()
