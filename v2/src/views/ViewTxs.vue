@@ -18,7 +18,12 @@ import BlockStatsModule from '@module/block/ModuleBlockStats.vue'
 import ModuleTxs from '@module/txs/ModuleTxs.vue'
 import { useAppViewGrid } from '@core/composables/AppViewGrid/AppViewGrid.composable'
 import { onMounted } from 'vue'
+import { useHead } from '@unhead/vue'
+import { VIEW_TAGS } from '@core/helper/tags'
 
+useHead({
+    title: VIEW_TAGS.TXS.title
+})
 const { columnPadding, rowMargin } = useAppViewGrid()
 onMounted(() => {
     window.scrollTo(0, 0)

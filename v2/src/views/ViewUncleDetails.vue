@@ -26,7 +26,12 @@ import { eth } from '@core/helper'
 import { ErrorMessageUncle } from '@module/uncles/models/ErrorMessagesForUncle'
 import { useAppViewGrid } from '@core/composables/AppViewGrid/AppViewGrid.composable'
 import { useI18n } from 'vue-i18n'
+import { useHead } from '@unhead/vue'
+import { VIEW_TAGS } from '@core/helper/tags'
 
+useHead({
+    title: VIEW_TAGS.UNCLE.title
+})
 const { t } = useI18n()
 const { columnPadding, rowMargin } = useAppViewGrid()
 

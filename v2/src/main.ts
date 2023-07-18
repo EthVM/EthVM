@@ -14,7 +14,9 @@ import { useI18n } from 'vue-i18n'
 import './assets/fonts/css/Roboto.css'
 import './assets/fonts/css/SourceCodePro.css'
 import VueGtag from 'vue-gtag-next'
+import { createHead } from '@unhead/vue'
 
+const head = createHead()
 const app = createApp({
     setup() {
         provide(ApolloClients, clients)
@@ -63,4 +65,5 @@ app.use(router)
         },
         router
     )
+    .use(head)
     .mount('#app')

@@ -19,7 +19,12 @@ import { ErrorMessageTx } from '@/modules/txs/models/ErrorMessagesForTx'
 import { onBeforeRouteUpdate } from 'vue-router'
 import { tabViewRouteGuardOnUpdate } from '@/core/router/helpers'
 import { Q_TXS_DETAILS } from '@/core/router/routesNames'
+import { useHead } from '@unhead/vue'
+import { VIEW_TAGS } from '@core/helper/tags'
 
+useHead({
+    title: VIEW_TAGS.TX.title
+})
 onMounted(() => {
     window.scrollTo(0, 0)
 })

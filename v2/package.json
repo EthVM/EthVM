@@ -24,6 +24,7 @@
         "@sentry/tracing": "^7.39.0",
         "@sentry/vue": "^7.39.0",
         "@types/webpack-env": "^1.17.0",
+        "@unhead/vue": "^1.1.31",
         "@unstoppabledomains/resolution": "^8.5.0",
         "@vue/apollo-composable": "^4.0.0-alpha.12",
         "@vueuse/core": "^9.3.0",

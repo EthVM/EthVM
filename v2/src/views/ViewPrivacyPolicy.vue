@@ -80,7 +80,12 @@
 <script setup lang="ts">
 import { useAppViewGrid } from '@core/composables/AppViewGrid/AppViewGrid.composable'
 import { onMounted } from 'vue'
+import { useHead } from '@unhead/vue'
+import { VIEW_TAGS } from '@core/helper/tags'
 
+useHead({
+    title: VIEW_TAGS.PRIVACY_POLICY.title
+})
 onMounted(() => {
     window.scrollTo(0, 0)
 })

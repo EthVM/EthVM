@@ -14,7 +14,12 @@ import { ErrorMessageBlock } from '@module/block/models/ErrorMessagesForBlock'
 import { onBeforeRouteUpdate } from 'vue-router'
 import { tabViewRouteGuardOnUpdate } from '@/core/router/helpers'
 import { Q_BLOCK_DETAILS } from '@/core/router/routesNames'
+import { useHead } from '@unhead/vue'
+import { VIEW_TAGS } from '@core/helper/tags'
 
+useHead({
+    title: VIEW_TAGS.BLOCK.title
+})
 interface ComponentState {
     errorMessages: ErrorMessageBlock[]
     blockNumber: string

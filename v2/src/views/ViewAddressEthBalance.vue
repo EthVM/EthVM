@@ -48,7 +48,12 @@ import { Tab } from '@core/components/props'
 import { ADDRESS_ROUTE_QUERY, Q_ADDRESS_TRANSFERS } from '@core/router/routesNames'
 import { useDisplay } from 'vuetify/lib/framework.mjs'
 import { useI18n } from 'vue-i18n'
+import { useHead } from '@unhead/vue'
+import { VIEW_TAGS } from '@core/helper/tags'
 
+useHead({
+    title: VIEW_TAGS.ADR_ETH.title
+})
 const { t } = useI18n()
 const { xs } = useDisplay()
 const routes = Q_ADDRESS_TRANSFERS

@@ -58,6 +58,12 @@ import { useRouter } from 'vue-router'
 import { Q_ADDRESS_TRANSFERS, ROUTE_NAME } from '@core/router/routesNames'
 import { onMounted, watch } from 'vue'
 import { useNetwork } from '@/core/composables/Network/useNetwork'
+import { useHead } from '@unhead/vue'
+import { VIEW_TAGS } from '@core/helper/tags'
+
+useHead({
+    title: VIEW_TAGS.ADR_OVERVIEW.title
+})
 onMounted(() => {
     window.scrollTo(0, 0)
 })

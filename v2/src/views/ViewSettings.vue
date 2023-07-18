@@ -18,7 +18,12 @@ import ModuleAddressNames from '@/modules/settings/ModuleAddressNames.vue'
 import ModuleSettings from '@/modules/settings/ModuleSettings.vue'
 import { useAppViewGrid } from '@core/composables/AppViewGrid/AppViewGrid.composable'
 import { onMounted } from 'vue'
+import { useHead } from '@unhead/vue'
+import { VIEW_TAGS } from '@core/helper/tags'
 
+useHead({
+    title: VIEW_TAGS.SETTINGS.title
+})
 const { columnPadding, rowMargin } = useAppViewGrid()
 
 onMounted(() => {

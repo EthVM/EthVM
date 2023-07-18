@@ -38,7 +38,12 @@ import { useAddressUpdate } from '@core/composables/AddressUpdate/addressUpdate.
 import { ADDRESS_ROUTE_QUERY } from '@core/router/routesNames'
 import { useAppViewGrid } from '@core/composables/AppViewGrid/AppViewGrid.composable'
 import { useI18n } from 'vue-i18n'
+import { useHead } from '@unhead/vue'
+import { VIEW_TAGS } from '@core/helper/tags'
 
+useHead({
+    title: VIEW_TAGS.ADR_TOKENS.title
+})
 const { t } = useI18n()
 const { columnPadding, rowMargin } = useAppViewGrid()
 

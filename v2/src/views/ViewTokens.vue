@@ -17,6 +17,12 @@ import { onMounted } from 'vue'
 import { onBeforeRouteUpdate } from 'vue-router'
 import { tabViewRouteGuardOnUpdate } from '@/core/router/helpers'
 import { Q_TOKENS } from '@/core/router/routesNames'
+import { useHead } from '@unhead/vue'
+import { VIEW_TAGS } from '@core/helper/tags'
+
+useHead({
+    title: VIEW_TAGS.TOKENS.title
+})
 onMounted(() => {
     window.scrollTo(0, 0)
 })

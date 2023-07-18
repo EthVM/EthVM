@@ -15,7 +15,12 @@ import { useRouter } from 'vue-router'
 import AppBtn from '@core/components/AppBtn.vue'
 import { ROUTE_NAME } from '@core/router/routesNames'
 import { onMounted } from 'vue'
+import { useHead } from '@unhead/vue'
+import { VIEW_TAGS } from '@core/helper/tags'
 
+useHead({
+    title: VIEW_TAGS.NOT_FOUND.title
+})
 onMounted(() => {
     window.scrollTo(0, 0)
 })

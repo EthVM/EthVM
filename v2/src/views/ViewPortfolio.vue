@@ -98,7 +98,12 @@ import { useCoinData } from '@core/composables/CoinData/coinData.composable'
 import { onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { tabViewRouteGuardOnUpdate } from '@/core/router/helpers'
+import { useHead } from '@unhead/vue'
+import { VIEW_TAGS } from '@core/helper/tags'
 
+useHead({
+    title: VIEW_TAGS.PORTFOLIO.title
+})
 const { t } = useI18n()
 
 onMounted(() => {

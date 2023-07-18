@@ -23,7 +23,12 @@ import { useAppViewGrid } from '@core/composables/AppViewGrid/AppViewGrid.compos
 import { ADDRESS_ROUTE_QUERY } from '@core/router/routesNames'
 import { onMounted, reactive } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { useHead } from '@unhead/vue'
+import { VIEW_TAGS } from '@core/helper/tags'
 
+useHead({
+    title: VIEW_TAGS.ADR_NFT.title
+})
 const { t } = useI18n()
 const { columnPadding, rowMargin } = useAppViewGrid()
 

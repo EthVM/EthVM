@@ -202,7 +202,12 @@ import { onMounted } from 'vue'
 import { useNetwork } from '@core/composables/Network/useNetwork'
 import configs from '@/configs'
 import { useGtag } from 'vue-gtag-next'
+import { useHead } from '@unhead/vue'
+import { VIEW_TAGS } from '@core/helper/tags'
 
+useHead({
+    title: VIEW_TAGS.HOME.title
+})
 const { lgAndUp, mdAndDown, mdAndUp, xs } = useDisplay()
 const { columnPadding, rowMargin } = useAppViewGrid()
 const { supportsFiat, isETH, isSEP } = useNetwork()
