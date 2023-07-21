@@ -187,7 +187,7 @@
         "searchTokenName": "Поиск по названию токена",
         "searchTokens": "Поиск токенов",
         "addToken": "Добавить Tокен",
-        "noMatch": "Не удалось ничего найти",
+        "noMatch": "Не удалось ничего найти: {search}",
         "holder": "Владелец | Владельцы",
         "favorites": "Избранные",
         "tokenTotal": "всего 1 токен | всего {n} токенoв"
@@ -265,7 +265,7 @@
         "nftCollection": "NFT Коллекция",
         "unknown": "Неизвестный",
         "portfolioEmpty": "Ваше портфолио пусто",
-        "portfolioValue": "Общая Стоимость Портфoлио",
+        "portfolioValue": "Общая Стоимость",
         "stakeWithdrawals": "Вывод Ставок",
         "header": {
             "blockNumber": "Блок №",
@@ -324,8 +324,10 @@
         "adrNoIncoming": "Этот адрес не имеет входящих транзакций",
         "adrNoTxs": "Этот адрес не имеет транзакций",
         "adrNoInternal": "Этот адрес не имеет внутренних переводов",
-        "imageNotAvailable": "изображение не доступно"
-
+        "imageNotAvailable": "изображение не доступно",
+        "addressAlreadyIsSaved": "Этот адрес уже сохранен",
+        "inputNotValid":  "Ввод недействителен",
+        "required": "Обязательный"
     },
     "nft": {
         "items": "предметов",
@@ -360,5 +362,17 @@
         "seconds": "1 секунда назад | {n} секунды назад",
         "secondsShort": "{n} сек. назад",
         "justNow": "только что"
+    },
+    "productDesc": {
+        "mew": "Ethereum веб кошелек",
+        "mewWallet": "Ethereum кошелек для IOS и  Android",
+        "enkrypt": "Mультичейн расширение для браузера",
+        "mewtopia": "Образовательный блог",
+        "helpCenter": "Как использовать MEW"
+    },
+    "notify": {
+        "undo": "отменить",
+        "adrDeleted": "{address} было удалено из портфолио",
+        "copied": "Cкопировано: {result}"
     }
 }

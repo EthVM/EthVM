@@ -187,7 +187,7 @@
         "searchTokenName": "Search token name",
         "searchTokens": "Search tokens",
         "addToken": "Add Token",
-        "noMatch": "We could not find anything mathching",
+        "noMatch": "We could not find anything mathching: {search}",
         "holder": "Holder | Holders",
         "favorites": "Favorites",
         "tokenTotal": "total 1 tokens | total {n} tokens"
@@ -221,7 +221,6 @@
         "language": "Language",
         "viewInPortfolio": "View in Portfolio",
         "delete": "Delete"
-
     },
     "address": {
         "blockRewards": "Block rewards",
@@ -325,7 +324,10 @@
         "adrNoIncoming": "This address does not have any incoming transactions",
         "adrNoTxs": "This address does not have any transactions",
         "adrNoInternal": "This address does not have any internal transfers",
-        "imageNotAvailable": "image not available"
+        "imageNotAvailable": "image not available",
+        "addressAlreadyIsSaved": "This address is already saved",
+        "inputNotValid":  "Input not valid",
+        "required": "Required"
     },
     "nft": {
         "items": "items",
@@ -360,5 +362,17 @@
         "seconds": "1 second ago | {n} seconds ago",
         "secondsShort": "{n} sec ago",
         "justNow": "just now"
+    },
+    "productDesc": {
+        "mew": "Ethereum desktop wallet",
+        "mewWallet": "IOS and Android wallet",
+        "enkrypt": "Multichain extension wallet",
+        "mewtopia": "Education Blog",
+        "helpCenter": "How to use MEW products"
+    },
+    "notify": {
+        "undo": "undo",
+        "adrDeleted": "{address} was deleted from portfolio",
+        "copied": "Copied: {result}"
     }
 }
