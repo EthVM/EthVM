@@ -145,7 +145,8 @@
         "nft": "NFT | NFTS",
         "reward": "Reward | Rewards",
         "height": "Height",
-        "search": "Search"
+        "search": "Search",
+        "noName": "No Name"
     },
     "portfolio": {
         "yourPortfolio": "Your portfolio",
