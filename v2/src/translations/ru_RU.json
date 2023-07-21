@@ -26,18 +26,23 @@
         "balanceChange": "Изменение Баланса",
         "balanceBefore": "Баланс До",
         "balanceAfter": "Баланс После",
+        "totalBalanceChange": "Oбщее Изменениe Баланса",
         "estimatedFee": "Примерная Kомиссия",
         "isHomeHeader": "Последние Транзакции",
         "refresh": "Найдены Новые Txs, Обновить",
         "name": "Транзакция | Транзакции",
         "nameShort": "Tx | Txs",
         "newNft": "Новые Переводы ERC721",
+        "internal": "Внутренний Перевод",
+        "value": "Значение Транзакции",
+        "internalValue":" Значение Внутреннeго Переводa",
+        "viewTx": "Показать Транзакцию",
         "details": {
             "header": "Сводка Транзакции",
             "txHash": "Хэш Тх",
             "createdContract": "Создал Контракт",
             "interactedWith": "Взаимодействовал с Контрактом",
-            "title": {
+            "status": {
                 "successful": "Успешная",
                 "failed": "Неудачная",
                 "replaced": "Заменена",
@@ -81,7 +86,8 @@
             "failSend": "Не удалось отправить",
             "selfSent": "Tx Себе",
             "recieve": "Получено",
-            "failRecieve": "Не удалось получить"
+            "failRecieve": "Не удалось получить",
+            "self": "себе"
         },
         "type": {
             "genesis": "genesis награда",
@@ -139,7 +145,9 @@
         "nft": "NFT | NFTS",
         "reward": "Наградa | Награды",
         "height": "Высота",
-        "search": "Поиск"
+        "search": "Поиск",
+        "noName": "Без Названия"
+
     },
     "portfolio": {
         "yourPortfolio": "Moe Портфолио",
@@ -153,7 +161,12 @@
         "placeholder": {
             "addAddress": "Введите Адрес / Имя Домена",
             "name": "Введите Название"
-        }
+        },
+        "nameAdded" : "{name} добавленно в ваше портфолио",
+        "viewTokens": "Показать Токены",
+        "noTokens": "В этом портфолио нет токенoв", 
+        "addressNoTokens": "Выбранные адреса не владеют этим токеном",
+        "sort": "сортировать"
     },
     "uncle": {
         "number": "Uncle-Блок №",
@@ -176,9 +189,10 @@
         "searchTokenName": "Поиск по названию токена",
         "searchTokens": "Поиск токенов",
         "addToken": "Добавить Tокен",
-        "noMatch": "Не удалось ничего найти",
+        "noMatch": "Не удалось ничего найти: {search}",
         "holder": "Владелец | Владельцы",
-        "favorites": "Избранные"
+        "favorites": "Избранные",
+        "tokenTotal": "всего 1 токен | всего {n} токенoв"
     },
     "settings": {
         "emptyList": "Список пуст",
@@ -206,7 +220,9 @@
             "selectFile": "Выбрать Файл",
             "dragAndDrop": "Перетащите файл ethVM-adrs-names.json или нажмите кнопку Выбрать Файл"
         },
-        "language": "Язык"
+        "language": "Язык",
+        "viewInPortfolio": "Показать в Портфолио",
+        "delete": "Удалить"
     },
     "address": {
         "blockRewards": "Награды за Блок",
@@ -219,7 +235,8 @@
             "noPendingTransactions": "Этот адрес не имеет ожидающих транзакций",
             "noStakeWithdrawals": "Этот адрес не имеет выводов ставок",
             "noTransfer": "Этот адрес не имеет истории переводов"
-        }
+        },
+        "balanceChangeBreakdown": "Изменения Баланса"
     },
     "block": {
         "lastBlockTitle": "Последние Блоки",
@@ -244,14 +261,13 @@
         "totalAddress": "Всего Адресов",
         "tokenBalance": "Баланс Токенов",
         "tokenHistory": "История Токенов",
-        "tokenTotal": "всего токенов",
         "tokenBalanceRefresh": "Баланс Tокенов Изменен, Обновить",
         "newTransfer": "Новые Переводы ERC20",
         "nftTotal": "Всего NFT",
         "nftCollection": "NFT Коллекция",
         "unknown": "Неизвестный",
         "portfolioEmpty": "Ваше портфолио пусто",
-        "portfolioValue": "Общая Стоимость Портфеля",
+        "portfolioValue": "Общая Стоимость",
         "stakeWithdrawals": "Вывод Ставок",
         "header": {
             "blockNumber": "Блок №",
@@ -265,12 +281,13 @@
         },
         "totalRewards": "Общее Вознаграждение",
         "txFee": "Комиссия за транзакцию",
-        "uncleSha": "Uncle-Блок SHA3"
+        "uncleSha": "Uncle-Блок SHA3",
+        "newBlock": "новый блок | новых блока" 
     },
     "home": {
         "tagline": {
-            "row1": "Отслеживайте, анализируйте и исследуйте",
-            "row2": "блокчейн Ethereum.",
+            "row1": "Отслеживайте, анализируйте и ",
+            "row2": "исследуйте блокчейн Ethereum.",
             "row3": "тестовую сеть Sepolia."
         },
         "footer": {
@@ -287,7 +304,8 @@
             "rights": "Все права защищены.",
             "settings": "Настройки",
             "advertise": "Рекламируйте у нас"
-        }
+        },
+        "search": "Поиск адреса/транзакции/токена"
     },
     "stats": {
         "lastUpdate": "Последнее Обновление",
@@ -307,7 +325,11 @@
         "adrNoOutgoing": "Этот адрес не имеет исходящих транзакций",
         "adrNoIncoming": "Этот адрес не имеет входящих транзакций",
         "adrNoTxs": "Этот адрес не имеет транзакций",
-        "adrNoInternal": "Этот адрес не имеет внутренних переводов"
+        "adrNoInternal": "Этот адрес не имеет внутренних переводов",
+        "imageNotAvailable": "изображение не доступно",
+        "addressAlreadyIsSaved": "Этот адрес уже сохранен",
+        "inputNotValid":  "Ввод недействителен",
+        "required": "Обязательный"
     },
     "nft": {
         "items": "предметов",
@@ -316,6 +338,7 @@
     },
     "market": {
         "marketCap": "Рыночная Капитализация",
+        "marketCapShort": "Рын. Кап.",
         "volume": "Объём",
         "circulatingSupply": "Циркулирующее Предложение",
         "24hHigh": "24ч Максимум",
@@ -326,5 +349,32 @@
         "24hChange": "Изменение за 24ч",
         "priceChange": "Изменение Цены",
         "totalUsdValue": "Общая стоимость в USD"
+    },
+    "timeAgo": {
+        "year": "1 год назад | {n} лет назад",
+        "yearShort": "{n} г. назад",
+        "month": "1 месяц назад | {n} месяцев назад",
+        "monthShort": "{n} мес. назад",
+        "day": "1 день назад | {n} дней назад",
+        "dayShort": "{n} д. назад",
+        "hour": "1 час назад | {n} часа назад",
+        "hourShort": "{n} ч. назад",
+        "minute": "1  минту назад | {n} минут назад",
+        "minuteShort": "{n} мин. назад",
+        "seconds": "1 секунда назад | {n} секунды назад",
+        "secondsShort": "{n} сек. назад",
+        "justNow": "только что"
+    },
+    "productDesc": {
+        "mew": "Ethereum веб кошелек",
+        "mewWallet": "Ethereum кошелек для IOS и  Android",
+        "enkrypt": "Mультичейн расширение для браузера",
+        "mewtopia": "Образовательный блог",
+        "helpCenter": "Как использовать MEW"
+    },
+    "notify": {
+        "undo": "отменить",
+        "adrDeleted": "{address} было удалено из портфолио",
+        "copied": "Cкопировано: {result}"
     }
 }

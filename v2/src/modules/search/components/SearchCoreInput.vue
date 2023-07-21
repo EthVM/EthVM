@@ -6,7 +6,7 @@
                 color="secondary"
                 :density="xs ? 'compact' : 'comfortable'"
                 variant="solo"
-                :placeholder="xs ? 'Search' : 'Search by address/transaction/token'"
+                :placeholder="xs ? $t('common.search') : $t('home.search')"
                 hide-details
                 clearable
                 max-width="380"
@@ -39,7 +39,7 @@
         <v-menu location="bottom" activator="#search-options-activator" v-model="search.focus" :open-on-click="false">
             <v-card v-if="search.value !== ''" max-width="380" max-height="300px" rounded="xl" class="mt-1">
                 <v-progress-linear v-if="isLoading" class="position-absolute" style="z-index: 1" color="secondary" height="5" indeterminate></v-progress-linear>
-                <app-no-result v-if="props.hasError" :text="`We could not find anything mathching: ${search.value}`"></app-no-result>
+                <app-no-result v-if="props.hasError" :text="$t('token.noMatch', { search: search.value })"></app-no-result>
                 <slot v-else name="search-results"> </slot>
             </v-card>
         </v-menu>

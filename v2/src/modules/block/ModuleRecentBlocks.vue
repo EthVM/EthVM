@@ -5,7 +5,7 @@
                 <h1 class="text-h6 font-weight-bold">{{ getTitle }}</h1>
                 <notice-new-block v-if="!isHome" @reload="setPage(1, true)" />
             </div>
-            <app-btn v-if="isHome && !xs" text="More" isSmall icon="east" @click="goToBlocksPage"></app-btn>
+            <app-btn v-if="isHome && !xs" :text="$t('common.more')" isSmall icon="east" @click="goToBlocksPage"></app-btn>
             <app-btn-icon v-else-if="isHome && xs" icon="east" @click="goToBlocksPage"></app-btn-icon>
         </v-card-title>
         <table-blocks
