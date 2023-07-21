@@ -65,7 +65,7 @@ export function useAppNavigation() {
                     {
                         text: 'MyEtherWallet',
                         routerLink: 'https://www.myetherwallet.com/',
-                        subtext: 'Ethereum desktop wallet',
+                        subtext: t('productDesc.mew'),
                         img: require('@/assets/logo/mew.svg'),
                         imgClass: 'pa-1',
                         isExternal: true
@@ -73,29 +73,29 @@ export function useAppNavigation() {
                     {
                         text: 'MEW wallet',
                         routerLink: 'https://www.mewwallet.com/',
-                        subtext: 'IOS and Android wallet',
+                        subtext: t('productDesc.mewWallet'),
                         img: require('@/assets/logo/mewwallet.svg'),
                         isExternal: true
                     },
                     {
                         text: 'Enkrypt',
                         routerLink: 'https://www.enkrypt.com',
-                        subtext: 'Multichain extension wallet',
+                        subtext: t('productDesc.enkrypt'),
                         img: require('@/assets/logo/enkrypt1.svg'),
                         isExternal: true
                     },
                     {
                         text: 'MEWtopia',
                         routerLink: 'https://www.mewtopia.com/',
-                        subtext: 'Education Blog',
+                        subtext: t('productDesc.mewtopia'),
                         img: require('@/assets/logo/mewtopia.svg'),
                         imgClass: 'pa-2',
                         isExternal: true
                     },
                     {
-                        text: 'Help Center',
+                        text: t('home.footer.help'),
                         routerLink: 'https://help.myetherwallet.com/',
-                        subtext: 'How to use MEW products',
+                        subtext: t('productDesc.helpCenter'),
                         img: require('@/assets/logo/help-center.svg'),
                         imgClass: 'pa-2',
                         isExternal: true

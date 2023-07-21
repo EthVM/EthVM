@@ -104,7 +104,7 @@
                     -->
                     <v-col cols="12" sm="3">
                         <div v-if="isOutgoing && transferType.type === TransferSubtype.Transaction" class="d-flex justify-space-between flex-sm-column">
-                            <p class="text-info mb-sm-2">Fee Paid</p>
+                            <p class="text-info mb-sm-2">{{ $t('common.txFeePaid') }}</p>
                             <p class="text-right text-sm-left">- {{ txFee.value }} {{ txFee.unit }}</p>
                         </div>
                     </v-col>
@@ -157,29 +157,29 @@ const transferStatus = computed<Status>(() => {
     // If to and from address is the same, then transfer is self
     if (props.transfer.transfer.to === props.addressRef.toLowerCase() && props.transfer.transfer.from === props.addressRef.toLowerCase()) {
         return {
-            direction: TRANSFER_DIRECTION.SELF,
+            direction: t('txs.status.self'),
             text: isFailed ? t('txs.status.failSend') : t('txs.status.selfSent'),
-            color: isFailed ? 'error' : 'warning',
-            icon: isFailed ? 'close' : 'north_west'
+            color: isFailed ? 'error' : 'info',
+            icon: isFailed ? 'close' : 'refresh'
         }
     }
     if (props.transfer.transfer.to === props.addressRef.toLowerCase()) {
         return {
-            direction: TRANSFER_DIRECTION.FROM,
+            direction: t('common.from'),
             text: isFailed ? t('txs.status.failRecieve') : t('txs.status.recieve'),
             color: isFailed ? 'error' : 'success',
             icon: isFailed ? 'close' : 'south_east'
         }
     } else if (props.transfer.transfer.from === props.addressRef.toLowerCase()) {
         return {
-            direction: TRANSFER_DIRECTION.TO,
+            direction: t('common.to'),
             text: isFailed ? t('txs.status.failSend') : t('txs.status.sent'),
             color: isFailed ? 'error' : 'warning',
             icon: isFailed ? 'close' : 'north_west'
         }
     }
     return {
-        direction: TRANSFER_DIRECTION.SELF,
+        direction: t('txs.status.self'),
         text: t('txs.status.selfSent'),
         color: 'info',
         icon: 'refresh'

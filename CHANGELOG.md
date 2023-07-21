@@ -6,6 +6,7 @@
 ### Devop
 - refactor missing string, add translations [#1175](https://github.com/EthVM/EthVM/pull/1175)
 - add settings to mobile menu[#1184](https://github.com/EthVM/EthVM/pull/1184)
+- localize timeago helper [$1188](https://github.com/EthVM/EthVM/pull/1188)
 
 ======================================================================
 

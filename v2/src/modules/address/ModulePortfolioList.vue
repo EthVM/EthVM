@@ -68,12 +68,12 @@
                             <v-icon v-if="isActiveSort(KEY.HASH)" class="ml-1" :size="14">{{ sortIcon }}</v-icon>
                         </template>
                     </v-list-item>
-                    <v-list-item :title="$t('common.balance')" class="py-2" @click="sortTable(KEY.ETH)">
+                    <v-list-item :title="`${currencyName} ${$t('common.balance')}`" class="py-2" @click="sortTable(KEY.ETH)">
                         <template #append>
                             <v-icon v-if="isActiveSort(KEY.ETH)" class="ml-1" :size="14">{{ sortIcon }}</v-icon></template
                         >
                     </v-list-item>
-                    <v-list-item :title="$t('common.value')" class="py-2" @click="sortTable(KEY.ETH_USD)">
+                    <v-list-item :title="`${currencyName} ${$t('common.value')}`" class="py-2" @click="sortTable(KEY.ETH_USD)">
                         <template #append>
                             <v-icon v-if="isActiveSort(KEY.ETH_USD)" class="ml-1" :size="14">{{ sortIcon }}</v-icon>
                         </template>
@@ -111,7 +111,9 @@ import { useDisplay } from 'vuetify/lib/framework.mjs'
 import { formatUsdValue, formatNonVariableEthValue, FormattedNumberUnit } from '@core/helper/number-format-helper'
 import BN from 'bignumber.js'
 import { useNetwork } from '@core/composables/Network/useNetwork'
+import { useI18n } from 'vue-i18n'
 
+const { t } = useI18n()
 const { xs } = useDisplay()
 const { currencyName } = useNetwork()
 const store = useStore()
@@ -216,17 +218,17 @@ const sortTable = (key: KEY) => {
 }
 const activeSortString = computed<string>(() => {
     if (state.sortKey.includes(KEY.HASH)) {
-        return 'Address'
+        return t('common.address')
     } else if (state.sortKey.includes(KEY.ETH)) {
-        return 'ETH Balance'
+        return `${currencyName.value} ${t('common.balance')}`
     } else if (state.sortKey.includes(KEY.NAME)) {
-        return 'Name'
+        return t('common.name')
     } else if (state.sortKey.includes(KEY.ETH_USD)) {
-        return 'ETH Value'
+        return `${currencyName.value} ${t('common.value')}`
     } else if (state.sortKey.includes(KEY.TOTAL)) {
-        return 'Total'
+        return t('common.total')
     }
-    return 'Sort'
+    return t('portfolio.sort')
 })
 
 interface SortedInterface {

@@ -9,7 +9,9 @@ import { reactive } from 'vue'
 import clipboardCopy from 'clipboard-copy'
 import AppBtnIcon from './AppBtnIcon.vue'
 import { useStore } from '@/store'
+import { useI18n } from 'vue-i18n'
 
+const { t } = useI18n()
 const props = defineProps({
     valueToCopy: {
         type: String,
@@ -45,7 +47,7 @@ const copy = async (): Promise<void> => {
     state.message = ''
     try {
         await clipboardCopy(props.valueToCopy)
-        state.message = props.customMessage === '' ? `Copied: ${props.valueToCopy}` : `${props.customMessage}`
+        state.message = props.customMessage === '' ? t('notify.copied', { result: props.valueToCopy }) : `${props.customMessage}`
         store.notify(state.message)
     } catch (err) {
         state.message = 'Error in copy'
