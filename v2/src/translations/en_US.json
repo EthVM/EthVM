@@ -178,7 +178,8 @@
         "addToken": "Add Token",
         "noMatch": "We could not find anything mathching",
         "holder": "Holder | Holders",
-        "favorites": "Favorites"
+        "favorites": "Favorites",
+        "bigMovers": "Big Movers"
     },
     "settings": {
         "emptyList": "This list is empty",
@@ -307,7 +308,8 @@
         "adrNoOutgoing": "This address does not have any outgoing transactions",
         "adrNoIncoming": "This address does not have any incoming transactions",
         "adrNoTxs": "This address does not have any transactions",
-        "adrNoInternal": "This address does not have any internal transfers"
+        "adrNoInternal": "This address does not have any internal transfers",
+        "noBigMovers": "There are no big movers in the last day"
     },
     "nft": {
         "items": "items",
@@ -326,5 +328,13 @@
         "24hChange": "24h Change",
         "priceChange": "Price Change",
         "totalUsdValue": "Total USD Value"
+    },
+    "bigMover": {
+        "ath": "all time high",
+        "1H": "in 1 hour",
+        "5M": "in 5 minutes",
+        "7D": "in 7 days",
+        "24H": "in 24 hours",
+        "30D": "in 30 days"
     }
 }

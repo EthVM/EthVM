@@ -16,10 +16,24 @@ export type Scalars = {
     BigInt: string
     Bytes: string
     EthVMCurrencyFloat: number
+    /**
+     * Prefixed hex non-empty hex string that can be preceeded by a "-".
+     *
+     * Regex: ^-?0x[0-9a-fA-F]+$
+     *
+     * Negative numbers are represented with a "-" infront of the hex prefix.
+     */
+    EthVMIntHex: string
     EthVMIso8601DateTimeMilliseconds: string
     EthVMPrefixedBase16String: string
     EthVMPrefixedEthereumAddress: string
     EthVMPrefixedHexString: string
+    /**
+     * Prefixed hex non-empty hex string.
+     *
+     * Regex: ^0x[0-9a-fA-F]+$
+     */
+    EthVMUintHex: string
     EthVMUnixEpochMilliseconds: number
     EthVMUnixEpochSeconds: number
     EthVMUrl: string
@@ -1459,6 +1473,11 @@ export enum FusesSet_OrderBy {
     TransactionId = 'transactionID'
 }
 
+export type GetTokenMarketMoversResult = {
+    __typename?: 'GetTokenMarketMoversResult'
+    items: Array<TokenMarketMoversItem>
+}
+
 export enum HashType {
     AddressHash = 'ADDRESS_HASH',
     BlockHash = 'BLOCK_HASH',
@@ -1584,11 +1603,16 @@ export type LatestBlockData = {
 
 export type Log = {
     __typename?: 'Log'
+    /** this value will be eventually switched to to the "signature" property */
+    _signature_tmp_?: Maybe<Scalars['String']>
     address: Scalars['String']
     data: Scalars['String']
     logIndex: Scalars['Int']
+    preimage?: Maybe<Scalars['String']>
     removed: Scalars['Boolean']
     /**
+     * TODO: the value of this field will be renamed to "preimage"
+     *
      * Best guess at the signature of the event that caused this log
      * The preimage of the first element of the "topics" array, if exists
      * Can be used to decode the logs data
@@ -1614,12 +1638,51 @@ export enum MmChain {
     Matic = 'MATIC'
 }
 
+export type MmErc20BalanceDeltasByBlockNumberItem = {
+    __typename?: 'MmErc20BalanceDeltasByBlockNumberItem'
+    /** balance of the owner with the contract after the block (no decimals) */
+    balanceNext: Scalars['EthVMUintHex']
+    /** balance of the owner with the contract before the block (no decimals) */
+    balancePrev: Scalars['EthVMUintHex']
+    blockNumber: Scalars['Int']
+    contractAddress: Scalars['EthVMPrefixedEthereumAddress']
+    ownerAddress: Scalars['EthVMPrefixedEthereumAddress']
+    timestampIso8601: Scalars['EthVMIso8601DateTimeMilliseconds']
+    timestampUnixSec: Scalars['EthVMUnixEpochSeconds']
+}
+
+export type MmErc20BalanceDeltasByBlockNumberResult = {
+    __typename?: 'MmErc20BalanceDeltasByBlockNumberResult'
+    items: Array<MmErc20BalanceDeltasByBlockNumberItem>
+    nextKey?: Maybe<Scalars['String']>
+}
+
+export type MmEthBalanceDeltasByBlockNumberItem = {
+    __typename?: 'MmEthBalanceDeltasByBlockNumberItem'
+    /** ETH Balance after the block (wei) */
+    balanceNext: Scalars['EthVMUintHex']
+    /** ETH Balance before the block (wei) */
+    balancePrev: Scalars['EthVMUintHex']
+    blockNumber: Scalars['Int']
+    ownerAddress: Scalars['EthVMPrefixedEthereumAddress']
+    timestampIso8601: Scalars['EthVMIso8601DateTimeMilliseconds']
+    timestampUnixSec: Scalars['EthVMUnixEpochSeconds']
+}
+
+export type MmEthBalanceDeltasByBlockNumberResult = {
+    __typename?: 'MmEthBalanceDeltasByBlockNumberResult'
+    items: Array<MmEthBalanceDeltasByBlockNumberItem>
+    nextKey?: Maybe<Scalars['String']>
+}
+
 export type MmEthErc20Balance = {
     __typename?: 'MmEthErc20Balance'
     /** 0x prefixed ethereum address that owners the token */
     ownerAddress: Scalars['EthVMPrefixedEthereumAddress']
     /** 0x prefixed base16 balance that the owner has of the token */
     ownerBalance: Scalars['EthVMPrefixedBase16String']
+    ownerBalanceUpdatedAtIso8601: Scalars['EthVMIso8601DateTimeMilliseconds']
+    ownerBalanceUpdatedAtUnixSec: Scalars['EthVMUnixEpochSeconds']
     /** 0x prefixed ethereum address of the token contract */
     tokenContractAddress: Scalars['EthVMPrefixedEthereumAddress']
     tokenDecimals?: Maybe<Scalars['Int']>
@@ -1636,18 +1699,39 @@ export type MmEthErc20Balance = {
     tokenPriceChangePercentage24h?: Maybe<Scalars['EthVMCurrencyFloat']>
     tokenPriceChangePercentage30d?: Maybe<Scalars['EthVMCurrencyFloat']>
     tokenPriceChangePercentage200d?: Maybe<Scalars['EthVMCurrencyFloat']>
-    tokenPriceLastUpdatedAtIso8601?: Maybe<Scalars['EthVMIso8601DateTimeMilliseconds']>
-    tokenPriceLastUpdatedAtUnixSec?: Maybe<Scalars['EthVMUnixEpochSeconds']>
+    tokenPriceUpdatedAtIso8601?: Maybe<Scalars['EthVMIso8601DateTimeMilliseconds']>
+    tokenPriceUpdatedAtUnixSec?: Maybe<Scalars['EthVMUnixEpochSeconds']>
     tokenSparkline24h?: Maybe<Array<Scalars['EthVMCurrencyFloat']>>
     tokenSymbol?: Maybe<Scalars['String']>
     tokenVolume24h?: Maybe<Scalars['EthVMCurrencyFloat']>
     tokenWebsiteUrl?: Maybe<Scalars['EthVMUrl']>
 }
 
+export type MmGetEthAndErc20BalancesWithPricesByOwnerAddressResult = {
+    __typename?: 'MmGetEthAndErc20BalancesWithPricesByOwnerAddressResult'
+    items: Array<MmEthErc20Balance>
+    nextKey?: Maybe<Scalars['String']>
+}
+
+export type MmGetTokenMarketDataByChainAndContractAddressesResult = {
+    __typename?: 'MmGetTokenMarketDataByChainAndContractAddressesResult'
+    items: Array<Maybe<MmTokenMarketData>>
+}
+
 export type MmGetTokenMarketDataByChainResult = {
     __typename?: 'MmGetTokenMarketDataByChainResult'
     items: Array<MmTokenMarketData>
     nextKey?: Maybe<Scalars['String']>
+}
+
+export type MmGetTokenMarketMoversByChainResult = {
+    __typename?: 'MmGetTokenMarketMoversByChainResult'
+    items: Array<MmTokenMarketMover>
+}
+
+export type MmSearchTokenByChainResult = {
+    __typename?: 'MmSearchTokenByChainResult'
+    items: Array<MmTokenSearchResult>
 }
 
 export enum MmSortDirection {
@@ -1657,6 +1741,7 @@ export enum MmSortDirection {
 
 export type MmTokenMarketData = {
     __typename?: 'MmTokenMarketData'
+    coingeckoCoinId: Scalars['String']
     contractAddress?: Maybe<Scalars['EthVMPrefixedEthereumAddress']>
     decimals?: Maybe<Scalars['Int']>
     iconPngUrl?: Maybe<Scalars['EthVMUrl']>
@@ -3170,6 +3255,8 @@ export type Query = {
     getTimestamp: Scalars['String']
     getTokenInfoByContract: EthTokenInfo
     getTokenInfoByContracts: Array<EthTokenInfo>
+    /** Query tokens that have had noteworthy price changes recently */
+    getTokenMarketMovers: GetTokenMarketMoversResult
     getTokensBeginsWith: Array<Maybe<TokenSearch>>
     getTransactionByHash: Tx
     getTransactionByHashWithTraces: Tx
@@ -3179,9 +3266,13 @@ export type Query = {
     getUncleRewards: EthTransfers
     interfaceChanged?: Maybe<InterfaceChanged>
     interfaceChangeds: Array<InterfaceChanged>
+    /** Get all the changed Erc20 balances for a given block number */
+    mmGetErc20BalanceDeltasByBlockNumber: MmErc20BalanceDeltasByBlockNumberResult
     /** Get the token balances of an address on Ethereum */
-    mmGetEthAndErc20BalancesWithPricesByOwnerAddress: Array<MmEthErc20Balance>
-    /** Get the market data of all tokens on a chain (paginated) */
+    mmGetEthAndErc20BalancesWithPricesByOwnerAddress: MmGetEthAndErc20BalancesWithPricesByOwnerAddressResult
+    /** Get all the changed Eth balances for a given block number */
+    mmGetEthBalanceDeltasByBlockNumber: MmEthBalanceDeltasByBlockNumberResult
+    /** Get a paginated list of market data of all tokens on a chain */
     mmGetTokenMarketDataByChain: MmGetTokenMarketDataByChainResult
     /**
      * Get the market data of the given tokens on a chain
@@ -3190,15 +3281,15 @@ export type Query = {
      *
      * If an address is not found then the result will be null for that address
      */
-    mmGetTokenMarketDataByChainAndContractAddresses: Array<Maybe<MmTokenMarketData>>
+    mmGetTokenMarketDataByChainAndContractAddresses: MmGetTokenMarketDataByChainAndContractAddressesResult
     /** Query tokens that have had noteworthy price changes recently */
-    mmGetTokenMarketMoversByChain: Array<MmTokenMarketMover>
+    mmGetTokenMarketMoversByChain: MmGetTokenMarketMoversByChainResult
     /**
      * Full text search for a token by name, symbol, or contract address
      *
      * Returns a list of tokens and native currencies that match the search query ordered by relevance and market cap
      */
-    mmSearchTokenByChain: Array<MmTokenSearchResult>
+    mmSearchTokenByChain: MmSearchTokenByChainResult
     multicoinAddrChanged?: Maybe<MulticoinAddrChanged>
     multicoinAddrChangeds: Array<MulticoinAddrChanged>
     nameChanged?: Maybe<NameChanged>
@@ -3724,14 +3815,29 @@ export type QueryInterfaceChangedsArgs = {
     where?: InputMaybe<InterfaceChanged_Filter>
 }
 
+export type QueryMmGetErc20BalanceDeltasByBlockNumberArgs = {
+    blockNumber: Scalars['Int']
+    limit?: InputMaybe<Scalars['Int']>
+    nextKey?: InputMaybe<Scalars['String']>
+}
+
 export type QueryMmGetEthAndErc20BalancesWithPricesByOwnerAddressArgs = {
+    limit?: InputMaybe<Scalars['Int']>
+    nextKey?: InputMaybe<Scalars['String']>
     ownerAddress: Scalars['String']
+}
+
+export type QueryMmGetEthBalanceDeltasByBlockNumberArgs = {
+    blockNumber: Scalars['Int']
+    limit?: InputMaybe<Scalars['Int']>
+    nextKey?: InputMaybe<Scalars['String']>
 }
 
 export type QueryMmGetTokenMarketDataByChainArgs = {
     chain: MmChain
     limit?: InputMaybe<Scalars['Int']>
     nextKey?: InputMaybe<Scalars['String']>
+    noQualityControl?: InputMaybe<Scalars['Boolean']>
     sortBy?: InputMaybe<MmTokenMarketDataByChainSortOption>
     sortDirection?: InputMaybe<MmSortDirection>
 }
@@ -4700,6 +4806,7 @@ export type Subscription = {
     textChanged?: Maybe<TextChanged>
     textChangeds: Array<TextChanged>
     timeseriesEvent: TimeseriesEvent
+    tokenMarketMoversProcessedEvent: TokenMarketMoverProcessedEventResult
     transactionEvent: Scalars['String']
     transfer?: Maybe<Transfer>
     transfers: Array<Transfer>
@@ -5456,6 +5563,45 @@ export type TokenMarketInfo = {
     symbol: Scalars['String']
     total_supply?: Maybe<Scalars['String']>
     total_volume?: Maybe<Scalars['Float']>
+}
+
+export type TokenMarketMoverProcessedEventResult = {
+    __typename?: 'TokenMarketMoverProcessedEventResult'
+    _?: Maybe<Scalars['String']>
+}
+
+export enum TokenMarketMoverSortDirection {
+    Asc = 'Asc',
+    Desc = 'Desc'
+}
+
+export enum TokenMarketMoverType {
+    Ath = 'ATH',
+    '1H' = '_1H',
+    '5M' = '_5M',
+    '7D' = '_7D',
+    '24H' = '_24H',
+    '30D' = '_30D'
+}
+
+export type TokenMarketMoversItem = {
+    __typename?: 'TokenMarketMoversItem'
+    ath?: Maybe<Scalars['Float']>
+    coingeckoCoinId: Scalars['String']
+    contractAddress?: Maybe<Scalars['EthVMPrefixedEthereumAddress']>
+    decimals?: Maybe<Scalars['Int']>
+    eventTimestampIso8601: Scalars['EthVMIso8601DateTimeMilliseconds']
+    eventTimestampUnixSec: Scalars['EthVMUnixEpochSeconds']
+    icon?: Maybe<Scalars['EthVMUrl']>
+    iconPng?: Maybe<Scalars['EthVMUrl']>
+    marketDataLastUpdatedAtIso8601: Scalars['EthVMIso8601DateTimeMilliseconds']
+    marketDataLastUpdatedAtUnixSec: Scalars['EthVMUnixEpochSeconds']
+    name: Scalars['String']
+    price?: Maybe<Scalars['EthVMCurrencyFloat']>
+    priceChangePercentage?: Maybe<Scalars['Float']>
+    symbol: Scalars['String']
+    type: TokenMarketMoverType
+    website?: Maybe<Scalars['EthVMUrl']>
 }
 
 export type TokenSearch = {
@@ -7177,114 +7323,38 @@ export type GetTokensBeginsWithQuery = {
     getTokensBeginsWith: Array<{ __typename?: 'TokenSearch'; contract: string; keyword: string } | null>
 }
 
-export type TokenDetailsFragment = {
-    __typename?: 'EthTokenInfo'
-    name?: string | null
-    symbol?: string | null
-    decimals?: number | null
-    totalSupply?: string | null
-    contract: string
-    tokenId?: string | null
+export type BigMoverFragment = {
+    __typename?: 'TokenMarketMoversItem'
+    contractAddress?: string | null
+    name: string
+    symbol: string
+    type: TokenMarketMoverType
+    eventTimestampUnixSec: number
+    price?: number | null
+    iconPng?: string | null
+    priceChangePercentage?: number | null
+    coingeckoCoinId: string
 }
 
-export type Erc20TokenOwnerDetailsFragment = {
-    __typename?: 'ERC20TokenBalance'
-    owner: string
-    balance: string
-    tokenInfo: {
-        __typename?: 'EthTokenInfo'
-        name?: string | null
-        symbol?: string | null
-        decimals?: number | null
-        totalSupply?: string | null
-        contract: string
-        tokenId?: string | null
-    }
-}
+export type GetBigMoversQueryVariables = Exact<{ [key: string]: never }>
 
-export type GetTokenInfoByContractQueryVariables = Exact<{
-    contract: Scalars['String']
-}>
-
-export type GetTokenInfoByContractQuery = {
+export type GetBigMoversQuery = {
     __typename?: 'Query'
-    getTokenInfoByContract: {
-        __typename?: 'EthTokenInfo'
-        name?: string | null
-        symbol?: string | null
-        decimals?: number | null
-        totalSupply?: string | null
-        contract: string
-        tokenId?: string | null
-    }
-}
-
-export type GetErc20TokenBalanceQueryVariables = Exact<{
-    contract: Scalars['String']
-    owner: Scalars['String']
-}>
-
-export type GetErc20TokenBalanceQuery = {
-    __typename?: 'Query'
-    getERC20TokenBalance: {
-        __typename?: 'ERC20TokenBalance'
-        owner: string
-        balance: string
-        tokenInfo: {
-            __typename?: 'EthTokenInfo'
-            name?: string | null
-            symbol?: string | null
-            decimals?: number | null
-            totalSupply?: string | null
-            contract: string
-            tokenId?: string | null
-        }
-    }
-}
-
-export type GetNftContractMetaQueryVariables = Exact<{
-    input: Scalars['String']
-}>
-
-export type GetNftContractMetaQuery = {
-    __typename?: 'Query'
-    getNFTContractMeta?: {
-        __typename?: 'RespCollections'
-        nextKey?: string | null
-        collections: Array<{
-            __typename?: 'RespCollection'
-            name?: string | null
-            description?: string | null
-            image_url?: string | null
-            external_url?: string | null
-            twitter_username?: string | null
-            discord_url?: string | null
-            distinct_owner_count?: number | null
-            distinct_nft_count?: number | null
-            floor_prices: Array<{
-                __typename?: 'RespNftFloorPrice'
-                value?: number | null
-                payment_token: { __typename?: 'RespPaymentToken'; name?: string | null; address?: string | null }
-            }>
+    getTokenMarketMovers: {
+        __typename?: 'GetTokenMarketMoversResult'
+        items: Array<{
+            __typename?: 'TokenMarketMoversItem'
+            contractAddress?: string | null
+            name: string
+            symbol: string
+            type: TokenMarketMoverType
+            eventTimestampUnixSec: number
+            price?: number | null
+            iconPng?: string | null
+            priceChangePercentage?: number | null
+            coingeckoCoinId: string
         }>
-    } | null
-}
-
-export type NftCollectionFragment = {
-    __typename?: 'RespCollection'
-    name?: string | null
-    description?: string | null
-    image_url?: string | null
-    external_url?: string | null
-    twitter_username?: string | null
-    discord_url?: string | null
-    distinct_owner_count?: number | null
-    distinct_nft_count?: number | null
-    floor_prices: Array<{
-        __typename?: 'RespNftFloorPrice'
-        value?: number | null
-        payment_token: { __typename?: 'RespPaymentToken'; name?: string | null; address?: string | null }
-    }>
+    }
 }
 
 export type Erc20TokenOwnersFragment = {
@@ -7627,6 +7697,116 @@ export type GetErc1155TokenTransfersQuery = {
             }
         } | null>
     }
+}
+
+export type TokenDetailsFragment = {
+    __typename?: 'EthTokenInfo'
+    name?: string | null
+    symbol?: string | null
+    decimals?: number | null
+    totalSupply?: string | null
+    contract: string
+    tokenId?: string | null
+}
+
+export type Erc20TokenOwnerDetailsFragment = {
+    __typename?: 'ERC20TokenBalance'
+    owner: string
+    balance: string
+    tokenInfo: {
+        __typename?: 'EthTokenInfo'
+        name?: string | null
+        symbol?: string | null
+        decimals?: number | null
+        totalSupply?: string | null
+        contract: string
+        tokenId?: string | null
+    }
+}
+
+export type GetTokenInfoByContractQueryVariables = Exact<{
+    contract: Scalars['String']
+}>
+
+export type GetTokenInfoByContractQuery = {
+    __typename?: 'Query'
+    getTokenInfoByContract: {
+        __typename?: 'EthTokenInfo'
+        name?: string | null
+        symbol?: string | null
+        decimals?: number | null
+        totalSupply?: string | null
+        contract: string
+        tokenId?: string | null
+    }
+}
+
+export type GetErc20TokenBalanceQueryVariables = Exact<{
+    contract: Scalars['String']
+    owner: Scalars['String']
+}>
+
+export type GetErc20TokenBalanceQuery = {
+    __typename?: 'Query'
+    getERC20TokenBalance: {
+        __typename?: 'ERC20TokenBalance'
+        owner: string
+        balance: string
+        tokenInfo: {
+            __typename?: 'EthTokenInfo'
+            name?: string | null
+            symbol?: string | null
+            decimals?: number | null
+            totalSupply?: string | null
+            contract: string
+            tokenId?: string | null
+        }
+    }
+}
+
+export type GetNftContractMetaQueryVariables = Exact<{
+    input: Scalars['String']
+}>
+
+export type GetNftContractMetaQuery = {
+    __typename?: 'Query'
+    getNFTContractMeta?: {
+        __typename?: 'RespCollections'
+        nextKey?: string | null
+        collections: Array<{
+            __typename?: 'RespCollection'
+            name?: string | null
+            description?: string | null
+            image_url?: string | null
+            external_url?: string | null
+            twitter_username?: string | null
+            discord_url?: string | null
+            distinct_owner_count?: number | null
+            distinct_nft_count?: number | null
+            floor_prices: Array<{
+                __typename?: 'RespNftFloorPrice'
+                value?: number | null
+                payment_token: { __typename?: 'RespPaymentToken'; name?: string | null; address?: string | null }
+            }>
+        }>
+    } | null
+}
+
+export type NftCollectionFragment = {
+    __typename?: 'RespCollection'
+    name?: string | null
+    description?: string | null
+    image_url?: string | null
+    external_url?: string | null
+    twitter_username?: string | null
+    discord_url?: string | null
+    distinct_owner_count?: number | null
+    distinct_nft_count?: number | null
+    floor_prices: Array<{
+        __typename?: 'RespNftFloorPrice'
+        value?: number | null
+        payment_token: { __typename?: 'RespPaymentToken'; name?: string | null; address?: string | null }
+    }>
 }
 
 export type EthTransferInTxFragment = {

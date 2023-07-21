@@ -1,7 +1,7 @@
 <template>
     <v-card variant="elevated" elevation="1" rounded="xl" :class="['pa-4 pa-sm-6 h-100']">
         <v-card-title :class="['pa-0', { 'd-flex align-center justify-space-between mb-2 mb-sm-4': isHomePage }]">
-            <h1 :class="[isHomePage ? 'text-h6' : 'text-h4 ', 'font-weight-bold']">
+            <h1 :class="[isHomePage ? 'text-h6' : 'text-h4', 'font-weight-bold']">
                 {{ title }}
             </h1>
             <app-btn v-if="isHomePage && !xs" text="More" isSmall icon="east" @click="goToTokens"></app-btn>

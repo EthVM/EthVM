@@ -178,7 +178,8 @@
         "addToken": "Добавить Tокен",
         "noMatch": "Не удалось ничего найти",
         "holder": "Владелец | Владельцы",
-        "favorites": "Избранные"
+        "favorites": "Избранные",
+        "bigMovers": "Big Movers"
     },
     "settings": {
         "emptyList": "Список пуст",
@@ -307,7 +308,9 @@
         "adrNoOutgoing": "Этот адрес не имеет исходящих транзакций",
         "adrNoIncoming": "Этот адрес не имеет входящих транзакций",
         "adrNoTxs": "Этот адрес не имеет транзакций",
-        "adrNoInternal": "Этот адрес не имеет внутренних переводов"
+        "adrNoInternal": "Этот адрес не имеет внутренних переводов",
+        "noBigMovers": "There are no big movers in the last day"
+
     },
     "nft": {
         "items": "предметов",
@@ -326,5 +329,13 @@
         "24hChange": "Изменение за 24ч",
         "priceChange": "Изменение Цены",
         "totalUsdValue": "Общая стоимость в USD"
+    },
+    "bigMover": {
+        "ath": "all time high",
+        "1H": "in 1 hour",
+        "5M": "in 5 minutes",
+        "7D": "in 7 days",
+        "24H": "in 24 hours",
+        "30D": "in 30 days"
     }
 }
