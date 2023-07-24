@@ -13,11 +13,18 @@
         <app-no-result v-if="!loading && !bigMovers" :text="$t('message.noBigMovers')" class="mt-4 mt-sm-6"></app-no-result>
 
         <div v-if="!loading && bigMovers">
+            {{ x }} {{ y }}
             <v-sheet>
                 <v-btn v-if="!xs" icon="chevron_left" height="34px" width="34px" @click="slideToNext" class="slide_prev" variant="flat" />
                 <v-btn v-if="!xs" icon="chevron_right" height="34px" width="34px" @click="slideToNext" class="slide_next" variant="flat" />
-                <div class="slide d-flex overflow-x-auto">
-                    <div v-for="i in bigMovers" :key="i.contractAddress + '-' + i.name" class="pl-5">
+                <div class="slide d-flex overflow-x-auto pr-5" ref="scrollContainer">
+                    <div
+                        v-for="(i, index) in bigMovers"
+                        :key="i.contractAddress + '-' + i.name + index"
+                        class="pl-5"
+                        :ref="el => assignRef(el, index)"
+                        :id="index + 'mover'"
+                    >
                         <v-sheet min-width="146" max-width="230" rounded="xl" :border="true" class="px-4 py-3 container-shadow">
                             <div class="d-flex flex-nowrap">
                                 <app-token-icon :token-icon="getTokenIcon(i)"></app-token-icon>
@@ -56,13 +63,14 @@ import AppTokenIcon from '@/core/components/AppTokenIcon.vue'
 import { useGetBigMoversQuery } from './apollo/big-movers/bigMovers.generated'
 import { TokenMarketMoverType, BigMoverFragment } from '@/apollo/types'
 import { formatUsdValue, FormattedNumber, formatPercentageValue } from '@/core/helper/number-format-helper'
-import { computed } from 'vue'
+import { computed, ref, reactive } from 'vue'
 import { useCoinData } from '@core/composables/CoinData/coinData.composable'
 import { useDisplay } from 'vuetify'
 import { useI18n } from 'vue-i18n'
 import { useNetwork } from '@/core/composables/Network/useNetwork'
 import BigNumber from 'bignumber.js'
 import { timeAgo } from '@/core/helper'
+import { useScroll } from '@vueuse/core'
 
 const { t } = useI18n()
 
@@ -79,7 +87,7 @@ const { loading: loadingBigMovers, result } = useGetBigMoversQuery()
 
 const bigMovers = computed<BigMoverFragment[]>(() => {
     const res = result?.value?.getTokenMarketMovers.items.filter((x): x is BigMoverFragment => x !== undefined) || []
-    return res
+    return res.slice(0, 100)
 })
 
 const loading = computed<boolean>(() => {
@@ -135,9 +143,50 @@ const getChangeClass = (percentage: number): string => {
 /**------------------------
  * Scroll
  -------------------------*/
+// interface RowRef {
+//    e: HTMLInputElement | null
+// }
+// interface ScrollState {
+//     rowRefs: <RowRef>[]
+// }
+// const state = reactive<ScrollState>({
+//     rowRefs: []
+// })
+
+// interface Refs {
+//     el: HTMLInputElement
+// }
+
+const rowRefs = ref<HTMLInputElement[]>([])
+const scrollContainer = ref<HTMLElement | null>(null)
+const { x, y, isScrolling, arrivedState, directions } = useScroll(scrollContainer)
 
 const slideToNext = () => {
-    console.log('f')
+    console.log('Hello', scrollContainer.value?.offsetWidth)
+    // console.log('f')
+    const containerWidth = scrollContainer.value?.offsetWidth
+    const el = document.getElementById(0 + 'mover')
+    const els = document.getElementById(3 + 'mover')
+    console.log(el.getBoundingClientRect().width)
+    console.log(els.getBoundingClientRect().width)
+    // First Visible:
+    // if (contatinerWidth) {
+    //     if (x.value === 0) {
+
+    //     }
+    //     console.log(x.value)
+
+    // }
+    if (scrollContainer.value && containerWidth) {
+        const next = x.value + (containerWidth - 20)
+        scrollContainer.value.scroll({ left: next, top: 0, behavior: 'smooth' })
+    }
+}
+
+const assignRef = (el: HTMLInputElement, index: number) => {
+    // // const refs = [...Array(bigMovers.value.length)]
+    // console.log(el.getBoundingClientRect().width)
+    rowRefs.value.push(el)
 }
 </script>
 
