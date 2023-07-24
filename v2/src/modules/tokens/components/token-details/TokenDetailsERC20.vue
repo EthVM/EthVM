@@ -45,7 +45,7 @@ import AppTokenIcon from '@/core/components/AppTokenIcon.vue'
 import BN from 'bignumber.js'
 import { formatPercentageValue, formatUsdValue } from '@core/helper/number-format-helper'
 import { useCoinData } from '@core/composables/CoinData/coinData.composable'
-import { TokenDetailsFragment as TokenInfo } from '@module/tokens/apollo/TokenDetails/tokenDetails.generated'
+import { TokenDetailsFragment as TokenInfo } from '@module/tokens/apollo/token-details/tokenDetails.generated'
 import { ErrorMessageToken } from '@module/tokens/models/ErrorMessagesForTokens'
 import { computed } from 'vue'
 import { MarketDataFragment as TokenMarketData } from '@/core/composables/CoinData/getLatestPrices.generated'
@@ -172,30 +172,30 @@ const otherDeatils = computed<TokenDetail[]>(() => {
     const zero = '$0.00'
     return [
         {
-            title: t('token.marketCap'),
+            title: t('market.marketCap'),
             text: !props.isLoading && tokenData.value && tokenData.value.market_cap ? formatUsdValue(new BN(tokenData.value.market_cap)).value : zero
         },
         {
-            title: t('token.24hHigh'),
+            title: t('market.24hHigh'),
             text: !props.isLoading && tokenData.value && tokenData.value.high_24h ? formatUsdValue(new BN(tokenData.value.high_24h)).value : zero
         },
         {
-            title: t('token.24hLow'),
+            title: t('market.24hLow'),
             text: !props.isLoading && tokenData.value && tokenData.value.low_24h ? formatUsdValue(new BN(tokenData.value.low_24h)).value : zero
         },
         {
-            title: t('token.circulatingSupply'),
+            title: t('market.circulatingSupply'),
             text:
                 !props.isLoading && tokenData.value && tokenData.value.circulating_supply
                     ? formatUsdValue(new BN(tokenData.value.circulating_supply)).value
                     : zero
         },
         {
-            title: t('token.maxSupply'),
+            title: t('market.maxSupply'),
             text: !props.isLoading && tokenData.value && tokenData.value.total_supply ? formatUsdValue(new BN(tokenData.value.total_supply)).value : zero
         },
         {
-            title: t('token.24hTradingVolume'),
+            title: t('market.24hTradingVolume'),
             text: !props.isLoading && tokenData.value && tokenData.value.total_volume ? formatUsdValue(new BN(tokenData.value.total_volume)).value : zero
         }
     ]

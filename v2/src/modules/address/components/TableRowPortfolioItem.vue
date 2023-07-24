@@ -37,7 +37,7 @@
             -->
         <v-col v-if="(xs && state.showMore) || smAndUp" cols="6" sm="3" lg="2" class="d-block d-lg-flex align-lg-center">
             <div v-if="props.adr.eth">
-                <p v-if="xs" class="text-info mb-2">{{ currencyName }} Balance</p>
+                <p v-if="xs" class="text-info mb-2">{{ currencyName }} {{ $t('common.balance') }}</p>
                 <p>
                     {{ props.adr.eth }} <span v-if="props.adr.ethTooltip"><app-tooltip :text="props.adr.ethTooltip"></app-tooltip></span>
                 </p>
@@ -50,7 +50,7 @@
                 hidden on (xs & !state.showMore) and SM, MD
              -->
         <v-col v-if="(xs && state.showMore) || lgAndUp" cols="6" lg="2" class="d-block d-lg-flex align-lg-center">
-            <p v-if="xs" class="text-info mb-2">{{ currencyName }} Value</p>
+            <p v-if="xs" class="text-info mb-2">{{ currencyName }} {{ $t('common.value') }}</p>
             <p v-if="props.adr.ethUSD">{{ props.adr.ethUSD }}</p>
             <div v-else class="skeleton-box rounded-xl" style="height: 20px; width: 60%"></div>
         </v-col>
@@ -67,15 +67,15 @@
                 hidden on (xs & ! state.showMore) and smAndUP
             -->
         <v-col v-if="xs && state.showMore" cols="12" class="pt-5 d-block">
-            <p class="text-info mb-2">Hash</p>
+            <p class="text-info mb-2">{{ $t('common.hash') }}</p>
             <app-transform-hash :hash="eth.toCheckSum(props.adr.hash)" :link="`address/${props.adr.hash}`" is-blue is-short :show-name="false" />
         </v-col>
     </app-table-row>
     <app-menu min-width="160" :activator="`#list-item-menu-${props.adr.hash}`">
-        <v-list-item title="Edit Name" class="py-2" @click="openEditDialog(true)"> </v-list-item>
-        <v-list-item title="View Tokens" class="py-2" @click="viewTokens"></v-list-item>
+        <v-list-item :title="$t('portfolio.editName')" class="py-2" @click="openEditDialog(true)"> </v-list-item>
+        <v-list-item :title="$t('portfolio.viewTokens')" class="py-2" @click="viewTokens"></v-list-item>
         <v-divider class="my-1 mx-4" />
-        <v-list-item title="Delete Address" class="py-2" @click="deleteAddress"> </v-list-item>
+        <v-list-item :title="$t('portfolio.deleteAdr')" class="py-2" @click="deleteAddress"> </v-list-item>
     </app-menu>
     <module-porfolio-handle-adr v-if="state.showEdit" is-edit-mode :address="props.adr.hash" :name="props.adr.name" @close-module="openEditDialog(false)">
     </module-porfolio-handle-adr>

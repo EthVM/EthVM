@@ -25,7 +25,7 @@
             {{ totalTokens }}
         </v-col>
         <v-col :cols="props.isOverview ? 2 : 1">
-            <app-chip :bg="transferType === 'in' ? 'success' : 'warning'" :text="transferType === 'in' ? 'From' : 'To'" />
+            <app-chip :bg="transferType === 'in' ? 'success' : 'warning'" :text="transferType === 'in' ? $t('common.from') : $t('common.to')" />
         </v-col>
         <v-col :cols="props.isOverview ? 4 : 3" class="text-secondary">
             <div class="d-flex align-center">
@@ -60,7 +60,7 @@
                         </v-icon>
                     </div>
                     <span>
-                        {{ transferType === 'in' ? 'Received' : 'Sent' }}
+                        {{ transferType === 'in' ? $t('txs.status.recieve') : $t('txs.status.sent') }}
                     </span>
                 </div>
                 <p class="text-info">{{ timeAgo(new Date(props.transfer.transfer.timestamp * 1e3)) }}</p>
@@ -81,14 +81,14 @@
                     </v-row>
                     <v-row class="ma-0 justify-space-between pb-5">
                         <div>
-                            <p class="text-info mb-2">From</p>
+                            <p class="text-info mb-2">{{ $t('common.address') }}</p>
                             <div class="d-flex">
                                 <app-address-blockie :address="transferTypeAddress || ''" :size="6" class="mr-2" />
                                 <app-transform-hash is-blue is-short :hash="eth.toCheckSum(transferTypeAddress)" :link="`/address/${transferTypeAddress}`" />
                             </div>
                         </div>
                         <div>
-                            <p class="text-info mb-2">Hash</p>
+                            <p class="text-info mb-2">{{ $t('common.hash') }}</p>
                             <app-transform-hash
                                 is-blue
                                 is-short
@@ -115,8 +115,8 @@ import { formatNumber } from '@core/helper/number-format-helper'
 import { computed, reactive } from 'vue'
 import { timeAgo, eth } from '@core/helper'
 import { NftMetaFragment } from '@core/composables/NftMeta/nftMeta.generated'
-import TokenNftImg from '@module/tokens/components/TokenNFT/TokenNftImg.vue'
-import { NFTDetails } from '@module/tokens/components/TokenNFT/propModel'
+import TokenNftImg from '@module/tokens/components/token-nft/TokenNftImg.vue'
+import { NFTDetails } from '@module/tokens/components/token-nft/propModel'
 import Web3Utils from 'web3-utils'
 
 const { mdAndDown, smAndDown } = useDisplay()

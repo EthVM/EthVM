@@ -1,3 +1,15 @@
+### Release v2.1.5
+
+### Feature
+- add change lang in settings [#1184](https://github.com/EthVM/EthVM/pull/1184)
+
+### Devop
+- refactor missing string, add translations [#1175](https://github.com/EthVM/EthVM/pull/1175)
+- add settings to mobile menu[#1184](https://github.com/EthVM/EthVM/pull/1184)
+- localize timeago helper [$1188](https://github.com/EthVM/EthVM/pull/1188)
+
+======================================================================
+
 ### Release v2.1.4
 
 ###  Fix

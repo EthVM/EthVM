@@ -43,7 +43,7 @@
                     </p>
                 </v-col>
                 <v-col :cols="props.isOverview ? 2 : 1">
-                    <app-chip :bg="transferType === 'in' ? 'success' : 'warning'" :text="transferType === 'in' ? 'From' : 'To'" />
+                    <app-chip :bg="transferType === 'in' ? 'success' : 'warning'" :text="transferType === 'in' ? $t('common.from') : $t('common.to')" />
                 </v-col>
                 <v-col :cols="props.isOverview ? 4 : 2" class="text-secondary py-0">
                     <div class="d-flex align-center">
@@ -68,9 +68,9 @@
                 <template #expandable>
                     <v-col v-if="state.showMoreDetails" cols="12" class="mt-6">
                         <v-row class="my-0">
-                            <v-col md="3" class="text-right text-body-1 font-weight-bold text-info">Balance Before</v-col>
+                            <v-col md="3" class="text-right text-body-1 font-weight-bold text-info">{{ $t('txs.balanceBefore') }}</v-col>
                             <v-col md="9" class="text-uppercase">{{ getTransferBalanceBefore.value }} {{ props.transfer.tokenInfo.symbol }}</v-col>
-                            <v-col md="3" class="text-right text-body-1 font-weight-bold text-info">Balance After</v-col>
+                            <v-col md="3" class="text-right text-body-1 font-weight-bold text-info">{{ $t('txs.balanceAfter') }}</v-col>
                             <v-col md="9" class="text-uppercase">{{ getTransferBalanceAfter.value }} {{ props.transfer.tokenInfo.symbol }}</v-col>
                         </v-row>
                     </v-col>
@@ -83,7 +83,7 @@
            =========================
         -->
         <template v-else>
-            <app-table-row @click="toggleMoreDetails">
+            <app-table-row @click="toggleMoreDetails" :color="state.showMoreDetails ? 'pillGrey' : 'transparent'">
                 <v-col cols="6" class="pb-2">
                     <div class="d-flex align-center flex-nowrap">
                         <div class="mobile-chip rounded-circle mr-2" :class="transferType ? 'bg-success' : 'bg-orange'">
@@ -92,7 +92,7 @@
                             </v-icon>
                         </div>
                         <span>
-                            {{ transferType === 'in' ? 'Received' : 'Sent' }}
+                            {{ transferType === 'in' ? $t('txs.status.recieve') : $t('txs.status.sent') }}
                         </span>
                     </div>
                 </v-col>
@@ -105,7 +105,7 @@
                 </v-col>
                 <v-col cols="6" class="py-0 text-info">
                     {{ timeAgo(new Date(props.transfer.transfer.timestamp * 1e3)) }}
-                    {{ transferType === 'in' ? 'from' : 'to' }}
+                    {{ transferType === 'in' ? $t('common.from') : $t('common.to') }}
                 </v-col>
                 <v-col cols="6" class="py-0 text-secondary">
                     <div class="d-flex align-center">
@@ -114,9 +114,9 @@
                     </div>
                 </v-col>
                 <template #expandable>
-                    <v-col cols="12" v-if="state.showMoreDetails">
+                    <v-col cols="12" v-if="state.showMoreDetails" class="mb-5">
                         <div>
-                            <p class="text-info mb-1">Hash</p>
+                            <p class="text-info mb-1">{{ $t('common.hash') }}</p>
                             <app-transform-hash
                                 is-blue
                                 is-short
@@ -126,15 +126,15 @@
                         </div>
                         <v-divider class="my-5 mx-n4 mx-sm-n6" />
                         <v-row justify="space-between" class="my-5 mx-0">
-                            <p class="text-info">Balance Before</p>
+                            <p class="text-info">{{ $t('txs.balanceBefore') }}</p>
                             <p class="text-uppercase">{{ getTransferBalanceBefore.value }} {{ props.transfer.tokenInfo.symbol }}</p>
                         </v-row>
                         <v-row justify="space-between" class="my-5 mx-0">
-                            <p class="text-info">Tx Fee Paid</p>
+                            <p class="text-info">{{ $t('common.txFeePaid') }}</p>
                             <p class="text-error">-{{ txFee.value }} {{ txFee.unit.toUpperCase() }}</p>
                         </v-row>
                         <v-row justify="space-between" class="mt-5 mx-0">
-                            <p class="text-info">Balance After</p>
+                            <p class="text-info">{{ $t('txs.balanceAfter') }}</p>
                             <p class="text-uppercase">{{ getTransferBalanceAfter.value }} {{ props.transfer.tokenInfo.symbol }}</p>
                         </v-row>
                     </v-col>

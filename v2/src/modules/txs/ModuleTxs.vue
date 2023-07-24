@@ -56,6 +56,7 @@ import { useRouter } from 'vue-router'
 import { useAppPaginate } from '@core/composables/AppPaginate/useAppPaginate.composable'
 import { useDisplay } from 'vuetify'
 import { useI18n } from 'vue-i18n'
+
 const { t } = useI18n()
 const { xs } = useDisplay()
 

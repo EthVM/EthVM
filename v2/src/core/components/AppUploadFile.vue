@@ -7,8 +7,10 @@
             @drop="drop"
             @click="openOnClick"
         >
-            <p class="px-5 px-sm-10 mb-3 text-center text-info mb-5">Drag and drop your ethVM-adrs-names.json file or click to browse</p>
-            <app-btn text="Select File" min-width="160" @click="openOnClick"></app-btn>
+            <p class="px-5 px-sm-10 mb-3 text-center text-info mb-5">
+                {{ $t('settings.import.dragAndDrop') }}
+            </p>
+            <app-btn :text="$t('settings.import.selectFile')" min-width="160" @click="openOnClick"></app-btn>
         </div>
 
         <div style="min-height: 48px">

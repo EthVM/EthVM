@@ -18,7 +18,7 @@
                 >
             </v-col>
             <v-col cols="12">
-                <app-input :place-holder="$t('portfolio.placeholder.searchTokenName')" v-model="state.searchParams" class="mt-5" />
+                <app-input :place-holder="$t('token.searchTokenName')" v-model="state.searchParams" class="mt-5" />
             </v-col>
         </v-row>
 
@@ -164,7 +164,9 @@ import { useStore } from '@/store'
 import { TokenSort } from '@module/address/models/TokenSort'
 import { MarketDataFragment as TokenMarketData } from '@core/composables/CoinData/getLatestPrices.generated'
 import { useAppPaginate } from '@core/composables/AppPaginate/useAppPaginate.composable'
+import { useI18n } from 'vue-i18n'
 
+const { t } = useI18n()
 const { xs } = useDisplay()
 const { loading: loadingCoinData, getEthereumTokensMap } = useCoinData()
 const store = useStore()
@@ -212,7 +214,7 @@ const state: ComponentState = reactive({
  -------------------------*/
 
 const messageNoTokens = computed<string>(() => {
-    return state.searchParams === '' ? 'This portfolio does not have any tokens' : 'Selected addresses do not own this token'
+    return state.searchParams === '' ? t('portfolio.noTokens') : t('portfolio.addressNoTokens')
 })
 
 store.portfolio.forEach(i => {
@@ -360,15 +362,15 @@ const SORT_KEY = KEY
 
 const activeSortString = computed<string>(() => {
     if (state.sortKey.includes(SORT_KEY.BALANCE)) {
-        return 'Balance'
+        return t('common.balance')
     } else if (state.sortKey.includes(SORT_KEY.PRICE)) {
-        return 'Price'
+        return t('common.price')
     } else if (state.sortKey.includes(SORT_KEY.NAME)) {
-        return 'Token'
+        return t('common.token')
     } else if (state.sortKey.includes(SORT_KEY.USD)) {
-        return 'USD Value'
+        return t('common.usdValue')
     }
-    return '24h'
+    return t('common.24h')
 })
 </script>
 

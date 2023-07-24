@@ -93,6 +93,9 @@ import { eth } from '@core/helper/eth'
 import { MAX_PORTFOLIO_ITEMS } from '@/store/helpers'
 import { useResolveName } from '@/core/composables/ResolveName/useResolveName'
 import { ROUTE_NAME } from '@core/router/routesNames'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 
 const routeSettings = {
     name: ROUTE_NAME.SETTINGS.NAME
@@ -235,7 +238,7 @@ const hasAddressError = computed<boolean>(() => {
  * @param _value user input
  */
 const addressErrorMes = computed<string>(() => {
-    return !addressIsNew.value ? 'This address is already saved' : 'Input not valid'
+    return !addressIsNew.value ? t('message.addressAlreadyIsSaved') : t('message.inputNotValid')
 })
 
 /** -------------------
@@ -331,11 +334,11 @@ const icon = computed<string>(() => {
     return store.addressHashIsSaved(props.address || '') === true ? 'star' : 'star_outline'
 })
 const title = computed<string>(() => {
-    return props.isEditMode ? 'Edit name' : 'Add Address'
+    return props.isEditMode ? t('portfolio.editName') : t('portfolio.addAddressIcon')
 })
 
 const buttonText = computed<string>(() => {
-    return props.isEditMode ? 'Save' : 'Add'
+    return props.isEditMode ? t('common.save') : t('common.add')
 })
 
 const isDisabled = computed<boolean>(() => {

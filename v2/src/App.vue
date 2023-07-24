@@ -11,6 +11,7 @@
             </v-container>
             <the-notifications />
         </v-main>
+        <the-promo />
         <the-app-footer />
     </v-app>
 </template>
@@ -20,18 +21,20 @@ import TheAppHeader from './core/components/TheAppHeader.vue'
 import TheAppFooter from '@core/components/TheAppFooter.vue'
 import TheAppNavigationDrawerVue from './core/components/TheAppNavigationDrawer.vue'
 import TheNotifications from './core/components/TheNotifications.vue'
+import ThePromo from '@core/components/ThePromo.vue'
 import { useStore } from '@/store'
 import { useGetLatestPricesQuery } from '@core/composables/CoinData/getLatestPrices.generated'
 import { useSetPortfolio } from './core/composables/Portfolio/useSetPortfolioBalance'
 import { computed, watch, reactive, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { ROUTE_NAME } from '@core/router/routesNames'
-import { useStorage } from '@vueuse/core'
 import { usePreferredColorScheme } from '@vueuse/core'
 import { useTheme } from 'vuetify/lib/framework.mjs'
 import { themes } from './core/plugins/vuetify'
 import { useNetwork } from './core/composables/Network/useNetwork'
 import { useState } from 'vue-gtag-next'
+import { useI18n } from 'vue-i18n'
+import { isOfTypeMes } from './translations/helpers'
 import configs from './configs'
 
 const store = useStore()
@@ -162,6 +165,8 @@ watch(
  * Set Default Theme
  * --------------------*/
 const theme = useTheme()
+const { locale } = useI18n()
+
 onMounted(() => {
     const preferredColor = usePreferredColorScheme()
     if (store.appTheme) {
@@ -172,6 +177,9 @@ onMounted(() => {
     }
     if (isEnabled && configs.NODE_ENV !== 'development') {
         isEnabled.value = store.dataShare
+    }
+    if (store.lang && isOfTypeMes(store.lang)) {
+        locale.value = store.lang
     }
     //Clean old Storage
     if (localStorage.getItem('dataShare')) {
@@ -185,6 +193,12 @@ onMounted(() => {
     }
     if (localStorage.getItem('favToksData')) {
         localStorage.removeItem('favToksData')
+    }
+    //Check Survey and hide after aug 18th:
+    const _now = Date.now()
+    const _end = 1692403200000
+    if (_now > _end) {
+        store.setPopup(false)
     }
 })
 </script>

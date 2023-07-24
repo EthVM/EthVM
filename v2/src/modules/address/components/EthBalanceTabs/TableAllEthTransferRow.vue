@@ -104,7 +104,7 @@
                     -->
                     <v-col cols="12" sm="3">
                         <div v-if="isOutgoing && transferType.type === TransferSubtype.Transaction" class="d-flex justify-space-between flex-sm-column">
-                            <p class="text-info mb-sm-2">Fee Paid</p>
+                            <p class="text-info mb-sm-2">{{ $t('common.txFeePaid') }}</p>
                             <p class="text-right text-sm-left">- {{ txFee.value }} {{ txFee.unit }}</p>
                         </div>
                     </v-col>
@@ -126,7 +126,9 @@ import { formatNonVariableEthValue, FormattedNumber, formatNumber } from '@core/
 import BN from 'bignumber.js'
 import { useDisplay } from 'vuetify'
 import { TransferSubtype } from '@/apollo/types'
+import { useI18n } from 'vue-i18n'
 
+const { t } = useI18n()
 const { smAndDown, xs, mdAndDown } = useDisplay()
 
 interface ComponentProps {
@@ -155,30 +157,30 @@ const transferStatus = computed<Status>(() => {
     // If to and from address is the same, then transfer is self
     if (props.transfer.transfer.to === props.addressRef.toLowerCase() && props.transfer.transfer.from === props.addressRef.toLowerCase()) {
         return {
-            direction: TRANSFER_DIRECTION.SELF,
-            text: isFailed ? 'Fail Send' : 'Self Sent',
-            color: isFailed ? 'error' : 'warning',
-            icon: isFailed ? 'close' : 'north_west'
+            direction: t('txs.status.self'),
+            text: isFailed ? t('txs.status.failSend') : t('txs.status.selfSent'),
+            color: isFailed ? 'error' : 'info',
+            icon: isFailed ? 'close' : 'refresh'
         }
     }
     if (props.transfer.transfer.to === props.addressRef.toLowerCase()) {
         return {
-            direction: TRANSFER_DIRECTION.FROM,
-            text: isFailed ? 'Fail Recieve' : 'Received',
+            direction: t('common.from'),
+            text: isFailed ? t('txs.status.failRecieve') : t('txs.status.recieve'),
             color: isFailed ? 'error' : 'success',
             icon: isFailed ? 'close' : 'south_east'
         }
     } else if (props.transfer.transfer.from === props.addressRef.toLowerCase()) {
         return {
-            direction: TRANSFER_DIRECTION.TO,
-            text: isFailed ? 'Fail Send' : 'Sent',
+            direction: t('common.to'),
+            text: isFailed ? t('txs.status.failSend') : t('txs.status.sent'),
             color: isFailed ? 'error' : 'warning',
             icon: isFailed ? 'close' : 'north_west'
         }
     }
     return {
-        direction: TRANSFER_DIRECTION.SELF,
-        text: 'Self',
+        direction: t('txs.status.self'),
+        text: t('txs.status.selfSent'),
         color: 'info',
         icon: 'refresh'
     }
@@ -204,37 +206,37 @@ const transferType = computed<Type>(() => {
     switch (props.transfer.transfer.subtype) {
         case TransferSubtype.BlockReward:
             return {
-                text: 'block reward',
+                text: t('block.blockReward'),
                 type: TransferSubtype.BlockReward
             }
         case TransferSubtype.UncleReward:
             return {
-                text: 'uncle reward',
+                text: t('block. uncleReward'),
                 type: TransferSubtype.UncleReward
             }
         case TransferSubtype.Genesis:
             return {
-                text: 'genesis reward',
+                text: t('txs.type.genesis'),
                 type: TransferSubtype.Genesis
             }
         case TransferSubtype.InternalTransaction:
             return {
-                text: 'internal',
+                text: t('txs.type.internal'),
                 type: TransferSubtype.InternalTransaction
             }
         case TransferSubtype.DaoHardFork:
             return {
-                text: 'dao hard fork',
+                text: t('txs.type.dao'),
                 type: TransferSubtype.DaoHardFork
             }
         case TransferSubtype.Withdrawl:
             return {
-                text: 'withdrawal',
+                text: t('txs.type.withdrawal'),
                 type: TransferSubtype.Withdrawl
             }
         default:
             return {
-                text: 'transaction',
+                text: t('txs.name', 1),
                 type: TransferSubtype.Transaction
             }
     }

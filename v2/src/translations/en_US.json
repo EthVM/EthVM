@@ -25,18 +25,24 @@
         "outcoming": "Outgoing",
         "balanceChange": "Balance Change",
         "balanceBefore": "Balance Before",
+        "totalBalanceChange": "Total Balance Change",
         "balanceAfter": "Balance After",
         "estimatedFee": "Estimated Fee",
         "isHomeHeader": "Last Transactions",
         "refresh": "New Txs Found, Refresh",
-        "name": "Transactions",
-        "newNft": "New ERC20 Transfers",
+        "name": "Transaction | Transactions",
+        "nameShort": "Tx | Txs",
+        "newNft": "New ERC721 Transfers",
+        "internal": "Internal Transfer",
+        "value": "Transaction Value",
+        "internalValue":"Internal Transfer Value",
+        "viewTx": "View Transaction",
         "details": {
             "header": "Transaction Summary",
             "txHash": "Tx Hash",
             "createdContract": "Created Contract",
             "interactedWith": "Interacted With Contract",
-            "title": {
+            "status": {
                 "successful": "Successful",
                 "failed": "Failed",
                 "replaced": "Replaced",
@@ -54,9 +60,8 @@
                 "gasUsed": "Gas Used",
                 "baseFee": "Base fee",
                 "maxFee": "Max fee per gas",
-                "notFound": "No transaction state difference avaialble",
-                "index": "TX Index",
-                "difference": "State"
+                "notFound": "No transaction state difference availаble",
+                "index": "Tx Index"
             },
             "actions": {
                 "header": "Actions",
@@ -71,17 +76,31 @@
                 "event": "Event | Events",
                 "searchEvents": "Search events",
                 "searchAdrs": "Search Addresses",
-                "noEvents": "No events found",
-                "noAdrs": "No addresses found",
+                "noEvents": "Еvent not found",
+                "noAdrs": "Address not found",
                 "clear": "Clear All"
             }
+        },
+        "status": {
+            "sent": "Sent",
+            "failSend": "Fail Send",
+            "selfSent": "Self Sent",
+            "recieve": "Received",
+            "failRecieve": "Fail Receive",
+            "self": "self"
+        },
+        "type": {
+            "genesis": "genesis reward",
+            "internal": "internal",
+            "dao": "dao hard fork",
+            "withdrawal": "withdrawal"
         }
     },
     "common": {
         "add": "add",
         "all": "All",
         "id": "Id",
-        "block": "Block",
+        "block": "Block | Blocks",
         "details": "Details",
         "blockMined": "Block Mined",
         "confirmations": "Confirmations",
@@ -95,10 +114,10 @@
         "type": "Type",
         "amount": "Amount",
         "gasLimit": "Gas limit",
+        "gasPrice": "Gas Price",
         "txFee": "Tx Fee",
         "txFeePaid": "Tx Fee Paid",
         "txValue": "Tx Value",
-        "paid": "Paid",
         "input": "Input",
         "nonce": "Nonce",
         "fee": "Fee",
@@ -109,10 +128,8 @@
         "transfer": "Transfers",
         "balance": "Balance | Balances",
         "value": "Value",
-        "validator": "Validator",
-        "token": "Token",
+        "token": "Token | Tokens",
         "price": "Price",
-        "marketCap": "Market Cap",
         "more": "More",
         "24h": "24h",
         "usdValue": "USD Value",
@@ -122,19 +139,33 @@
             "export": "Export",
             "import": "Import"
         },
-        "filter": "Filter"
+        "filter": "Filter",
+        "save": "Save",
+        "overview": "Overview",
+        "nft": "NFT | NFTS",
+        "reward": "Reward | Rewards",
+        "height": "Height",
+        "search": "Search",
+        "noName": "No Name"
     },
     "portfolio": {
+        "yourPortfolio": "Your portfolio",
         "addAddressIcon": "Add Address",
+        "editName": "Edit name",
+        "deleteAdr": "Delete Address",
         "limit": "You can only store 10 addresses in your portfolio",
         "errorDuplicateName": "This name is already saved",
         "tokenName": "Token Name",
         "viewInSettings": "View in Settings",
         "placeholder": {
-            "addAddress": "Enter Address Hash / Domain Name",
-            "searchTokenName": "Search token name",
+            "addAddress": "Enter Address / Domain Name",
             "name": "Enter Name"
-        }
+        },
+        "nameAdded" : "{name} has been added to your portfolio",
+        "viewTokens": "View tokens",
+        "noTokens": "This portfolio does not have any tokens", 
+        "addressNoTokens": "Selected addresses do not own this token",
+        "sort": "sort"
     },
     "uncle": {
         "number": "Uncle #",
@@ -144,21 +175,23 @@
         "position": "Position"
     },
     "token": {
-        "maxSupply": "Max Supply",
         "contract": "Contract",
         "tokenStandard": "Token Standard",
         "decimals": "Decimals",
-        "collections": "Collections",
-        "circulatingSupply": "Circulating Supply",
-        "24hHigh": "24h High",
-        "24hTradingVolume": "24h Trading Volume",
-        "marketCap": "Market Cap",
+        "collection": "Collection | Collections",
         "id": "ID",
         "percentage": "Percentage",
         "image": "Image",
         "quantity": "Quantity",
         "noHolder": "There are no holders for this token",
-        "noTransfers": "No transfers available"
+        "noTransfers": "No transfers available",
+        "searchTokenName": "Search token name",
+        "searchTokens": "Search tokens",
+        "addToken": "Add Token",
+        "noMatch": "We could not find anything mathching: {search}",
+        "holder": "Holder | Holders",
+        "favorites": "Favorites",
+        "tokenTotal": "total 1 tokens | total {n} tokens"
     },
     "settings": {
         "emptyList": "This list is empty",
@@ -169,7 +202,7 @@
             "addressName": "Address Names"
         },
         "placeholder": {
-            "search": "Search by hash or name"
+            "search": "Search by address or name"
         },
         "tagline": {
             "addressName": "Add custom names to addresses in order to easily track them through ethVM"
@@ -177,22 +210,22 @@
         "data-share": {
             "on": "Data Sharing On",
             "off": "Data Sharing Off"
-        }
+        },
+        "import": {
+            "name": "Import Address Names",
+            "portfolio": "Import Portfolio",
+            "all": "Import All Settings",
+            "invalidFile": "File contents are not valid",
+            "selectFile": "Select File",
+            "dragAndDrop": "Drag and drop your ethVM-adrs-names.json file or click to browse"
+        },
+        "language": "Language",
+        "viewInPortfolio": "View in Portfolio",
+        "delete": "Delete"
     },
     "address": {
-        "circulatingSupply": "Circulating Supply",
-        "24hTradingVolume": "24h Trading Volume",
         "blockRewards": "Block rewards",
         "uncleRewards": "Uncle rewards",
-        "totalSupply": "Total Supply",
-        "24h": {
-            "high": "24h High",
-            "change": "24h Change",
-            "low": "24h low"
-        },
-        "placeholder": {
-            "search": "Search by hash or name"
-        },
         "tagline": {
             "noToken": "This address does not hold any tokens",
             "noTransactionHistory": "This address does not have any token transfer history",
@@ -201,7 +234,8 @@
             "noPendingTransactions": "This address does not have pending transactions",
             "noStakeWithdrawals": "This address does not have any stake withdrawals",
             "noTransfer": "This address does not have any transfers"
-        }
+        },
+        "balanceChangeBreakdown": "Balance Change Breakdown"
     },
     "block": {
         "lastBlockTitle": "Last Blocks",
@@ -214,8 +248,8 @@
         "uncle": "Uncle | Uncles",
         "difficulty": "Difficulty",
         "stateRoot": "State Root",
-        "receiptRoot": "Receipt Root",
-        "transactionRoot": "Transaction Root",
+        "receiptRoot": "Receipts Root",
+        "transactionRoot": "Transactions Root",
         "logBloom": "Logs Bloom",
         "extraData": "Extra Data",
         "addressBlockTitle": "Mined Blocks",
@@ -226,8 +260,6 @@
         "totalAddress": "Total Addresses",
         "tokenBalance": "Token Balance",
         "tokenHistory": "Token History",
-        "tokenSearch": "Search token name",
-        "tokenTotal": "total tokens",
         "tokenBalanceRefresh": "Token's Balance Changed, Refresh",
         "newTransfer": "New ERC20 Transfers",
         "nftTotal": "Total NFT's",
@@ -235,19 +267,21 @@
         "unknown": "Unknown",
         "portfolioEmpty": "Your portfolio is empty",
         "portfolioValue": "Portfolio Value",
+        "stakeWithdrawals": "Stake Withdrawals",
         "header": {
             "blockNumber": "Block #",
             "watchList": "Watchlist",
-            "time": "Timestamp",
-            "transactions": "Transactions",
-            "miner": "Miner",
-            "reward": "Reward"
+            "miner": "Miner"
         },
         "error": {
             "withdrawal": "This block does not have any withdrawals",
             "notMined": "This block has not been mined yet",
-            "reward": "Reward"
-        }
+            "txs": "This block does not have any transactions"
+        },
+        "totalRewards": "Total Rewards",
+        "txFee": "Transaction fees",
+        "uncleSha": "Uncles SHA3",
+        "newBlock": "1 new block | {count} new blocks" 
     },
     "home": {
         "tagline": {
@@ -269,6 +303,77 @@
             "rights": "All rights reserved.",
             "settings": "Settings",
             "advertise": "Advertise with us"
-        }
+        },
+        "search": "Search by address/transaction/token"
+    },
+    "stats": {
+        "lastUpdate": "Last update",
+        "lastBlock": "Last block"
+    },
+    "coreMenu": {
+        "home": "Home",
+        "blockchain": "Blockchain",
+        "products": "Products",
+        "gas": "Gas"
+    },
+    "message": {
+        "txNoactions": "There are no actions performed in this transaction",
+        "txNoLogs": "There are no logs found in this transaction",
+        "adrNoBlockRewards": "This address does not have any block rewards",
+        "adrNoUnclerewards": "This address does not have any uncle rewards",
+        "adrNoOutgoing": "This address does not have any outgoing transactions",
+        "adrNoIncoming": "This address does not have any incoming transactions",
+        "adrNoTxs": "This address does not have any transactions",
+        "adrNoInternal": "This address does not have any internal transfers",
+        "imageNotAvailable": "image not available",
+        "addressAlreadyIsSaved": "This address is already saved",
+        "inputNotValid":  "Input not valid",
+        "required": "Required"
+    },
+    "nft": {
+        "items": "items",
+        "owner": "owner | owners",
+        "ownedBy": "Owned By"
+    },
+    "market": {
+        "marketCap": "Market Cap",
+        "marketCapShort": "Market Cap",
+        "volume": "Volume",
+        "circulatingSupply": "Circulating Supply",
+        "24hHigh": "24h High",
+        "24hLow": "24h Low",
+        "totalSupply": "Total Supply",
+        "24hTradingVolume": "24h Trading Volume",
+        "maxSupply": "Max Supply",
+        "24hChange": "24h Change",
+        "priceChange": "Price Change",
+        "totalUsdValue": "Total USD Value"
+    },
+    "timeAgo": {
+        "year": "1 year ago | {n} years ago",
+        "yearShort": "{n} y ago",
+        "month": "1 month ago | {n} months ago",
+        "monthShort": "{n} m ago",
+        "day": "1 day ago | {n} days ago",
+        "dayShort": "{n} d ago",
+        "hour": "1 hour ago | {n} hours ago",
+        "hourShort": "{n} h ago",
+        "minute": "1 minute ago | {n} minutes ago",
+        "minuteShort": "{n} min ago",
+        "seconds": "1 second ago | {n} seconds ago",
+        "secondsShort": "{n} sec ago",
+        "justNow": "just now"
+    },
+    "productDesc": {
+        "mew": "Ethereum desktop wallet",
+        "mewWallet": "IOS and Android wallet",
+        "enkrypt": "Multichain extension wallet",
+        "mewtopia": "Education Blog",
+        "helpCenter": "How to use MEW products"
+    },
+    "notify": {
+        "undo": "undo",
+        "adrDeleted": "{address} was deleted from portfolio",
+        "copied": "Copied: {result}"
     }
 }

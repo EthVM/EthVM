@@ -13,14 +13,16 @@
     >
         <div v-if="state.notification" class="text-body-1 text-break-new-line">
             <!-- TYPE: DELETE ADDRESS -->
-            <p v-if="state.notification._type === TYPES.DELETE_ADR">"{{ state.notification.name }}" was deleted from portfolio</p>
+            <p v-if="state.notification._type === TYPES.DELETE_ADR">{{ $t('notify.adrDeleted', { address: state.notification.name }) }}</p>
             <!-- TYPE: PLAIN -->
             <p v-if="state.notification._type === TYPES.PLAIN" class="d-flex flex-nowrap">
                 {{ state.notification.text }}
             </p>
         </div>
         <template v-if="state.notification && state.notification._type === TYPES.DELETE_ADR" #actions>
-            <v-btn color="secondary" variant="text" rounded="pill" @click="restoreAddress(state.notification.hash, state.notification.name)"> Undo </v-btn>
+            <v-btn color="secondary" variant="text" rounded="pill" @click="restoreAddress(state.notification.hash, state.notification.name)">
+                {{ $t('notify.undo') }}
+            </v-btn>
         </template>
     </v-snackbar>
 </template>

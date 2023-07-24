@@ -42,7 +42,9 @@
 
 <script setup lang="ts">
 import { defineProps, defineEmits, reactive, onBeforeUnmount, watch, computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 
+const { t } = useI18n()
 interface ComponentProps {
     isLoading?: boolean
     hasError?: boolean
@@ -116,7 +118,7 @@ const showRequired = computed(() => {
 })
 
 const message = computed(() => {
-    return showRequired.value ? 'Required' : props.errorMessage
+    return showRequired.value ? t('message.required') : props.errorMessage
 })
 
 /**

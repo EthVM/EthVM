@@ -1,12 +1,12 @@
 <template>
     <div>
-        <app-btn text="Add token" @click="setDialog(true)"></app-btn>
-        <app-dialog v-model="state.openDialog" title="Add Token" @update:modelValue="setDialog">
+        <app-btn :text="$t('token.addToken')" @click="setDialog(true)"></app-btn>
+        <app-dialog v-model="state.openDialog" :title="$t('token.addToken')" @update:modelValue="setDialog">
             <template #no-scroll-content>
                 <app-input
                     v-model="state.tokenSearch"
                     :has-error="hasUserError"
-                    place-holder="Search token name"
+                    :place-holder="$t('token.searchTokenName')"
                     @on-user-input="setNewTokenSearch"
                     class="w-100"
                 ></app-input>
@@ -24,7 +24,7 @@
                         </div>
                     </template>
                     <template v-else>
-                        <app-no-result :text="`We could not find anything mathching: ${state.tokenSearch}`"></app-no-result>
+                        <app-no-result :text="`${$t('token.noMatch')}: ${state.tokenSearch}`"></app-no-result>
                     </template>
                 </template>
                 <div v-else class="skeleton-box rounded-xl mt-1 my-4" style="height: 90%"></div>
@@ -38,7 +38,7 @@ import AppBtn from '@core/components/AppBtn.vue'
 import AppDialog from '@core/components/AppDialog.vue'
 import AppNoResult from '@core/components/AppNoResult.vue'
 import AppInput from '@core/components/AppInput.vue'
-import TokenMarketInfoTableRow from '@module/tokens/components/TokenMarketInfo/TableRowTokenMarketInfo.vue'
+import TokenMarketInfoTableRow from '@module/tokens/components/token-market-info/TableRowTokenMarketInfo.vue'
 import { computed, reactive } from 'vue'
 import { useStore } from '@/store'
 import { useCoinData } from '@core/composables/CoinData/coinData.composable'

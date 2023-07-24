@@ -124,12 +124,14 @@ import { useCoinData } from '@core/composables/CoinData/coinData.composable'
 import {
     GetErc20TokenBalanceQuery as TokenOwnerInfo,
     GetTokenInfoByContractQuery as TokenInfo
-} from '@module/tokens/apollo/TokenDetails/tokenDetails.generated'
+} from '@module/tokens/apollo/token-details/tokenDetails.generated'
 import { ErrorMessageToken } from '@module/tokens/models/ErrorMessagesForTokens'
 import { computed } from 'vue'
 import { MarketDataFragment as TokenMarketData } from '@/core/composables/CoinData/getLatestPrices.generated'
 import TokenDetailsHistory from '@module/tokens/components/TokenDetailsHistory.vue'
+import { useI18n } from 'vue-i18n'
 
+const { t } = useI18n()
 interface PropType {
     addressRef: string
     isLoading: boolean
@@ -242,7 +244,7 @@ const contractDetail = computed<Detail>(() => {
 })
 
 const contractOwnerDetail = computed<Detail>(() => {
-    const detail: Detail = { title: 'Owner' }
+    const detail: Detail = { title: t('nft.owner') }
     if (!props.isLoading && props.holderDetails && props.holderDetails.owner) {
         detail.detail = props.holderDetails.owner
         detail.link = `/address/${props.holderDetails.owner}`
@@ -254,13 +256,13 @@ const contractOwnerDetail = computed<Detail>(() => {
 
 const contractDecimalsDetail = computed<Detail>(() => {
     return {
-        title: 'Decimals',
+        title: t('token.decimals'),
         detail: !props.isLoading && props.tokenDetails && props.tokenDetails.decimals != null ? props.tokenDetails.decimals : undefined
     }
 })
 
 const priceDetail = computed<Detail>(() => {
-    const detail: Detail = { title: 'Price' }
+    const detail: Detail = { title: t('common.price') }
     if (!props.isLoading && tokenData.value) {
         const priceFormatted = formatUsdValue(new BN(tokenData.value.current_price || 0))
         detail.detail = priceFormatted.value
@@ -282,7 +284,7 @@ const priceChange = computed<PriceChange>(() => {
     const change = priceDetail.value?.priceChange?.value || 0
     if (change > 0) {
         return {
-            title: 'Price Change',
+            title: t('market.priceChange'),
             symbol: '+',
             icon: 'arrow_upward',
             color: 'success'
@@ -290,14 +292,14 @@ const priceChange = computed<PriceChange>(() => {
     }
     if (change < 0) {
         return {
-            title: 'Price Change',
+            title: t('market.priceChange'),
             symbol: '-',
             icon: 'arrow_downward',
             color: 'error'
         }
     }
     return {
-        title: 'Price Change',
+        title: t('market.priceChange'),
         symbol: '',
         icon: 'arrow_downward',
         color: 'error'
@@ -310,34 +312,34 @@ const supplyDetail = computed<Detail>(() => {
         supply = new BN(tokenData.value.total_supply).toNumber()
     }
     return {
-        title: 'Max supply',
+        title: t('market.maxSupply'),
         detail: !props.isLoading && supply ? formatNumber(supply) : undefined
     }
 })
 
 const marketCapDetail = computed<Detail>(() => {
     return {
-        title: 'Market Cap',
+        title: t('market.marketCap'),
         detail: !props.isLoading && tokenData.value && tokenData.value.market_cap ? formatNumber(tokenData.value.market_cap) : undefined
     }
 })
 
 const circulatingSupplyDetail = computed<Detail>(() => {
     return {
-        title: 'Circulating Supply',
+        title: t('market.circulatingSupply'),
         detail: !props.isLoading && tokenData.value && tokenData.value.circulating_supply ? formatNumber(tokenData.value.circulating_supply) : undefined
     }
 })
 
 const volumeDetail = computed<Detail>(() => {
     return {
-        title: '24 hour trading volume',
+        title: t('market.24hTradingVolume'),
         detail: !props.isLoading && tokenData.value && tokenData.value.total_volume ? formatNumber(tokenData.value.total_volume) : undefined
     }
 })
 
 const holderDetail = computed<Detail>(() => {
-    const detail: Detail = { title: 'Holder' }
+    const detail: Detail = { title: t('token.holder', 1) }
     if (!props.isLoading && props.holderDetails && props.holderDetails.owner) {
         detail.detail = props.holderDetails.owner
         detail.link = `/address/${props.holderDetails.owner}`
@@ -348,7 +350,7 @@ const holderDetail = computed<Detail>(() => {
 })
 
 const holderBalanceDetail = computed<Detail>(() => {
-    const detail: Detail = { title: 'Balance' }
+    const detail: Detail = { title: t('common.balance', 1) }
     if (!props.isLoading && props.tokenDetails && props.holderDetails) {
         const symbol = props.tokenDetails.symbol === null || !props.tokenDetails.symbol ? '' : ` ${props.tokenDetails.symbol.toUpperCase()}`
         detail.detail = `${balance.value.value}${symbol}`
@@ -359,7 +361,7 @@ const holderBalanceDetail = computed<Detail>(() => {
 
 const holderUsdDetail = computed<Detail>(() => {
     return {
-        title: 'Total USD Value',
+        title: t('market.totalUsdValue'),
         detail: !props.isLoading && props.tokenDetails ? balanceUsd.value : undefined
     }
 })

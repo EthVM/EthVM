@@ -10,6 +10,7 @@
 
         <v-list bg-color="primary" lines="one">
             <template v-for="item in navItems" :key="item.header.text">
+                <v-divider v-if="item.header.text === $t('home.footer.settings')"></v-divider>
                 <v-list-item
                     v-if="!item.links"
                     :title="item.header.text"

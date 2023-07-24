@@ -64,7 +64,7 @@ import BN from 'bignumber.js'
 import { computed } from 'vue'
 import { formatFloatingPointValue, formatPercentageValue, FormattedNumber, formatUsdValue } from '@core/helper/number-format-helper'
 import { eth } from '@core/helper'
-import { Erc20TokenOwnerDetailsFragment as Erc20Owner } from '@module/tokens/apollo/TokenDetails/tokenDetails.generated'
+import { Erc20TokenOwnerDetailsFragment as Erc20Owner } from '@module/tokens/apollo/token-details/tokenDetails.generated'
 
 interface PropType {
     holder: Erc20Owner

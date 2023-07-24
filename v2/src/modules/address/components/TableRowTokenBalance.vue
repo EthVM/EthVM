@@ -87,41 +87,39 @@
                     <v-col cols="12" md="8" lg="7" class="pa-3 pt-md-10 pb-md-5 pl-lg-9">
                         <v-row :dense="xs">
                             <v-col cols="6" class="d-sm-none">
-                                <p class="mb-1 text-info font-weight-bold">Price</p>
+                                <p class="mb-1 text-info font-weight-bold">{{ $t('common.price') }}</p>
                                 <p class="mb-4">
                                     {{ formatUsdValue(new BN(token.current_price || 0)).value }}
                                 </p></v-col
                             >
-
                             <v-col cols="6" class="d-sm-none">
-                                <p class="mb-1 text-info font-weight-bold">Price Change</p>
+                                <p class="mb-1 text-info font-weight-bold">{{ $t('market.priceChange') }}</p>
                                 <p :class="[priceChangeClass, 'mb-4']">
                                     {{ token.getPriceChangeFormatted() }}
                                 </p>
                             </v-col>
                             <v-col cols="6" md="4">
-                                <p class="mb-1 mb-md-3 text-info font-weight-bold">Market Cap</p>
+                                <p class="mb-1 mb-md-3 text-info font-weight-bold">{{ $t('market.marketCap') }}</p>
                                 <p class="mb-4 mb-md-9">{{ marketData.market_cap }}</p></v-col
                             >
                             <v-col cols="6" md="4">
-                                <p class="mb-1 mb-md-3 text-info font-weight-bold">Ciculating Supply</p>
+                                <p class="mb-1 mb-md-3 text-info font-weight-bold">{{ $t('market.circulatingSupply') }}</p>
                                 <p class="mb-4 mb-md-9">{{ marketData.circ_supply }}</p></v-col
                             >
                             <v-col cols="6" md="4">
-                                <p class="mb-1 mb-md-3 text-info font-weight-bold">24h Trading Volume</p>
+                                <p class="mb-1 mb-md-3 text-info font-weight-bold">{{ $t('market.24hTradingVolume') }}</p>
                                 <p class="mb-4 mb-md-9">{{ marketData.volume }}</p></v-col
                             >
-
                             <v-col cols="6" md="4">
-                                <p class="mb-1 mb-md-3 text-info font-weight-bold">Max Supply</p>
+                                <p class="mb-1 mb-md-3 text-info font-weight-bold">{{ $t('market.maxSupply') }}</p>
                                 <p class="mb-4 mb-md-9">{{ marketData.total_supply }}</p></v-col
                             >
                             <v-col cols="6" md="4">
-                                <p class="mb-1 mb-md-3 text-info font-weight-bold">24h High</p>
+                                <p class="mb-1 mb-md-3 text-info font-weight-bold">{{ $t('market.24hHigh') }}</p>
                                 <p class="mb-0 mb-md-9">{{ marketData.high }}</p></v-col
                             >
                             <v-col cols="6" md="4">
-                                <p class="mb-1 mb-md-3 text-info font-weight-bold">24h Low</p>
+                                <p class="mb-1 mb-md-3 text-info font-weight-bold">{{ $t('market.24hLow') }} w</p>
                                 <p class="mb-0 mb-md-9">{{ marketData.low }}</p></v-col
                             >
                         </v-row>

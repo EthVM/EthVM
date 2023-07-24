@@ -5,6 +5,7 @@ import { GetLatestPricesQuery } from '@core/composables/CoinData/getLatestPrices
 import { useStorage, RemovableRef } from '@vueuse/core'
 import { TokenOwnersFragment } from '@module/address/apollo/AddressTokens/tokens.generated'
 import { NotificationType, NotificationDeleteAddress, Notification, MAX_PORTFOLIO_ITEMS, PortfolioItem, PROMOS } from './helpers'
+import { i18nGlobal } from '@/translations/index'
 
 interface PortfolioEthBalanceMap {
     [key: string]: {
@@ -35,6 +36,8 @@ interface StoreState {
     appTheme: RemovableRef<string>
     currentLargeButtonPromo: string
     dataShare: RemovableRef<boolean>
+    lang: RemovableRef<string>
+    showPopUp: RemovableRef<boolean>
 }
 
 const getKeySumBN = <T>(map: Record<string, T>, _key: keyof T): BN => {
@@ -70,7 +73,9 @@ export const useStore = defineStore('main', {
         paginationStateMap: new Map(),
         appTheme: useStorage('app-theme', ''),
         currentLargeButtonPromo: PROMOS.enkrypt,
-        dataShare: useStorage('allowDataShare', true)
+        dataShare: useStorage('allowDataShare', true),
+        lang: useStorage('lang', 'en_US'),
+        showPopUp: useStorage('showPopUp', true)
     }),
     getters: {
         /**
@@ -255,7 +260,7 @@ export const useStore = defineStore('main', {
                     if (notify) {
                         this.addNotification({
                             _type: NotificationType.PLAIN,
-                            text: `${_name} has been added to your portfolio`
+                            text: `${i18nGlobal.t('portfolio.nameAdded', { name: _name })}`
                         })
                     }
                 }
@@ -354,6 +359,12 @@ export const useStore = defineStore('main', {
         },
         setDataShare(_value: boolean) {
             this.dataShare = _value
+        },
+        setLang(_value: string) {
+            this.lang = _value
+        },
+        setPopup(_value: boolean) {
+            this.showPopUp = _value
         }
     }
 })

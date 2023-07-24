@@ -37,7 +37,9 @@ import { Tab } from '@core/components/props'
 import { useAddressUpdate } from '@core/composables/AddressUpdate/addressUpdate.composable'
 import { ADDRESS_ROUTE_QUERY } from '@core/router/routesNames'
 import { useAppViewGrid } from '@core/composables/AppViewGrid/AppViewGrid.composable'
+import { useI18n } from 'vue-i18n'
 
+const { t } = useI18n()
 const { columnPadding, rowMargin } = useAppViewGrid()
 
 const routes = ADDRESS_ROUTE_QUERY.Q_TOKENS
@@ -45,11 +47,11 @@ const routes = ADDRESS_ROUTE_QUERY.Q_TOKENS
 const tabs: Tab[] = [
     {
         value: routes[0],
-        title: 'Balance'
+        title: t('common.balance', 1)
     },
     {
         value: routes[1],
-        title: 'Transfers'
+        title: t('common.transfer')
     }
 ]
 

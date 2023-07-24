@@ -115,7 +115,7 @@
                     </template>
                 </app-expansion-panel>
             </div>
-            <app-no-result v-if="!hasActions" text="There are no actions performed in this transaction" class="mx-4 mx-sm-6"></app-no-result>
+            <app-no-result v-if="!hasActions" :text="$t('message.txNoactions')" class="mx-4 mx-sm-6"></app-no-result>
         </div>
         <template v-else>
             <div v-for="item in 3" :key="item" class="px-4 px-sm-6 mb-4 mb-sm-6">

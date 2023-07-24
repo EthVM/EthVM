@@ -12,7 +12,7 @@
                     <template v-else>{{ $t('token.id') }}</template>
                 </v-col>
                 <v-col v-if="isNFT" sm="2"> {{ $t('token.image') }} </v-col>
-                <v-col md="2" class="d-none d-lg-block"> {{ $t('block.header.time') }} </v-col>
+                <v-col md="2" class="d-none d-lg-block"> {{ $t('common.timestamp') }} </v-col>
             </v-row>
             <v-divider class="my-0 mt-sm-4 mx-n4 mx-sm-n6" />
             <!-- End Table Header -->
@@ -57,7 +57,7 @@ import {
     TokenTransferFragment,
     Erc721TransferFragment,
     Erc1155TokenTransferFragment
-} from '@module/tokens/apollo/TokenDetailsTransfer/tokenTransfers.generated'
+} from '@module/tokens/apollo/token-details-transfer/tokenTransfers.generated'
 import { generateMapId } from '@/core/composables/NftMeta/helpers'
 
 const { lgAndUp } = useDisplay()

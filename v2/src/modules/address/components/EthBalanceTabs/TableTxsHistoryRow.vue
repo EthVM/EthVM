@@ -1,29 +1,28 @@
 <template>
     <app-table-row
-        v-if="smAndDown"
+        row-align="center"
         row-justify="space-between"
         @click="showMoreDetails = !showMoreDetails"
         :color="showMoreDetails ? 'pillGrey' : 'transparent'"
     >
-        <v-col cols="6">
+        <v-co v-if="smAndDown" cols="6">
             <v-avatar :color="transferDirection.color" size="22">
                 <v-icon size="13" color="white"> {{ transferDirection.icon }} </v-icon>
             </v-avatar>
             <span class="ml-2">
                 {{ transferDirection.text }}
             </span>
-        </v-col>
-        <v-col cols="6" class="text-right">{{ txValue.value }} {{ currencyName }}</v-col>
-        <v-col cols="6" class="text-info text-lowercase"> {{ timestamp }} {{ transferDirection.direction }} </v-col>
-        <v-col cols="6">
+        </v-co>
+        <v-col v-if="smAndDown" cols="6" class="text-right">{{ txValue.value }} {{ currencyName }}</v-col>
+        <v-col v-if="smAndDown" cols="6" class="text-info text-lowercase"> {{ timestamp }} {{ transferDirection.direction }} </v-col>
+        <v-col v-if="smAndDown" cols="6">
             <div class="d-flex align-center justify-end">
                 <app-address-blockie :address="txAddress || ''" :size="6" class="mr-2 mr-sm-2" />
                 <app-transform-hash is-short is-blue :hash="eth.toCheckSum(txAddress)" :link="`/address/${txAddress}`" />
             </div>
         </v-col>
-    </app-table-row>
-    <app-table-row v-else row-align="center" @click="showMoreDetails = !showMoreDetails" :color="showMoreDetails ? 'pillGrey' : 'transparent'">
-        <v-col :sm="mdAndDown ? 3 : 2">
+
+        <v-col v-if="!smAndDown" :sm="mdAndDown ? 3 : 2">
             <div class="d-flex">
                 <span style="width: 30px" class="d-inline-block">
                     <v-icon :color="statusIcon.color">{{ statusIcon.icon }}</v-icon>
@@ -32,63 +31,64 @@
                     {{ txValue.value }} {{ currencyName }}
                     <div class="text-lowercase text-info">
                         {{ timestamp }}
-                        <span v-if="mdAndDown">{{ transferDirection.direction }}</span>
+                        <span v-if="smAndDown">{{ transferDirection.direction }}</span>
                     </div>
                 </div>
             </div>
         </v-col>
-        <v-col cols="1" lg="2">
+        <v-col v-if="!smAndDown" cols="1" lg="2">
             <app-chip :bg="transferDirection.color" :text="transferDirection.direction" />
         </v-col>
-        <v-col md="3">
+        <v-col v-if="!smAndDown" md="3">
             <div class="d-flex align-center">
                 <app-address-blockie :address="txAddress || ''" :size="8" class="mr-2 mr-sm-2" />
                 <app-transform-hash is-short is-blue :hash="eth.toCheckSum(txAddress)" :link="`/address/${txAddress}`" />
             </div>
         </v-col>
-        <v-col sm="2">
+        <v-col v-if="!smAndDown" sm="2">
             <app-transform-hash is-short is-blue :hash="eth.toCheckSum(transfer.transfer.transactionHash)" :link="`/tx/${transfer.transfer.transactionHash}`" />
         </v-col>
-        <v-col sm="3"> {{ totalBalanceChange.value }} {{ currencyName }} </v-col>
+        <v-col v-if="!smAndDown" sm="3"> {{ totalBalanceChange.value }} {{ currencyName }} </v-col>
         <template #expandable>
             <v-row v-if="showMoreDetails" justify="space-between" class="my-4 flex-column-reverse flex-sm-row">
-                <v-col cols="2" class="d-none d-md-block"></v-col>
-                <v-col cols="12" sm="5" md="4">
-                    <p class="font-weight-bold">Events</p>
-                    <p class="my-5 text-info">
+                <v-col cols="2" class="d-none d-lg-block"></v-col>
+                <v-col cols="12" sm="5" md="6" lg="4">
+                    <p class="font-weight-bold">{{ $t('txs.details.logs.event', 2) }}</p>
+                    <p class="my-5 mb-10 mb-sm-9 my-md-5 text-info">
                         {{ txEvents }}
                     </p>
+                    <router-link v-if="smAndDown" :to="`/tx/${transfer.transfer.transactionHash}`" class="text-secondary">{{ $t('txs.viewTx') }}</router-link>
                 </v-col>
                 <v-spacer />
-                <v-col cols="12" sm="7" md="4">
-                    <p class="font-weight-bold">Balance Change Breakdown</p>
+                <v-col cols="12" sm="7" md="6" lg="4">
+                    <p class="font-weight-bold">{{ $t('address.balanceChangeBreakdown') }}</p>
                     <v-row class="my-5" align="center">
-                        <v-col cols="6" class="text-info">Transaction Value</v-col>
-                        <span>{{ txValue.value }} {{ currencyName }}</span>
+                        <v-col cols="6" class="text-info">{{ $t('txs.value') }}</v-col>
+                        <v-col cols="6" class="text-right text-md-left">{{ txValue.value }} {{ currencyName }}</v-col>
                     </v-row>
                     <v-row v-if="!isIncoming" class="my-5" align="center">
-                        <v-col cols="6" class="text-info">TX Fee Paid</v-col>
-                        <span class="text-error">{{ txFee.value }} {{ currencyName }}</span>
+                        <v-col cols="6" class="text-info">{{ $t('common.txFeePaid') }}</v-col>
+                        <v-col cols="6" class="text-error text-right text-md-left">{{ txFee.value }} {{ currencyName }}</v-col>
                     </v-row>
-                    <v-row v-if="internalTransferValue" class="my-5" align="center">
-                        <v-col cols="6" class="text-info">Internal Transfer Value</v-col>
-                        <span class="text-success">{{ internalTransferValue.value }} {{ currencyName }}</span>
+                    <v-row v-if="internalTransferValue" class="my-5">
+                        <v-col cols="6" class="text-info">{{ $t('txs.internalValue') }}</v-col>
+                        <v-col cols="6" class="text-success text-right text-md-left">{{ internalTransferValue.value }} {{ currencyName }}</v-col>
                     </v-row>
                     <v-divider class="mx-n5 mx-sm-0" />
                     <v-row class="my-5" align="center">
-                        <v-col cols="6" class="text-info">Total Balance Change</v-col>
-                        <span :class="totalBalanceChange.color">{{ totalBalanceChange.value }} {{ currencyName }}</span>
+                        <v-col cols="6" class="text-info">{{ $t('txs.totalBalanceChange') }}</v-col>
+                        <v-col cols="6" :class="[totalBalanceChange.color, 'text-right text-md-left']">{{ totalBalanceChange.value }} {{ currencyName }}</v-col>
                     </v-row>
                     <v-row class="my-5" align="center">
-                        <v-col cols="6" class="text-info">Balance Before</v-col>
-                        <span>{{ balanceBeforeFormatted.value }} {{ currencyName }}</span>
+                        <v-col cols="6" class="text-info">{{ $t('txs.balanceBefore') }}</v-col>
+                        <v-col cols="6" class="text-right text-md-left">{{ balanceBeforeFormatted.value }} {{ currencyName }}</v-col>
                     </v-row>
                     <v-row class="my-5" align="center">
-                        <v-col cols="6" class="text-info">Balance After</v-col>
-                        <span>{{ balanceAfterFormatted.value }} {{ currencyName }}</span>
+                        <v-col cols="6" class="text-info">{{ $t('txs.balanceAfter') }}</v-col>
+                        <v-col cols="6" class="text-right text-md-left">{{ balanceAfterFormatted.value }} {{ currencyName }}</v-col>
                     </v-row>
                 </v-col>
-                <v-col cols="1" class="d-none d-md-block"></v-col>
+                <v-col cols="1" class="d-none d-md-block"> </v-col>
             </v-row>
         </template>
     </app-table-row>
@@ -107,7 +107,9 @@ import BN from 'bignumber.js'
 import { useDisplay } from 'vuetify'
 import { TransferSubtype } from '@/apollo/types'
 import { useNetwork } from '@core/composables/Network/useNetwork'
+import { useI18n } from 'vue-i18n'
 
+const { t } = useI18n()
 const { smAndDown, mdAndDown } = useDisplay()
 const { currencyName } = useNetwork()
 interface ComponentProps {
@@ -142,31 +144,31 @@ const transferDirection = computed<{ [key: string]: string }>(() => {
     // If to and from address is the same, then transfer is self
     if (props.transfer.transfer.to === props.addressRef.toLowerCase() && props.transfer.transfer.from === props.addressRef.toLowerCase()) {
         return {
-            direction: TRANSFER_DIRECTION.SELF,
-            text: 'Self',
+            direction: t('txs.status.self'),
+            text: t('txs.status.selfSent'),
             color: 'info',
             icon: 'refresh'
         }
     }
     if (props.transfer.transfer.to === props.addressRef.toLowerCase()) {
         return {
-            direction: TRANSFER_DIRECTION.FROM,
-            text: 'Received',
+            direction: t('common.from'),
+            text: t('txs.status.recieve'),
             color: 'success',
             icon: 'south_east'
         }
     } else if (props.transfer.transfer.from === props.addressRef.toLowerCase()) {
         return {
-            direction: TRANSFER_DIRECTION.TO,
-            text: 'Sent',
+            direction: t('common.to'),
+            text: t('txs.status.sent'),
             color: 'warning',
             icon: 'north_west'
         }
     }
     return {
-        direction: TRANSFER_DIRECTION.SELF,
-        text: 'Self',
-        color: 'orange',
+        direction: t('txs.status.self'),
+        text: t('txs.status.selfSent'),
+        color: 'info',
         icon: 'refresh'
     }
 })
@@ -232,7 +234,7 @@ const txAddress = computed<string>(() => {
 
 const timestamp = computed<string>(() => {
     const date = new Date(props.transfer.transfer.timestamp * 1e3)
-    return timeAgo(date, smAndDown.value)
+    return timeAgo(date)
 })
 
 const txValue = computed<FormattedNumber>(() => {
@@ -273,9 +275,9 @@ const hasInternalTransaction = computed<boolean>(() => {
 
 const txEvents = computed<string>(() => {
     const events = []
-    events.push(`${currencyName.value} Transfers`)
+    events.push(`${currencyName.value} ${t('common.transfer')}`)
     if (hasInternalTransaction.value) {
-        events.push('Internal Transaction')
+        events.push(t('txs.internal'))
     }
     return events.join(', ')
 })

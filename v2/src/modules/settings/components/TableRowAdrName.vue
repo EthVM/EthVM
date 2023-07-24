@@ -37,7 +37,7 @@
        Address Name Options
     -->
     <app-menu min-width="180" :activator="`#list-item-menu-${props.adr.hash}`">
-        <v-list-item title="Edit Name" class="py-2" @click="openEditDialog(true)"> </v-list-item>
+        <v-list-item :title="$t('portfolio.editName')" class="py-2" @click="openEditDialog(true)"> </v-list-item>
         <v-divider class="my-1 mx-4" />
         <v-list-item :title="menuTitle" class="py-2" @click="deleteAddress"> </v-list-item>
     </app-menu>
@@ -71,7 +71,9 @@ import { eth } from '@core/helper/eth'
 import { Q_PORTFOLIO, ROUTE_NAME } from '@core/router/routesNames'
 import { useRouter } from 'vue-router'
 import { PortfolioItem } from '@/store/helpers'
+import { useI18n } from 'vue-i18n'
 
+const { t } = useI18n()
 const store = useStore()
 const { xs, mdAndDown, smAndUp } = useDisplay()
 
@@ -105,6 +107,6 @@ const shortName = computed<string>(() => {
 })
 
 const menuTitle = computed<string>(() => {
-    return store.addressHashIsSaved(props.adr.hash) ? 'View in Portfolio' : 'Delete'
+    return store.addressHashIsSaved(props.adr.hash) ? t('settings.viewInPortfolio') : t('settings.delete')
 })
 </script>

@@ -125,7 +125,7 @@ const timestamp = computed<string>(() => {
     if (uncle.value) {
         const date = new Date(uncle.value?.block.summary.timestamp * 1e3).toLocaleDateString()
         const time = new Date(uncle.value?.block.summary.timestamp * 1e3).toTimeString().split('GMT')[0]
-        const timeago = timeAgo(new Date(uncle.value?.block.summary.timestamp * 1e3))
+        const timeago = timeAgo(new Date(uncle.value?.block.summary.timestamp * 1e3), false)
         const [month, day, year] = date.split('/')
         return `${year}-${month}-${day}, ${time}, ${timeago}`
     }

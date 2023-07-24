@@ -13,7 +13,9 @@
         <div>
             <template v-if="loadingBalance === false && loadingMeta === false">
                 <template v-if="!tokens || tokens.length < 1">
-                    <app-no-result :text="$t('address.tagline.noNFT')" class="mt-4 mt-sm-6"></app-no-result>
+                    <div class="pt-lg-9">
+                        <app-no-result :text="$t('address.tagline.noNFT')" class="mt-4 mt-sm-6"></app-no-result>
+                    </div>
                 </template>
                 <template v-else>
                     <v-row :dense="xs">
@@ -58,8 +60,8 @@ import { useGetOwnersNftTokensQuery } from './apollo/AddressTokens/tokens.genera
 import { useRouter } from 'vue-router'
 import { ADDRESS_ROUTE_QUERY, ROUTE_NAME } from '@core/router/routesNames'
 import AppNoResult from '@/core/components/AppNoResult.vue'
-import TokenNftImg from '../tokens/components/TokenNFT/TokenNftImg.vue'
-import { NFTDetails } from '../tokens/components/TokenNFT/propModel'
+import TokenNftImg from '../tokens/components/token-nft/TokenNftImg.vue'
+import { NFTDetails } from '../tokens/components/token-nft/propModel'
 import { useGetNftsMeta } from '@core/composables/NftMeta/useGetNftsMeta.composable'
 import { NftId, generateId, generateMapId } from '@/core/composables/NftMeta/helpers'
 import { NftType } from '@/apollo/types'

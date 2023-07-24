@@ -108,8 +108,8 @@ import { reactive, computed, onMounted, watch } from 'vue'
 import AppAdButtonsLarge from '@/core/components/AppAdButtonsLarge.vue'
 import AppBtnIcon from '@core/components/AppBtnIcon.vue'
 import AppCopyToClip from '@/core/components/AppCopyToClip.vue'
-import TokenDetailsErc20 from '@module/tokens/components/TokenDetails/TokenDetailsERC20.vue'
-import TokenDetailsNft from '@module/tokens/components/TokenDetails/TokenDetailsNFT.vue'
+import TokenDetailsErc20 from '@module/tokens/components/token-details/TokenDetailsERC20.vue'
+import TokenDetailsNft from '@module/tokens/components/token-details/TokenDetailsNFT.vue'
 import TokenTransfers from '@module/tokens/components/TokenTransfers.vue'
 import TokenHolders from '@module/tokens/components/TokenHolders.vue'
 import AppTabs from '@/core/components/AppTabs.vue'
@@ -121,7 +121,7 @@ import {
     GetTokenInfoByContractQuery,
     useGetNftContractMetaQuery,
     NftCollectionFragment
-} from '@module/tokens/apollo/TokenDetails/tokenDetails.generated'
+} from '@module/tokens/apollo/token-details/tokenDetails.generated'
 import { eth } from '@core/helper'
 import { ErrorMessageToken } from '@module/tokens/models/ErrorMessagesForTokens'
 import { Q_TOKEN_DETAILS } from '@core/router/routesNames'
@@ -133,6 +133,7 @@ import { useCoinData } from '@core/composables/CoinData/coinData.composable'
 import { useNetwork } from '@/core/composables/Network/useNetwork'
 import { useI18n } from 'vue-i18n'
 const { t } = useI18n()
+
 const { supportsNft } = useNetwork()
 
 const { columnPadding, rowMargin } = useAppViewGrid()
@@ -142,11 +143,11 @@ const routes = Q_TOKEN_DETAILS
 const tabs: Tab[] = [
     {
         value: routes[0],
-        title: 'Transfers'
+        title: t('common.transfer')
     },
     {
         value: routes[1],
-        title: 'Holders'
+        title: t('token.holder', 2)
     }
 ]
 
@@ -306,7 +307,7 @@ const decimals = computed<number | undefined>(() => {
 
 const leftTitle = computed<string>(() => {
     if (state.standard === TransferType.Erc1155 || state.standard === TransferType.Erc721) {
-        return t('token.collections')
+        return t('token.collection', 2)
     }
     if (state.standard === TransferType.Erc20) {
         return t('token.decimals')

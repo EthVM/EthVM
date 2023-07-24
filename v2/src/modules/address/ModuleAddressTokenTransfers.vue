@@ -14,7 +14,7 @@
                             :is-loading="loadingAddressTokens || loadingMarketInfo"
                             :balance="tokenBalance.value"
                             :balance-tooltip="tokenBalance.tooltipText"
-                            :subtext="`${tokenCount} ${$t('block.tokenTotal')}`"
+                            :subtext="tokenCountSubtext"
                         />
                     </div>
                     <span v-if="props.isOverview" class="text-h6 font-weight-bold">{{ $t('block.tokenHistory') }}</span>
@@ -91,7 +91,8 @@ import { useStore } from '@/store'
 import { WatchQueryFetchPolicy } from '@apollo/client/core'
 import { useAppPaginate } from '@core/composables/AppPaginate/useAppPaginate.composable'
 import { ITEMS_PER_PAGE } from '@core/constants'
-
+import { useI18n } from 'vue-i18n'
+const { t } = useI18n()
 const { getEthereumTokensMap } = useCoinData()
 
 const OVERVIEW_MAX_ITEMS = 7
@@ -231,6 +232,10 @@ const goToTokenTransfersPage = async (): Promise<void> => {
         query: { t: ADDRESS_ROUTE_QUERY.Q_TOKENS[1] }
     })
 }
+
+const tokenCountSubtext = computed<string>(() => {
+    return tokenCount.value === 1 ? t('token.tokenTotal') : t('token.tokenTotal', { n: tokenCount.value })
+})
 </script>
 
 <style lang="scss" scoped>

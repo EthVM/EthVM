@@ -5,7 +5,7 @@
                 <h1 class="text-h6 font-weight-bold">{{ getTitle }}</h1>
                 <notice-new-block v-if="!isHome" @reload="setPage(1, true)" />
             </div>
-            <app-btn v-if="isHome && !xs" text="More" isSmall icon="east" @click="goToBlocksPage"></app-btn>
+            <app-btn v-if="isHome && !xs" :text="$t('common.more')" isSmall icon="east" @click="goToBlocksPage"></app-btn>
             <app-btn-icon v-else-if="isHome && xs" icon="east" @click="goToBlocksPage"></app-btn-icon>
         </v-card-title>
         <table-blocks
@@ -143,7 +143,9 @@ function subscribeToMoreHandler() {
                     }
                 } catch (error) {
                     Sentry.captureException(
-                        `ERROR in subscribeToMoreHandler: ${error}. previousResult : ${previousResult}. subscriptionData: ${subscriptionData}`
+                        `ERROR in subscribeToMoreHandler: ${error}. previousResult : ${JSON.stringify(previousResult)}. subscriptionData: ${JSON.stringify(
+                            subscriptionData
+                        )}`
                     )
                 }
             }
@@ -227,7 +229,7 @@ onBlockArrayLoaded(result => {
             const newBlocks = result.data.getBlocksArrayByNumber
             state.indexedBlocks[pageNum.value] = props.pageType === 'home' ? newBlocks.slice(0, ITEMS_PER_PAGE) : newBlocks
         } catch (error) {
-            Sentry.captureException(`ERROR in onBlockArrayLoaded: ${error}. state.initialLoad : ${state.initialLoad}. result: ${result}`)
+            Sentry.captureException(`ERROR in onBlockArrayLoaded: ${error}. state.initialLoad : ${state.initialLoad}. result: ${JSON.stringify(result)}`)
         }
     }
 })

@@ -1,7 +1,7 @@
 <template>
     <v-img cover :src="imagePreview" @error="imgLoadFail" :height="194" :width="194" :max-width="216" class="rounded-lg align-end img-shadow">
         <div v-if="imagePreview === require('@/assets/icon-nft.png')" class="no-image text-uppercase text-caption text-center py-2 justify-end">
-            image not available
+            {{ $t('message.imageNotAvailable') }}
         </div>
     </v-img>
 </template>
