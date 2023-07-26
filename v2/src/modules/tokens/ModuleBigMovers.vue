@@ -1,23 +1,28 @@
 <template>
     <v-card variant="elevated" elevation="1" rounded="xl" class="py-4 py-sm-6 h-100" min-height="232px">
-        <v-card-title class="py-0 px-4 px-sm-6 mb-2 mb-sm-4 d-flex align-center justify-space-between">
-            <h4 class="font-weight-bold text-h4">
-                {{ $t('token.bigMovers') }}
-            </h4>
-        </v-card-title>
+        <v-row class="py-0 px-4 px-sm-6 mb-2 mb-sm-3 align-center justify-space-between">
+            <v-col cols="12" md="auto" lg="4" order="last" order-md="first">
+                <h4 class="font-weight-bold text-h4">
+                    {{ $t('token.bigMovers') }}
+                </h4>
+            </v-col>
+            <v-spacer />
+            <v-col cols="12" md="auto" lg="8" order="first" order-md="last" class="mb-6 mb-md-0 pa-0">
+                <app-ad-buttons-small />
+            </v-col>
+        </v-row>
         <v-row v-if="loading" class="px-4 px-sm-6">
             <v-col cols="6" sm="3" lg="2" v-for="item in loadingContainersCount" :key="item">
-                <div class="skeleton-box rounded-xl my-5" style="height: 144px"></div>
+                <div class="skeleton-box rounded-xl" style="height: 150px"></div>
             </v-col>
         </v-row>
         <app-no-result v-if="!loading && !bigMovers" :text="$t('message.noBigMovers')" class="mt-4 mt-sm-6"></app-no-result>
-
         <div v-if="!loading && bigMovers">
             <v-sheet>
-                <v-btn v-if="!xs" icon="chevron_left" height="34px" width="34px" @click="slideToNext" class="slide_prev" variant="flat" />
+                <v-btn v-if="!xs" icon="chevron_left" height="34px" width="34px" @click="slideToPrev" class="slide_prev" variant="flat" />
                 <v-btn v-if="!xs" icon="chevron_right" height="34px" width="34px" @click="slideToNext" class="slide_next" variant="flat" />
-                <div class="slide d-flex overflow-x-auto">
-                    <div v-for="i in bigMovers" :key="i.contractAddress + '-' + i.name" class="pl-5">
+                <div class="slide d-flex overflow-x-auto pr-5" ref="scrollContainer">
+                    <div v-for="(i, index) in bigMovers" :key="i.contractAddress + '-' + i.name + index" class="pl-5" :id="index + 'mover'">
                         <v-sheet min-width="146" max-width="230" rounded="xl" :border="true" class="px-4 py-3 container-shadow">
                             <div class="d-flex flex-nowrap">
                                 <app-token-icon :token-icon="getTokenIcon(i)"></app-token-icon>
@@ -53,16 +58,18 @@
 <script setup lang="ts">
 import AppNoResult from '@core/components/AppNoResult.vue'
 import AppTokenIcon from '@/core/components/AppTokenIcon.vue'
+import AppAdButtonsSmall from '@/core/components/AppAdButtonsSmall.vue'
 import { useGetBigMoversQuery } from './apollo/big-movers/bigMovers.generated'
 import { TokenMarketMoverType, BigMoverFragment } from '@/apollo/types'
 import { formatUsdValue, FormattedNumber, formatPercentageValue } from '@/core/helper/number-format-helper'
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import { useCoinData } from '@core/composables/CoinData/coinData.composable'
 import { useDisplay } from 'vuetify'
 import { useI18n } from 'vue-i18n'
 import { useNetwork } from '@/core/composables/Network/useNetwork'
 import BigNumber from 'bignumber.js'
 import { timeAgo } from '@/core/helper'
+import { useScroll } from '@vueuse/core'
 
 const { t } = useI18n()
 
@@ -79,7 +86,7 @@ const { loading: loadingBigMovers, result } = useGetBigMoversQuery()
 
 const bigMovers = computed<BigMoverFragment[]>(() => {
     const res = result?.value?.getTokenMarketMovers.items.filter((x): x is BigMoverFragment => x !== undefined) || []
-    return res
+    return res.slice(0, 100)
 })
 
 const loading = computed<boolean>(() => {
@@ -135,9 +142,55 @@ const getChangeClass = (percentage: number): string => {
 /**------------------------
  * Scroll
  -------------------------*/
+const scrollContainer = ref<HTMLElement | null>(null)
+const { x, isScrolling } = useScroll(scrollContainer)
 
 const slideToNext = () => {
-    console.log('f')
+    if (scrollContainer.value && scrollContainer.value && !isScrolling.value) {
+        const containerWidth = scrollContainer.value.offsetWidth
+        const containerLeftOffset = scrollContainer.value.getBoundingClientRect().left
+        let index = 0
+        let next: null | number = null
+        while (index < bigMovers.value.length && next === null) {
+            const el = document.getElementById(index + 'mover')
+            if (el) {
+                const endContainer = containerWidth + containerLeftOffset
+                const elEndRight = el.getBoundingClientRect().right - containerLeftOffset
+                if (elEndRight > endContainer) {
+                    next = el.getBoundingClientRect().left - containerLeftOffset + x.value
+                }
+            }
+            index = index + 1
+        }
+        scrollContainer.value.scroll({ left: next || containerLeftOffset, top: 0, behavior: 'smooth' })
+    }
+}
+
+const slideToPrev = () => {
+    if (scrollContainer.value && scrollContainer.value && !isScrolling.value) {
+        const containerWidth = scrollContainer.value.offsetWidth
+        const containerLeftOffset = scrollContainer.value.getBoundingClientRect().left
+        let index = bigMovers.value.length - 1
+        let prev: null | number = null
+        while (index > -1 && prev === null) {
+            const el = document.getElementById(index + 'mover')
+            if (el) {
+                const elStartLeft = el.getBoundingClientRect().left - containerLeftOffset + x.value
+                if (x.value === 0 && index === bigMovers.value.length - 1) {
+                    prev = elStartLeft
+                } else {
+                    const elEndRight = x.value + el.getBoundingClientRect().right - containerWidth - containerLeftOffset
+                    const isFirstVisible = elStartLeft >= 0 && el.getBoundingClientRect().left <= 0
+                    if (isFirstVisible) {
+                        prev = elEndRight
+                    }
+                }
+            }
+            index = index - 1
+        }
+
+        scrollContainer.value.scroll({ left: prev || 0, top: 0, behavior: 'smooth' })
+    }
 }
 </script>
 
@@ -150,7 +203,7 @@ const slideToNext = () => {
 }
 .slide_next {
     position: absolute !important;
-    top: 46%;
+    top: 44%;
     right: 1%;
     z-index: 2;
     border: 1px solid rgb(var(--v-border-color), 0.12);
@@ -159,10 +212,14 @@ const slideToNext = () => {
 
 .slide_prev {
     position: absolute !important;
-    top: 46%;
+    top: 44%;
     left: 1%;
     z-index: 2;
     border: 1px solid rgb(var(--v-border-color), 0.12);
     filter: drop-shadow(0px 5px 5px rgb(24, 43, 75, 0.1));
+}
+.loading-div {
+    padding-left: 10px;
+    padding-right: 10px;
 }
 </style>
