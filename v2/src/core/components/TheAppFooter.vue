@@ -129,7 +129,6 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { useStore } from '@/store'
 import { useDisplay } from 'vuetify/lib/framework.mjs'
 import { ROUTE_NAME, ROUTE_PROP } from '@core/router/routesNames'
 import configs from '@/configs'
@@ -215,8 +214,6 @@ const socialIcons = [
         altText: 'Telegram icon'
     }
 ]
-
-const store = useStore()
 </script>
 
 <style lang="scss" scoped>

@@ -90,7 +90,7 @@ import { useDisplay } from 'vuetify'
 import { useI18n } from 'vue-i18n'
 import { useNetwork } from '@/core/composables/Network/useNetwork'
 import BigNumber from 'bignumber.js'
-import { eth, timeAgo } from '@/core/helper'
+import { timeAgo } from '@/core/helper'
 import { useScroll } from '@vueuse/core'
 
 const { t } = useI18n()

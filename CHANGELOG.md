@@ -3,6 +3,10 @@
 ### Feature
 - Big token movers with subscription [#1191](https://github.com/EthVM/EthVM/pull/1191)
 
+
+### UI
+- clean up color system [#1191](https://github.com/EthVM/EthVM/pull/1191)
+
 ======================================================================
 
 ### Release v2.1.5
