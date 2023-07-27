@@ -119,7 +119,6 @@ const { onResult: onSubscriptionResult } = useBigMoversUpdateSubscription(() => 
 }))
 
 onSubscriptionResult(() => {
-    console.log('update recieved')
     refetch()
 })
 
