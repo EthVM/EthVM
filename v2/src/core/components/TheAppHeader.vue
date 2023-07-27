@@ -20,7 +20,7 @@
                 <v-row align="center" justify="start" class="mr-0 mx-0 flex-nowrap my-0 mr-lg-n3" style="min-height: 40px">
                     <div class="mr-4 logo-btn">
                         <v-img
-                            :src="appStore.isDarkMode ? require('@/assets/logo-dark.svg') : require('@/assets/logo.svg')"
+                            :src="require('@/assets/logo.svg')"
                             height="35"
                             :width="xs ? '80' : '100'"
                             contain

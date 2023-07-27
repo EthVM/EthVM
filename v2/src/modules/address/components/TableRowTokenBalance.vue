@@ -119,7 +119,7 @@
                                 <p class="mb-0 mb-md-9">{{ marketData.high }}</p></v-col
                             >
                             <v-col cols="6" md="4">
-                                <p class="mb-1 mb-md-3 text-info font-weight-bold">{{ $t('market.24hLow') }} w</p>
+                                <p class="mb-1 mb-md-3 text-info font-weight-bold">{{ $t('market.24hLow') }}</p>
                                 <p class="mb-0 mb-md-9">{{ marketData.low }}</p></v-col
                             >
                         </v-row>

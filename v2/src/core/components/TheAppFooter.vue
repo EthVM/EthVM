@@ -4,7 +4,7 @@
             <v-row justify="space-between" class="flex-wrap">
                 <v-col cols="12" lg="3" class="mb-10 mb-lg-0" order="1">
                     <router-link to="/">
-                        <v-img :src="store.isDarkMode ? require('@/assets/logo-dark.svg') : require('@/assets/logo.svg')" height="25" width="80" contain />
+                        <v-img :src="require('@/assets/logo.svg')" height="25" width="80" contain />
                     </router-link>
                     <v-img
                         v-if="lgAndUp"
