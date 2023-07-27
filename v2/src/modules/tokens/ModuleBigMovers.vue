@@ -90,13 +90,13 @@ import { useDisplay } from 'vuetify'
 import { useI18n } from 'vue-i18n'
 import { useNetwork } from '@/core/composables/Network/useNetwork'
 import BigNumber from 'bignumber.js'
-import { timeAgo } from '@/core/helper'
+import { eth, timeAgo } from '@/core/helper'
 import { useScroll } from '@vueuse/core'
 
 const { t } = useI18n()
 const { xs, sm, md, lgAndUp } = useDisplay()
-const { supportsFiat } = useNetwork()
-const { loading: loadingCoinData, getEthereumTokenByContract } = useCoinData()
+const { supportsFiat, coingeckoId } = useNetwork()
+const { loading: loadingCoinData, getEthereumTokenByContract, ethMarketInfo } = useCoinData()
 
 /**------------------------
  * Fetch Movers:
@@ -122,6 +122,7 @@ onSubscriptionResult(() => {
     console.log('update recieved')
     refetch()
 })
+
 /**------------------------
  * Loading State:
  -------------------------*/
@@ -145,6 +146,9 @@ const loadingContainersCount = computed<number>(() => {
 const getTokenIcon = (token: BigMoverFragment): string | undefined => {
     const contract = token.contractAddress
     const backUpIcon = token.iconPng || undefined
+    if (token.coingeckoCoinId === coingeckoId.value && ethMarketInfo.value) {
+        return ethMarketInfo.value?.image
+    }
     if (contract) {
         const tokenData = getEthereumTokenByContract(contract)
         if (tokenData) {
