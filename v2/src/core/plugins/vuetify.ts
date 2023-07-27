@@ -20,7 +20,7 @@ const COLORS = {
     surfaceDM: '#121212',
     greyBackdroundDM: '#2E2E2E',
     greyBackgroundLM: '#C2C7CE',
-    darkGreyLM: '#7C8696',
+    darkGreyLM: '#656565',
     darkGreyDM: '#90959C',
     mediumGreyLM: '#DEDBDD',
     lightGreyLM: '#F2F3F6',
