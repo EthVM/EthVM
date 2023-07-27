@@ -27,7 +27,7 @@
                     :is-loading="loadingTokens || loadingCoinData"
                     :balance="tokenBalance.value"
                     :balance-tooltip="tokenBalance.tooltipText"
-                    :subtext="`${tokensLength} ${$t('block.tokenTotal')}`"
+                    :subtext="tokenCountSubtext"
                     :class="{ 'd-sm-none': props.isOverview }"
                 >
                 </address-balance-totals>
@@ -167,7 +167,7 @@
                     </table-row-token-balance>
                 </div>
             </div>
-            <app-no-result v-else :text="$t('address.tagline.noToken')" class="mt-4 mt-sm-6"></app-no-result>
+            <app-no-result v-else :text="$t('address.tagline.noToken')" :class="['mt-4 mt-sm-6', { 'mx-6 mx-sm-0': props.isOverview }]"></app-no-result>
             <template v-if="showPagination">
                 <app-pagination :length="numberOfPages" @update:modelValue="loadMoreData" :current-page="pageNum" />
             </template>
@@ -198,6 +198,9 @@ import { searchHelper } from '@core/helper/search'
 import { useStore } from '@/store'
 import { WatchQueryFetchPolicy } from '@apollo/client/core'
 import { useAppPaginate } from '@core/composables/AppPaginate/useAppPaginate.composable'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 const { xs } = useDisplay()
 const { loading: loadingCoinData } = useCoinData()
 
@@ -307,15 +310,15 @@ const SORT_KEY = KEY
 
 const activeSortString = computed<string>(() => {
     if (state.sortKey.includes(SORT_KEY.BALANCE)) {
-        return 'Balance'
+        return t('common.balance')
     } else if (state.sortKey.includes(SORT_KEY.PRICE)) {
-        return 'Price'
+        return t('common.price')
     } else if (state.sortKey.includes(SORT_KEY.NAME)) {
-        return 'Token'
+        return t('common.token')
     } else if (state.sortKey.includes(SORT_KEY.USD)) {
-        return 'USD Value'
+        return t('common.usdValue')
     }
-    return '24h'
+    return t('common.24h')
 })
 
 /**------------------------
@@ -391,6 +394,10 @@ const tableHeight = computed(() => {
         }
     }
     return {}
+})
+
+const tokenCountSubtext = computed<string>(() => {
+    return tokensLength.value === 1 ? t('token.tokenTotal') : t('token.tokenTotal', { n: tokensLength.value })
 })
 </script>
 

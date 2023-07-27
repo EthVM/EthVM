@@ -71,7 +71,9 @@ import { eth } from '@core/helper/eth'
 import { Q_PORTFOLIO, ROUTE_NAME } from '@core/router/routesNames'
 import { useRouter } from 'vue-router'
 import { PortfolioItem } from '@/store/helpers'
+import { useI18n } from 'vue-i18n'
 
+const { t } = useI18n()
 const store = useStore()
 const { xs, mdAndDown, smAndUp } = useDisplay()
 
@@ -105,6 +107,6 @@ const shortName = computed<string>(() => {
 })
 
 const menuTitle = computed<string>(() => {
-    return store.addressHashIsSaved(props.adr.hash) ? 'View in Portfolio' : 'Delete'
+    return store.addressHashIsSaved(props.adr.hash) ? t('settings.viewInPortfolio') : t('settings.delete')
 })
 </script>

@@ -19,7 +19,9 @@ import AppCopyToClip from '@/core/components/AppCopyToClip.vue'
 import AppAddressBlockie from '@core/components/AppAddressBlockie.vue'
 import VueQr from 'vue-qr/src/packages/vue-qr.vue'
 import { eth } from '@/core/helper/eth'
+import { useI18n } from 'vue-i18n'
 
+const { t } = useI18n()
 interface PropType {
     address: string
     name?: string
@@ -34,6 +36,6 @@ const props = defineProps<PropType>()
 */
 
 const name = computed<string>(() => {
-    return props.name ? props.name : 'No Name'
+    return props.name ? props.name : t('common.noName')
 })
 </script>

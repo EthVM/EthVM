@@ -4,7 +4,7 @@
             <v-col cols="12" sm="6" order-sm="2">
                 <v-img contain :src="imageLarge" @error="imgLoadFail" max-width="w-100" class="border-radius-default mb-4 align-end">
                     <div v-if="imageLarge === require('@/assets/icon-nft.png')" class="no-image text-uppercase text-caption text-center py-2 justify-end">
-                        image not available
+                        {{ $t('message.imageNotAvailable') }}
                     </div></v-img
                 >
             </v-col>
@@ -15,14 +15,14 @@
                 <p v-if="props.nft.meta?.description" class="mb-1">
                     {{ props.nft.meta?.description }}
                 </p>
-                <p v-if="balance" class="font-weight-bold mt-3 mb-1">Balance</p>
+                <p v-if="balance" class="font-weight-bold mt-3 mb-1">{{ $t('common.balance') }}</p>
                 <p v-if="balance" class="text-break-new-line">{{ balance }}</p>
-                <p class="font-weight-bold mt-3 mb-1">Contract</p>
+                <p class="font-weight-bold mt-3 mb-1">{{ $t('token.contract') }}</p>
                 <div class="d-flex align-center">
                     <app-address-blockie :address="props.nft.contract"></app-address-blockie>
                     <app-transform-hash is-short is-blue :hash="eth.toCheckSum(props.nft.contract)" :link="`/token/${props.nft.contract}`" class="ml-2" />
                 </div>
-                <p class="font-weight-bold mt-3 mb-1">Token Standard</p>
+                <p class="font-weight-bold mt-3 mb-1">{{ $t('token.tokenStandard') }}</p>
                 <p>{{ props.nft.type }}</p>
                 <p class="font-weight-bold mt-3 mb-1">ID</p>
                 <p class="text-break-new-line">{{ props.nft.id }}</p>

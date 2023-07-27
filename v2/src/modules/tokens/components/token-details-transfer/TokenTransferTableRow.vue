@@ -54,7 +54,7 @@
             </v-col>
             <!-- End Column 6 -->
             <!-- Column 6: Age -->
-            <v-col md="2" class="d-none d-md-block">
+            <v-col md="2" class="d-none d-md-block text-info">
                 {{ timeAgo(date) }}
             </v-col>
             <!-- End Column 6 -->
