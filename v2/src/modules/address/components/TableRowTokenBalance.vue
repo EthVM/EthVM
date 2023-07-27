@@ -2,7 +2,7 @@
     <app-table-row
         row-align="start"
         row-align-lg="center"
-        :color="state.showMore ? 'pillGrey' : 'transparent'"
+        :color="state.showMore ? 'lightGrey' : 'transparent'"
         v-on="{ click: !props.isOverview && marketData ? openMoreInfo : null }"
     >
         <!--

@@ -3,7 +3,7 @@
         v-if="smAndDown"
         row-justify="space-between"
         @click="showMoreDetails = !showMoreDetails"
-        :color="showMoreDetails ? 'pillGrey' : 'transparent'"
+        :color="showMoreDetails ? 'lightGrey' : 'transparent'"
     >
         <v-col cols="6">
             <v-avatar :color="transferDirection.color" size="22">
@@ -22,7 +22,7 @@
             </div>
         </v-col>
     </app-table-row>
-    <app-table-row v-else row-align="center" @click="showMoreDetails = !showMoreDetails" :color="showMoreDetails ? 'pillGrey' : 'transparent'">
+    <app-table-row v-else row-align="center" @click="showMoreDetails = !showMoreDetails" :color="showMoreDetails ? 'lightGrey' : 'transparent'">
         <v-col :sm="mdAndDown ? 3 : 2">
             <div class="d-flex">
                 <span style="width: 30px" class="d-inline-block">

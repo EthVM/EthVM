@@ -1,5 +1,5 @@
 <template>
-    <app-table-row row-align="center" row-justify="start" @click="toggleMoreDetails" :link="xs" :color="xs && showMoreDetails ? 'pillGrey' : 'transparent'">
+    <app-table-row row-align="center" row-justify="start" @click="toggleMoreDetails" :link="xs" :color="xs && showMoreDetails ? 'lightGrey' : 'transparent'">
         <template v-if="isNFT">
             <v-col cols="12" sm="5" md="3" class="d-flex align-center justify-start">
                 <token-nft-img v-if="nftMetaDetails" :loading="false" :nft="nftMetaDetails" height="50" width="50" class="rounded-md"></token-nft-img>

@@ -43,7 +43,7 @@
     =====================================================================================
     -->
 
-        <div v-for="(item, index) in basicDetails" :key="calculateKey(index)" :class="[getColor(calculateKey(index)) ? '' : 'tableGrey']">
+        <div v-for="(item, index) in basicDetails" :key="calculateKey(index)" :class="[getColor(calculateKey(index)) ? '' : 'lightGrey']">
             <v-col xs="12">
                 <app-details-list-row :detail="item" :is-loading="isLoading" />
             </v-col>
@@ -61,7 +61,7 @@
     -->
         <v-expand-transition v-show="!isLoading && state.showMore">
             <div>
-                <div v-for="(item, index) in moreDetails" :key="calculateKey(index)" :class="[getColor(index) ? '' : 'tableGrey']">
+                <div v-for="(item, index) in moreDetails" :key="calculateKey(index)" :class="[getColor(index) ? '' : 'lightGrey']">
                     <v-col xs="12">
                         <app-details-list-row :detail="item" :is-loading="isLoading" />
                     </v-col>

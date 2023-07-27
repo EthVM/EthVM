@@ -18,11 +18,11 @@
                         v-for="filter in activeFilters"
                         :text="filter.text"
                         @click="removeFilter(filter)"
-                        color="greyCard"
+                        color="lightGrey"
                         variant="flat"
                         height="24px"
                         :key="filter.value"
-                        class="ma-1 rounded-pill text-greyTextFilter text-body-1 px-3"
+                        class="ma-1 rounded-pill text-info text-body-1 px-3"
                     >
                         <template #append>
                             <v-icon icon="close" size="14"></v-icon>
