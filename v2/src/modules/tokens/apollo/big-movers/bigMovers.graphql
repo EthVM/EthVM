@@ -16,3 +16,9 @@ query getBigMovers {
     }
   }
 }
+
+subscription bigMoversUpdate {
+   tokenMarketMoversProcessedEvent {
+        _
+    }
+}

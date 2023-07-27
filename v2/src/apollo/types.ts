@@ -28,6 +28,7 @@ export type Scalars = {
     EthVMPrefixedBase16String: string
     EthVMPrefixedEthereumAddress: string
     EthVMPrefixedHexString: string
+    EthVMTransactionHash: string
     /**
      * Prefixed hex non-empty hex string.
      *
@@ -1638,45 +1639,8 @@ export enum MmChain {
     Matic = 'MATIC'
 }
 
-export type MmErc20BalanceDeltasByBlockNumberItem = {
-    __typename?: 'MmErc20BalanceDeltasByBlockNumberItem'
-    /** balance of the owner with the contract after the block (no decimals) */
-    balanceNext: Scalars['EthVMUintHex']
-    /** balance of the owner with the contract before the block (no decimals) */
-    balancePrev: Scalars['EthVMUintHex']
-    blockNumber: Scalars['Int']
-    contractAddress: Scalars['EthVMPrefixedEthereumAddress']
-    ownerAddress: Scalars['EthVMPrefixedEthereumAddress']
-    timestampIso8601: Scalars['EthVMIso8601DateTimeMilliseconds']
-    timestampUnixSec: Scalars['EthVMUnixEpochSeconds']
-}
-
-export type MmErc20BalanceDeltasByBlockNumberResult = {
-    __typename?: 'MmErc20BalanceDeltasByBlockNumberResult'
-    items: Array<MmErc20BalanceDeltasByBlockNumberItem>
-    nextKey?: Maybe<Scalars['String']>
-}
-
-export type MmEthBalanceDeltasByBlockNumberItem = {
-    __typename?: 'MmEthBalanceDeltasByBlockNumberItem'
-    /** ETH Balance after the block (wei) */
-    balanceNext: Scalars['EthVMUintHex']
-    /** ETH Balance before the block (wei) */
-    balancePrev: Scalars['EthVMUintHex']
-    blockNumber: Scalars['Int']
-    ownerAddress: Scalars['EthVMPrefixedEthereumAddress']
-    timestampIso8601: Scalars['EthVMIso8601DateTimeMilliseconds']
-    timestampUnixSec: Scalars['EthVMUnixEpochSeconds']
-}
-
-export type MmEthBalanceDeltasByBlockNumberResult = {
-    __typename?: 'MmEthBalanceDeltasByBlockNumberResult'
-    items: Array<MmEthBalanceDeltasByBlockNumberItem>
-    nextKey?: Maybe<Scalars['String']>
-}
-
-export type MmEthErc20Balance = {
-    __typename?: 'MmEthErc20Balance'
+export type MmEthOrErc20Balance = {
+    __typename?: 'MmETHOrERC20Balance'
     /** 0x prefixed ethereum address that owners the token */
     ownerAddress: Scalars['EthVMPrefixedEthereumAddress']
     /** 0x prefixed base16 balance that the owner has of the token */
@@ -1707,10 +1671,47 @@ export type MmEthErc20Balance = {
     tokenWebsiteUrl?: Maybe<Scalars['EthVMUrl']>
 }
 
-export type MmGetEthAndErc20BalancesWithPricesByOwnerAddressResult = {
-    __typename?: 'MmGetEthAndErc20BalancesWithPricesByOwnerAddressResult'
-    items: Array<MmEthErc20Balance>
+export type MmGetErc20BalanceDeltasByBlockNumberResult = {
+    __typename?: 'MmGetERC20BalanceDeltasByBlockNumberResult'
+    items: Array<MmGetErc20BalanceDeltasByBlockNumberResultItem>
     nextKey?: Maybe<Scalars['String']>
+}
+
+export type MmGetErc20BalanceDeltasByBlockNumberResultItem = {
+    __typename?: 'MmGetERC20BalanceDeltasByBlockNumberResultItem'
+    /** balance of the owner with the contract after the block (no decimals) */
+    balanceNext: Scalars['EthVMUintHex']
+    /** balance of the owner with the contract before the block (no decimals) */
+    balancePrev: Scalars['EthVMUintHex']
+    blockNumber: Scalars['Int']
+    contractAddress: Scalars['EthVMPrefixedEthereumAddress']
+    ownerAddress: Scalars['EthVMPrefixedEthereumAddress']
+    timestampIso8601: Scalars['EthVMIso8601DateTimeMilliseconds']
+    timestampUnixSec: Scalars['EthVMUnixEpochSeconds']
+}
+
+export type MmGetEthAndErc20BalancesWithPricesByOwnerAddressResult = {
+    __typename?: 'MmGetEthAndERC20BalancesWithPricesByOwnerAddressResult'
+    items: Array<MmEthOrErc20Balance>
+    nextKey?: Maybe<Scalars['String']>
+}
+
+export type MmGetEthBalanceDeltasByBlockNumberResult = {
+    __typename?: 'MmGetEthBalanceDeltasByBlockNumberResult'
+    items: Array<MmGetEthBalanceDeltasByBlockNumberResultItem>
+    nextKey?: Maybe<Scalars['String']>
+}
+
+export type MmGetEthBalanceDeltasByBlockNumberResultItem = {
+    __typename?: 'MmGetEthBalanceDeltasByBlockNumberResultItem'
+    /** ETH Balance after the block (wei) */
+    balanceNext: Scalars['EthVMUintHex']
+    /** ETH Balance before the block (wei) */
+    balancePrev: Scalars['EthVMUintHex']
+    blockNumber: Scalars['Int']
+    ownerAddress: Scalars['EthVMPrefixedEthereumAddress']
+    timestampIso8601: Scalars['EthVMIso8601DateTimeMilliseconds']
+    timestampUnixSec: Scalars['EthVMUnixEpochSeconds']
 }
 
 export type MmGetTokenMarketDataByChainAndContractAddressesResult = {
@@ -1729,6 +1730,67 @@ export type MmGetTokenMarketMoversByChainResult = {
     items: Array<MmTokenMarketMover>
 }
 
+export enum MmGetTransfersByBlockNumberItemType {
+    Erc20 = 'ERC20',
+    Erc721 = 'ERC721',
+    Erc1155 = 'ERC1155',
+    Eth = 'ETH'
+}
+
+export type MmGetTransfersByBlockNumberResult = {
+    __typename?: 'MmGetTransfersByBlockNumberResult'
+    /** This page of transfers */
+    items: Array<MmGetTransfersByBlockNumberResultItem>
+    /**
+     * Token used to retreieve the next page of transfers
+     * Undefined if this is the last page
+     */
+    nextKey?: Maybe<Scalars['String']>
+}
+
+export type MmGetTransfersByBlockNumberResultItem = {
+    __typename?: 'MmGetTransfersByBlockNumberResultItem'
+    /** Number of the block containing the transfer */
+    blockNumber: Scalars['Int']
+    /**
+     * Address of the contract, if applicable
+     * Only applicable to Type = ERC20, ERC721 or ERC1155
+     */
+    contractAddress?: Maybe<Scalars['EthVMPrefixedEthereumAddress']>
+    /** Address sending the transfer */
+    fromAddress?: Maybe<Scalars['EthVMPrefixedEthereumAddress']>
+    /**
+     * Did the transfer succeed or fail?
+     * true=success
+     * false=fail
+     */
+    status: Scalars['Boolean']
+    /** Timestamp of the block containing the transfer in Iso8601 milliseconds */
+    timestampIso8601: Scalars['EthVMIso8601DateTimeMilliseconds']
+    /** Timestamp of the block containing the transfer in unix epoch seconds */
+    timestampUnixSec: Scalars['EthVMUnixEpochSeconds']
+    /** Address receiving the transfer */
+    toAddress?: Maybe<Scalars['EthVMPrefixedEthereumAddress']>
+    /**
+     * Unique id (withn the contract) of NFT token being transferred, if applicable
+     * Only applicable to Type = ERC721 or ERC1155
+     */
+    tokenId?: Maybe<Scalars['EthVMUintHex']>
+    /**
+     * Transaction hash that the transfer belongs to, if applicable
+     * Not all transfers are associated with a transaction, for example block
+     * rewards or withdrawals
+     */
+    transactionHash?: Maybe<Scalars['EthVMTransactionHash']>
+    /** Type of the MmGetTransfersByBlockNumberResult item */
+    type: MmGetTransfersByBlockNumberItemType
+    /**
+     * Amount of the token transferred from fromAddress to toAddress, if applicable
+     * Only applicable to Type = ETH, ERC20 or ERC1155
+     */
+    value?: Maybe<Scalars['EthVMUintHex']>
+}
+
 export type MmSearchTokenByChainResult = {
     __typename?: 'MmSearchTokenByChainResult'
     items: Array<MmTokenSearchResult>
@@ -1741,6 +1803,7 @@ export enum MmSortDirection {
 
 export type MmTokenMarketData = {
     __typename?: 'MmTokenMarketData'
+    circulatingSupply?: Maybe<Scalars['EthVMCurrencyFloat']>
     coingeckoCoinId: Scalars['String']
     contractAddress?: Maybe<Scalars['EthVMPrefixedEthereumAddress']>
     decimals?: Maybe<Scalars['Int']>
@@ -1761,6 +1824,7 @@ export type MmTokenMarketData = {
     priceLastUpdatedAtUnixSec?: Maybe<Scalars['EthVMUnixEpochSeconds']>
     sparkline24h: Array<Scalars['EthVMCurrencyFloat']>
     symbol: Scalars['String']
+    totalSupply?: Maybe<Scalars['EthVMCurrencyFloat']>
     volume24h?: Maybe<Scalars['EthVMCurrencyFloat']>
     websiteUrl?: Maybe<Scalars['EthVMUrl']>
 }
@@ -3267,11 +3331,11 @@ export type Query = {
     interfaceChanged?: Maybe<InterfaceChanged>
     interfaceChangeds: Array<InterfaceChanged>
     /** Get all the changed Erc20 balances for a given block number */
-    mmGetErc20BalanceDeltasByBlockNumber: MmErc20BalanceDeltasByBlockNumberResult
+    mmGetErc20BalanceDeltasByBlockNumber: MmGetErc20BalanceDeltasByBlockNumberResult
     /** Get the token balances of an address on Ethereum */
     mmGetEthAndErc20BalancesWithPricesByOwnerAddress: MmGetEthAndErc20BalancesWithPricesByOwnerAddressResult
     /** Get all the changed Eth balances for a given block number */
-    mmGetEthBalanceDeltasByBlockNumber: MmEthBalanceDeltasByBlockNumberResult
+    mmGetEthBalanceDeltasByBlockNumber: MmGetEthBalanceDeltasByBlockNumberResult
     /** Get a paginated list of market data of all tokens on a chain */
     mmGetTokenMarketDataByChain: MmGetTokenMarketDataByChainResult
     /**
@@ -3284,6 +3348,7 @@ export type Query = {
     mmGetTokenMarketDataByChainAndContractAddresses: MmGetTokenMarketDataByChainAndContractAddressesResult
     /** Query tokens that have had noteworthy price changes recently */
     mmGetTokenMarketMoversByChain: MmGetTokenMarketMoversByChainResult
+    mmGetTransfersByBlockNumber: MmGetTransfersByBlockNumberResult
     /**
      * Full text search for a token by name, symbol, or contract address
      *
@@ -3849,6 +3914,12 @@ export type QueryMmGetTokenMarketDataByChainAndContractAddressesArgs = {
 
 export type QueryMmGetTokenMarketMoversByChainArgs = {
     chain: MmChain
+}
+
+export type QueryMmGetTransfersByBlockNumberArgs = {
+    blockNumber: Scalars['Int']
+    limit?: InputMaybe<Scalars['Int']>
+    nextKey?: InputMaybe<Scalars['String']>
 }
 
 export type QueryMmSearchTokenByChainArgs = {
@@ -7355,6 +7426,13 @@ export type GetBigMoversQuery = {
             coingeckoCoinId: string
         }>
     }
+}
+
+export type BigMoversUpdateSubscriptionVariables = Exact<{ [key: string]: never }>
+
+export type BigMoversUpdateSubscription = {
+    __typename?: 'Subscription'
+    tokenMarketMoversProcessedEvent: { __typename?: 'TokenMarketMoverProcessedEventResult'; _?: string | null }
 }
 
 export type Erc20TokenOwnersFragment = {

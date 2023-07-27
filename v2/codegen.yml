@@ -29,6 +29,7 @@ generates:
             EthVMPrefixedHexString: string
             EthVMUintHex: string
             EthVMIntHex: string
+            EthVMTransactionHash: string
             # IMPORTANT: Below values are not used, they are coming from ens graph.  Add proper types, if they are needed
             BigDecimal: string
             BigInt: string
@@ -64,6 +65,7 @@ generates:
             EthVMPrefixedHexString: string
             EthVMUintHex: string
             EthVMIntHex: string
+            EthVMTransactionHash: string
             # IMPORTANT: Below values are not used, they are coming from ens graph.  Add proper types, if they are needed
             BigDecimal: string
             BigInt: string

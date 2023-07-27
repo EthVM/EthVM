@@ -1,16 +1,16 @@
 <template>
-    <v-card variant="elevated" elevation="1" rounded="xl" class="py-4 py-sm-6 h-100" min-height="232px">
+    <v-card variant="elevated" elevation="1" rounded="xl" class="py-4 py-sm-6 h-100" min-height="264">
         <!--
         ===================================================
             Title 
         ===================================================
         -->
-        <v-row no-gutters class="px-4 px-sm-6 mb-4 mb-md-7 align-center justify-space-between">
+        <v-row class="px-4 px-sm-6 mb-1 mb-md-6 align-center justify-space-between">
             <v-col cols="12" md="auto" lg="4" order="last" order-md="first">
                 <h4 class="text-h4 font-weight-bold">{{ $t('token.bigMovers') }}</h4>
             </v-col>
             <v-spacer />
-            <v-col cols="12" md="auto" lg="8" order="first" order-md="last" class="mb-6 mb-md-0 pa-0">
+            <v-col cols="12" md="auto" lg="8" order="first" order-md="last" class="mb-2 mb-md-0">
                 <app-ad-buttons-small />
             </v-col>
         </v-row>
@@ -19,9 +19,9 @@
            Loading Containers
         ===================================================
         -->
-        <v-row v-if="loading" class="px-4 px-sm-6">
+        <v-row v-if="loading" class="px-4 px-sm-6 mt-0">
             <v-col cols="6" sm="3" lg="2" v-for="item in loadingContainersCount" :key="item">
-                <div class="skeleton-box rounded-xl" style="height: 150px"></div>
+                <div class="skeleton-box rounded-xl" style="height: 144px"></div>
             </v-col>
         </v-row>
         <!--
@@ -81,7 +81,7 @@
 import AppNoResult from '@core/components/AppNoResult.vue'
 import AppTokenIcon from '@/core/components/AppTokenIcon.vue'
 import AppAdButtonsSmall from '@/core/components/AppAdButtonsSmall.vue'
-import { useGetBigMoversQuery } from './apollo/big-movers/bigMovers.generated'
+import { useGetBigMoversQuery, useBigMoversUpdateSubscription } from './apollo/big-movers/bigMovers.generated'
 import { TokenMarketMoverType, BigMoverFragment } from '@/apollo/types'
 import { formatUsdValue, FormattedNumber, formatPercentageValue } from '@/core/helper/number-format-helper'
 import { computed, ref } from 'vue'
@@ -94,7 +94,6 @@ import { timeAgo } from '@/core/helper'
 import { useScroll } from '@vueuse/core'
 
 const { t } = useI18n()
-
 const { xs, sm, md, lgAndUp } = useDisplay()
 const { supportsFiat } = useNetwork()
 const { loading: loadingCoinData, getEthereumTokenByContract } = useCoinData()
@@ -102,7 +101,11 @@ const { loading: loadingCoinData, getEthereumTokenByContract } = useCoinData()
 /**------------------------
  * Fetch Movers:
  -------------------------*/
-const { loading: loadingBigMovers, result } = useGetBigMoversQuery(() => ({
+const {
+    loading: loadingBigMovers,
+    result,
+    refetch
+} = useGetBigMoversQuery(() => ({
     enabled: supportsFiat.value
 }))
 
@@ -111,6 +114,14 @@ const bigMovers = computed<BigMoverFragment[]>(() => {
     return res.slice(0, 100)
 })
 
+const { onResult: onSubscriptionResult } = useBigMoversUpdateSubscription(() => ({
+    enabled: supportsFiat.value
+}))
+
+onSubscriptionResult(() => {
+    console.log('update recieved')
+    refetch()
+})
 /**------------------------
  * Loading State:
  -------------------------*/

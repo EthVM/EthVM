@@ -43,6 +43,13 @@ export type GetBigMoversQuery = {
     }
 }
 
+export type BigMoversUpdateSubscriptionVariables = Types.Exact<{ [key: string]: never }>
+
+export type BigMoversUpdateSubscription = {
+    __typename?: 'Subscription'
+    tokenMarketMoversProcessedEvent: { __typename?: 'TokenMarketMoverProcessedEventResult'; _?: string | null }
+}
+
 export const BigMoverFragmentDoc = gql`
     fragment BigMover on TokenMarketMoversItem {
         contractAddress
@@ -96,3 +103,35 @@ export function useGetBigMoversLazyQuery(
     return VueApolloComposable.useLazyQuery<GetBigMoversQuery, GetBigMoversQueryVariables>(GetBigMoversDocument, {}, options)
 }
 export type GetBigMoversQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<GetBigMoversQuery, GetBigMoversQueryVariables>
+export const BigMoversUpdateDocument = gql`
+    subscription bigMoversUpdate {
+        tokenMarketMoversProcessedEvent {
+            _
+        }
+    }
+`
+
+/**
+ * __useBigMoversUpdateSubscription__
+ *
+ * To run a query within a Vue component, call `useBigMoversUpdateSubscription` and pass it any options that fit your needs.
+ * When your component renders, `useBigMoversUpdateSubscription` returns an object from Apollo Client that contains result, loading and error properties
+ * you can use to render your UI.
+ *
+ * @param options that will be passed into the subscription, supported options are listed on: https://v4.apollo.vuejs.org/guide-composable/subscription.html#options;
+ *
+ * @example
+ * const { result, loading, error } = useBigMoversUpdateSubscription();
+ */
+export function useBigMoversUpdateSubscription(
+    options:
+        | VueApolloComposable.UseSubscriptionOptions<BigMoversUpdateSubscription, BigMoversUpdateSubscriptionVariables>
+        | VueCompositionApi.Ref<VueApolloComposable.UseSubscriptionOptions<BigMoversUpdateSubscription, BigMoversUpdateSubscriptionVariables>>
+        | ReactiveFunction<VueApolloComposable.UseSubscriptionOptions<BigMoversUpdateSubscription, BigMoversUpdateSubscriptionVariables>> = {}
+) {
+    return VueApolloComposable.useSubscription<BigMoversUpdateSubscription, BigMoversUpdateSubscriptionVariables>(BigMoversUpdateDocument, {}, options)
+}
+export type BigMoversUpdateSubscriptionCompositionFunctionResult = VueApolloComposable.UseSubscriptionReturn<
+    BigMoversUpdateSubscription,
+    BigMoversUpdateSubscriptionVariables
+>
