@@ -191,6 +191,7 @@
         "noMatch": "We could not find anything mathching: {search}",
         "holder": "Holder | Holders",
         "favorites": "Favorites",
+        "bigMovers": "Recent Big Movers",
         "tokenTotal": "total 1 tokens | total {n} tokens"
     },
     "settings": {
@@ -325,6 +326,7 @@
         "adrNoIncoming": "This address does not have any incoming transactions",
         "adrNoTxs": "This address does not have any transactions",
         "adrNoInternal": "This address does not have any internal transfers",
+        "noBigMovers": "There are no big movers in the last day",
         "imageNotAvailable": "image not available",
         "addressAlreadyIsSaved": "This address is already saved",
         "inputNotValid":  "Input not valid",
@@ -348,6 +350,14 @@
         "24hChange": "24h Change",
         "priceChange": "Price Change",
         "totalUsdValue": "Total USD Value"
+    },
+    "bigMover": {
+        "ath": "all time high",
+        "1H": "in 1 hour",
+        "5M": "in 5 minutes",
+        "7D": "in 7 days",
+        "24H": "in 24 hours",
+        "30D": "in 30 days"
     },
     "timeAgo": {
         "year": "1 year ago | {n} years ago",
