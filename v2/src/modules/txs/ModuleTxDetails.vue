@@ -74,7 +74,7 @@
                 </v-row>
                 <v-row align="center" class="mt-5">
                     <v-col cols="12" lg="5">
-                        <div class="rounded-lg bg-tableGrey pa-6">
+                        <div class="rounded-lg bg-lightGrey pa-6">
                             <div class="tx-info">
                                 <p class="text-button mb-1">{{ $t('common.from') }}</p>
                                 <template v-if="loadingTransactionHash || !transactionData">
@@ -100,7 +100,7 @@
                     </v-col>
                     <v-icon class="mx-3" :class="{ 'mx-auto': mdAndDown }">{{ mdAndDown ? 'expand_more' : 'chevron_right' }}</v-icon>
                     <v-col cols="12" lg="5">
-                        <div class="rounded-lg bg-tableGrey pa-6">
+                        <div class="rounded-lg bg-lightGrey pa-6">
                             <div class="tx-info">
                                 <p v-if="transactionData && transactionData.contractAddress" class="text-button mb-1">
                                     {{ $t('txs.details.createdContract') }}
@@ -141,7 +141,7 @@
                 </v-row>
                 <v-row align="center" class="mt-5">
                     <v-col cols="12" sm="6" md="4" lg="2" class="flex-grow-0 mr-lg-6">
-                        <div class="rounded-lg bg-tableGrey pa-6">
+                        <div class="rounded-lg bg-lightGrey pa-6">
                             <div class="tx-info">
                                 <p class="text-button mb-1">{{ $t('common.value') }}</p>
                                 <div v-if="loadingTransactionHash" class="skeleton-box rounded-xl" style="height: 21px"></div>
@@ -150,7 +150,7 @@
                         </div>
                     </v-col>
                     <v-col cols="12" sm="6" md="4" lg="2" class="flex-grow-0">
-                        <div class="rounded-lg bg-tableGrey pa-6">
+                        <div class="rounded-lg bg-lightGrey pa-6">
                             <div class="tx-info">
                                 <p class="text-button mb-1">{{ $t('common.fee') }}</p>
                                 <div v-if="loadingTransactionHash" class="skeleton-box rounded-xl" style="height: 21px"></div>

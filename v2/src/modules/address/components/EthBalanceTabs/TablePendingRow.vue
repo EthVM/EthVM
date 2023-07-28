@@ -1,6 +1,6 @@
 <template>
     <!-- For tablet devices and below -->
-    <app-table-row v-if="smAndDown" row-align="center" @click="showMoreDetails = !showMoreDetails" :color="showMoreDetails ? 'pillGrey' : 'transparent'">
+    <app-table-row v-if="smAndDown" row-align="center" @click="showMoreDetails = !showMoreDetails" :color="showMoreDetails ? 'lightGrey' : 'transparent'">
         <!-- For mobile devices -->
         <template v-if="xs">
             <v-col cols="6">

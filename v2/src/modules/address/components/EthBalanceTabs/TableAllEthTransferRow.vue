@@ -1,5 +1,5 @@
 <template>
-    <app-table-row row-align="center" :link="mdAndDown" @click="openMoreInfo" :color="showMoreDetails && mdAndDown ? 'pillGrey' : 'transparent'">
+    <app-table-row row-align="center" :link="mdAndDown" @click="openMoreInfo" :color="showMoreDetails && mdAndDown ? 'lightGrey' : 'transparent'">
         <!--
             Status
         -->

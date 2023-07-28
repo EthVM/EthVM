@@ -51,7 +51,7 @@
     =========================
     -->
     <template v-else>
-        <app-table-row row-align="start" row-justify="space-between" @click="toggleMoreDetails" :color="state.showMoreDetails ? 'pillGrey' : 'transparent'">
+        <app-table-row row-align="start" row-justify="space-between" @click="toggleMoreDetails" :color="state.showMoreDetails ? 'lightGrey' : 'transparent'">
             <v-col class="flex-shrink-0">
                 <div class="d-flex align-center flex-nowrap mb-2">
                     <div class="mobile-chip rounded-circle mr-2" :class="transferType === 'in' ? 'bg-success' : 'bg-warning'">

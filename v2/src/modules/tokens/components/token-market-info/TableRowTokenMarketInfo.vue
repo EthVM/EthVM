@@ -2,7 +2,7 @@
     <app-table-row
         row-align="start"
         row-align-lg="center"
-        :color="state.showMoreDetails && xs ? 'pillGrey' : 'transparent'"
+        :color="state.showMoreDetails && xs ? 'lightGrey' : 'transparent'"
         v-on="{ click: xs ? toggleMoreDetails : null }"
     >
         <v-col :cols="colName">

@@ -4,7 +4,7 @@
             <v-row justify="space-between" class="flex-wrap">
                 <v-col cols="12" lg="3" class="mb-10 mb-lg-0" order="1">
                     <router-link to="/">
-                        <v-img :src="store.isDarkMode ? require('@/assets/logo-dark.svg') : require('@/assets/logo.svg')" height="25" width="80" contain />
+                        <v-img :src="require('@/assets/logo.svg')" height="25" width="80" contain />
                     </router-link>
                     <v-img
                         v-if="lgAndUp"
@@ -129,7 +129,6 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { useStore } from '@/store'
 import { useDisplay } from 'vuetify/lib/framework.mjs'
 import { ROUTE_NAME, ROUTE_PROP } from '@core/router/routesNames'
 import configs from '@/configs'
@@ -215,8 +214,6 @@ const socialIcons = [
         altText: 'Telegram icon'
     }
 ]
-
-const store = useStore()
 </script>
 
 <style lang="scss" scoped>

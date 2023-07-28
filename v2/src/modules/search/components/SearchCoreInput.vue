@@ -20,7 +20,7 @@
                 @keydown.down="menuArrow('down')"
             >
                 <template v-slot:prepend-inner v-if="!xs">
-                    <v-icon :color="search.value ? (props.hasError ? 'error' : 'secondary') : 'greyInputText'" icon="search" />
+                    <v-icon :color="search.value ? (props.hasError ? 'error' : 'secondary') : 'info'" icon="search" />
                 </template>
             </v-text-field>
         </v-card>

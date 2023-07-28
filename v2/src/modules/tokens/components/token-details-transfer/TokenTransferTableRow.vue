@@ -62,7 +62,7 @@
         <app-table-row
             row-justify="space-between"
             class="d-sm-none"
-            :color="visibleDetails.has(props.transfer.transfer.transactionHash) ? 'pillGrey' : 'transparent'"
+            :color="visibleDetails.has(props.transfer.transfer.transactionHash) ? 'lightGrey' : 'transparent'"
             @click="toggleMoreDetails(props.transfer.transfer.transactionHash)"
         >
             <v-col cols="6" sm="5">

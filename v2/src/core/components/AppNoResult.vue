@@ -1,6 +1,6 @@
 <template>
     <v-card
-        color="greyCard"
+        color="lightGrey"
         class="pa-4 pa-sm-6 align-center d-flex justify-center"
         flat
         :min-height="props.height ? props.height : xs ? 66 : 112"

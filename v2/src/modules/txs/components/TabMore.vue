@@ -33,7 +33,7 @@
                 </div>
             </v-col>
         </v-row>
-        <div class="rounded-lg bg-tableGrey pa-5 mt-5 border-sm">
+        <div class="rounded-lg bg-lightGrey pa-5 mt-5 border-sm">
             <p class="text-button mb-1">{{ $t('common.input') }}</p>
             <div v-if="props.loading" class="skeleton-box rounded-xl" style="height: 80px"></div>
             <p v-else class="">{{ props.txData.input }}</p>

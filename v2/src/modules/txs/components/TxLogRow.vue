@@ -1,5 +1,5 @@
 <template>
-    <v-card flat :color="showMoreDetails ? 'pillGrey' : 'transparent'" class="pa-4 px-sm-6">
+    <v-card flat :color="showMoreDetails ? 'lightGrey' : 'transparent'" class="pa-4 px-sm-6">
         <div class="d-flex text-caption justify-space-between mb-2">
             <p>{{ props.index }}</p>
             <p class="text-right text-info">Log Index: {{ props.log.logIndex }}</p>

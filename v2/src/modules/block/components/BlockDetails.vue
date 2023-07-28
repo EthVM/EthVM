@@ -49,7 +49,7 @@
                     </div>
                 </v-col>
                 <v-col cols="12" lg="5">
-                    <div class="rounded-xl bg-tableGrey pa-5 text-textPrimary">
+                    <div class="rounded-xl bg-lightGrey pa-5 text-textPrimary">
                         <v-row>
                             <v-col cols="6" sm="4">
                                 <div class="block-info mb-5">

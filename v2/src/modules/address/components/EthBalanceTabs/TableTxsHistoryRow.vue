@@ -3,7 +3,7 @@
         row-align="center"
         row-justify="space-between"
         @click="showMoreDetails = !showMoreDetails"
-        :color="showMoreDetails ? 'pillGrey' : 'transparent'"
+        :color="showMoreDetails ? 'lightGrey' : 'transparent'"
     >
         <v-co v-if="smAndDown" cols="6">
             <v-avatar :color="transferDirection.color" size="22">
