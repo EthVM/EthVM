@@ -1,7 +1,7 @@
 <template>
     <v-container fluid class="pa-0">
-        <v-row :class="[rowMargin, 'fill-height']" align-content="center" justify="center">
-            <v-col cols="6" md="3" :class="[columnPadding, 'py-2']">
+        <v-row :class="[rowMargin, 'fill-height my-n1 my-sm-n3']" align-content="center" justify="center">
+            <v-col cols="12" sm="6" md="3" :class="[columnPadding, 'pb-sm-2 pb-md-3']">
                 <BlockStatsCard
                     :is-loading="loading"
                     :title="$t('stats.lastBlock')"
@@ -9,7 +9,7 @@
                     :img="require('@/assets/block-stats-icons/block.svg')"
                 />
             </v-col>
-            <v-col cols="6" md="3" :class="[columnPadding, 'py-2']">
+            <v-col cols="12" sm="6" md="3" :class="[columnPadding, 'pb-sm-2 pb-md-3']">
                 <BlockStatsCard
                     :title="$t('stats.lastUpdate')"
                     :value="timestamp"
@@ -21,7 +21,7 @@
                     :img="require('@/assets/block-stats-icons/time.svg')"
                 />
             </v-col>
-            <v-col cols="6" md="3" :class="[columnPadding, 'py-2']">
+            <v-col cols="12" sm="6" md="3" :class="[columnPadding, 'pt-sm-1 pt-md-3']">
                 <BlockStatsCard
                     :title="$t('common.gasPrice')"
                     :value="gasPrice"
@@ -30,7 +30,7 @@
                     :img="require('@/assets/block-stats-icons/gas.svg')"
                 />
             </v-col>
-            <v-col cols="6" md="3" :class="[columnPadding, 'py-2']">
+            <v-col cols="12" sm="6" md="3" :class="[columnPadding, 'pt-sm-1 pt-md-3']">
                 <BlockStatsCard
                     :title="`${currencyName} ${$t('common.price')}`"
                     :value="ethPrice"

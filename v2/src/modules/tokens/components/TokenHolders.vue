@@ -21,7 +21,7 @@
 </template>
 
 <script setup lang="ts">
-import TokenHoldersTable from '@module/tokens/components/TokenDetailsHolder/TokenHolderTable.vue'
+import TokenHoldersTable from '@module/tokens/components/token-details-holder/TokenHolderTable.vue'
 import { ErrorMessageToken } from '@module/tokens/models/ErrorMessagesForTokens'
 import { excpInvariantViolation } from '@/apollo/errorExceptions'
 import { reactive, computed, defineEmits, watch } from 'vue'
@@ -34,8 +34,8 @@ import {
     useGetErc20TokenOwnersQuery,
     useGetErc721TokenOwnersQuery,
     useGetErc1155TokenOwnersQuery
-} from '@module/tokens/apollo/TokenDetailsHolder/tokenHolders.generated'
-import { Erc20TokenOwnerDetailsFragment as Erc20Owner } from '@module/tokens/apollo/TokenDetails/tokenDetails.generated'
+} from '@module/tokens/apollo/token-details-holder/tokenHolders.generated'
+import { Erc20TokenOwnerDetailsFragment as Erc20Owner } from '@module/tokens/apollo/token-details/tokenDetails.generated'
 import { useCoinData } from '@core/composables/CoinData/coinData.composable'
 import { MarketDataFragment as TokenMarketData } from '@core/composables/CoinData/getLatestPrices.generated'
 import { useGetNftsMeta } from '@core/composables/NftMeta/useGetNftsMeta.composable'

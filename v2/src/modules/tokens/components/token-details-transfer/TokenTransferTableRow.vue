@@ -54,7 +54,7 @@
             </v-col>
             <!-- End Column 6 -->
             <!-- Column 6: Age -->
-            <v-col md="2" class="d-none d-md-block">
+            <v-col md="2" class="d-none d-md-block text-info">
                 {{ timeAgo(date) }}
             </v-col>
             <!-- End Column 6 -->
@@ -62,7 +62,7 @@
         <app-table-row
             row-justify="space-between"
             class="d-sm-none"
-            :color="visibleDetails.has(props.transfer.transfer.transactionHash) ? 'pillGrey' : 'transparent'"
+            :color="visibleDetails.has(props.transfer.transfer.transactionHash) ? 'lightGrey' : 'transparent'"
             @click="toggleMoreDetails(props.transfer.transfer.transactionHash)"
         >
             <v-col cols="6" sm="5">
@@ -114,7 +114,7 @@ import {
     TokenTransferFragment,
     Erc721TransferFragment,
     Erc1155TokenTransferFragment
-} from '@module/tokens/apollo/TokenDetailsTransfer/tokenTransfers.generated'
+} from '@module/tokens/apollo/token-details-transfer/tokenTransfers.generated'
 import BN from 'bignumber.js'
 import { computed, ref } from 'vue'
 import { formatFloatingPointValue, FormattedNumber } from '@core/helper/number-format-helper'
@@ -122,8 +122,8 @@ import { useDisplay } from 'vuetify'
 import { eth, timeAgo } from '@core/helper'
 import { TransferType } from '@/apollo/types'
 import { NftMetaFragment } from '@core/composables/NftMeta/nftMeta.generated'
-import TokenNftImg from '@module/tokens/components/TokenNFT/TokenNftImg.vue'
-import { NFTDetails } from '@module/tokens/components/TokenNFT/propModel'
+import TokenNftImg from '@module/tokens/components/token-nft/TokenNftImg.vue'
+import { NFTDetails } from '@module/tokens/components/token-nft/propModel'
 import Web3Utils from 'web3-utils'
 
 const { lgAndUp } = useDisplay()

@@ -6,7 +6,7 @@
                 :is-loading="initialLoad || loadingMarketInfo"
                 :balance="tokenBalance.value"
                 :balance-tooltip="tokenBalance.tooltipText"
-                :subtext="`${tokenCount} ${$t('block.tokenTotal')}`"
+                :subtext="tokenCountSubtext"
             >
             </address-balance-totals>
             <app-token-icon-row v-if="!loadingMarketInfo && !initialLoad" :tokens="tokenIcons"></app-token-icon-row>
@@ -26,7 +26,9 @@ import { TOKEN_FILTER_VALUES } from '@module/address/models/TokenSort'
 import { useGetOwnersNftBalanceQuery } from '@module/address/apollo/AddressTokens/tokens.generated'
 import { formatIntegerValue } from '@core/helper/number-format-helper'
 import BigNumber from 'bignumber.js'
+import { useI18n } from 'vue-i18n'
 
+const { t } = useI18n()
 const props = defineProps({
     addressRef: {
         type: String,
@@ -61,6 +63,10 @@ const tokenIcons = computed<string[]>(() => {
             .filter(i => i !== '')
     }
     return []
+})
+
+const tokenCountSubtext = computed<string>(() => {
+    return tokenCount.value === 1 ? t('token.tokenTotal') : t('token.tokenTotal', { n: tokenCount.value })
 })
 </script>
 

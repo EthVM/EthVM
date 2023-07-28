@@ -51,7 +51,7 @@
     =========================
     -->
     <template v-else>
-        <app-table-row row-align="start" row-justify="space-between" @click="toggleMoreDetails" :color="state.showMoreDetails ? 'pillGrey' : 'transparent'">
+        <app-table-row row-align="start" row-justify="space-between" @click="toggleMoreDetails" :color="state.showMoreDetails ? 'lightGrey' : 'transparent'">
             <v-col class="flex-shrink-0">
                 <div class="d-flex align-center flex-nowrap mb-2">
                     <div class="mobile-chip rounded-circle mr-2" :class="transferType === 'in' ? 'bg-success' : 'bg-warning'">
@@ -81,14 +81,14 @@
                     </v-row>
                     <v-row class="ma-0 justify-space-between pb-5">
                         <div>
-                            <p class="text-info mb-2">From</p>
+                            <p class="text-info mb-2">{{ $t('common.address') }}</p>
                             <div class="d-flex">
                                 <app-address-blockie :address="transferTypeAddress || ''" :size="6" class="mr-2" />
                                 <app-transform-hash is-blue is-short :hash="eth.toCheckSum(transferTypeAddress)" :link="`/address/${transferTypeAddress}`" />
                             </div>
                         </div>
                         <div>
-                            <p class="text-info mb-2">Hash</p>
+                            <p class="text-info mb-2">{{ $t('common.hash') }}</p>
                             <app-transform-hash
                                 is-blue
                                 is-short
@@ -115,8 +115,8 @@ import { formatNumber } from '@core/helper/number-format-helper'
 import { computed, reactive } from 'vue'
 import { timeAgo, eth } from '@core/helper'
 import { NftMetaFragment } from '@core/composables/NftMeta/nftMeta.generated'
-import TokenNftImg from '@module/tokens/components/TokenNFT/TokenNftImg.vue'
-import { NFTDetails } from '@module/tokens/components/TokenNFT/propModel'
+import TokenNftImg from '@module/tokens/components/token-nft/TokenNftImg.vue'
+import { NFTDetails } from '@module/tokens/components/token-nft/propModel'
 import Web3Utils from 'web3-utils'
 
 const { mdAndDown, smAndDown } = useDisplay()

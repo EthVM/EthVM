@@ -269,7 +269,7 @@ const colors = ['success', 'warning', 'purple', 'error']
 
 <style scoped lang="scss">
 .token-percent {
-    background-color: rgb(var(--v-theme-pillGrey));
+    background-color: rgb(var(--v-theme-lightGrey));
     width: 70px;
 }
 </style>

@@ -1,37 +1,42 @@
+import { i18nGlobal } from '@/translations/index'
 export const timeAgo = (date: string | Date, isShort = true) => {
-    const prevDate = new Date(date)
+    const formatDate = new Date(date)
 
-    const seconds = Math.floor((new Date().getTime() - prevDate.getTime()) / 1000)
+    const seconds = Math.floor((new Date().getTime() - formatDate.getTime()) / 1000)
 
     const intervals = [
         {
             interval: 31536000,
-            name: isShort ? 'y' : 'year'
+            name: isShort ? 'yearShort' : 'year'
         },
         {
             interval: 2592000,
-            name: isShort ? 'm' : 'month'
+            name: isShort ? 'monthShort' : 'month'
         },
         {
             interval: 86400,
-            name: isShort ? 'd' : 'day'
+            name: isShort ? 'dayShort' : 'day'
         },
         {
             interval: 3600,
-            name: isShort ? 'hr' : 'hour'
+            name: isShort ? 'hourShort' : 'hour'
         },
         {
             interval: 60,
-            name: isShort ? 'min' : 'minute'
+            name: isShort ? 'minuteShort' : 'minute'
         }
     ]
-
     for (const interval of intervals) {
         const res = seconds / interval.interval
         if (res > 1) {
-            const isPlural = Math.floor(res) > 1
-            return `${Math.floor(res)} ${interval.name}${isPlural ? 's' : ''} ago`
+            const dateString = `timeAgo.${interval.name}`
+            const _n = Math.floor(res)
+            if (isShort) {
+                return i18nGlobal.t(dateString, { n: _n })
+            }
+            return i18nGlobal.t(dateString, { n: _n })
         }
     }
-    return seconds > 5 ? `${Math.floor(seconds)} ${isShort ? 'sec' : 'seconds'} ago` : 'Just now'
+    const dateString = isShort ? `timeAgo.secondsShort` : `timeAgo.seconds`
+    return seconds < 30 ? i18nGlobal.t('timeAgo.justNow') : i18nGlobal.t(dateString, { n: Math.floor(seconds) })
 }

@@ -12,7 +12,9 @@
             </div>
             <v-spacer />
             <v-scroll-y-reverse-transition hide-on-leave>
-                <p v-if="gasPriceLoaded" key="gas-transition"><span class="text-info">GAS</span> {{ gasPrice }} Gwei</p>
+                <p v-if="gasPriceLoaded" key="gas-transition">
+                    <span class="text-info">{{ $t('coreMenu.gas') }}</span> {{ gasPrice }} Gwei
+                </p>
             </v-scroll-y-reverse-transition>
         </v-system-bar>
         <v-app-bar app flat :color="background" :class="['py-0 px-0 py-sm-2']" :height="xs ? '64' : '114'">
@@ -20,7 +22,7 @@
                 <v-row align="center" justify="start" class="mr-0 mx-0 flex-nowrap my-0 mr-lg-n3" style="min-height: 40px">
                     <div class="mr-4 logo-btn">
                         <v-img
-                            :src="appStore.isDarkMode ? require('@/assets/logo-dark.svg') : require('@/assets/logo.svg')"
+                            :src="require('@/assets/logo.svg')"
                             height="35"
                             :width="xs ? '80' : '100'"
                             contain
@@ -74,7 +76,7 @@
                         <div v-if="loadingMarketInfo" style="height: 20px; width: 153px"></div>
                     </div>
                     <v-scroll-y-reverse-transition hide-on-leave>
-                        <p v-if="gasPriceLoaded" key="gas-transition">Gas {{ gasPrice }} Gwei</p>
+                        <p v-if="gasPriceLoaded" key="gas-transition">{{ $t('coreMenu.gas') }} {{ gasPrice }} Gwei</p>
                     </v-scroll-y-reverse-transition>
                     <v-spacer />
                     <app-change-network />

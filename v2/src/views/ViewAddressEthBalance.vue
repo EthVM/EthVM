@@ -98,7 +98,7 @@ const tabs = computed<Tab[]>(() => {
         },
         {
             value: routes[3],
-            title: t('txs.details.title.pending')
+            title: t('txs.details.status.pending')
         },
         {
             value: routes[5],

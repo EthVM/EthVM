@@ -1,5 +1,5 @@
 <template>
-    <app-table-row row-align="center" row-justify="start" @click="toggleMoreDetails" :link="xs" :color="xs && showMoreDetails ? 'pillGrey' : 'transparent'">
+    <app-table-row row-align="center" row-justify="start" @click="toggleMoreDetails" :link="xs" :color="xs && showMoreDetails ? 'lightGrey' : 'transparent'">
         <template v-if="isNFT">
             <v-col cols="12" sm="5" md="3" class="d-flex align-center justify-start">
                 <token-nft-img v-if="nftMetaDetails" :loading="false" :nft="nftMetaDetails" height="50" width="50" class="rounded-md"></token-nft-img>
@@ -59,7 +59,7 @@ import AppTransformHash from '@core/components/AppTransformHash.vue'
 import AppTableRow from '@core/components/AppTableRow.vue'
 import AppTokenIcon from '@core/components/AppTokenIcon.vue'
 import AppTooltip from '@/core/components/AppTooltip.vue'
-import TokenNftImg from '@module/tokens/components/TokenNFT/TokenNftImg.vue'
+import TokenNftImg from '@module/tokens/components/token-nft/TokenNftImg.vue'
 import { computed, PropType, ref } from 'vue'
 import { Action } from '../types'
 import { eth } from '@core/helper'
@@ -70,7 +70,7 @@ import { useDisplay } from 'vuetify/lib/framework.mjs'
 import { formatNonVariableEthValue, FormattedNumber, formatFloatingPointValue } from '@/core/helper/number-format-helper'
 import { MarketDataFragment } from '@core/composables/CoinData/getLatestPrices.generated'
 import { NftMetaFragment } from '@core/composables/NftMeta/nftMeta.generated'
-import { NFTDetails } from '@module/tokens/components/TokenNFT/propModel'
+import { NFTDetails } from '@module/tokens/components/token-nft/propModel'
 import BigNumber from 'bignumber.js'
 import { hexToNumberString } from 'web3-utils'
 import { useI18n } from 'vue-i18n'

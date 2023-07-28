@@ -20,7 +20,7 @@
 </template>
 
 <script setup lang="ts">
-import TokenTransfersTable from '@module/tokens/components/TokenDetailsTransfer/TokenTransferTable.vue'
+import TokenTransfersTable from '@module/tokens/components/token-details-transfer/TokenTransferTable.vue'
 import { ErrorMessageToken } from '@module/tokens/models/ErrorMessagesForTokens'
 import { excpInvariantViolation } from '@/apollo/errorExceptions'
 import { reactive, computed, defineEmits, watch } from 'vue'
@@ -34,7 +34,7 @@ import {
     TokenTransferFragment,
     Erc721TransferFragment,
     Erc1155TokenTransferFragment
-} from '@module/tokens/apollo/TokenDetailsTransfer/tokenTransfers.generated'
+} from '@module/tokens/apollo/token-details-transfer/tokenTransfers.generated'
 import { useGetNftsMeta } from '@core/composables/NftMeta/useGetNftsMeta.composable'
 import { NftId, generateId } from '@/core/composables/NftMeta/helpers'
 import { TransferType } from '@/apollo/types'

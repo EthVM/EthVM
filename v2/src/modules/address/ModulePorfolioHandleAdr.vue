@@ -238,7 +238,7 @@ const hasAddressError = computed<boolean>(() => {
  * @param _value user input
  */
 const addressErrorMes = computed<string>(() => {
-    return !addressIsNew.value ? 'This address is already saved' : 'Input not valid'
+    return !addressIsNew.value ? t('message.addressAlreadyIsSaved') : t('message.inputNotValid')
 })
 
 /** -------------------

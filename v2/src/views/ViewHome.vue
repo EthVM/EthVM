@@ -62,8 +62,8 @@
                     <v-col v-if="showPortfolio" cols="12" :class="columnPadding">
                         <v-card elevation="1" rounded="xl" class="pt-4 pt-sm-6">
                             <v-card-title class="px-0 d-flex align-center justify-space-between px-4 px-sm-6 py-0 mb-3 mb-sm-4">
-                                <p class="text-h6 font-weight-bold text-capitalize">Your portfolio</p>
-                                <app-btn v-if="!xs" text="More" isSmall icon="east" @click="goToPortfolio"></app-btn>
+                                <p class="text-h6 font-weight-bold text-capitalize">{{ $t('portfolio.yourPortfolio') }}</p>
+                                <app-btn v-if="!xs" :text="$t('common.more')" isSmall icon="east" @click="goToPortfolio"></app-btn>
                                 <app-btn-icon v-else icon="east" @click="goToPortfolio"></app-btn-icon>
                             </v-card-title>
                             <module-portfolio-list is-home-page /> </v-card

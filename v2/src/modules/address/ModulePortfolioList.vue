@@ -68,12 +68,12 @@
                             <v-icon v-if="isActiveSort(KEY.HASH)" class="ml-1" :size="14">{{ sortIcon }}</v-icon>
                         </template>
                     </v-list-item>
-                    <v-list-item :title="$t('common.balance')" class="py-2" @click="sortTable(KEY.ETH)">
+                    <v-list-item :title="`${currencyName} ${$t('common.balance')}`" class="py-2" @click="sortTable(KEY.ETH)">
                         <template #append>
                             <v-icon v-if="isActiveSort(KEY.ETH)" class="ml-1" :size="14">{{ sortIcon }}</v-icon></template
                         >
                     </v-list-item>
-                    <v-list-item :title="$t('common.value')" class="py-2" @click="sortTable(KEY.ETH_USD)">
+                    <v-list-item :title="`${currencyName} ${$t('common.value')}`" class="py-2" @click="sortTable(KEY.ETH_USD)">
                         <template #append>
                             <v-icon v-if="isActiveSort(KEY.ETH_USD)" class="ml-1" :size="14">{{ sortIcon }}</v-icon>
                         </template>
@@ -88,10 +88,15 @@
         </v-row>
 
         <v-divider class="mx-n4 mx-sm-n6 mt-sm-3" />
-        <template v-if="addressList.length > 0">
-            <div class="p-ten-top">
+        <template v-if="store.portfolioLength > 0">
+            <div class="p-ten-top" v-if="store.portfolioIsLoaded">
                 <div v-for="adr in sortList" flat :key="adr.hash">
                     <table-row-portfolio-item :adr="adr"></table-row-portfolio-item>
+                </div>
+            </div>
+            <div v-else class="p-ten-top">
+                <div v-for="i in store.portfolioLength" :key="i" style="padding: 10px 0">
+                    <div class="skeleton-box rounded-xl skeleton_portfolio"></div>
                 </div>
             </div>
         </template>
@@ -111,7 +116,9 @@ import { useDisplay } from 'vuetify/lib/framework.mjs'
 import { formatUsdValue, formatNonVariableEthValue, FormattedNumberUnit } from '@core/helper/number-format-helper'
 import BN from 'bignumber.js'
 import { useNetwork } from '@core/composables/Network/useNetwork'
+import { useI18n } from 'vue-i18n'
 
+const { t } = useI18n()
 const { xs } = useDisplay()
 const { currencyName } = useNetwork()
 const store = useStore()
@@ -216,17 +223,17 @@ const sortTable = (key: KEY) => {
 }
 const activeSortString = computed<string>(() => {
     if (state.sortKey.includes(KEY.HASH)) {
-        return 'Address'
+        return t('common.address')
     } else if (state.sortKey.includes(KEY.ETH)) {
-        return 'ETH Balance'
+        return `${currencyName.value} ${t('common.balance')}`
     } else if (state.sortKey.includes(KEY.NAME)) {
-        return 'Name'
+        return t('common.name')
     } else if (state.sortKey.includes(KEY.ETH_USD)) {
-        return 'ETH Value'
+        return `${currencyName.value} ${t('common.value')}`
     } else if (state.sortKey.includes(KEY.TOTAL)) {
-        return 'Total'
+        return t('common.total')
     }
-    return 'Sort'
+    return t('portfolio.sort')
 })
 
 interface SortedInterface {
@@ -316,5 +323,19 @@ class Sorted implements SortedInterface {
 .fade-enter-from,
 .fade-leave-to {
     opacity: 0;
+}
+
+.skeleton_portfolio {
+    height: 40px;
+
+    @media only screen and (min-width: 600px) and (max-width: 904px) {
+        height: 42px;
+    }
+    @media only screen and (min-width: 905px) and (max-width: 1239px) {
+        height: 42px;
+    }
+    @media (min-width: 1240px) {
+        height: 34px;
+    }
 }
 </style>

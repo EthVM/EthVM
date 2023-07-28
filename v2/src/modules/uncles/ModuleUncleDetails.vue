@@ -29,7 +29,7 @@
                     </div>
                 </v-col>
                 <v-col cols="12" lg="5" class="mt-5 mt-lg-0">
-                    <div class="rounded-xl bg-tableGrey pa-5 text-textPrimary">
+                    <div class="rounded-xl bg-lightGrey pa-5 text-textPrimary">
                         <v-row>
                             <v-col cols="6" sm="4">
                                 <div class="block-info mb-5">
@@ -125,7 +125,7 @@ const timestamp = computed<string>(() => {
     if (uncle.value) {
         const date = new Date(uncle.value?.block.summary.timestamp * 1e3).toLocaleDateString()
         const time = new Date(uncle.value?.block.summary.timestamp * 1e3).toTimeString().split('GMT')[0]
-        const timeago = timeAgo(new Date(uncle.value?.block.summary.timestamp * 1e3))
+        const timeago = timeAgo(new Date(uncle.value?.block.summary.timestamp * 1e3), false)
         const [month, day, year] = date.split('/')
         return `${year}-${month}-${day}, ${time}, ${timeago}`
     }

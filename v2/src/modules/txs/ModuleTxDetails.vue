@@ -12,14 +12,14 @@
                             <div v-else>
                                 <app-chip :bg="titleBg" rounded="xl" text="" class="">
                                     <p>
-                                        {{ titleStatus }}
+                                        {{ titleStatusString }}
                                         <span>
                                             <v-progress-circular
                                                 v-if="txStatus === TxStatus.pending"
                                                 indeterminate
                                                 color="white"
                                                 size="15"
-                                                width="3"
+                                                width="2"
                                                 class="ml-2"
                                             />
                                         </span>
@@ -74,7 +74,7 @@
                 </v-row>
                 <v-row align="center" class="mt-5">
                     <v-col cols="12" lg="5">
-                        <div class="rounded-lg bg-tableGrey pa-6">
+                        <div class="rounded-lg bg-lightGrey pa-6">
                             <div class="tx-info">
                                 <p class="text-button mb-1">{{ $t('common.from') }}</p>
                                 <template v-if="loadingTransactionHash || !transactionData">
@@ -100,7 +100,7 @@
                     </v-col>
                     <v-icon class="mx-3" :class="{ 'mx-auto': mdAndDown }">{{ mdAndDown ? 'expand_more' : 'chevron_right' }}</v-icon>
                     <v-col cols="12" lg="5">
-                        <div class="rounded-lg bg-tableGrey pa-6">
+                        <div class="rounded-lg bg-lightGrey pa-6">
                             <div class="tx-info">
                                 <p v-if="transactionData && transactionData.contractAddress" class="text-button mb-1">
                                     {{ $t('txs.details.createdContract') }}
@@ -141,7 +141,7 @@
                 </v-row>
                 <v-row align="center" class="mt-5">
                     <v-col cols="12" sm="6" md="4" lg="2" class="flex-grow-0 mr-lg-6">
-                        <div class="rounded-lg bg-tableGrey pa-6">
+                        <div class="rounded-lg bg-lightGrey pa-6">
                             <div class="tx-info">
                                 <p class="text-button mb-1">{{ $t('common.value') }}</p>
                                 <div v-if="loadingTransactionHash" class="skeleton-box rounded-xl" style="height: 21px"></div>
@@ -150,7 +150,7 @@
                         </div>
                     </v-col>
                     <v-col cols="12" sm="6" md="4" lg="2" class="flex-grow-0">
-                        <div class="rounded-lg bg-tableGrey pa-6">
+                        <div class="rounded-lg bg-lightGrey pa-6">
                             <div class="tx-info">
                                 <p class="text-button mb-1">{{ $t('common.fee') }}</p>
                                 <div v-if="loadingTransactionHash" class="skeleton-box rounded-xl" style="height: 21px"></div>
@@ -307,6 +307,18 @@ const titleStatus = computed<TitleStatus>(() => {
     }
     return TitleStatus.replaced
 })
+const titleStatusString = computed<string>(() => {
+    switch (titleStatus.value) {
+        case TitleStatus.success:
+            return t('txs.details.status.successful')
+        case TitleStatus.failed:
+            return t('txs.details.status.failed')
+        case TitleStatus.pending:
+            return t('txs.details.status.pending')
+        default:
+            return t('txs.details.status.replaced')
+    }
+})
 
 const titleBg = computed<string>(() => {
     switch (titleStatus.value) {
@@ -314,8 +326,10 @@ const titleBg = computed<string>(() => {
             return 'success'
         case TitleStatus.failed:
             return 'error'
+        case TitleStatus.pending:
+            return 'purple'
         default:
-            return 'warning'
+            return 'info'
     }
 })
 
@@ -323,7 +337,7 @@ const timestamp = computed<string>(() => {
     if (transactionData.value && transactionData.value?.timestamp) {
         const date = new Date(transactionData.value.timestamp * 1e3).toLocaleDateString()
         const time = new Date(transactionData.value.timestamp * 1e3).toTimeString().split('GMT')[0]
-        const timeago = timeAgo(new Date(transactionData.value.timestamp * 1e3))
+        const timeago = timeAgo(new Date(transactionData.value.timestamp * 1e3), false)
         const [month, day, year] = date.split('/')
         return `${year}-${month}-${day}, ${time}, ${timeago}`
     }

@@ -209,7 +209,7 @@ const timestamp = computed<string>(() => {
     if (blockDetailsData.value) {
         const date = new Date(blockDetailsData.value?.summary.timestamp * 1e3).toLocaleDateString()
         const time = new Date(blockDetailsData.value?.summary.timestamp * 1e3).toTimeString().split('GMT')[0]
-        const timeago = timeAgo(new Date(blockDetailsData.value?.summary.timestamp * 1e3))
+        const timeago = timeAgo(new Date(blockDetailsData.value?.summary.timestamp * 1e3), false)
         const [month, day, year] = date.split('/')
         return `${year}-${month}-${day}, ${time}, ${timeago}`
     }

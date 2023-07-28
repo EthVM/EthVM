@@ -17,12 +17,12 @@
                 clearable
                 @update:modelValue="onUserInput"
                 @click:clear="resetValues"
-                bg-color="greyCard"
+                bg-color="lightGrey"
                 color="primary"
             >
                 <template v-if="hasPreppendInner" #prepend-inner>
                     <slot name="prepend">
-                        <v-icon :color="state.value ? (props.hasError ? 'error' : 'secondary') : 'greyInputText'" icon="search" />
+                        <v-icon :color="state.value ? (props.hasError ? 'error' : 'secondary') : 'info'" icon="search" />
                     </slot>
                 </template>
                 <template v-else #prepend-inner>
@@ -42,7 +42,9 @@
 
 <script setup lang="ts">
 import { defineProps, defineEmits, reactive, onBeforeUnmount, watch, computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 
+const { t } = useI18n()
 interface ComponentProps {
     isLoading?: boolean
     hasError?: boolean
@@ -116,7 +118,7 @@ const showRequired = computed(() => {
 })
 
 const message = computed(() => {
-    return showRequired.value ? 'Required' : props.errorMessage
+    return showRequired.value ? t('message.required') : props.errorMessage
 })
 
 /**
