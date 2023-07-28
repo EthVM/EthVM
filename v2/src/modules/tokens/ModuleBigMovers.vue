@@ -264,4 +264,21 @@ const scrollToPrev = () => {
     padding-left: 10px;
     padding-right: 10px;
 }
+
+.slide::-webkit-scrollbar {
+    height: 4px;
+}
+
+.slide::-webkit-scrollbar-thumb {
+    background-color: rgb(var(--v-theme-loading));
+    border: 2px solid rgb(var(--v-theme-loading));
+    border-radius: 10rem;
+}
+
+.slide::-webkit-scrollbar-track {
+    position: absolute;
+    right: -20rem;
+    top: -50rem;
+    background: transparent;
+}
 </style>
