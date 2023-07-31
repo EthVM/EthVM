@@ -28,7 +28,7 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, onMounted } from 'vue'
+import { reactive, onMounted, toRefs } from 'vue'
 import AppAdButtonsLarge from '@/core/components/AppAdButtonsLarge.vue'
 import ModuleAddressTokens from '@module/address/ModuleAddressTokens.vue'
 import ModuleAddressTokenTransfers from '@module/address/ModuleAddressTokenTransfers.vue'
@@ -38,12 +38,9 @@ import { useAddressUpdate } from '@core/composables/AddressUpdate/addressUpdate.
 import { ADDRESS_ROUTE_QUERY } from '@core/router/routesNames'
 import { useAppViewGrid } from '@core/composables/AppViewGrid/AppViewGrid.composable'
 import { useI18n } from 'vue-i18n'
-import { useHead } from '@unhead/vue'
 import { VIEW_TAGS } from '@core/helper/tags'
+import { usePageMeta } from '@core/composables/use-page-meta/use-page-meta.composable'
 
-useHead({
-    title: VIEW_TAGS.ADR_TOKENS.title
-})
 const { t } = useI18n()
 const { columnPadding, rowMargin } = useAppViewGrid()
 
@@ -74,6 +71,8 @@ const props = defineProps({
         required: false
     }
 })
+const { addressRef } = toRefs(props)
+usePageMeta(addressRef, VIEW_TAGS.ADR_TOKENS)
 
 const state = reactive({
     error: '',

@@ -206,7 +206,8 @@ import { useHead } from '@unhead/vue'
 import { VIEW_TAGS } from '@core/helper/tags'
 
 useHead({
-    title: VIEW_TAGS.HOME.title
+    title: VIEW_TAGS.HOME.title,
+    meta: [{ name: 'description', content: VIEW_TAGS.HOME.description }]
 })
 const { lgAndUp, mdAndDown, mdAndUp, xs } = useDisplay()
 const { columnPadding, rowMargin } = useAppViewGrid()

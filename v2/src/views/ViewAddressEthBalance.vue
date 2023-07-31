@@ -42,18 +42,15 @@ import ModuleEthTxsHistory from '@module/address/ModuleEthTxsHistory.vue'
 import ModuleAddressMinerBlock from '@module/address/ModuleAddressMinerBlock.vue'
 import ModuleAllEthTransfers from '@module/address/ModuleAllEthTransfers.vue'
 import ModuleStakeWithdrawals from '@/modules/address/ModuleStakeWithdrawals.vue'
-import { reactive, computed, onMounted } from 'vue'
+import { reactive, computed, onMounted, toRefs } from 'vue'
 import { useAppViewGrid } from '@core/composables/AppViewGrid/AppViewGrid.composable'
 import { Tab } from '@core/components/props'
 import { ADDRESS_ROUTE_QUERY, Q_ADDRESS_TRANSFERS } from '@core/router/routesNames'
 import { useDisplay } from 'vuetify/lib/framework.mjs'
 import { useI18n } from 'vue-i18n'
-import { useHead } from '@unhead/vue'
 import { VIEW_TAGS } from '@core/helper/tags'
+import { usePageMeta } from '@core/composables/use-page-meta/use-page-meta.composable'
 
-useHead({
-    title: VIEW_TAGS.ADR_ETH.title
-})
 const { t } = useI18n()
 const { xs } = useDisplay()
 const routes = Q_ADDRESS_TRANSFERS
@@ -73,6 +70,9 @@ const props = defineProps({
     },
     isAddressMiner: { type: Boolean }
 })
+
+const { addressRef } = toRefs(props)
+usePageMeta(addressRef, VIEW_TAGS.ADR_ETH)
 
 const state = reactive({
     tab: props.tab,

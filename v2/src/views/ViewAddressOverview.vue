@@ -56,14 +56,11 @@ import ModuleAddressNftTransfers from '@module/address/ModuleAddressNftTransfers
 import { useDisplay } from 'vuetify/lib/framework.mjs'
 import { useRouter } from 'vue-router'
 import { Q_ADDRESS_TRANSFERS, ROUTE_NAME } from '@core/router/routesNames'
-import { onMounted, watch } from 'vue'
+import { onMounted, watch, toRefs } from 'vue'
 import { useNetwork } from '@/core/composables/Network/useNetwork'
-import { useHead } from '@unhead/vue'
+import { usePageMeta } from '@core/composables/use-page-meta/use-page-meta.composable'
 import { VIEW_TAGS } from '@core/helper/tags'
 
-useHead({
-    title: VIEW_TAGS.ADR_OVERVIEW.title
-})
 onMounted(() => {
     window.scrollTo(0, 0)
 })
@@ -73,6 +70,9 @@ const { currencyName } = useNetwork()
 const props = defineProps({
     addressRef: { type: String, required: true }
 })
+
+const { addressRef } = toRefs(props)
+usePageMeta(addressRef, VIEW_TAGS.ADR_OVERVIEW)
 
 const { columnPadding, rowMargin } = useAppViewGrid()
 

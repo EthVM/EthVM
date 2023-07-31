@@ -45,7 +45,8 @@ import { useDisplay } from 'vuetify/lib/framework.mjs'
 import { useHead } from '@unhead/vue'
 import { VIEW_TAGS } from '@core/helper/tags'
 useHead({
-    title: VIEW_TAGS.ABOUT.title
+    title: VIEW_TAGS.ABOUT.title,
+    meta: [{ name: 'description', content: VIEW_TAGS.ABOUT.description }]
 })
 const { xs } = useDisplay()
 onMounted(() => {

@@ -22,7 +22,8 @@ import { useHead } from '@unhead/vue'
 import { VIEW_TAGS } from '@core/helper/tags'
 
 useHead({
-    title: VIEW_TAGS.BLOCKS.title
+    title: VIEW_TAGS.BLOCKS.title,
+    meta: [{ name: 'description', content: VIEW_TAGS.BLOCK.description }]
 })
 onMounted(() => {
     window.scrollTo(0, 0)

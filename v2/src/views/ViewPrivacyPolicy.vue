@@ -84,7 +84,8 @@ import { useHead } from '@unhead/vue'
 import { VIEW_TAGS } from '@core/helper/tags'
 
 useHead({
-    title: VIEW_TAGS.PRIVACY_POLICY.title
+    title: VIEW_TAGS.PRIVACY_POLICY.title,
+    meta: [{ name: 'description', content: VIEW_TAGS.PRIVACY_POLICY.description }]
 })
 onMounted(() => {
     window.scrollTo(0, 0)

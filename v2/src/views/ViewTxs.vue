@@ -22,7 +22,8 @@ import { useHead } from '@unhead/vue'
 import { VIEW_TAGS } from '@core/helper/tags'
 
 useHead({
-    title: VIEW_TAGS.TXS.title
+    title: VIEW_TAGS.TXS.title,
+    meta: [{ name: 'description', content: VIEW_TAGS.TXS.description }]
 })
 const { columnPadding, rowMargin } = useAppViewGrid()
 onMounted(() => {

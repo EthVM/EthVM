@@ -19,7 +19,8 @@ import { useHead } from '@unhead/vue'
 import { VIEW_TAGS } from '@core/helper/tags'
 
 useHead({
-    title: VIEW_TAGS.NOT_FOUND.title
+    title: VIEW_TAGS.NOT_FOUND.title,
+    meta: [{ name: 'description', content: VIEW_TAGS.NOT_FOUND.description }]
 })
 onMounted(() => {
     window.scrollTo(0, 0)

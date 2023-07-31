@@ -102,7 +102,8 @@ import { useHead } from '@unhead/vue'
 import { VIEW_TAGS } from '@core/helper/tags'
 
 useHead({
-    title: VIEW_TAGS.PORTFOLIO.title
+    title: VIEW_TAGS.PORTFOLIO.title,
+    meta: [{ name: 'description', content: VIEW_TAGS.PORTFOLIO.description }]
 })
 const { t } = useI18n()
 

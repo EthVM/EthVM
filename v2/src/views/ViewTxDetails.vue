@@ -11,7 +11,7 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, computed, onMounted } from 'vue'
+import { reactive, computed, onMounted, toRefs } from 'vue'
 import AppError from '@/core/components/AppError.vue'
 import { eth } from '@/core/helper'
 import TxDetails from '@/modules/txs/ModuleTxDetails.vue'
@@ -19,12 +19,9 @@ import { ErrorMessageTx } from '@/modules/txs/models/ErrorMessagesForTx'
 import { onBeforeRouteUpdate } from 'vue-router'
 import { tabViewRouteGuardOnUpdate } from '@/core/router/helpers'
 import { Q_TXS_DETAILS } from '@/core/router/routesNames'
-import { useHead } from '@unhead/vue'
 import { VIEW_TAGS } from '@core/helper/tags'
+import { usePageMeta } from '@core/composables/use-page-meta/use-page-meta.composable'
 
-useHead({
-    title: VIEW_TAGS.TX.title
-})
 onMounted(() => {
     window.scrollTo(0, 0)
 })
@@ -40,9 +37,15 @@ const state: ComponentState = reactive({
 })
 
 const props = defineProps({
-    txRef: String,
+    txRef: {
+        type: String,
+        required: true
+    },
     tab: String
 })
+
+const { txRef } = toRefs(props)
+usePageMeta(txRef, VIEW_TAGS.TX)
 
 const isValid = computed<boolean>(() => {
     return eth.isValidHash(props.txRef || '')

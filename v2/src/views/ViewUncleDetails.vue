@@ -18,7 +18,7 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, computed, onMounted } from 'vue'
+import { reactive, computed, onMounted, toRefs } from 'vue'
 import AppError from '@core/components/AppError.vue'
 import AppAdButtonsLarge from '@/core/components/AppAdButtonsLarge.vue'
 import UncleDetails from '@module/uncles/ModuleUncleDetails.vue'
@@ -26,12 +26,9 @@ import { eth } from '@core/helper'
 import { ErrorMessageUncle } from '@module/uncles/models/ErrorMessagesForUncle'
 import { useAppViewGrid } from '@core/composables/AppViewGrid/AppViewGrid.composable'
 import { useI18n } from 'vue-i18n'
-import { useHead } from '@unhead/vue'
 import { VIEW_TAGS } from '@core/helper/tags'
+import { usePageMeta } from '@core/composables/use-page-meta/use-page-meta.composable'
 
-useHead({
-    title: VIEW_TAGS.UNCLE.title
-})
 const { t } = useI18n()
 const { columnPadding, rowMargin } = useAppViewGrid()
 
@@ -46,8 +43,13 @@ const state: ComponentState = reactive({
 })
 
 const props = defineProps({
-    uncleRef: String
+    uncleRef: {
+        type: String,
+        required: true
+    }
 })
+const { uncleRef } = toRefs(props)
+usePageMeta(uncleRef, VIEW_TAGS.UNCLE)
 
 const isValid = computed<boolean>(() => {
     return eth.isValidHash(props.uncleRef)
