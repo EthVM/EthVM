@@ -45,6 +45,16 @@ export function usePageMeta(propVar: Ref<string> | null, tag: META) {
                 property: 'og:description',
                 content: () => metaDescription.value,
                 vmid: 'og:description'
+            },
+            {
+                property: 'twitter:title',
+                content: () => metaTitle.value,
+                vmid: 'twitter:title'
+            },
+            {
+                property: 'twitter:description',
+                content: () => metaDescription.value,
+                vmid: 'twitter:description'
             }
         ]
     })
