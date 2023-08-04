@@ -25,6 +25,7 @@
         "outcoming": "Исходящие",
         "balanceChange": "Изменение Баланса",
         "balanceBefore": "Баланс До",
+        "totalBalanceChange": "Oбщее Изменениe Баланса",
         "balanceAfter": "Баланс После",
         "totalBalanceChange": "Oбщее Изменениe Баланса",
         "estimatedFee": "Примерная Kомиссия",
@@ -35,7 +36,7 @@
         "newNft": "Новые Переводы ERC721",
         "internal": "Внутренний Перевод",
         "value": "Значение Транзакции",
-        "internalValue":" Значение Внутреннeго Переводa",
+        "internalValue": " Значение Внутреннeго Переводa",
         "viewTx": "Показать Транзакцию",
         "details": {
             "header": "Сводка Транзакции",
@@ -147,7 +148,6 @@
         "height": "Высота",
         "search": "Поиск",
         "noName": "Без Названия"
-
     },
     "portfolio": {
         "yourPortfolio": "Moe Портфолио",
@@ -162,9 +162,9 @@
             "addAddress": "Введите Адрес / Имя Домена",
             "name": "Введите Название"
         },
-        "nameAdded" : "{name} добавленно в ваше портфолио",
+        "nameAdded": "{name} добавленно в ваше портфолио",
         "viewTokens": "Показать Токены",
-        "noTokens": "В этом портфолио нет токенoв", 
+        "noTokens": "В этом портфолио нет токенoв",
         "addressNoTokens": "Выбранные адреса не владеют этим токеном",
         "sort": "сортировать"
     },
@@ -192,7 +192,7 @@
         "noMatch": "Не удалось ничего найти: {search}",
         "holder": "Владелец | Владельцы",
         "favorites": "Избранные",
-        "bigMovers": "Recent Big Movers",
+        "bigMovers": "Недавние События",
         "tokenTotal": "всего 1 токен | всего {n} токенoв"
     },
     "settings": {
@@ -283,7 +283,7 @@
         "totalRewards": "Общее Вознаграждение",
         "txFee": "Комиссия за транзакцию",
         "uncleSha": "Uncle-Блок SHA3",
-        "newBlock": "новый блок | новых блока" 
+        "newBlock": "новый блок | {count} новых блока"
     },
     "home": {
         "tagline": {
@@ -327,10 +327,10 @@
         "adrNoIncoming": "Этот адрес не имеет входящих транзакций",
         "adrNoTxs": "Этот адрес не имеет транзакций",
         "adrNoInternal": "Этот адрес не имеет внутренних переводов",
-        "noBigMovers": "There are no big movers in the last day",
+        "noBigMovers": "За последний день нет больших изменений",
         "imageNotAvailable": "изображение не доступно",
         "addressAlreadyIsSaved": "Этот адрес уже сохранен",
-        "inputNotValid":  "Ввод недействителен",
+        "inputNotValid": "Ввод недействителен",
         "required": "Обязательный"
     },
     "nft": {
@@ -353,12 +353,12 @@
         "totalUsdValue": "Общая стоимость в USD"
     },
     "bigMover": {
-        "ath": "all time high",
-        "1H": "in 1 hour",
-        "5M": "in 5 minutes",
-        "7D": "in 7 days",
-        "24H": "in 24 hours",
-        "30D": "in 30 days"
+        "ath": "исторический макс.",
+        "1H": "за 1 час",
+        "5M": "за 5 минут",
+        "7D": "за 7 дней",
+        "24H": "за 24 часа",
+        "30D": "за 30 дней"
     },
     "timeAgo": {
         "year": "1 год назад | {n} лет назад",
@@ -369,7 +369,7 @@
         "dayShort": "{n} д. назад",
         "hour": "1 час назад | {n} часа назад",
         "hourShort": "{n} ч. назад",
-        "minute": "1  минту назад | {n} минут назад",
+        "minute": "1 минуту назад | {n} минут назад",
         "minuteShort": "{n} мин. назад",
         "seconds": "1 секунда назад | {n} секунды назад",
         "secondsShort": "{n} сек. назад",
