@@ -18,13 +18,11 @@ import BlockStatsModule from '@module/block/ModuleBlockStats.vue'
 import ModuleTxs from '@module/txs/ModuleTxs.vue'
 import { useAppViewGrid } from '@core/composables/AppViewGrid/AppViewGrid.composable'
 import { onMounted } from 'vue'
-import { useHead } from '@unhead/vue'
 import { VIEW_TAGS } from '@core/helper/tags'
+import { usePageMeta } from '@core/composables/use-page-meta/use-page-meta.composable'
 
-useHead({
-    title: VIEW_TAGS.TXS.title,
-    meta: [{ name: 'description', content: VIEW_TAGS.TXS.description }]
-})
+usePageMeta(null, VIEW_TAGS.TXS)
+
 const { columnPadding, rowMargin } = useAppViewGrid()
 onMounted(() => {
     window.scrollTo(0, 0)

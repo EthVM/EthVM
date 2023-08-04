@@ -15,13 +15,11 @@ import { useRouter } from 'vue-router'
 import AppBtn from '@core/components/AppBtn.vue'
 import { ROUTE_NAME } from '@core/router/routesNames'
 import { onMounted } from 'vue'
-import { useHead } from '@unhead/vue'
 import { VIEW_TAGS } from '@core/helper/tags'
+import { usePageMeta } from '@core/composables/use-page-meta/use-page-meta.composable'
 
-useHead({
-    title: VIEW_TAGS.NOT_FOUND.title,
-    meta: [{ name: 'description', content: VIEW_TAGS.NOT_FOUND.description }]
-})
+usePageMeta(null, VIEW_TAGS.NOT_FOUND)
+
 onMounted(() => {
     window.scrollTo(0, 0)
 })

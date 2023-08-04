@@ -9,7 +9,8 @@ export interface PAGE {
 export const VIEW_TAGS: PAGE = {
     HOME: {
         title: 'ethVM - Track, Analyze and Explore the Ethereum Blockchain',
-        description: 'ethVM is a blockchain explorer created by MyEtherWallet. Explore the Ethereum Blockchain easily and analyze crypto transactions.'
+        description:
+            'ethVM is a blockchain explorer created by MyEtherWallet. Explore the Ethereum Blockchain easily and analyze crypto transactions. Open source project powered by MyEtherWallet (MEW)'
     },
     ABOUT: {
         title: 'About Us | The best blockchain explorer from MyEtherWallet',

@@ -18,13 +18,11 @@ import ModuleAddressNames from '@/modules/settings/ModuleAddressNames.vue'
 import ModuleSettings from '@/modules/settings/ModuleSettings.vue'
 import { useAppViewGrid } from '@core/composables/AppViewGrid/AppViewGrid.composable'
 import { onMounted } from 'vue'
-import { useHead } from '@unhead/vue'
 import { VIEW_TAGS } from '@core/helper/tags'
+import { usePageMeta } from '@core/composables/use-page-meta/use-page-meta.composable'
 
-useHead({
-    title: VIEW_TAGS.SETTINGS.title,
-    meta: [{ name: 'description', content: VIEW_TAGS.SETTINGS.description }]
-})
+usePageMeta(null, VIEW_TAGS.SETTINGS)
+
 const { columnPadding, rowMargin } = useAppViewGrid()
 
 onMounted(() => {

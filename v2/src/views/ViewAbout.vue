@@ -42,12 +42,11 @@ import AppAdButtonsLarge from '@/core/components/AppAdButtonsLarge.vue'
 import { useAppViewGrid } from '@core/composables/AppViewGrid/AppViewGrid.composable'
 import { onMounted } from 'vue'
 import { useDisplay } from 'vuetify/lib/framework.mjs'
-import { useHead } from '@unhead/vue'
 import { VIEW_TAGS } from '@core/helper/tags'
-useHead({
-    title: VIEW_TAGS.ABOUT.title,
-    meta: [{ name: 'description', content: VIEW_TAGS.ABOUT.description }]
-})
+import { usePageMeta } from '@core/composables/use-page-meta/use-page-meta.composable'
+
+usePageMeta(null, VIEW_TAGS.ABOUT)
+
 const { xs } = useDisplay()
 onMounted(() => {
     window.scrollTo(0, 0)

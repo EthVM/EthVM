@@ -263,13 +263,11 @@ import { computed, reactive } from 'vue'
 import { onMounted, nextTick, ref } from 'vue'
 import configs from '@/configs'
 import * as Sentry from '@sentry/vue'
-import { useHead } from '@unhead/vue'
 import { VIEW_TAGS } from '@core/helper/tags'
+import { usePageMeta } from '@core/composables/use-page-meta/use-page-meta.composable'
 
-useHead({
-    title: VIEW_TAGS.AD_WITH_US.title,
-    meta: [{ name: 'description', content: VIEW_TAGS.AD_WITH_US.description }]
-})
+usePageMeta(null, VIEW_TAGS.AD_WITH_US)
+
 const { lgAndUp, mdAndUp, md, sm } = useDisplay()
 const { columnPadding, rowMargin } = useAppViewGrid()
 

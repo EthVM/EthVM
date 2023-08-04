@@ -80,13 +80,11 @@
 <script setup lang="ts">
 import { useAppViewGrid } from '@core/composables/AppViewGrid/AppViewGrid.composable'
 import { onMounted } from 'vue'
-import { useHead } from '@unhead/vue'
 import { VIEW_TAGS } from '@core/helper/tags'
+import { usePageMeta } from '@core/composables/use-page-meta/use-page-meta.composable'
 
-useHead({
-    title: VIEW_TAGS.PRIVACY_POLICY.title,
-    meta: [{ name: 'description', content: VIEW_TAGS.PRIVACY_POLICY.description }]
-})
+usePageMeta(null, VIEW_TAGS.PRIVACY_POLICY)
+
 onMounted(() => {
     window.scrollTo(0, 0)
 })

@@ -202,13 +202,11 @@ import { onMounted } from 'vue'
 import { useNetwork } from '@core/composables/Network/useNetwork'
 import configs from '@/configs'
 import { useGtag } from 'vue-gtag-next'
-import { useHead } from '@unhead/vue'
 import { VIEW_TAGS } from '@core/helper/tags'
+import { usePageMeta } from '@core/composables/use-page-meta/use-page-meta.composable'
 
-useHead({
-    title: VIEW_TAGS.HOME.title,
-    meta: [{ name: 'description', content: VIEW_TAGS.HOME.description }]
-})
+usePageMeta(null, VIEW_TAGS.HOME)
+
 const { lgAndUp, mdAndDown, mdAndUp, xs } = useDisplay()
 const { columnPadding, rowMargin } = useAppViewGrid()
 const { supportsFiat, isETH, isSEP } = useNetwork()
