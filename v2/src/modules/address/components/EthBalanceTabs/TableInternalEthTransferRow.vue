@@ -1,6 +1,6 @@
 <template>
     <div>
-        <app-table-row v-if="smAndDown" @click="toggleMoreDetails" :color="showMoreDetails ? 'pillGrey' : 'transparent'">
+        <app-table-row v-if="smAndDown" @click="toggleMoreDetails" :color="showMoreDetails ? 'lightGrey' : 'transparent'">
             <v-col cols="6">
                 <v-avatar :color="transferDirection.color" size="22">
                     <v-icon size="13" color="white"> {{ transferDirection.icon }} </v-icon>

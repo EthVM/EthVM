@@ -1,11 +1,3 @@
-fragment ERC20TokenOwnerDetails on ERC20TokenBalance  {
-    tokenInfo {
-        ...TokenDetails
-    }
-    owner
-    balance
-}
-
 fragment ERC20TokenOwners on ERC20TokenOwners {
     owners {
         ...ERC20TokenOwnerDetails

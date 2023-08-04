@@ -35,7 +35,7 @@
         "newNft": "New ERC721 Transfers",
         "internal": "Internal Transfer",
         "value": "Transaction Value",
-        "internalValue":"Internal Transfer Value",
+        "internalValue": "Internal Transfer Value",
         "viewTx": "View Transaction",
         "details": {
             "header": "Transaction Summary",
@@ -161,9 +161,9 @@
             "addAddress": "Enter Address / Domain Name",
             "name": "Enter Name"
         },
-        "nameAdded" : "{name} has been added to your portfolio",
+        "nameAdded": "{name} has been added to your portfolio",
         "viewTokens": "View tokens",
-        "noTokens": "This portfolio does not have any tokens", 
+        "noTokens": "This portfolio does not have any tokens",
         "addressNoTokens": "Selected addresses do not own this token",
         "sort": "sort"
     },
@@ -282,7 +282,7 @@
         "totalRewards": "Total Rewards",
         "txFee": "Transaction fees",
         "uncleSha": "Uncles SHA3",
-        "newBlock": "1 new block | {count} new blocks" 
+        "newBlock": "1 new block | {count} new blocks"
     },
     "home": {
         "tagline": {
@@ -329,7 +329,7 @@
         "noBigMovers": "There are no big movers in the last day",
         "imageNotAvailable": "image not available",
         "addressAlreadyIsSaved": "This address is already saved",
-        "inputNotValid":  "Input not valid",
+        "inputNotValid": "Input not valid",
         "required": "Required"
     },
     "nft": {

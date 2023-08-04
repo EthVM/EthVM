@@ -5,7 +5,7 @@
                 Mobile (XS-SM)
               =====================================================================================
         -->
-        <app-table-row v-if="xs" @click="toggleMoreDetails" :color="state.showMoreDetails ? 'pillGrey' : 'transparent'">
+        <app-table-row v-if="xs" @click="toggleMoreDetails" :color="state.showMoreDetails ? 'lightGrey' : 'transparent'">
             <v-col cols="6">
                 <router-link :to="`/block/number/${props.block.number}`" class="text-secondary">{{ _block.number }}</router-link>
                 <p class="text-info mb-0">{{ _block.timestamp }}</p>

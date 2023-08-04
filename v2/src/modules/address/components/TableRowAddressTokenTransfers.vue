@@ -6,7 +6,7 @@
           =========================
        -->
         <template v-if="!mdAndDown">
-            <app-table-row row-align="center" @click="toggleMoreDetails" :color="state.showMoreDetails ? 'pillGrey' : 'transparent'">
+            <app-table-row row-align="center" @click="toggleMoreDetails" :color="state.showMoreDetails ? 'lightGrey' : 'transparent'">
                 <v-col :cols="props.isOverview ? 3 : 2">
                     <v-row class="ma-0 flex-nowrap" align="center">
                         <app-token-icon :token-icon="tokenImg" img-size="32px" class="mr-2" />

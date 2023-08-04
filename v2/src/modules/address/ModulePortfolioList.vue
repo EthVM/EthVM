@@ -88,10 +88,15 @@
         </v-row>
 
         <v-divider class="mx-n4 mx-sm-n6 mt-sm-3" />
-        <template v-if="addressList.length > 0">
-            <div class="p-ten-top">
+        <template v-if="store.portfolioLength > 0">
+            <div class="p-ten-top" v-if="store.portfolioIsLoaded">
                 <div v-for="adr in sortList" flat :key="adr.hash">
                     <table-row-portfolio-item :adr="adr"></table-row-portfolio-item>
+                </div>
+            </div>
+            <div v-else class="p-ten-top">
+                <div v-for="i in store.portfolioLength" :key="i" style="padding: 10px 0">
+                    <div class="skeleton-box rounded-xl skeleton_portfolio"></div>
                 </div>
             </div>
         </template>
@@ -318,5 +323,19 @@ class Sorted implements SortedInterface {
 .fade-enter-from,
 .fade-leave-to {
     opacity: 0;
+}
+
+.skeleton_portfolio {
+    height: 40px;
+
+    @media only screen and (min-width: 600px) and (max-width: 904px) {
+        height: 42px;
+    }
+    @media only screen and (min-width: 905px) and (max-width: 1239px) {
+        height: 42px;
+    }
+    @media (min-width: 1240px) {
+        height: 34px;
+    }
 }
 </style>

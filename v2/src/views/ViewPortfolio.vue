@@ -98,6 +98,10 @@ import { useCoinData } from '@core/composables/CoinData/coinData.composable'
 import { onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { tabViewRouteGuardOnUpdate } from '@/core/router/helpers'
+import { VIEW_TAGS } from '@core/helper/tags'
+import { usePageMeta } from '@core/composables/use-page-meta/use-page-meta.composable'
+
+usePageMeta(null, VIEW_TAGS.PORTFOLIO)
 
 const { t } = useI18n()
 

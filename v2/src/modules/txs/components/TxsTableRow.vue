@@ -3,7 +3,7 @@
         <app-table-row
             row-align="center"
             row-justify="start"
-            :color="state.showMoreDetails && mdAndDown ? 'pillGrey' : 'transparent'"
+            :color="state.showMoreDetails && mdAndDown ? 'lightGrey' : 'transparent'"
             v-on="{ click: smAndDown ? toggleMoreDetails : null }"
         >
             <!--

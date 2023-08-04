@@ -15,6 +15,10 @@ import { useRouter } from 'vue-router'
 import AppBtn from '@core/components/AppBtn.vue'
 import { ROUTE_NAME } from '@core/router/routesNames'
 import { onMounted } from 'vue'
+import { VIEW_TAGS } from '@core/helper/tags'
+import { usePageMeta } from '@core/composables/use-page-meta/use-page-meta.composable'
+
+usePageMeta(null, VIEW_TAGS.NOT_FOUND)
 
 onMounted(() => {
     window.scrollTo(0, 0)

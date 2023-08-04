@@ -21,8 +21,10 @@ import AppTabs from '@/core/components/AppTabs.vue'
 import { Tab } from '@core/components/props'
 import { useAppViewGrid } from '@core/composables/AppViewGrid/AppViewGrid.composable'
 import { ADDRESS_ROUTE_QUERY } from '@core/router/routesNames'
-import { onMounted, reactive } from 'vue'
+import { onMounted, reactive, toRefs } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { VIEW_TAGS } from '@core/helper/tags'
+import { usePageMeta } from '@core/composables/use-page-meta/use-page-meta.composable'
 
 const { t } = useI18n()
 const { columnPadding, rowMargin } = useAppViewGrid()
@@ -47,6 +49,8 @@ const props = defineProps({
         required: true
     }
 })
+const { addressRef } = toRefs(props)
+usePageMeta(addressRef, VIEW_TAGS.ADR_NFT)
 
 const state = reactive({
     error: '',

@@ -13,7 +13,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, reactive, watch } from 'vue'
+import { computed, reactive, watch, toRefs } from 'vue'
 import TokenDetails from '@module/tokens/ModuleTokenDetails.vue'
 import { ErrorMessageToken } from '@module/tokens/models/ErrorMessagesForTokens'
 import AppError from '@core/components/AppError.vue'
@@ -23,6 +23,8 @@ import { onMounted } from 'vue'
 import { onBeforeRouteUpdate } from 'vue-router'
 import { tabViewRouteGuardOnUpdate } from '@/core/router/helpers'
 import { Q_TOKEN_DETAILS } from '@/core/router/routesNames'
+import { VIEW_TAGS } from '@core/helper/tags'
+import { usePageMeta } from '@core/composables/use-page-meta/use-page-meta.composable'
 
 onMounted(() => {
     window.scrollTo(0, 0)
@@ -33,6 +35,9 @@ const props = defineProps({
         required: true
     }
 })
+
+const { addressRef } = toRefs(props)
+usePageMeta(addressRef, VIEW_TAGS.TOKEN)
 
 interface ComponentState {
     errorMessages: ErrorMessageToken[]

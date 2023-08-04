@@ -1,5 +1,5 @@
 <template>
-    <app-table-row :row-justify="xs ? 'end' : 'start'" :link="xs" @click="openMoreInfo" :color="state.showMore && xs ? 'pillGrey' : 'transparent'">
+    <app-table-row :row-justify="xs ? 'end' : 'start'" :link="xs" @click="openMoreInfo" :color="state.showMore && xs ? 'lightGrey' : 'transparent'">
         <v-col cols="12" sm="6" lg="3" :class="['d-flex align-center justify-start flex-nowrap', { 'mb-5': state.showMore }]">
             <app-address-blockie :address="props.adr.hash" class="mr-4" />
             <div class="overflow-hidden">
