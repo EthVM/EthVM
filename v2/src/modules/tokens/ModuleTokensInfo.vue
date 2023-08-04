@@ -1,10 +1,10 @@
 <template>
     <v-card variant="elevated" elevation="1" rounded="xl" :class="['pa-4 pa-sm-6 h-100']">
         <v-card-title :class="['pa-0', { 'd-flex align-center justify-space-between mb-2 mb-sm-4': isHomePage }]">
-            <h1 :class="[isHomePage ? 'text-h6' : 'text-h4 ', 'font-weight-bold']">
+            <h1 :class="[isHomePage ? 'text-h6' : 'text-h4', 'font-weight-bold']">
                 {{ title }}
             </h1>
-            <app-btn v-if="isHomePage && !xs" text="More" isSmall icon="east" @click="goToTokens"></app-btn>
+            <app-btn v-if="isHomePage && !xs" :text="$t('common.more')" isSmall icon="east" @click="goToTokens"></app-btn>
             <app-btn-icon v-else-if="isHomePage && xs" icon="east" @click="goToTokens"></app-btn-icon>
         </v-card-title>
         <app-tabs
@@ -52,7 +52,7 @@
             <v-col :sm="2" class="d-none d-sm-block py-0">
                 <v-row align="center" class="ma-0">
                     <v-btn variant="text" color="info" class="font-weight-regular ml-n3" rounded="pill" size="small" @click="sortTable(SORT_KEY.MARKET_CAP)">
-                        {{ $t('market.marketCap') }}
+                        {{ $t('market.marketCapShort') }}
                         <v-icon v-if="isActiveSort(SORT_KEY.MARKET_CAP)" class="ml-1" :size="14">{{ sortIcon }}</v-icon></v-btn
                     >
                 </v-row>
@@ -130,7 +130,7 @@ import AppNoResult from '@core/components/AppNoResult.vue'
 import AppPagination from '@core/components/AppPagination.vue'
 import AppMenu from '@core/components/AppMenu.vue'
 import { Tab } from '@/core/components/props'
-import TokenMarketInfoTableRow from '@module/tokens/components/TokenMarketInfo/TableRowTokenMarketInfo.vue'
+import TokenMarketInfoTableRow from '@module/tokens/components/token-market-info/TableRowTokenMarketInfo.vue'
 import ModuleAddFavToken from './ModuleAddFavToken.vue'
 import { computed, reactive } from 'vue'
 import { useStore } from '@/store'

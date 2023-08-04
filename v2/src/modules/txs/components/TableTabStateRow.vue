@@ -1,7 +1,7 @@
 <template>
     <app-table-row
         row-align="center"
-        :color="state.showMoreDetails && mdAndDown ? 'pillGrey' : 'transparent'"
+        :color="state.showMoreDetails && mdAndDown ? 'lightGrey' : 'transparent'"
         v-on="{ click: mdAndDown ? toggleMoreDetails : null }"
     >
         <v-col lg="2">

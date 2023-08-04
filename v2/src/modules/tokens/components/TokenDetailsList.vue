@@ -124,7 +124,7 @@ import { useCoinData } from '@core/composables/CoinData/coinData.composable'
 import {
     GetErc20TokenBalanceQuery as TokenOwnerInfo,
     GetTokenInfoByContractQuery as TokenInfo
-} from '@module/tokens/apollo/TokenDetails/tokenDetails.generated'
+} from '@module/tokens/apollo/token-details/tokenDetails.generated'
 import { ErrorMessageToken } from '@module/tokens/models/ErrorMessagesForTokens'
 import { computed } from 'vue'
 import { MarketDataFragment as TokenMarketData } from '@/core/composables/CoinData/getLatestPrices.generated'

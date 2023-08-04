@@ -1,0 +1,24 @@
+fragment BigMover on  TokenMarketMoversItem {
+  contractAddress
+  name
+  symbol
+  type
+  eventTimestampUnixSec
+  price
+  iconPng
+  priceChangePercentage
+  coingeckoCoinId 
+}
+query getBigMovers {
+  getTokenMarketMovers {
+    items {
+       ...BigMover
+    }
+  }
+}
+
+subscription bigMoversUpdate {
+   tokenMarketMoversProcessedEvent {
+        _
+    }
+}

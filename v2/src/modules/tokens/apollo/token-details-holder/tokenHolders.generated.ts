@@ -6,7 +6,7 @@
 import * as Types from '../../../../apollo/types'
 
 import gql from 'graphql-tag'
-import { Erc20TokenOwnerDetailsFragmentDoc, TokenDetailsFragmentDoc } from '../TokenDetails/tokenDetails.generated'
+import { Erc20TokenOwnerDetailsFragmentDoc, TokenDetailsFragmentDoc } from '../token-details/tokenDetails.generated'
 import * as VueApolloComposable from '@vue/apollo-composable'
 import * as VueCompositionApi from 'vue'
 export type ReactiveFunction<TParam> = () => TParam

@@ -9,9 +9,13 @@ const messages: MassagesShema = {
     ru_RU
 }
 
-export default createI18n({
+const instance = createI18n({
     locale: 'en_US',
     fallbackLocale: 'en_US',
     legacy: false,
     messages
 })
+
+export default instance
+
+export const i18nGlobal = instance.global

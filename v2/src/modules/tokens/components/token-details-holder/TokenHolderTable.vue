@@ -83,14 +83,14 @@ import { MarketDataFragment as TokenMarketData } from '@core/composables/CoinDat
 import {
     Erc721TokenOwnerDetailsFragment as Erc721Owner,
     Erc1155TokenOwnerDetailsFragment as Erc1155Owner
-} from '@module/tokens/apollo/TokenDetailsHolder/tokenHolders.generated'
-import { Erc20TokenOwnerDetailsFragment as Erc20Owner } from '@module/tokens/apollo/TokenDetails/tokenDetails.generated'
+} from '@module/tokens/apollo/token-details-holder/tokenHolders.generated'
+import { Erc20TokenOwnerDetailsFragment as Erc20Owner } from '@module/tokens/apollo/token-details/tokenDetails.generated'
 import BN from 'bignumber.js'
 import { generateMapId, generateId } from '@/core/composables/NftMeta/helpers'
 import { TransferType } from '@/apollo/types'
 import { NftMetaFragment } from '@/core/composables/NftMeta/nftMeta.generated'
-import TokenNftImg from '@module/tokens/components/TokenNFT/TokenNftImg.vue'
-import { NFTDetails } from '@module/tokens/components/TokenNFT/propModel'
+import TokenNftImg from '@module/tokens/components/token-nft/TokenNftImg.vue'
+import { NFTDetails } from '@module/tokens/components/token-nft/propModel'
 import { eth } from '@core/helper'
 
 interface PropType {

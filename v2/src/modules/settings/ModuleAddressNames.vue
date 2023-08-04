@@ -74,8 +74,8 @@
             </v-col>
         </v-row>
         <app-menu min-width="140" activator="#activator-mobile-names-menu">
-            <v-list-item title="Import" class="py-2" @click="state.openImport = true"> </v-list-item>
-            <v-list-item title="Export" class="py-2" @click="exportNames"> </v-list-item>
+            <v-list-item :title="$t('common.button.import')" class="py-2" @click="state.openImport = true"> </v-list-item>
+            <v-list-item :title="$t('common.button.export')" class="py-2" @click="exportNames"> </v-list-item>
         </app-menu>
         <module-import-settings :type="IMPORT_TYPE.NAMES" v-model="state.openImport"></module-import-settings>
     </v-card>
@@ -99,7 +99,9 @@ import { PortfolioItem } from '@/store/helpers'
 import { useAppPaginate } from '@core/composables/AppPaginate/useAppPaginate.composable'
 import { captureException } from '@sentry/vue'
 import { searchHelper } from '@core/helper/search'
+import { useI18n } from 'vue-i18n'
 
+const { t } = useI18n()
 const { xs, smAndDown } = useDisplay()
 const store = useStore()
 
@@ -218,9 +220,9 @@ const sortTable = (key: SORT_KEY): void => {
 
 const activeSortString = computed<string>(() => {
     if (state.sortKey.includes(SORT_KEY.NAME)) {
-        return 'Name'
+        return t('common.name')
     }
-    return 'Address'
+    return t('common.address')
 })
 
 /**------------------------

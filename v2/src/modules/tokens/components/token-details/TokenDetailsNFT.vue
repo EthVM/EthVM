@@ -40,7 +40,7 @@
 <script setup lang="ts">
 import TokenDetailsCollectionImg from './TokenDetailsCollectionImg.vue'
 import { computed } from 'vue'
-import { NftCollectionFragment } from '@module/tokens/apollo/TokenDetails/tokenDetails.generated'
+import { NftCollectionFragment } from '@module/tokens/apollo/token-details/tokenDetails.generated'
 import { marked } from 'marked'
 interface PropType {
     isLoading: boolean

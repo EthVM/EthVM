@@ -1,6 +1,6 @@
 <template>
     <div>
-        <app-table-row v-if="smAndDown" @click="toggleMoreDetails" :color="showMoreDetails ? 'pillGrey' : 'transparent'">
+        <app-table-row v-if="smAndDown" @click="toggleMoreDetails" :color="showMoreDetails ? 'lightGrey' : 'transparent'">
             <v-col cols="6">
                 <v-avatar :color="transferDirection.color" size="22">
                     <v-icon size="13" color="white"> {{ transferDirection.icon }} </v-icon>
@@ -21,15 +21,15 @@
                 <v-col cols="12" v-if="showMoreDetails">
                     <v-divider class="mx-n6 mb-3" />
                     <div class="mb-4 d-flex justify-space-between">
-                        <span class="text-info mr-2">Balance Before:</span>
+                        <span class="text-info mr-2">{{ $t('txs.balanceBefore') }}:</span>
                         <span>{{ balanceBefore.value }} {{ currencyName }}</span>
                     </div>
                     <div class="mb-4 d-flex justify-space-between">
-                        <span class="text-info mr-2">Balance After:</span>
+                        <span class="text-info mr-2">{{ $t('txs.balanceAfter') }}:</span>
                         <span>{{ balanceAfter.value }} {{ currencyName }}</span>
                     </div>
                     <div class="d-flex justify-space-between">
-                        <span class="text-info mr-2">Hash:</span>
+                        <span class="text-info mr-2">{{ $t('common.hash') }}:</span>
                         <span>
                             <app-transform-hash
                                 is-short
@@ -120,17 +120,11 @@ const statusIcon = computed<{ [key: string]: string }>(() => {
     }
 })
 
-enum TRANSFER_DIRECTION {
-    FROM = 'From',
-    TO = 'To',
-    SELF = 'Self'
-}
-
 const transferDirection = computed<{ [key: string]: string }>(() => {
     // If to and from address is the same, then transfer is self
     if (props.transfer.transfer.to === props.addressRef.toLowerCase() && props.transfer.transfer.from === props.addressRef.toLowerCase()) {
         return {
-            direction: TRANSFER_DIRECTION.SELF,
+            direction: t('txs.status.self'),
             text: t('txs.status.selfSent'),
             color: 'info',
             icon: 'refresh'
@@ -138,21 +132,21 @@ const transferDirection = computed<{ [key: string]: string }>(() => {
     }
     if (props.transfer.transfer.to === props.addressRef.toLowerCase()) {
         return {
-            direction: TRANSFER_DIRECTION.FROM,
+            direction: t('common.from'),
             text: t('txs.status.recieve'),
             color: 'success',
             icon: 'south_east'
         }
     } else if (props.transfer.transfer.from === props.addressRef.toLowerCase()) {
         return {
-            direction: TRANSFER_DIRECTION.TO,
+            direction: t('common.to'),
             text: t('txs.status.sent'),
             color: 'warning',
             icon: 'north_west'
         }
     }
     return {
-        direction: TRANSFER_DIRECTION.SELF,
+        direction: t('txs.status.self'),
         text: t('txs.status.selfSent'),
         color: 'info',
         icon: 'refresh'
@@ -188,7 +182,7 @@ const txAddress = computed<string>(() => {
 
 const timestamp = computed<string>(() => {
     const date = new Date(props.transfer.transfer.timestamp * 1e3)
-    return timeAgo(date, smAndDown.value)
+    return timeAgo(date)
 })
 
 const txValue = computed<FormattedNumber>(() => {

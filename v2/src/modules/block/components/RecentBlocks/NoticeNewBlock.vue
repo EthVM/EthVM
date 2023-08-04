@@ -1,12 +1,14 @@
 <template>
-    <app-new-update icon-only text="New blocks" :update-count="state.valueString" @reload="onReload" />
+    <app-new-update icon-only :text="updateText" :update-count="state.valueString" @reload="onReload" />
 </template>
 
 <script setup lang="ts">
 import AppNewUpdate from '@core/components/AppNewUpdate.vue'
-import { reactive } from 'vue'
+import { reactive, computed } from 'vue'
 import { useBlockSubscription } from '@core/composables/NewBlock/newBlock.composable'
+import { useI18n } from 'vue-i18n'
 
+const { t } = useI18n()
 const props = defineProps({
     pageId: {
         type: String,
@@ -61,6 +63,9 @@ const onReload = () => {
     state.newUncles = 0
     state.valueString = 0
 }
+const updateText = computed<string>(() => {
+    return state.valueString > 1 ? `${t('block.newBlock', 2)}` : `${t('block.newBlock')}`
+})
 </script>
 
 <style scoped></style>
