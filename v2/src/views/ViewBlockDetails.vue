@@ -6,7 +6,7 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, computed, onMounted, watch } from 'vue'
+import { reactive, computed, onMounted, watch, toRefs } from 'vue'
 import AppError from '@core/components/AppError.vue'
 import ModuleBlockDetails from '@module/block/ModuleBlockDetails.vue'
 import { eth } from '@core/helper'
@@ -14,6 +14,8 @@ import { ErrorMessageBlock } from '@module/block/models/ErrorMessagesForBlock'
 import { onBeforeRouteUpdate } from 'vue-router'
 import { tabViewRouteGuardOnUpdate } from '@/core/router/helpers'
 import { Q_BLOCK_DETAILS } from '@/core/router/routesNames'
+import { VIEW_TAGS } from '@core/helper/tags'
+import { usePageMeta } from '@core/composables/use-page-meta/use-page-meta.composable'
 
 interface ComponentState {
     errorMessages: ErrorMessageBlock[]
@@ -28,9 +30,15 @@ const state: ComponentState = reactive({
 })
 
 const props = defineProps({
-    blockRef: String,
+    blockRef: {
+        type: String,
+        required: true
+    },
     tab: String
 })
+
+const { blockRef } = toRefs(props)
+usePageMeta(blockRef, VIEW_TAGS.BLOCK)
 
 const isValid = computed<boolean>(() => {
     return isHash.value || eth.isValidBlockNumber(props.blockRef)

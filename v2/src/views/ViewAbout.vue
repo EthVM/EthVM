@@ -31,7 +31,6 @@
                 <p class="mb-15">
                     {{ $t('about.why.body') }}
                 </p>
-
                 <p>{{ $t('about.foot') }}</p>
             </v-card>
         </v-col>
@@ -43,6 +42,10 @@ import AppAdButtonsLarge from '@/core/components/AppAdButtonsLarge.vue'
 import { useAppViewGrid } from '@core/composables/AppViewGrid/AppViewGrid.composable'
 import { onMounted } from 'vue'
 import { useDisplay } from 'vuetify/lib/framework.mjs'
+import { VIEW_TAGS } from '@core/helper/tags'
+import { usePageMeta } from '@core/composables/use-page-meta/use-page-meta.composable'
+
+usePageMeta(null, VIEW_TAGS.ABOUT)
 
 const { xs } = useDisplay()
 onMounted(() => {

@@ -263,6 +263,10 @@ import { computed, reactive } from 'vue'
 import { onMounted, nextTick, ref } from 'vue'
 import configs from '@/configs'
 import * as Sentry from '@sentry/vue'
+import { VIEW_TAGS } from '@core/helper/tags'
+import { usePageMeta } from '@core/composables/use-page-meta/use-page-meta.composable'
+
+usePageMeta(null, VIEW_TAGS.AD_WITH_US)
 
 const { lgAndUp, mdAndUp, md, sm } = useDisplay()
 const { columnPadding, rowMargin } = useAppViewGrid()

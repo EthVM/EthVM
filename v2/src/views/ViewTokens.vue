@@ -21,6 +21,11 @@ import { onMounted } from 'vue'
 import { onBeforeRouteUpdate } from 'vue-router'
 import { tabViewRouteGuardOnUpdate } from '@/core/router/helpers'
 import { Q_TOKENS } from '@/core/router/routesNames'
+import { VIEW_TAGS } from '@core/helper/tags'
+import { usePageMeta } from '@core/composables/use-page-meta/use-page-meta.composable'
+
+usePageMeta(null, VIEW_TAGS.TOKENS)
+
 onMounted(() => {
     window.scrollTo(0, 0)
 })

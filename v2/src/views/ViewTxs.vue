@@ -18,6 +18,10 @@ import BlockStatsModule from '@module/block/ModuleBlockStats.vue'
 import ModuleTxs from '@module/txs/ModuleTxs.vue'
 import { useAppViewGrid } from '@core/composables/AppViewGrid/AppViewGrid.composable'
 import { onMounted } from 'vue'
+import { VIEW_TAGS } from '@core/helper/tags'
+import { usePageMeta } from '@core/composables/use-page-meta/use-page-meta.composable'
+
+usePageMeta(null, VIEW_TAGS.TXS)
 
 const { columnPadding, rowMargin } = useAppViewGrid()
 onMounted(() => {

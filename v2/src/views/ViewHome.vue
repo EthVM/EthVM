@@ -202,6 +202,10 @@ import { onMounted } from 'vue'
 import { useNetwork } from '@core/composables/Network/useNetwork'
 import configs from '@/configs'
 import { useGtag } from 'vue-gtag-next'
+import { VIEW_TAGS } from '@core/helper/tags'
+import { usePageMeta } from '@core/composables/use-page-meta/use-page-meta.composable'
+
+usePageMeta(null, VIEW_TAGS.HOME)
 
 const { lgAndUp, mdAndDown, mdAndUp, xs } = useDisplay()
 const { columnPadding, rowMargin } = useAppViewGrid()

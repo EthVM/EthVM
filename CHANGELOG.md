@@ -2,6 +2,7 @@
 
 ### Feature
 - Big token movers with subscription [#1191](https://github.com/EthVM/EthVM/pull/1191)
+- Page meta tags and descriptions [#1189](https://github.com/EthVM/EthVM/pull/1189)
 
 ###  Fix
 - fis loading state on portfolio list [#1191](https://github.com/EthVM/EthVM/pull/1191)
