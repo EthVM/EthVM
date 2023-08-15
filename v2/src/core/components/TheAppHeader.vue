@@ -1,5 +1,6 @@
 <template>
     <div>
+        <div class="header-741647070a5a06fa983"></div>
         <v-system-bar v-if="xs" color="surface" class="font-weight-bold">
             <div v-if="supportsFiat">
                 <v-scroll-y-reverse-transition hide-on-leave>
@@ -168,6 +169,8 @@ watch(
 )
 
 onMounted(() => {
+    window.coinzilla_header.push('741647070a5a06fa983')
+
     if (props.hideSearchBar || props.isTransparent) {
         window.addEventListener('scroll', onScroll)
     }

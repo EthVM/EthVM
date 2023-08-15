@@ -1,6 +1,5 @@
 <template>
     <v-app class="app-view">
-        <div class="header-741647070a5a06fa983"></div>
         <the-app-navigation-drawer-vue />
         <the-app-header :hide-search-bar="isHomeView" :is-transparent="isFullScreen || isHomeView" />
         <v-main :class="[{ 'pt-16': isHomeView || isFullScreen }, 'w-100']">
