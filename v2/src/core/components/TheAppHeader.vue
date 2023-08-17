@@ -17,9 +17,9 @@
                 </p>
             </v-scroll-y-reverse-transition>
         </v-system-bar>
-        <v-app-bar app flat :color="background" :class="['py-0 px-0 d-flex flex-column ethvm-app-bar']" :height="xs ? '64' : showAd ? '204' : '114'">
+        <v-app-bar app flat :color="background" :class="['py-0 px-0 ethvm-app-bar']" :height="xs ? (showAd ? '144' : '64') : showAd ? '204' : '132'">
             <div class="header-741647070a5a06fa983" id="header-741647070a5a06fa983" v-show="showAd"></div>
-            <v-container class="mx-2 mx-sm-6 mx-md-auto mx-lg-6 mx-xl-auto px-0 text-white pt-lg-5 pb-lg-4">
+            <v-container class="mx-2 px-sm-6 mx-md-auto mx-lg-6 mx-xl-auto px-0 text-white pt-6 pt-lg-5 pb-lg-4">
                 <v-row align="center" justify="start" class="mr-0 mx-0 flex-nowrap my-0 mr-lg-n3" style="min-height: 40px">
                     <div class="mr-4 logo-btn">
                         <v-img
