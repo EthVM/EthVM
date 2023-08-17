@@ -1,6 +1,5 @@
 <template>
     <div>
-        <div class="header-741647070a5a06fa983"></div>
         <v-system-bar v-if="xs" color="surface" class="font-weight-bold">
             <div v-if="supportsFiat">
                 <v-scroll-y-reverse-transition hide-on-leave>
@@ -18,7 +17,8 @@
                 </p>
             </v-scroll-y-reverse-transition>
         </v-system-bar>
-        <v-app-bar app flat :color="background" :class="['py-0 px-0 py-sm-2']" :height="xs ? '64' : '114'">
+        <v-app-bar app flat :color="background" :class="['py-0 px-0 d-flex flex-column ethvm-app-bar']" :height="xs ? '64' : showAd ? '204' : '114'">
+            <div class="header-741647070a5a06fa983" id="header-741647070a5a06fa983" v-show="showAd"></div>
             <v-container class="mx-2 mx-sm-6 mx-md-auto mx-lg-6 mx-xl-auto px-0 text-white pt-lg-5 pb-lg-4">
                 <v-row align="center" justify="start" class="mr-0 mx-0 flex-nowrap my-0 mr-lg-n3" style="min-height: 40px">
                     <div class="mr-4 logo-btn">
@@ -169,7 +169,8 @@ watch(
 )
 
 onMounted(() => {
-    window.coinzilla_header.push('741647070a5a06fa983')
+    const coinzillaArg = Array.isArray(window.coinzilla_header) ? '741647070a5a06fa983' : ['741647070a5a06fa983']
+    window.coinzilla_header.push(coinzillaArg)
 
     if (props.hideSearchBar || props.isTransparent) {
         window.addEventListener('scroll', onScroll)
@@ -185,6 +186,10 @@ const showSearchbar = computed<boolean>(() => {
         return offset.value > visibleAt
     }
     return true
+})
+
+const showAd = computed<boolean>(() => {
+    return offset.value < 90
 })
 
 const background = computed<string>(() => {
@@ -264,5 +269,14 @@ const gasPrice = computed<string>(() => {
 }
 .logo-btn {
     cursor: pointer;
+}
+</style>
+
+<style lang="scss">
+.ethvm-app-bar {
+    .v-toolbar__content {
+        display: flex;
+        flex-direction: column;
+    }
 }
 </style>
