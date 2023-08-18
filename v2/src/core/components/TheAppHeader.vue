@@ -17,8 +17,9 @@
                 </p>
             </v-scroll-y-reverse-transition>
         </v-system-bar>
-        <v-app-bar app flat :color="background" :class="['py-0 px-0 py-sm-2']" :height="xs ? '64' : '114'">
-            <v-container class="mx-2 mx-sm-6 mx-md-auto mx-lg-6 mx-xl-auto px-0 text-white pt-lg-5 pb-lg-4">
+        <v-app-bar app flat :color="background" :class="['py-0 px-0 ethvm-app-bar']" :height="xs ? (showAd ? '144' : '64') : showAd ? '204' : '132'">
+            <div class="header-741647070a5a06fa983" id="header-741647070a5a06fa983" v-show="showAd"></div>
+            <v-container class="mx-2 px-sm-6 mx-md-auto mx-lg-6 mx-xl-auto px-0 text-white pt-sm-6 pt-2 pt-lg-5 pb-lg-4">
                 <v-row align="center" justify="start" class="mr-0 mx-0 flex-nowrap my-0 mr-lg-n3" style="min-height: 40px">
                     <div class="mr-4 logo-btn">
                         <v-img
@@ -168,6 +169,9 @@ watch(
 )
 
 onMounted(() => {
+    const coinzillaArg = Array.isArray(window.coinzilla_header) ? '741647070a5a06fa983' : ['741647070a5a06fa983']
+    window.coinzilla_header.push(coinzillaArg)
+
     if (props.hideSearchBar || props.isTransparent) {
         window.addEventListener('scroll', onScroll)
     }
@@ -182,6 +186,10 @@ const showSearchbar = computed<boolean>(() => {
         return offset.value > visibleAt
     }
     return true
+})
+
+const showAd = computed<boolean>(() => {
+    return offset.value < 90
 })
 
 const background = computed<string>(() => {
@@ -261,5 +269,14 @@ const gasPrice = computed<string>(() => {
 }
 .logo-btn {
     cursor: pointer;
+}
+</style>
+
+<style lang="scss">
+.ethvm-app-bar {
+    .v-toolbar__content {
+        display: flex;
+        flex-direction: column;
+    }
 }
 </style>
