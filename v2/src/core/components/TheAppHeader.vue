@@ -1,5 +1,8 @@
 <template>
     <div>
+        <v-system-bar :height="showAd ? (!adHidden ? '0' : '90') : '0'" v-if="xs" v-show="showAd" class="px-0">
+            <div class="header-741647070a5a06fa983" style="top: 0px; position: fixed" v-if="xs"></div>
+        </v-system-bar>
         <v-system-bar v-if="xs" color="surface" class="font-weight-bold">
             <div v-if="supportsFiat">
                 <v-scroll-y-reverse-transition hide-on-leave>
@@ -17,8 +20,14 @@
                 </p>
             </v-scroll-y-reverse-transition>
         </v-system-bar>
-        <v-app-bar app flat :color="background" :class="['py-0 px-0 ethvm-app-bar']" :height="xs ? (showAd ? '144' : '64') : showAd ? '204' : '132'">
-            <div class="header-741647070a5a06fa983" id="header-741647070a5a06fa983" v-show="showAd"></div>
+        <v-app-bar
+            app
+            flat
+            :color="background"
+            :class="['py-0 px-0 ethvm-app-bar']"
+            :height="xs ? (showAd ? (!adHidden ? '64' : '144') : '64') : showAd ? '204' : '132'"
+        >
+            <div class="header-741647070a5a06fa983" v-show="showAd" v-if="!xs"></div>
             <v-container class="mx-2 px-sm-6 mx-md-auto mx-lg-6 mx-xl-auto px-0 text-white pt-sm-6 pt-2 pt-lg-5 pb-lg-4">
                 <v-row align="center" justify="start" class="mr-0 mx-0 flex-nowrap my-0 mr-lg-n3" style="min-height: 40px">
                     <div class="mr-4 logo-btn">
@@ -135,6 +144,9 @@ const goToHome = async (): Promise<void> => {
     })
 }
 
+/** ad hidden bool */
+const adHidden = ref(false)
+
 /*
 ===================================================================================
    Search Bar Handling
@@ -169,8 +181,32 @@ watch(
 )
 
 onMounted(() => {
+    /** Ad banner setup */
     const coinzillaArg = Array.isArray(window.coinzilla_header) ? '741647070a5a06fa983' : ['741647070a5a06fa983']
     window.coinzilla_header.push(coinzillaArg)
+
+    /** Ad banner close listener */
+    window.addEventListener('click', e => {
+        if (e.srcElement.src === 'https://coinzillatag.com/lib/img/close.png') {
+            adHidden.value = false
+        }
+    })
+
+    /**
+     * watch if ad loads in 3 seconds
+     * if not, assume ad was closed before this session
+     */
+    let adShown = document.getElementById('CloseCoinzillaHeader')
+    const interval = setInterval(() => {
+        adShown = document.getElementById('CloseCoinzillaHeader')
+        if (adShown) {
+            adHidden.value = true
+            clearInterval(interval)
+        }
+    }, 500)
+    setTimeout(() => {
+        clearInterval(interval)
+    }, 3000)
 
     if (props.hideSearchBar || props.isTransparent) {
         window.addEventListener('scroll', onScroll)
