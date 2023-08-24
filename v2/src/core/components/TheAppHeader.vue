@@ -1,7 +1,7 @@
 <template>
     <div>
-        <v-system-bar :height="showAd ? (!adHidden ? '0' : '90') : '0'" v-if="xs" v-show="showAd" class="px-0">
-            <div class="header-741647070a5a06fa983" style="top: 0px; position: fixed" v-if="xs"></div>
+        <v-system-bar :height="showAd ? (!adHidden ? '0' : '90') : '0'" v-show="showAd" class="px-0">
+            <div class="header-741647070a5a06fa983" style="top: 0px; position: fixed"></div>
         </v-system-bar>
         <v-system-bar v-if="xs" color="surface" class="font-weight-bold">
             <div v-if="supportsFiat">
@@ -20,15 +20,8 @@
                 </p>
             </v-scroll-y-reverse-transition>
         </v-system-bar>
-        <v-app-bar
-            app
-            flat
-            :color="background"
-            :class="['py-0 px-0 ethvm-app-bar']"
-            :height="xs ? (showAd ? (!adHidden ? '64' : '144') : '64') : showAd ? '204' : '132'"
-        >
-            <div class="header-741647070a5a06fa983" v-show="showAd" v-if="!xs"></div>
-            <v-container class="mx-2 px-sm-6 mx-md-auto mx-lg-6 mx-xl-auto px-0 text-white pt-sm-6 pt-2 pt-lg-5 pb-lg-4">
+        <v-app-bar app flat :color="background" :class="['py-0 px-0 py-sm-2']" :height="xs ? '64' : '114'">
+            <v-container class="mx-2 mx-sm-6 mx-md-auto mx-lg-6 mx-xl-auto px-0 text-white pt-lg-5 pb-lg-4">
                 <v-row align="center" justify="start" class="mr-0 mx-0 flex-nowrap my-0 mr-lg-n3" style="min-height: 40px">
                     <div class="mr-4 logo-btn">
                         <v-img
