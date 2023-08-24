@@ -1,3 +1,9 @@
+### Release v2.1.8
+
+### Feature
+
+-   make ui react to ad being closed [#1202](https://github.com/EthVM/EthVM/pull/1202)
+
 ### Release v2.1.7
 
 ### Feature
