@@ -1,7 +1,8 @@
 <template>
     <div>
-        <v-system-bar :height="showAd ? (!adHidden ? '0' : '90') : '0'" v-show="showAd" class="px-0">
-            <div class="header-741647070a5a06fa983" style="top: 0px; position: fixed"></div>
+        <v-system-bar :height="showAd ? (!adHidden ? '0' : '90') : '0'" v-show="showAd" class="px-0 system-bar-container">
+            <div class="paid-ad" v-if="adHidden">Paid Advertisement</div>
+            <div class="header-741647070a5a06fa983 ad-header" />
         </v-system-bar>
         <v-system-bar v-if="xs" color="surface" class="font-weight-bold">
             <div v-if="supportsFiat">
@@ -299,6 +300,18 @@ const gasPrice = computed<string>(() => {
 .logo-btn {
     cursor: pointer;
 }
+
+.paid-ad {
+    top: 0px;
+    position: fixed;
+    z-index: 2000;
+    right: 30px;
+}
+
+.ad-header {
+    top: 0px;
+    position: fixed;
+}
 </style>
 
 <style lang="scss">
@@ -307,5 +320,9 @@ const gasPrice = computed<string>(() => {
         display: flex;
         flex-direction: column;
     }
+}
+
+.system-bar-container {
+    position: relative;
 }
 </style>
