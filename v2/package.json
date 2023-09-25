@@ -35,7 +35,7 @@
         "chart.js": "^3.9.1",
         "clipboard-copy": "^4.0.1",
         "core-js": "^3.8.3",
-        "graphql": "^16.4.0",
+        "graphql": "^16.8.1",
         "graphql-anywhere": "^4.2.7",
         "graphql-tag": "^2.12.6",
         "graphql-ws": "^5.8.1",
