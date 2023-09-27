@@ -5,7 +5,7 @@
           Header
         =========================
         -->
-        <div class="nebula px-2 px-sm-6 mx-xl-auto mt-n24 pt-16">
+        <div :class="[showAd, 'nebula px-2 px-sm-6 mx-xl-auto pt-16']">
             <v-container :class="['px-7 px-lg-12 pt-5 pt-lg-10 pb-16']">
                 <div class="pl-lg-14 mt-16">
                     <div class="pt-sm-11 pb-2 pb-md-16 pb-lg-0 text-white font-weight-light text-h3 text-sm-h2 text-md-h1 text-center text-sm-left">
@@ -411,6 +411,13 @@ const submit = () => {
             })
     }
 }
+
+/**
+ * show ad
+ */
+const showAd = computed<string>(() => {
+    return store.showAd ? 'mt-n24' : 'mt-n16'
+})
 </script>
 
 <style lang="scss" scoped>

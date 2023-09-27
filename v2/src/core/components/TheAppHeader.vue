@@ -1,7 +1,7 @@
 <template>
     <div>
-        <v-system-bar :height="showAd ? (!adHidden ? '0' : '90') : '0'" v-show="showAd" class="px-0 system-bar-container">
-            <div class="paid-ad" v-if="adHidden">Paid Advertisement</div>
+        <v-system-bar :height="showAdOnScreen ? (!appStore.showAd ? '0' : '90') : '0'" v-show="showAdOnScreen" class="px-0 system-bar-container">
+            <div class="paid-ad" v-show="appStore.showAd">Paid Advertisement</div>
             <div class="header-741647070a5a06fa983 ad-header" />
         </v-system-bar>
         <v-system-bar v-if="xs" color="surface" class="font-weight-bold">
@@ -138,9 +138,6 @@ const goToHome = async (): Promise<void> => {
     })
 }
 
-/** ad hidden bool */
-const adHidden = ref(false)
-
 /*
 ===================================================================================
    Search Bar Handling
@@ -175,6 +172,7 @@ watch(
 )
 
 onMounted(() => {
+    const storeInstance = appStore
     /** Ad banner setup */
     const coinzillaArg = Array.isArray(window.coinzilla_header) ? '741647070a5a06fa983' : ['741647070a5a06fa983']
     window.coinzilla_header.push(coinzillaArg)
@@ -182,7 +180,7 @@ onMounted(() => {
     /** Ad banner close listener */
     window.addEventListener('click', e => {
         if (e.srcElement.src === 'https://coinzillatag.com/lib/img/close.png') {
-            adHidden.value = false
+            storeInstance.setShowAd(false)
         }
     })
 
@@ -194,7 +192,7 @@ onMounted(() => {
     const interval = setInterval(() => {
         adShown = document.getElementById('CloseCoinzillaHeader')
         if (adShown) {
-            adHidden.value = true
+            storeInstance.setShowAd(true)
             clearInterval(interval)
         }
     }, 500)
@@ -218,7 +216,7 @@ const showSearchbar = computed<boolean>(() => {
     return true
 })
 
-const showAd = computed<boolean>(() => {
+const showAdOnScreen = computed<boolean>(() => {
     return offset.value < 90
 })
 
