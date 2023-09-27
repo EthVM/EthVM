@@ -85,9 +85,11 @@ const randomPromoImg = computed<string>(() => {
         case currentLargeButtonPromo.value === PROMOS.enkrypt:
             return require('@/assets/promo/btn-enkrypt.png')
         case currentLargeButtonPromo.value === PROMOS.mewwallet:
+        default: // default to mew mobile wallet if something goes wrong
             return require('@/assets/promo/btn-mewwallet.png')
-        default:
-            return require('@/assets/promo/btn-raffle.png')
+        // todo: delete (from enkrypt raffle)
+        // default:
+        //     return require('@/assets/promo/btn-raffle.png')
     }
 })
 
@@ -96,9 +98,11 @@ const randomPromoText = computed<string>(() => {
         case currentLargeButtonPromo.value === PROMOS.enkrypt:
             return 'Download our browser wallet'
         case currentLargeButtonPromo.value === PROMOS.mewwallet:
+        default: // default to mew mobile wallet if something goes wrong
             return 'Download our mobile wallet'
-        default:
-            return 'Win $250 in crypto'
+        // todo: delete (from enkrypt raffle)
+        // default:
+        //     return 'Win $250 in crypto'
     }
 })
 
@@ -110,15 +114,17 @@ const randomPromoImgSize = computed(() => {
                 width: 26
             }
         case currentLargeButtonPromo.value === PROMOS.mewwallet:
+        default: // default to mew mobile wallet if something goes wrong
             return {
                 height: 30,
                 width: 30
             }
-        default:
-            return {
-                height: 30,
-                width: 50
-            }
+        // todo: delete (from enkrypt raffle)
+        // default:
+        //     return {
+        //         height: 30,
+        //         width: 50
+        //     }
     }
 })
 
@@ -161,9 +167,11 @@ const randomHref = computed<string>(() => {
         case currentLargeButtonPromo.value === PROMOS.enkrypt:
             return downloadEnkrypt.value
         case currentLargeButtonPromo.value === PROMOS.mewwallet:
+        default: // default to mew mobile wallet if something goes wrong
             return 'https://download.mewwallet.com/'
-        default:
-            return 'https://raffle.enkrypt.com/'
+        // todo: delete (from enkrypt raffle)
+        // default:
+        //     return 'https://raffle.enkrypt.com/'
     }
 })
 
