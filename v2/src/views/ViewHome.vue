@@ -5,7 +5,7 @@
             Page Header
         =========================
         -->
-        <div class="nebula px-2 px-sm-6 mx-xl-auto mt-n16 pt-16">
+        <div class="nebula px-2 px-sm-6 mx-xl-auto mt-n24 pt-16">
             <v-container :class="['px-7 px-lg-12 pt-5 pt-lg-0 pb-16']">
                 <v-row align="center" justify="space-between" class="flex-column flex-lg-row">
                     <v-img

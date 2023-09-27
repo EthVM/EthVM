@@ -1,5 +1,5 @@
 <template>
-    <div class="not-found mt-n16">
+    <div class="not-found mt-n24">
         <v-container class="core-container pt-16 pb-4 pb-md-12">
             <div class="d-flex flex-column align-center justify-center text-center mt-md-16 mb-5 mb-md-16 pt-md-16">
                 <v-img :src="require('@/assets/hero/hero-error.png')" alt="" height="380" width="380" contain />
