@@ -38,6 +38,7 @@ interface StoreState {
     dataShare: RemovableRef<boolean>
     lang: RemovableRef<string>
     showPopUp: RemovableRef<boolean>
+    showAd: RemovableRef<boolean>
 }
 
 const getKeySumBN = <T>(map: Record<string, T>, _key: keyof T): BN => {
@@ -75,7 +76,8 @@ export const useStore = defineStore('main', {
         currentLargeButtonPromo: PROMOS.enkrypt,
         dataShare: useStorage('allowDataShare', true),
         lang: useStorage('lang', 'en_US'),
-        showPopUp: useStorage('showPopUp', true)
+        showPopUp: useStorage('showPopUp', true),
+        showAd: useStorage('showAd', false)
     }),
     getters: {
         /**
@@ -239,6 +241,9 @@ export const useStore = defineStore('main', {
         }
     },
     actions: {
+        setShowAd(_value: boolean) {
+            this.showAd = _value
+        },
         addFavToken(contract: string) {
             this.favTokens.push(contract)
         },
