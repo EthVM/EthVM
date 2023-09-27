@@ -47,6 +47,7 @@
         "qs": "^6.11.0",
         "roboto-fontface": "*",
         "ts-loader": "^9.4.2",
+        "url": "^0.11.3",
         "vue": "^3.2.13",
         "vue-chartjs": "^4.1.1",
         "vue-gtag-next": "^1.14.0",
