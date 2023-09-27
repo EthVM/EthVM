@@ -1,7 +1,8 @@
 <template>
     <div>
-        <v-system-bar :height="showAd ? (!adHidden ? '0' : '90') : '0'" v-show="showAd" class="px-0">
-            <div class="header-741647070a5a06fa983" style="top: 0px; position: fixed"></div>
+        <v-system-bar :height="showAdOnScreen ? (!appStore.showAd ? '0' : '90') : '0'" v-show="showAdOnScreen" class="px-0 system-bar-container">
+            <div class="paid-ad" v-show="appStore.showAd">Paid Advertisement</div>
+            <div class="header-741647070a5a06fa983 ad-header" />
         </v-system-bar>
         <v-system-bar v-if="xs" color="surface" class="font-weight-bold">
             <div v-if="supportsFiat">
@@ -137,9 +138,6 @@ const goToHome = async (): Promise<void> => {
     })
 }
 
-/** ad hidden bool */
-const adHidden = ref(false)
-
 /*
 ===================================================================================
    Search Bar Handling
@@ -174,6 +172,7 @@ watch(
 )
 
 onMounted(() => {
+    const storeInstance = appStore
     /** Ad banner setup */
     const coinzillaArg = Array.isArray(window.coinzilla_header) ? '741647070a5a06fa983' : ['741647070a5a06fa983']
     window.coinzilla_header.push(coinzillaArg)
@@ -181,7 +180,7 @@ onMounted(() => {
     /** Ad banner close listener */
     window.addEventListener('click', e => {
         if (e.srcElement.src === 'https://coinzillatag.com/lib/img/close.png') {
-            adHidden.value = false
+            storeInstance.setShowAd(false)
         }
     })
 
@@ -193,7 +192,7 @@ onMounted(() => {
     const interval = setInterval(() => {
         adShown = document.getElementById('CloseCoinzillaHeader')
         if (adShown) {
-            adHidden.value = true
+            storeInstance.setShowAd(true)
             clearInterval(interval)
         }
     }, 500)
@@ -217,7 +216,7 @@ const showSearchbar = computed<boolean>(() => {
     return true
 })
 
-const showAd = computed<boolean>(() => {
+const showAdOnScreen = computed<boolean>(() => {
     return offset.value < 90
 })
 
@@ -299,6 +298,18 @@ const gasPrice = computed<string>(() => {
 .logo-btn {
     cursor: pointer;
 }
+
+.paid-ad {
+    top: 0px;
+    position: fixed;
+    z-index: 2000;
+    right: 30px;
+}
+
+.ad-header {
+    top: 0px;
+    position: fixed;
+}
 </style>
 
 <style lang="scss">
@@ -307,5 +318,9 @@ const gasPrice = computed<string>(() => {
         display: flex;
         flex-direction: column;
     }
+}
+
+.system-bar-container {
+    position: relative;
 }
 </style>

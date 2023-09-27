@@ -119,7 +119,10 @@ module.exports = defineConfig({
             fallback: {
                 http: require.resolve('stream-http'),
                 stream: require.resolve('stream-browserify'),
-                assert: require.resolve('assert/')
+                assert: require.resolve('assert/'),
+                https: require.resolve('https-browserify'),
+                zlib: require.resolve('browserify-zlib'),
+                url: require.resolve('url/')
             },
             alias: {
                 '@': path.resolve(__dirname, 'src/'),

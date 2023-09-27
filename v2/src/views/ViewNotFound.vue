@@ -1,5 +1,5 @@
 <template>
-    <div class="not-found mt-n16">
+    <div :class="[showAd, 'not-found']">
         <v-container class="core-container pt-16 pb-4 pb-md-12">
             <div class="d-flex flex-column align-center justify-center text-center mt-md-16 mb-5 mb-md-16 pt-md-16">
                 <v-img :src="require('@/assets/hero/hero-error.png')" alt="" height="380" width="380" contain />
@@ -14,14 +14,20 @@
 import { useRouter } from 'vue-router'
 import AppBtn from '@core/components/AppBtn.vue'
 import { ROUTE_NAME } from '@core/router/routesNames'
-import { onMounted } from 'vue'
+import { onMounted, computed } from 'vue'
 import { VIEW_TAGS } from '@core/helper/tags'
 import { usePageMeta } from '@core/composables/use-page-meta/use-page-meta.composable'
+import { useStore } from '@/store'
+
+const store = useStore()
 
 usePageMeta(null, VIEW_TAGS.NOT_FOUND)
-
 onMounted(() => {
     window.scrollTo(0, 0)
+})
+
+const showAd = computed<string>(() => {
+    return store.showAd ? 'mt-n24' : 'mt-n16'
 })
 
 const router = useRouter()
