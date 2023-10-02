@@ -1,3 +1,9 @@
+### Release v2.1.9
+
+### UI
+
+-   Removed Enkrypt raffle ad
+
 ### Release v2.1.8
 
 ### Feature
