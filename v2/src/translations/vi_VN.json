@@ -2,7 +2,7 @@
     "about": {
         "what": {
             "header": "What is ethVM",
-            "body": "ethVM is a block explorer made by people that put user experience first. We made EthVM so that normal users can monitor blockchain transactions, view portfolio analytics, and even explore NFT collections without feeling like they are doing their taxes…or even worse:using Excel. It is an open source platform that empowers users to do more when it comes to crypto!"
+            "body": "ethVM là một trình khám phá khối được tạo bởi những người coi trải nghiệm người dùng là điều quan trọng nhất. Chúng tôi đã tạo EthVM để người dùng bình thường có thể theo dõi các giao dịch chuỗi khối, xem phân tích danh mục đầu tư và thậm chí khám phá các bộ sưu tập NFT mà không cảm thấy như họ đang thực hiện khai thuế… hoặc thậm chí tệ hơn: sử dụng Excel. Đây là một nền tảng nguồn mở giúp người dùng làm được nhiều việc hơn khi liên quan đến tiền điện tử!"
         },
         "who": {
             "header": "Who are we?",
