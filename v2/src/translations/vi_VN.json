@@ -5,72 +5,72 @@
             "body": "ethVM là một trình khám phá khối được tạo bởi những người coi trải nghiệm người dùng là điều quan trọng nhất. Chúng tôi đã tạo EthVM để người dùng bình thường có thể theo dõi các giao dịch chuỗi khối, xem phân tích danh mục đầu tư và thậm chí khám phá các bộ sưu tập NFT mà không cảm thấy như họ đang thực hiện khai thuế… hoặc thậm chí tệ hơn: sử dụng Excel. Đây là một nền tảng nguồn mở giúp người dùng làm được nhiều việc hơn khi liên quan đến tiền điện tử!"
         },
         "who": {
-            "header": "Who are we?",
-            "body": "ethVM is made by the MyEtherWallet team!",
-            "body2": "MEW was the first wallet interface in Ethereum and was founded 2 weeks after Ethereum mainnet went live. You can basically call us a crypto OG. Ever since our founding, our mission has been to make products that people love to use."
+            "header": "Chúng tôi là ai?",
+            "body": "ethVM do đội ngũ MyEtherWallet tạo ra!",
+            "body2": "MEW là giao diện ví đầu tiên trong Ethereum và được thành lập 2 tuần sau khi mạng chính Ethereum đi vào hoạt động. Về cơ bản, bạn có thể gọi chúng tôi là OG tiền điện tử. Kể từ khi thành lập, sứ mệnh của chúng tôi là tạo ra những sản phẩm mà mọi người yêu thích sử dụng."
         },
         "why": {
-            "header": "Why did we make ethVM?",
-            "body": " We made ethVM so that users, developers, and communities have a beautiful choice when it comes to block explorers. ethVM is open source, which makes it adaptable to any crypto ecosystem. So whether you want a better way to track your contract approvals or a solution for an ambitious new project - this is for you!"
+            "header": "Tại sao chúng tôi tạo ra ethVM?",
+            "body": "Chúng tôi đã tạo ra ethVM để người dùng, nhà phát triển và cộng đồng có một lựa chọn tuyệt vời khi muốn sử dụng các trình khám phá. ethVM có mã nguồn mở, giúp ethVM có thể thích ứng với bất kỳ hệ sinh thái tiền điện tử nào. Vì vậy, cho dù bạn muốn một cách tốt hơn để theo dõi việc phê duyệt hợp đồng của mình hay một giải pháp cho một dự án mới đầy tham vọng - đây là thứ dành cho bạn!"
         },
-        "foot": "SSPL License, Copyright © 2023 MyEtherWallet Inc. For Terms & conditions visit our GitHub."
+        "foot": "Giấy phép SSPL, Bản quyền © 2023 MyEtherWallet Inc. Để xem Điều khoản & điều kiện, hãy truy cập GitHub của chúng tôi."
     },
     "notFound": {
-        "text": "Oh No! This page is not found.",
-        "homeButton": "Go Back Home"
+        "text": "Rất tiếc! Không tìm thấy trang này.",
+        "homeButton": "Quay Về Trang chính"
     },
     "txs": {
-        "header": "All Transactions",
-        "incoming": "Incoming",
-        "outcoming": "Outgoing",
-        "balanceChange": "Balance Change",
-        "balanceBefore": "Balance Before",
-        "totalBalanceChange": "Total Balance Change",
-        "balanceAfter": "Balance After",
-        "estimatedFee": "Estimated Fee",
-        "isHomeHeader": "Last Transactions",
-        "refresh": "New Txs Found, Refresh",
-        "name": "Transaction | Transactions",
+        "header": "Tất cả Giao dịch",
+        "incoming": "Đến",
+        "outcoming": "Đi",
+        "balanceChange": "Thay đổi Số dư",
+        "balanceBefore": "Số dư Trước",
+        "totalBalanceChange": "Tổng Thay đổi Số dư",
+        "balanceAfter": "Số dư Sau",
+        "estimatedFee": "Phí Ước tính",
+        "isHomeHeader": "Giao dịch Mới nhất",
+        "refresh": "Đã tìm thấy Giao dịch mới, Hãy tải lại trang",
+        "name": "Giao dịch | Giao dịch",
         "nameShort": "Tx | Txs",
-        "newNft": "New ERC721 Transfers",
-        "internal": "Internal Transfer",
-        "value": "Transaction Value",
-        "internalValue": "Internal Transfer Value",
-        "viewTx": "View Transaction",
+        "newNft": "Chuyển khoản ERC721 Mới",
+        "internal": "Chuyển khoản Nội bộ",
+        "value": "Giá trị Giao dịch",
+        "internalValue": "Giá trị Chuyển khoản Nội bộ",
+        "viewTx": "Xem Giao dịch",
         "details": {
-            "header": "Transaction Summary",
-            "txHash": "Tx Hash",
-            "createdContract": "Created Contract",
-            "interactedWith": "Interacted With Contract",
+            "header": "Tóm tắt Giao dịch",
+            "txHash": "Mã băm Giao dịch",
+            "createdContract": "Hợp đồng Đã tạo",
+            "interactedWith": "Đã tương tác Với Hợp đồng",
             "status": {
-                "successful": "Successful",
-                "failed": "Failed",
-                "replaced": "Replaced",
-                "pending": "Pending"
+                "successful": "Thành công",
+                "failed": "Không thành công",
+                "replaced": "Đã thay thế",
+                "pending": "Đang chờ xử lý"
             },
             "state": {
-                "header": "State",
-                "before": "Before",
-                "after": "After",
-                "notFound": "No transaction state difference avaialble",
-                "difference": "State Difference"
+                "header": "Trạng thái",
+                "before": "Trước",
+                "after": "Sau",
+                "notFound": "Không có sự khác biệt về trạng thái giao dịch",
+                "difference": "Sự khác biệt về Trạng thái"
             },
             "other": {
-                "header": "Other",
-                "gasUsed": "Gas Used",
-                "baseFee": "Base fee",
-                "maxFee": "Max fee per gas",
-                "notFound": "No transaction state difference availаble",
-                "index": "Tx Index"
+                "header": "Khác",
+                "gasUsed": "Gas Đã dùng",
+                "baseFee": "Phí cơ bản",
+                "maxFee": "Phí tối đa cho mỗi gas",
+                "notFound": "Không có sự khác biệt về trạng thái giao dịch",
+                "index": "Chỉ mục Giao dịch"
             },
             "actions": {
-                "header": "Actions",
-                "tokenTransfers": "Token Transfers",
-                "nftTransfers": "NFT Transfers"
+                "header": "Hành động",
+                "tokenTransfers": "Chuyển Token",
+                "nftTransfers": "Chuyển NFT"
             },
             "logs": {
-                "header": "Logs",
-                "decoded": "Decoded",
+                "header": "Nhật ký",
+                "decoded": "Giải mã",
                 "data": "Raw Data",
                 "signature": "Signature",
                 "event": "Event | Events",
@@ -129,30 +129,30 @@
         "balance": "Balance | Balances",
         "value": "Value",
         "token": "Token | Tokens",
-        "price": "Price",
-        "more": "More",
-        "24h": "24h",
-        "usdValue": "USD Value",
-        "name": "Name",
-        "validator": "Validator",
+        "price": "Giá",
+        "more": "Nhiều hơn",
+        "24h": "24 giờ",
+        "usdValue": "Giá trị USD",
+        "name": "Tên",
+        "validator": "Trình xác thực",
         "button": {
-            "export": "Export",
-            "import": "Import"
+            "export": "Xuất",
+            "import": "Nhập"
         },
-        "filter": "Filter",
-        "save": "Save",
-        "overview": "Overview",
-        "nft": "NFT | NFTS",
-        "reward": "Reward | Rewards",
-        "height": "Height",
-        "search": "Search",
-        "noName": "No Name"
+        "filter": "Bộ lọc",
+        "save": "Lưu",
+        "overview": "Tổng quan",
+        "nft": "NFT | NFT",
+        "reward": "Phần thưởng | Phần thưởng",
+        "height": "Chiều cao",
+        "search": "Tìm kiếm",
+        "noName": "Không có Tên"
     },
     "portfolio": {
-        "yourPortfolio": "Your portfolio",
-        "addAddressIcon": "Add Address",
-        "editName": "Edit name",
-        "deleteAdr": "Delete Address",
+        "yourPortfolio": "Danh mục đầu tư của bạn",
+        "addAddressIcon": "Thêm Địa chỉ",
+        "editName": "Chỉnh sửa tên",
+        "deleteAdr": "Xóa Địa chỉ",
         "limit": "You can only store 10 addresses in your portfolio",
         "errorDuplicateName": "This name is already saved",
         "tokenName": "Token Name",
