@@ -1,3 +1,9 @@
+### Release v2.1.10
+
+### Docs
+
+-   Suggest older pnpm version in README instructions for lockfile compatibility
+
 ### Release v2.1.9
 
 ### UI
