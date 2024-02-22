@@ -41,7 +41,7 @@ jobs:
           VUE_APP_SENTRY_SECURITY_DSN: ${{ secrets.VUE_APP_SENTRY_SECURITY_DSN }}
           VUE_APP_PUBLIC_URL: ${{ secrets.VUE_APP_PUBLIC_URL }}
           VUE_APP_HTTP_LINK: https://mainnet-dev-api-v3.ethvm.dev
-          VUE_APP_WS_CLIENT: https://mainnet-dev-apiws-v3.ethvm.dev
+          VUE_APP_WS_CLIENT: wss://mainnet-dev-apiws-v3.ethvm.dev
           VUE_APP_OPENSEA_API: ${{ secrets.VUE_APP_OPENSEA_API }}
           VUE_APP_FORMSPREE_CONTACT : ${{secrets.VUE_APP_FORMSPREE_CONTACT}}
           VUE_APP_GA_ID: ${{secrets.VUE_APP_GA_ID}}
