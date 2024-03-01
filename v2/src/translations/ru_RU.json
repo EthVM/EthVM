@@ -27,7 +27,6 @@
         "balanceBefore": "Баланс До",
         "totalBalanceChange": "Oбщее Изменениe Баланса",
         "balanceAfter": "Баланс После",
-        "totalBalanceChange": "Oбщее Изменениe Баланса",
         "estimatedFee": "Примерная Kомиссия",
         "isHomeHeader": "Последние Транзакции",
         "refresh": "Найдены Новые Txs, Обновить",
@@ -268,7 +267,7 @@
         "nftCollection": "NFT Коллекция",
         "unknown": "Неизвестный",
         "portfolioEmpty": "Ваше портфолио пусто",
-        "portfolioValue": "Общая Стоимость",
+        "portfolioValue": "Общая Стоимость Портфеля",
         "stakeWithdrawals": "Вывод Ставок",
         "header": {
             "blockNumber": "Блок №",
@@ -287,8 +286,8 @@
     },
     "home": {
         "tagline": {
-            "row1": "Отслеживайте, анализируйте и ",
-            "row2": "исследуйте блокчейн Ethereum.",
+            "row1": "Отслеживайте, анализируйте и исследуйте",
+            "row2": "блокчейн Ethereum.",
             "row3": "тестовую сеть Sepolia."
         },
         "footer": {
