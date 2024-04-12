@@ -179,29 +179,29 @@ const router = createRouter({
     routes
 })
 
-router.beforeEach((to: RouteLocationNormalized, from: RouteLocationNormalized, next: NavigationGuardNext) => {
-    if (to.query.affiliate) {
-        const _body = {
-            affiliateString: to.query.affiliate
-        }
-        fetch(configs.AFFILIATE, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(_body)
-        })
-            .then(res => {
-                return res.json()
-            })
-            .catch(e => {
-                Sentry.captureException(`Can not send affilaite event: ${to.query.affiliate}, ${e}`)
-            })
-        delete to.query['affiliate']
-        next(to)
-    }
-    next()
-})
+// router.beforeEach((to: RouteLocationNormalized, from: RouteLocationNormalized, next: NavigationGuardNext) => {
+//     if (to.query.affiliate) {
+//         const _body = {
+//             affiliateString: to.query.affiliate
+//         }
+//         fetch(configs.AFFILIATE, {
+//             method: 'POST',
+//             headers: {
+//                 'Content-Type': 'application/json'
+//             },
+//             body: JSON.stringify(_body)
+//         })
+//             .then(res => {
+//                 return res.json()
+//             })
+//             .catch(e => {
+//                 Sentry.captureException(`Can not send affilaite event: ${to.query.affiliate}, ${e}`)
+//             })
+//         delete to.query['affiliate']
+//         next(to)
+//     }
+//     next()
+// })
 
 trackRouter(router, { useScreenview: true })
 
