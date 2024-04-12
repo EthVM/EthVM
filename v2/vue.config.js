@@ -85,7 +85,7 @@ module.exports = defineConfig({
             new VuetifyPlugin({
                 styles: { configFile: 'src/styles/settings.scss' }
             }),
-            new webpack.EnvironmentPlugin(vars)
+            new webpack.EnvironmentPlugin(vars),
             new NodePolyfillPlugin()
         ],
         optimization: {
