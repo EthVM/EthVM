@@ -4,6 +4,7 @@ const path = require('path')
 const ImageMinimizerPlugin = require('image-minimizer-webpack-plugin')
 const { VuetifyPlugin } = require('webpack-plugin-vuetify')
 const version = require('./package.json').version
+const NodePolyfillPlugin = require('node-polyfill-webpack-plugin')
 
 const vars = {
     VERSION: version
@@ -84,7 +85,8 @@ module.exports = defineConfig({
             new VuetifyPlugin({
                 styles: { configFile: 'src/styles/settings.scss' }
             }),
-            new webpack.EnvironmentPlugin(vars)
+            new webpack.EnvironmentPlugin(vars),
+            new NodePolyfillPlugin()
         ],
         optimization: {
             chunkIds: 'size',

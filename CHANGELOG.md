@@ -2,6 +2,7 @@
 
 ### Feature
 - affiliate links
+- add polyfills [#1222](https://github.com/EthVM/EthVM/pull/1222)
 
 ==================================================
 
