@@ -54,6 +54,8 @@ jobs:
           VUE_APP_OPENSEA_API: ${{ secrets.VUE_APP_OPENSEA_API }}
           VUE_APP_FORMSPREE_CONTACT : ${{secrets.VUE_APP_FORMSPREE_CONTACT}}
           VUE_APP_GA_ID: ${{secrets.VUE_APP_GA_ID}}
+          VUE_APP_AFFILIATE: ${{secrets.VUE_APP_AFFILIATE}}
+
       # Deploy to S3        
       - name: Deploy to S3
         if: github.base_ref == ''
