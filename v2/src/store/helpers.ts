@@ -32,7 +32,8 @@ export const TIMEOUT = 5000
 
 export const PROMOS = {
     enkrypt: 'enkrypt',
-    ruffle: 'ruffle',
+    // todo: delete (from enkrypt raffle)
+    // ruffle: 'ruffle',
     mewwallet: 'mewallet'
 }
 

@@ -1,5 +1,8 @@
 <template>
     <div>
+        <v-system-bar :height="showAd ? (!adHidden ? '0' : '90') : '0'" v-show="showAd" class="px-0">
+            <div class="header-741647070a5a06fa983" style="top: 0px; position: fixed"></div>
+        </v-system-bar>
         <v-system-bar v-if="xs" color="surface" class="font-weight-bold">
             <div v-if="supportsFiat">
                 <v-scroll-y-reverse-transition hide-on-leave>
@@ -134,6 +137,9 @@ const goToHome = async (): Promise<void> => {
     })
 }
 
+/** ad hidden bool */
+const adHidden = ref(false)
+
 /*
 ===================================================================================
    Search Bar Handling
@@ -168,6 +174,33 @@ watch(
 )
 
 onMounted(() => {
+    /** Ad banner setup */
+    const coinzillaArg = Array.isArray(window.coinzilla_header) ? '741647070a5a06fa983' : ['741647070a5a06fa983']
+    window.coinzilla_header.push(coinzillaArg)
+
+    /** Ad banner close listener */
+    window.addEventListener('click', e => {
+        if (e.srcElement.src === 'https://coinzillatag.com/lib/img/close.png') {
+            adHidden.value = false
+        }
+    })
+
+    /**
+     * watch if ad loads in 3 seconds
+     * if not, assume ad was closed before this session
+     */
+    let adShown = document.getElementById('CloseCoinzillaHeader')
+    const interval = setInterval(() => {
+        adShown = document.getElementById('CloseCoinzillaHeader')
+        if (adShown) {
+            adHidden.value = true
+            clearInterval(interval)
+        }
+    }, 500)
+    setTimeout(() => {
+        clearInterval(interval)
+    }, 3000)
+
     if (props.hideSearchBar || props.isTransparent) {
         window.addEventListener('scroll', onScroll)
     }
@@ -182,6 +215,10 @@ const showSearchbar = computed<boolean>(() => {
         return offset.value > visibleAt
     }
     return true
+})
+
+const showAd = computed<boolean>(() => {
+    return offset.value < 90
 })
 
 const background = computed<string>(() => {
@@ -261,5 +298,14 @@ const gasPrice = computed<string>(() => {
 }
 .logo-btn {
     cursor: pointer;
+}
+</style>
+
+<style lang="scss">
+.ethvm-app-bar {
+    .v-toolbar__content {
+        display: flex;
+        flex-direction: column;
+    }
 }
 </style>

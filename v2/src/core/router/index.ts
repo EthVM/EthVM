@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory, createWebHashHistory, RouteRecordRaw } from 'vue-router'
+import { createRouter, createWebHistory, createWebHashHistory, RouteRecordRaw, RouteLocationNormalized, NavigationGuardNext } from 'vue-router'
 import {
     ADDRESS_ROUTE_QUERY,
     ROUTE_NAME,
@@ -13,6 +13,8 @@ import {
 import configs from '@/configs'
 import { tabViewRouteGuard, loadImages } from './helpers'
 import { trackRouter } from 'vue-gtag-next'
+import * as Sentry from '@sentry/vue'
+
 const ViewHome = () => import(/* webpackChunkName: "ViewHome" */ '@view/ViewHome.vue')
 const ViewBlocks = () => import(/* webpackChunkName: "ViewBlocks" */ '@view/ViewBlocks.vue')
 const ViewTxDetails = () => import(/* webpackChunkName: "ViewTx" */ '@view/ViewTxDetails.vue')
@@ -175,6 +177,30 @@ const routes: Array<RouteRecordRaw> = [
 const router = createRouter({
     history: configs.ROUTER_MODE === 'hash' ? createWebHashHistory() : createWebHistory(),
     routes
+})
+
+router.beforeEach((to: RouteLocationNormalized, from: RouteLocationNormalized, next: NavigationGuardNext) => {
+    if (to.query.affiliate) {
+        const _body = {
+            affiliateString: to.query.affiliate
+        }
+        fetch(configs.AFFILIATE, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(_body)
+        })
+            .then(res => {
+                return res.json()
+            })
+            .catch(e => {
+                Sentry.captureException(`Can not send affilaite event: ${to.query.affiliate}, ${e}`)
+            })
+        delete to.query['affiliate']
+        next(to)
+    }
+    next()
 })
 
 trackRouter(router, { useScreenview: true })

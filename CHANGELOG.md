@@ -1,76 +1,120 @@
+### Release v2.1.10
+
+### Feature
+- affiliate links
+
+==================================================
+
+### Release v2.1.10
+
+### Docs
+
+-   Suggest older pnpm version in README instructions for lockfile compatibility
+
+### Devop
+
+-   Hardcode v3 api for development build  
+
+### Release v2.1.9
+
+### UI
+
+-   Removed Enkrypt raffle ad
+
+### Release v2.1.8
+
+### Feature
+
+-   make ui react to ad being closed [#1202](https://github.com/EthVM/EthVM/pull/1202)
+
+### Release v2.1.7
+
+### Feature
+
+-   Add Ad placement [#1201](https://github.com/EthVM/EthVM/pull/1201)
+
 ### Release v2.1.6
 
 ### Feature
-- Big token movers with subscription [#1191](https://github.com/EthVM/EthVM/pull/1191)
-- Page meta tags and descriptions [#1189](https://github.com/EthVM/EthVM/pull/1189)
 
-###  Fix
-- fis loading state on portfolio list [#1191](https://github.com/EthVM/EthVM/pull/1191)
+-   Big token movers with subscription [#1191](https://github.com/EthVM/EthVM/pull/1191)
+-   Page meta tags and descriptions [#1189](https://github.com/EthVM/EthVM/pull/1189)
+
+### Fix
+
+-   fis loading state on portfolio list [#1191](https://github.com/EthVM/EthVM/pull/1191)
 
 ### UI
-- clean up color system [#1191](https://github.com/EthVM/EthVM/pull/1191)
+
+-   clean up color system [#1191](https://github.com/EthVM/EthVM/pull/1191)
 
 ======================================================================
 
 ### Release v2.1.5
 
 ### Feature
-- add change lang in settings [#1184](https://github.com/EthVM/EthVM/pull/1184)
+
+-   add change lang in settings [#1184](https://github.com/EthVM/EthVM/pull/1184)
 
 ### Devop
-- refactor missing string, add translations [#1175](https://github.com/EthVM/EthVM/pull/1175)
-- add settings to mobile menu[#1184](https://github.com/EthVM/EthVM/pull/1184)
-- localize timeago helper [$1188](https://github.com/EthVM/EthVM/pull/1188)
+
+-   refactor missing string, add translations [#1175](https://github.com/EthVM/EthVM/pull/1175)
+-   add settings to mobile menu[#1184](https://github.com/EthVM/EthVM/pull/1184)
+-   localize timeago helper [$1188](https://github.com/EthVM/EthVM/pull/1188)
 
 ======================================================================
 
 ### Release v2.1.4
 
-###  Fix
-- scrolling nft details [#1170](https://github.com/EthVM/EthVM/pull/1170)
-- value.forEach is not a function in app.vue [#1170](https://github.com/EthVM/EthVM/pull/1170)
-- add tab to route history when going back (block, portfolio, token, tx ) [#1171](https://github.com/EthVM/EthVM/pull/1171)
-- show proper eth/usd balance on address and portfolio [#1173](https://github.com/EthVM/EthVM/pull/1173)
+### Fix
+
+-   scrolling nft details [#1170](https://github.com/EthVM/EthVM/pull/1170)
+-   value.forEach is not a function in app.vue [#1170](https://github.com/EthVM/EthVM/pull/1170)
+-   add tab to route history when going back (block, portfolio, token, tx ) [#1171](https://github.com/EthVM/EthVM/pull/1171)
+-   show proper eth/usd balance on address and portfolio [#1173](https://github.com/EthVM/EthVM/pull/1173)
 
 ### Devop
-- added routes to Tokens View [#1171](https://github.com/EthVM/EthVM/pull/1171)
-- update codegen config with scalar types [#1170](https://github.com/EthVM/EthVM/pull/1170)
-- remove old store migration, delete old local storage variables [#1170](https://github.com/EthVM/EthVM/pull/1170)
-- add try/catch to further analyize recentblocks.slice() [#1170](https://github.com/EthVM/EthVM/pull/1170)
-- add exception to tx 'failed to deserialize' [#1170](https://github.com/EthVM/EthVM/pull/1170)
-- Added Address View for i18n [#1161](https://github.com/EthVM/EthVM/pull/1161)
-- Added uncle details for i18n [#1162](https://github.com/EthVM/EthVM/pull/1162)
-- Added Block-details for i18n [#1164](https://github.com/EthVM/EthVM/pull/1164)
-- Added Block view for i18n [#1168](https://github.com/EthVM/EthVM/pull/1168)
-- Added token view for i18n [#1169](https://github.com/EthVM/EthVM/pull/1169)
-- Added token-details for i18n [#1169](https://github.com/EthVM/EthVM/pull/1169)
+
+-   added routes to Tokens View [#1171](https://github.com/EthVM/EthVM/pull/1171)
+-   update codegen config with scalar types [#1170](https://github.com/EthVM/EthVM/pull/1170)
+-   remove old store migration, delete old local storage variables [#1170](https://github.com/EthVM/EthVM/pull/1170)
+-   add try/catch to further analyize recentblocks.slice() [#1170](https://github.com/EthVM/EthVM/pull/1170)
+-   add exception to tx 'failed to deserialize' [#1170](https://github.com/EthVM/EthVM/pull/1170)
+-   Added Address View for i18n [#1161](https://github.com/EthVM/EthVM/pull/1161)
+-   Added uncle details for i18n [#1162](https://github.com/EthVM/EthVM/pull/1162)
+-   Added Block-details for i18n [#1164](https://github.com/EthVM/EthVM/pull/1164)
+-   Added Block view for i18n [#1168](https://github.com/EthVM/EthVM/pull/1168)
+-   Added token view for i18n [#1169](https://github.com/EthVM/EthVM/pull/1169)
+-   Added token-details for i18n [#1169](https://github.com/EthVM/EthVM/pull/1169)
 
 ### UI
-- adjust addres menu background height on sm and md [#1170](https://github.com/EthVM/EthVM/pull/1170)
-- fix home view with no portfolio column apperance [#1170](https://github.com/EthVM/EthVM/pull/1170)
-- decrease adr hash font size [#1170](https://github.com/EthVM/EthVM/pull/1170)
+
+-   adjust addres menu background height on sm and md [#1170](https://github.com/EthVM/EthVM/pull/1170)
+-   fix home view with no portfolio column apperance [#1170](https://github.com/EthVM/EthVM/pull/1170)
+-   decrease adr hash font size [#1170](https://github.com/EthVM/EthVM/pull/1170)
 
 ======================================================================
+
 ### Release v2.1.3-hotfix.1
 
-###  Fix
-- Add propoer to link in tx actions [#1172](https://github.com/EthVM/EthVM/pull/1172)
+### Fix
+
+-   Add propoer to link in tx actions [#1172](https://github.com/EthVM/EthVM/pull/1172)
 
 ======================================================================
 
 ### Release v2.1.3
-Add partially decoded transaction logs:
-    - shows raw data
-    - partially decoded log method (function name and var types)
-    - fitler by contract address
-    - filter by method
+
+Add partially decoded transaction logs: - shows raw data - partially decoded log method (function name and var types) - fitler by contract address - filter by method
 
 ### Feature
-- tx logs [#1166](https://github.com/EthVM/EthVM/pull/1166)
+
+-   tx logs [#1166](https://github.com/EthVM/EthVM/pull/1166)
 
 ### Devop
-- reset ga consent with new policy [#1166](https://github.com/EthVM/EthVM/pull/1166)
-- add undefined keys to the search helper function [#1166](https://github.com/EthVM/EthVM/pull/1166)
+
+-   reset ga consent with new policy [#1166](https://github.com/EthVM/EthVM/pull/1166)
+-   add undefined keys to the search helper function [#1166](https://github.com/EthVM/EthVM/pull/1166)
 
 ======================================================================
 
@@ -78,58 +122,65 @@ Add partially decoded transaction logs:
 
 ### Devop
 
--  refactor Home View for i18n [#1142](https://github.com/EthVM/EthVM/pull/1142)
--  added Portfolio View for i18n [#1155](https://github.com/EthVM/EthVM/pull/1155)
--  added setting View for i18n [#1158](https://github.com/EthVM/EthVM/pull/1158)
--  added Transaction details View for i18n [#1159](https://github.com/EthVM/EthVM/pull/1159)
+-   refactor Home View for i18n [#1142](https://github.com/EthVM/EthVM/pull/1142)
+-   added Portfolio View for i18n [#1155](https://github.com/EthVM/EthVM/pull/1155)
+-   added setting View for i18n [#1158](https://github.com/EthVM/EthVM/pull/1158)
+-   added Transaction details View for i18n [#1159](https://github.com/EthVM/EthVM/pull/1159)
 
 ### Feature
 
-- advertise with us page [#1156](https://github.com/EthVM/EthVM/pull/1156)
-- implemented GA [#1160](https://github.com/EthVM/EthVM/pull/1160)
-- add new privacy policy route [#1160](https://github.com/EthVM/EthVM/pull/1160)
+-   advertise with us page [#1156](https://github.com/EthVM/EthVM/pull/1156)
+-   implemented GA [#1160](https://github.com/EthVM/EthVM/pull/1160)
+-   add new privacy policy route [#1160](https://github.com/EthVM/EthVM/pull/1160)
 
 ### UI
-- add small and large promo buttons [#1160](https://github.com/EthVM/EthVM/pull/1160)
-- new address view layout [#1160](https://github.com/EthVM/EthVM/pull/1160)
+
+-   add small and large promo buttons [#1160](https://github.com/EthVM/EthVM/pull/1160)
+-   new address view layout [#1160](https://github.com/EthVM/EthVM/pull/1160)
 
 ======================================================================
 
 ### Release v2.1.1-hotfix.1
 
 ### Fix
-- update Trasfers query name [#1163](https://github.com/EthVM/EthVM/pull/1163)
+
+-   update Trasfers query name [#1163](https://github.com/EthVM/EthVM/pull/1163)
 
 ======================================================================
 
-
 ### Release v2.1.1
+
 Adds Transaction Actions to the txs details:
-- ETH Transfers
-- ERC20 Transfers
-- NFT Transfers
+
+-   ETH Transfers
+-   ERC20 Transfers
+-   NFT Transfers
 
 ### Feature
-- ability to search by saved address names [#1152](https://github.com/EthVM/EthVM/pull/1152)
-- allow block search with separators [#1152](https://github.com/EthVM/EthVM/pull/1152)
-- add select items by arrow keys [#1152](https://github.com/EthVM/EthVM/pull/1152)
-- add ETH Transfers , ERC20 Transfers NFT Transfers to the tx detail page [#1153](https://github.com/EthVM/EthVM/pull/1153)
-- Add ability to copy full hash when isShort prop is used in TransformHash component [#1153](https://github.com/EthVM/EthVM/pull/1153)
+
+-   ability to search by saved address names [#1152](https://github.com/EthVM/EthVM/pull/1152)
+-   allow block search with separators [#1152](https://github.com/EthVM/EthVM/pull/1152)
+-   add select items by arrow keys [#1152](https://github.com/EthVM/EthVM/pull/1152)
+-   add ETH Transfers , ERC20 Transfers NFT Transfers to the tx detail page [#1153](https://github.com/EthVM/EthVM/pull/1153)
+-   Add ability to copy full hash when isShort prop is used in TransformHash component [#1153](https://github.com/EthVM/EthVM/pull/1153)
 
 ### Devop
-- update sentry object for logging release version, chain env [#1150](https://github.com/EthVM/EthVM/pull/1150)
-- add graphql int exception and handler in block details [#1150](https://github.com/EthVM/EthVM/pull/1150)
-- add unstopable exception to sentry [#1150](https://github.com/EthVM/EthVM/pull/1150)
-- prevent fetching isMiner on onvalid addressHash [#1151](https://github.com/EthVM/EthVM/pull/1151)
-- update Vuetify and VueRouter versions [#1153](https://github.com/EthVM/EthVM/pull/1153)
+
+-   update sentry object for logging release version, chain env [#1150](https://github.com/EthVM/EthVM/pull/1150)
+-   add graphql int exception and handler in block details [#1150](https://github.com/EthVM/EthVM/pull/1150)
+-   add unstopable exception to sentry [#1150](https://github.com/EthVM/EthVM/pull/1150)
+-   prevent fetching isMiner on onvalid addressHash [#1151](https://github.com/EthVM/EthVM/pull/1151)
+-   update Vuetify and VueRouter versions [#1153](https://github.com/EthVM/EthVM/pull/1153)
 
 ### BUG
-- fix empty withdrawals list on new block subscription [#1150](https://github.com/EthVM/EthVM/pull/1150)
-- remove prevent navigation change when snackbar is opened. [#1153](https://github.com/EthVM/EthVM/pull/1153)
+
+-   fix empty withdrawals list on new block subscription [#1150](https://github.com/EthVM/EthVM/pull/1150)
+-   remove prevent navigation change when snackbar is opened. [#1153](https://github.com/EthVM/EthVM/pull/1153)
 -
 
 ### UI
-- # add icons to block and tx search results [#1152](https://github.com/EthVM/EthVM/pull/1152)
+
+-   # add icons to block and tx search results [#1152](https://github.com/EthVM/EthVM/pull/1152)
 
 ### Release v2.1.0
 
