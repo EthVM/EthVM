@@ -1,9 +1,9 @@
-### Release v2.1.10
+### Release v2.1.12
 
 ### Feature
 - vietnamese language [#1224](https://github.com/EthVM/EthVM/pull/1224)
 
-### Release v2.1.10
+### Release v2.1.11
 
 ### Feature
 - affiliate links
