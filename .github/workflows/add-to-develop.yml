@@ -11,15 +11,15 @@ jobs:
     steps:
       #Checkout the repository to the GitHub Actions runner
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       # Use pnpm
       - name: Use pnpm
-        uses: pnpm/action-setup@v2
+        uses: pnpm/action-setup@v3
         with:
-          version: 6.32.10
+          version: 8.10.5
       # Use node in .nvmrc and cache dependencies
       - name: Set up
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version-file: 'v2/.nvmrc'
           cache: pnpm
@@ -40,11 +40,12 @@ jobs:
           VUE_APP_SENTRY_SECURITY_TOKEN: ${{ secrets.VUE_APP_SENTRY_SECURITY_TOKEN }}
           VUE_APP_SENTRY_SECURITY_DSN: ${{ secrets.VUE_APP_SENTRY_SECURITY_DSN }}
           VUE_APP_PUBLIC_URL: ${{ secrets.VUE_APP_PUBLIC_URL }}
-          VUE_APP_HTTP_LINK: ${{ secrets.VUE_APP_HTTP_LINK }}
-          VUE_APP_WS_CLIENT: ${{ secrets.VUE_APP_WS_CLIENT }}
+          VUE_APP_HTTP_LINK: https://api-v3.ethvm.dev
+          VUE_APP_WS_CLIENT: wss://apiws-v3.ethvm.dev
           VUE_APP_OPENSEA_API: ${{ secrets.VUE_APP_OPENSEA_API }}
           VUE_APP_FORMSPREE_CONTACT : ${{secrets.VUE_APP_FORMSPREE_CONTACT}}
           VUE_APP_GA_ID: ${{secrets.VUE_APP_GA_ID}}
+          VUE_APP_AFFILIATE: ${{secrets.VUE_APP_AFFILIATE_DEV}}
       # Deploy to S3
       - name: Deploy to S3
         if: github.base_ref == ''

@@ -1,6 +1,6 @@
 {
     "name": "client",
-    "version": "2.1.6",
+    "version": "2.1.11",
     "description": "",
     "main": "index.js",
     "private": true,
@@ -40,6 +40,7 @@
         "graphql-tag": "^2.12.6",
         "graphql-ws": "^5.8.1",
         "marked": "^4.2.12",
+        "node-polyfill-webpack-plugin": "^3.0.0",
         "pinia": "^2.0.14",
         "prismjs": "^1.29.0",
         "qs": "^6.11.0",

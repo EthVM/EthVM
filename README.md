@@ -49,6 +49,7 @@ You can run Sepolia front end locally, you will need:
 
 *Prerequisites*
 - Node version 18.0.0
+- pnpm version 6.35.1
 - pnpm, [installation guide](https://pnpm.io/installation). 
 
 1. Open terminal
