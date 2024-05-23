@@ -46,5 +46,6 @@ export type Lang = {
 
 export const LANGUAGE: Lang = {
     en_US: { title: 'English', id: 'EN' },
-    ru_RU: { title: 'Русский', id: 'RU' }
+    ru_RU: { title: 'Русский', id: 'RU' },
+    vi_VN: { title: 'Tiếng Việt', id: 'VN' }
 }

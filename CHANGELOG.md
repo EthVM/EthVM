@@ -1,6 +1,11 @@
 ### Release v2.1.10
 
 ### Feature
+- vietnamese language [#1224](https://github.com/EthVM/EthVM/pull/1224)
+
+### Release v2.1.10
+
+### Feature
 - affiliate links
 - add polyfills [#1222](https://github.com/EthVM/EthVM/pull/1222)
 
