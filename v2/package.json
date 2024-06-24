@@ -4,6 +4,10 @@
     "description": "",
     "main": "index.js",
     "private": true,
+    "engines": {
+        "node": ">=20.14.0",
+        "pnpm": ">=8 <9"
+      },
     "scripts": {
         "ts-serve": "run-p type-check serve",
         "serve": "vue-cli-service serve",

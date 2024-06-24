@@ -363,7 +363,7 @@
         "year": "1 year ago | {n} years ago",
         "yearShort": "{n} y ago",
         "month": "1 month ago | {n} months ago",
-        "monthShort": "{n} m ago",
+        "monthShort": "{n} month ago",
         "day": "1 day ago | {n} days ago",
         "dayShort": "{n} d ago",
         "hour": "1 hour ago | {n} hours ago",
