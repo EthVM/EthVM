@@ -189,7 +189,7 @@ import { TOKEN_FILTER_VALUES, KEY, DIRECTION, Token } from '@module/address/mode
 import { useAddressToken } from '@core/composables/AddressTokens/addressTokens.composable'
 import { AddressEventType } from '@/apollo/types'
 import { useRouter } from 'vue-router'
-import { ROUTE_NAME, ADDRESS_ROUTE_QUERY } from '@core/router/routesNames'
+import { ROUTE_NAME } from '@core/router/routesNames'
 import AddressBalanceTotals from './components/AddressBalanceTotals.vue'
 import AppNoResult from '@/core/components/AppNoResult.vue'
 import { useDisplay } from 'vuetify/lib/framework.mjs'
