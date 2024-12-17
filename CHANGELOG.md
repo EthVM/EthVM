@@ -1,6 +1,6 @@
 ### Release v2.1.13
 
--   add link to contract on address [#1225](https://github.com/EthVM/EthVM/pull/1225)
+-   add link to contract on address [#1232](https://github.com/EthVM/EthVM/pull/1232)
 
 ### Release v2.1.12
 
