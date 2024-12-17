@@ -17,7 +17,7 @@
                 />
             </div>
             <template v-if="props.isOverview">
-                <app-btn :text="$t('common.more')" is-small icon="east" @click="goToTokensBalancePage"></app-btn>
+                <app-btn :text="$t('common.more')" is-small icon="east" @click="goToTokensContractPage"></app-btn>
             </template>
         </v-card-title>
         <div v-if="!props.isOverview || (props.isOverview && xs)" class="d-flex align-center flex-wrap">
@@ -33,7 +33,7 @@
                 </address-balance-totals>
             </v-col>
             <v-spacer v-if="props.isOverview && xs" />
-            <app-btn-icon v-if="props.isOverview && xs" icon="east" @click="goToTokensBalancePage"></app-btn-icon>
+            <app-btn-icon v-if="props.isOverview && xs" icon="east" @click="goToTokensContractPage"></app-btn-icon>
             <div class="flex-grow-1 my-5 my-sm-0">
                 <app-input :place-holder="$t('token.searchTokenName')" v-model="state.searchParams" />
             </div>
@@ -189,7 +189,7 @@ import { TOKEN_FILTER_VALUES, KEY, DIRECTION, Token } from '@module/address/mode
 import { useAddressToken } from '@core/composables/AddressTokens/addressTokens.composable'
 import { AddressEventType } from '@/apollo/types'
 import { useRouter } from 'vue-router'
-import { ROUTE_NAME, ADDRESS_ROUTE_QUERY } from '@core/router/routesNames'
+import { ROUTE_NAME } from '@core/router/routesNames'
 import AddressBalanceTotals from './components/AddressBalanceTotals.vue'
 import AppNoResult from '@/core/components/AppNoResult.vue'
 import { useDisplay } from 'vuetify/lib/framework.mjs'
@@ -347,14 +347,13 @@ const router = useRouter()
 
 const routeToToken = (id: string) => {
     state.activeToken = id
-    goToTokensBalancePage()
+    goToTokensContractPage()
 }
 
-const goToTokensBalancePage = async () => {
+const goToTokensContractPage = async () => {
     await router.push({
-        name: ROUTE_NAME.ADDRESS_TOKENS.NAME,
-        query: { t: ADDRESS_ROUTE_QUERY.Q_TOKENS[0] },
-        params: { scrollId: state.activeToken }
+        name: ROUTE_NAME.TOKEN.NAME,
+        params: { addressRef: state.activeToken }
     })
 }
 

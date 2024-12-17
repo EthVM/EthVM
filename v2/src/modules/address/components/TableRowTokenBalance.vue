@@ -1,10 +1,5 @@
 <template>
-    <app-table-row
-        row-align="start"
-        row-align-lg="center"
-        :color="state.showMore ? 'lightGrey' : 'transparent'"
-        v-on="{ click: !props.isOverview && marketData ? openMoreInfo : null }"
-    >
+    <app-table-row row-align="start" row-align-lg="center" :color="state.showMore ? 'lightGrey' : 'transparent'" v-on="{ click: openMoreInfo }">
         <!--
                 Token on Overview:
                 XS: NONE
