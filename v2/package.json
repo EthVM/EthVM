@@ -1,18 +1,22 @@
 {
     "name": "client",
-    "version": "2.1.12",
+    "version": "2.1.13",
     "description": "",
     "main": "index.js",
     "private": true,
     "scripts": {
-        "ts-serve": "run-p type-check serve",
-        "serve": "vue-cli-service serve",
+        "ts-serve": "run-p type-check dev",
+        "dev": "vue-cli-service serve",
         "serve-sepolia": "vue-cli-service serve --mode sepolia",
         "type-check": "vue-tsc --noEmit --watch",
         "build": "vue-cli-service build",
         "lint": "vue-cli-service lint",
         "codegen-generate": "graphql-codegen --config codegen.yml",
         "build:hash": "VUE_APP_ROUTER_MODE=hash vue-cli-service build"
+    },
+    "engines": {
+        "node": "18.0.0",
+        "pnpm": "8.10.5"
     },
     "dependencies": {
         "@apollo/client": "^3.5.10",

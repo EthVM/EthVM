@@ -56,7 +56,6 @@ const { name, xs } = useDisplay()
 const appDrawer = useAppDrawer()
 
 const showDrawerBtn = computed<boolean>(() => {
-    console.log(name.value === 'xs' || name.value === 'sm' || name.value === 'md')
     return name.value === 'xs' || name.value === 'sm' || name.value === 'md'
 })
 
