@@ -1,13 +1,25 @@
+### Release v2.1.13
+
+### Fix
+
+-   fix ens subgraph [#1233](https://github.com/EthVM/EthVM/pull/1233)
+
+### Feature
+
+-   add link to contract on address [#1232](https://github.com/EthVM/EthVM/pull/1232)
+
 ### Release v2.1.12
 
 ### Feature
-- vietnamese language [#1224](https://github.com/EthVM/EthVM/pull/1224)
+
+-   vietnamese language [#1224](https://github.com/EthVM/EthVM/pull/1224)
 
 ### Release v2.1.11
 
 ### Feature
-- affiliate links
-- add polyfills [#1222](https://github.com/EthVM/EthVM/pull/1222)
+
+-   affiliate links
+-   add polyfills [#1222](https://github.com/EthVM/EthVM/pull/1222)
 
 ==================================================
 
@@ -19,7 +31,7 @@
 
 ### Devop
 
--   Hardcode v3 api for development build  
+-   Hardcode v3 api for development build
 
 ### Release v2.1.9
 

@@ -10,7 +10,7 @@ import * as Sentry from '@sentry/vue'
 */
 
 const httpLink = createHttpLink({
-    uri: 'https://api.thegraph.com/subgraphs/name/ensdomains/ens'
+    uri: 'https://gateway-arbitrum.network.thegraph.com/api/eb17d5e0f1e62e505370ef6bfd7c2844/subgraphs/id/5XqPmWe6gjyrJtFn9cLy237i4cWw2j9HcUJEXsP5qGtH'
 })
 
 // eslint-disable-next-line
