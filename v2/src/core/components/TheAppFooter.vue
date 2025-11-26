@@ -33,6 +33,9 @@
                         <li class="mb-2">
                             <router-link :to="routeAdvertise" class="text-link">{{ $t('home.footer.advertise') }}</router-link>
                         </li>
+                        <li class="mb-2">
+                            <a href="https://www.myetherwallet.com/terms-of-service" class="text-link">{{ $t('home.footer.terms') }}</a>
+                        </li>
                     </ul>
                 </v-col>
                 <v-col cols="12" sm="6" lg="3" class="mb-11 mb-lg-0" order="4" order-sm="4" order-lg="3">
