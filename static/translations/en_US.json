@@ -303,7 +303,8 @@
             "power": "Powered by",
             "rights": "All rights reserved.",
             "settings": "Settings",
-            "advertise": "Advertise with us"
+            "advertise": "Advertise with us",
+            "terms": "Terms of Service"
         },
         "search": "Search by address/transaction/token"
     },
