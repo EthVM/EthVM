@@ -1,3 +1,10 @@
+### Release v2.1.16
+
+### Feat
+
+-   add terms [#1268](https://github.com/EthVM/EthVM/pull/1268)
+-   add geofence [#1266](https://github.com/EthVM/EthVM/pull/1266)
+
 ### Release v2.1.13
 
 ### Fix
